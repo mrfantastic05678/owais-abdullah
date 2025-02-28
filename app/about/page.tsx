@@ -1,13 +1,13 @@
 import React from 'react'
 import About from '@/components/About'
-import Skills from '@/components/Skills'
+import Skill from '@/components/Skill'
 import Projects from '@/components/Projects'
 const about = () => {
   return (
     <>
     <About />
     <Projects />
-    <Skills />
+    <Skill />
     </>
   )
 }

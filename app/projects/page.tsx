@@ -1,8 +1,8 @@
 import React from 'react'
-import Projects from '@/components/Projects'
+import ProjectsTab from '@/components/ProjectsTab'
 const projects = () => {
   return (
-    <Projects />
+    <ProjectsTab />
   )
 }
 

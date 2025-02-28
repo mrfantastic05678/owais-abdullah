@@ -9,6 +9,7 @@ import projects  from "@/data/projects"; // Assuming your projects object is sto
 const ProjectTabs = () => {
   const categories = Object.keys(projects);
   const [selectedTab, setSelectedTab] = useState(categories[0]);
+  console.log(selectedTab)
 
   return (
     <section id="projects" className="max-w-7xl mx-auto mt-20 px-5">

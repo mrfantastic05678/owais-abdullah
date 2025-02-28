@@ -1,6 +1,5 @@
 "use client";
 import {
-  useMotionValueEvent,
   useScroll,
   useTransform,
   motion,
@@ -43,8 +42,8 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
           Job Experience
         </h2>
         <p className="text-neutral-300 text-sm md:text-base text-center max-w-2xl mx-auto">
-          Over the past few years, I've been building my expertise in web
-          development, AI integrations, and digital marketing. Here's a timeline
+          Over the past few years, I&apos;ve been building my expertise in web
+          development, AI integrations, and digital marketing. Here&apos;s a timeline
           of my journey so far:
         </p>
       </div>

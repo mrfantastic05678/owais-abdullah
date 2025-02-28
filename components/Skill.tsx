@@ -2,9 +2,9 @@
 
 import type React from "react";
 import SkillCard from "../components/ui/SkillCard";
-import { FaReact, FaNodeJs, FaWordpress } from "react-icons/fa";
+import { FaReact, FaWordpress } from "react-icons/fa";
 import { BiLogoTypescript, BiLogoPython } from "react-icons/bi";
-import { SiNextdotjs, SiTailwindcss, SiSqlite, SiPrisma, SiSanity } from "react-icons/si";
+import { SiNextdotjs,  SiSanity } from "react-icons/si";
 
 const skills = [
   // Frontend Skills

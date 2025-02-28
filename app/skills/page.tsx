@@ -1,9 +1,9 @@
-import Skills from '@/components/Skills'
+import Skill from '@/components/Skill'
 import React from 'react'
 
 const skills = () => {
   return (
-    <Skills />
+    <Skill />
   )
 }
 
