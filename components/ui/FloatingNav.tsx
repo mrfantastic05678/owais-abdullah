@@ -61,25 +61,35 @@ export const FloatingNav = ({
           className
         )}
       >
-        {navItems.map((navItem: any, idx: number) => (
-          <Link
-            key={`link=${idx}`}
-            href={navItem.link}
-            className={cn(
-              "relative text-neutral-50 items-center flex space-x-1 hover:text-accent"
-            )}
-          >
-            <span className="block sm:hidden">{navItem.icon}</span>
-            <span className="hidden sm:block text-sm">{navItem.name}</span>
-          </Link>
-        ))}
+        {navItems.map(
+          (
+            navItem: {
+              name: string;
+              link: string;
+              icon?: JSX.Element;
+            },
+            idx: number
+          ) => (
+            <Link
+              key={`link=${idx}`}
+              href={navItem.link}
+              className={cn(
+                "relative text-neutral-50 items-center flex space-x-1 hover:text-accent"
+              )}
+            >
+              <span className="block sm:hidden">{navItem.icon}</span>
+              <span className="hidden sm:block text-sm">{navItem.name}</span>
+            </Link>
+          )
+        )}
         <Link href="/contact">
-        <HoverBorderGradient
-        containerClassName="rounded-full"
-        as="button"
-        className="bg-background text-white hover:text-accent flex items-center space-x-2">
-        <span>Hire Me</span>
-      </HoverBorderGradient>
+          <HoverBorderGradient
+            containerClassName="rounded-full"
+            as="button"
+            className="bg-background text-white hover:text-accent flex items-center space-x-2"
+          >
+            <span>Hire Me</span>
+          </HoverBorderGradient>
         </Link>
       </motion.div>
     </AnimatePresence>
