@@ -95,7 +95,7 @@ const Hero = () => {
               height={100}
               priority
               placeholder="blur"
-              alt="hero"
+              alt="Owais Abdullah"
             />
             </AnimatedTooltip>
           </div>
