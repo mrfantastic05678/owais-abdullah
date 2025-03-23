@@ -40,7 +40,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
 
   return (
 
-    <div className="group border border-zinc-800 shadow-lg shadow-zinc-900 p-6 rounded-lg hover:shadow-lg hover:shadow-slate-500/50 hover:border-blue-400 transition-all duration-300 ease-in-out bg-gradient-to-br to-[#1c1f22] from-[#16161f]">
+    <div className="entrance scroll-smooth group border border-zinc-800 shadow-lg shadow-zinc-900 p-6 rounded-lg hover:shadow-lg hover:shadow-slate-500/50 hover:border-blue-400 transition-all duration-300 ease-in-out bg-gradient-to-br to-[#1c1f22] from-[#16161f]">
       <div className="flex justify-between gap-3">
       {/* Icon & Details */}
       <div className="flex flex-col mb-4 max-w-[70%]">

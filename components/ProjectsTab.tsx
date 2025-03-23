@@ -44,7 +44,7 @@ const ProjectTabs = () => {
               {projects[category as keyof typeof projects].map((project, index) => (
                 <div
                   key={index}
-                  className="border border-gray-800 rounded-lg overflow-hidden hover:scale-105 transition duration-300 shadow-lg bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                  className="entrance scroll-smooth border border-gray-800 rounded-lg overflow-hidden hover:scale-105 transition duration-300 shadow-lg bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
                 >
                   <Image
                     className="lg:h-48 md:h-36 w-full object-cover"

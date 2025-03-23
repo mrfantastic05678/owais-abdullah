@@ -15,7 +15,8 @@ export default {
   theme: {
   	extend: {
   		screens: {
-  			xs: '360px'
+  			xs: '360px',
+        xss: '450px'
   		},
   		container: {
   			center: true,

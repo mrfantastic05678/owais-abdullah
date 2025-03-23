@@ -16,3 +16,57 @@
     --radius: 0.5rem;
   }
 }
+
+/* CSS for hero section animation */
+
+.entrance-left {
+  opacity: 0;
+  animation-timeline: view();
+  animation: slideInLeft 2s ease-in-out forwards; 
+}
+
+.entrance-right {
+  opacity: 0;
+  animation-timeline: view();
+  animation: slideInRight 2s ease-in-out forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* entrance animation */
+@keyframes entrance {
+  from{
+    opacity: 0;
+    scale: 0.5;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.entrance{
+  animation: entrance linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 40%;
+}

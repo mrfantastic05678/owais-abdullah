@@ -15,7 +15,7 @@ const Hero = () => {
     <section className="relative text-gray-600 overflow-hidden z-0 -mt-20">
       <HeroHighlight>
         <div className="max-w-7xl mx-auto flex px-5 pt-40 py-10 md:flex-row flex-col items-center">
-          <div className="lg:flex-grow md:w-1/2 lg:pr-16 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center lg:w-3/5">
+          <div className="sm:entrance-left lg:flex-grow md:w-1/2 lg:pr-16 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center lg:w-3/5">
             <h2 className="title-font sm:text-lg text-base mb-4 font-montserrat text-text">
               WELCOME TO MY WORLD
             </h2>
@@ -85,7 +85,7 @@ const Hero = () => {
               </AnimatedTooltip>
             </div>
           </div>
-          <div className="lg:max-w-lg md:w-2/5 sm:-ml-16 sm:pt-0 relative lg:-mt-8 xl:-mt-14 md:ml-20 md:-mt-52 ">
+          <div className="sm:entrance-right lg:max-w-lg md:w-2/5 sm:-ml-16 sm:pt-0 relative lg:-mt-8 xl:-mt-14 md:ml-20 md:-mt-52 ">
             <div className="-mt-56 -mr-[155px] w-11/12 h-[75%] shadow-xl opacity-30 shadow-slate-500 rounded-xl absolute bottom-0 right-40 z-0 bg-black md:w-11/12 md:h-[75%] md:-mr-28 md:bottom-0 xs:h-[75%] xs:bottom-0 sm:bottom-0 sm:-mr-40 sm:w-10/12 lg:w-11/12 lg:-mr-40 xl:w-10/12 xl:-mr-30 xl:h-[75%] xl:bottom-0 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"></div>
             <AnimatedTooltip tooltipTitle="Owais Abdullah" tooltipDescription="AI & Web Engineer">
             <Image
