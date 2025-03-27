@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingNavbar from "@/components/FloatingNavbar";
+import { ChatBot } from "@/components/ui/ChatBot";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 
 
@@ -17,13 +19,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
       <body
       >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
         <FloatingNavbar />
         <Header />
         {children}
         <Footer />
+        <ChatBot />
+        </ThemeProvider>
       </body>
     </html>
   );

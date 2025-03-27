@@ -35,7 +35,15 @@ export default {
   		colors: {
   			accent: '#3a69ff',
   			background: '#212428',
-  			text: '#fff'
+  			text: '#fff',
+        foreground: "#ffffff",
+        muted: "#e5e7eb",
+        mutedforeground: "#4b5563",
+        dforeground: "#1f2937",
+        dmuted: "#374151",
+        dmutedforeground: "#d1d5db",
+        dbackground: "#f3f4f6",
+
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

@@ -15,6 +15,21 @@
   :root {
     --radius: 0.5rem;
   }
+  
+}
+
+:root {
+  --primary: #0284c7; /* Example blue */
+  --primary-foreground: #ffffff;
+  --muted: #e5e7eb; /* Example light gray */
+  --muted-foreground: #4b5563;
+}
+
+[data-theme="dark"] {
+  --primary: #60a5fa;
+  --primary-foreground: #1f2937;
+  --muted: #374151;
+  --muted-foreground: #d1d5db;
 }
 
 /* CSS for hero section animation */
