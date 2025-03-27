@@ -119,7 +119,7 @@ export function ChatBot() {
                 <CardContent className="space-y-4 pt-4 w-full p-1 sm:p-2">
                   {messages.length === 0 ? (
                     <div className="flex h-full items-center justify-center text-center text-mutedforeground">
-                      <p>Hello! I'm here to help You. Ask anything about Owais Abdullah's services or tech!</p>
+                      <p>Hello! I&apos;m here to help You. Ask anything about Owais Abdullah&apos;s services or tech!</p>
                     </div>
                   ) : (
                     messages.map((message, index) =>
