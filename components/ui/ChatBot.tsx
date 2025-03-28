@@ -162,7 +162,7 @@ export function ChatBot() {
                     👋 Chat with Me!
                   </div>
                 </motion.div>
-                <div className="absolute right-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-600 rotate-45"></div>
+                <div className="absolute right-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-l from-blue-600 to-blue-500 rotate-45"></div>
               </motion.div>
             )}
           </AnimatePresence>
