@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { z } from "zod";
 
 // Message schema
@@ -35,38 +35,97 @@ Your question was: *"${sanitizedQuery}"*
   `;
 };
 
+const AUTO_CLEAR_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
 export function useChat() {
   // Initialize messages as an empty array
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
-  
-  // Load messages from localStorage only on the client side
+  const clearTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Initialize messages and set auto-clear
   useEffect(() => {
-    // Check if we're in the browser
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("chatMessages");
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed)) {
-            setMessages(parsed); // Set stored messages
+    const initializeChat = () => {
+      if (typeof window !== "undefined") {
+        const stored = localStorage.getItem("chatMessages");
+        const lastUpdated = localStorage.getItem("chatLastUpdated");
+        
+        // Check if we should clear existing messages
+        if (stored && lastUpdated) {
+          const lastUpdateTime = parseInt(lastUpdated);
+          const timeSinceLastUpdate = Date.now() - lastUpdateTime;
+          
+          if (timeSinceLastUpdate > AUTO_CLEAR_TIMEOUT) {
+            clearLocalStorage();
           }
-        } catch (e) {
-          console.error("Error parsing chatMessages:", e);
         }
-      } else {
-        // Set a default welcome message if nothing is stored
-        setMessages([
-          {
-            role: "assistant",
-            content: "**Hello!** I'm here to help You. Ask anything about Owais Abdullah's services or tech!",
-          },
-        ]);
+
+        // Load messages or set default
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed)) {
+              setMessages(parsed);
+              startAutoClearTimer(); // Start timer after loading
+            }
+          } catch (e) {
+            console.error("Error parsing chatMessages:", e);
+          }
+        } else {
+          setMessages([
+            {
+              role: "assistant",
+              content: "**Hello!** I'm here to help You. Ask anything about Owais Abdullah's services or tech!",
+            },
+          ]);
+        }
       }
+    };
+
+    initializeChat();
+
+    return () => {
+      if (clearTimerRef.current) {
+        clearTimeout(clearTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Save messages and update timer
+  useEffect(() => {
+    if (typeof window !== "undefined" && messages.length > 0) {
+      localStorage.setItem("chatMessages", JSON.stringify(messages));
+      localStorage.setItem("chatLastUpdated", Date.now().toString());
+      startAutoClearTimer(); // Reset timer on any message change
     }
-  }, []); 
+  }, [messages]);
+
+  const startAutoClearTimer = () => {
+    // Clear any existing timer
+    if (clearTimerRef.current) {
+      clearTimeout(clearTimerRef.current);
+    }
+    
+    // Set new timer
+    clearTimerRef.current = setTimeout(() => {
+      clearLocalStorage();
+    }, AUTO_CLEAR_TIMEOUT);
+  };
+
+  const clearLocalStorage = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("chatMessages");
+      localStorage.removeItem("chatLastUpdated");
+      setMessages([
+        {
+          role: "assistant",
+          content: "**Hello!** I'm here to help You. Ask anything about Owais Abdullah's services or tech!",
+        },
+      ]);
+    }
+  };
 
   // Save messages to localStorage whenever they change
   useEffect(() => {

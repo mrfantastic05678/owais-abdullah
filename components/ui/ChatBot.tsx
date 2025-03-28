@@ -173,7 +173,7 @@ export function ChatBot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-x-0 mx-auto bottom-[72px] sm:inset-auto sm:bottom-16 sm:right-6 z-[5000] w-[90vw] sm:w-[calc(100%-2rem)] sm:max-w-md shadow-lg"
+            className="fixed inset-x-0 mx-auto bottom-[72px] sm:inset-auto sm:bottom-16 sm:right-6 z-[5000] w-[92vw] sm:w-[calc(100%-2rem)] sm:max-w-md shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
@@ -294,7 +294,7 @@ export function ChatBot() {
                 </CardContent>
               </ScrollArea>
 
-              <CardFooter className="px-4">
+              <CardFooter className="px-4 py-2">
                 <form
                   onSubmit={handleSubmit}
                   className="flex w-full items-center gap-2"
@@ -315,6 +315,7 @@ export function ChatBot() {
                   </Button>
                 </form>
               </CardFooter>
+              <p className="flex justify-center items-center text-center text-xs text-mutedforeground pb-2">Made with ❤️ By Owais Abdullah</p>
             </Card>
           </motion.div>
         )}
