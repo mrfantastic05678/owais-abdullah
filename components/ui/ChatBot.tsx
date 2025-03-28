@@ -39,8 +39,8 @@ export function ChatBot() {
         hideTimeout = setTimeout(() => {
           setShowTooltip(false);
           startCycle(); 
-        }, 8000); 
-      }, 5000); 
+        }, 10000); 
+      }, 8000); 
     };
 
     startCycle();
