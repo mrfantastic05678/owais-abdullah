@@ -88,7 +88,7 @@ export function ChatBot() {
         <div className="relative">
           <motion.button
             onClick={toggleChat}
-            className="flex justify-center items-center h-12 w-12 rounded-full shadow-black/50 shadow-lg bg-accent hover:bg-accent/90 transition-all"
+            className="flex justify-center items-center h-10 w-10 rounded-full shadow-black/50 shadow-lg bg-accent hover:bg-accent/90 transition-all"
             animate={
               !isOpen
                 ? {
@@ -113,7 +113,7 @@ export function ChatBot() {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X size={28} strokeWidth={2} />
+                  <X size={24} strokeWidth={2} />
                 </motion.div>
               ) : (
                 <motion.div
@@ -123,7 +123,7 @@ export function ChatBot() {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <BotMessageSquare size={28} strokeWidth={1.5} />
+                  <BotMessageSquare size={24} strokeWidth={1.5} />
                 </motion.div>
               )}
             </AnimatePresence>
