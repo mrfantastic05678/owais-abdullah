@@ -173,7 +173,7 @@ export function ChatBot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-x-0 mx-auto bottom-20 sm:inset-auto sm:bottom-16 sm:right-6 z-[5000] w-[95vw] sm:w-[calc(100%-2rem)] sm:max-w-md"
+            className="fixed inset-x-0 mx-auto bottom-[72px] sm:inset-auto sm:bottom-16 sm:right-6 z-[5000] w-[90vw] sm:w-[calc(100%-2rem)] sm:max-w-md"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
