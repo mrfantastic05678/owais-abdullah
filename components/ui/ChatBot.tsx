@@ -133,7 +133,7 @@ export function ChatBot() {
           <AnimatePresence>
             {showTooltip && !isOpen && (
               <motion.div
-                className="absolute right-16 bottom-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm px-3 py-1 rounded-md whitespace-nowrap shadow-lg"
+                className="absolute right-14 bottom-1 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm px-3 py-1 rounded-md whitespace-nowrap shadow-lg"
                 initial={{ opacity: 0, x: 10, y: 10 }}
                 animate={{
                   opacity: 1,
