@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MessageSquare, X, Send, AlertTriangle } from "lucide-react";
+import { X, Send, AlertTriangle, Bot, BotMessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -23,20 +23,42 @@ export function ChatBot() {
   const { messages, input, setInput, handleSubmit, isLoading } = useChat();
   const scrollAreaRef = useRef<HTMLDivElement>(null); // Ref for the ScrollArea viewport
   const messagesEndRef = useRef<HTMLDivElement>(null); // Add this ref
-  const [showTrigger, setShowTrigger] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
-  // Move scroll position logic to useEffect
+  // Show tooltip after 5 seconds
   useEffect(() => {
-    const handleScroll = () => {
-      const position = window.scrollY;
-      setShowTrigger(position > window.innerHeight * 0.2);
+    if (isOpen) return; 
+
+    let showTimeout: NodeJS.Timeout;
+    let hideTimeout: NodeJS.Timeout;
+
+    const startCycle = () => {
+      showTimeout = setTimeout(() => {
+        setShowTooltip(true);
+        hideTimeout = setTimeout(() => {
+          setShowTooltip(false);
+          startCycle(); 
+        }, 8000); 
+      }, 5000); 
     };
 
-    // Only add listener on client-side
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    startCycle();
+
+    return () => {
+      clearTimeout(showTimeout);
+      clearTimeout(hideTimeout);
+    };
+  }, [isOpen]);
+
+  // Pulsing animation for the button when tooltip is visible
+  useEffect(() => {
+    if (!isOpen) {
+      const interval = setInterval(() => {
+      }, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [ isOpen]);
 
   // Scroll to bottom when messages, loading state, or window open state changes
   useEffect(() => {
@@ -48,40 +70,116 @@ export function ChatBot() {
     }
   }, [messages, isLoading, isOpen]);
 
+  const toggleChat = () => setIsOpen(!isOpen);
+
   return (
     <>
-      {/* Chatbot Trigger Button */}
-      <AnimatePresence>
-        {showTrigger && (
-          <motion.div
-            className="fixed bottom-6 right-6 z-50"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.3 }}
+      {/* Animated Trigger Button */}
+      <motion.div
+        className="fixed bottom-6 right-6 z-[5001]"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          y: isOpen ? 14 : 0,
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="relative">
+          <motion.button
+            onClick={toggleChat}
+            className="flex justify-center items-center h-12 w-12 rounded-full shadow-black/50 shadow-lg bg-accent hover:bg-accent/90 transition-all"
+            animate={
+              !isOpen
+                ? {
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 5, -5, 0],
+                    transition: {
+                      repeat: Infinity,
+                      repeatType: "mirror",
+                      duration: 1.5,
+                    },
+                  }
+                : {}
+            }
+            whileHover={{ scale: 1.1 }}
           >
-            <Button
-              onClick={() => setIsOpen(true)}
-              size="lg"
-              className="h-14 w-14 rounded-full shadow-lg"
-            >
-              <MessageSquare className="h-6 w-6" />
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <AnimatePresence mode="wait">
+              {isOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X size={28} strokeWidth={2} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="open"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <BotMessageSquare size={28} strokeWidth={1.5} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
 
-      {/* Chat Window */}
+          {/* Enhanced Tooltip with Attraction Animation */}
+          <AnimatePresence>
+            {showTooltip && !isOpen && (
+              <motion.div
+                className="absolute right-16 bottom-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm px-3 py-1 rounded-md whitespace-nowrap shadow-lg"
+                initial={{ opacity: 0, x: 10, y: 10 }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  y: 0,
+                  transition: {
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 15,
+                  },
+                }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <motion.div
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    transition: {
+                      repeat: Infinity,
+                      repeatType: "mirror",
+                      duration: 2,
+                    },
+                  }}
+                >
+                  <div className="flex items-center gap-1">
+                    👋 Chat with Me!
+                  </div>
+                </motion.div>
+                <div className="absolute right-[-4px] top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-600 rotate-45"></div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+
+      {/* Responsive Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed bottom-6 right-6 w-[calc(100%-2rem)] z-[5000] max-w-md sm:w-full"
+            className="fixed inset-0 sm:inset-auto sm:bottom-16 sm:right-6 z-[5000] w-full sm:w-[calc(100%-2rem)] sm:max-w-md"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="border shadow-xl bg-gray-50/80 dark:bg-background/80 backdrop-blur-sm">
+            <Card className="h-[70vh] sm:h-[80vh] flex flex-col border shadow-xl bg-gray-50/90 dark:bg-background/95 backdrop-blur-sm">
               <CardHeader className="flex flex-row items-center justify-between rounded-[10px] bg-gray-50 dark:bg-background border-b px-4 dark:border-gray-900">
                 <div className="flex items-center gap-4">
                   <Avatar className="h-8 w-8">
@@ -112,14 +210,14 @@ export function ChatBot() {
                 </div>
               </CardHeader>
 
-              <ScrollArea
-                className="h-[350px] md:h-[400px] p-4"
-                ref={scrollAreaRef}
-              >
+              <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
                 <CardContent className="space-y-4 pt-4 w-full p-1 sm:p-2">
                   {messages.length === 0 ? (
                     <div className="flex h-full items-center justify-center text-center text-mutedforeground">
-                      <p>Hello! I&apos;m here to help You. Ask anything about Owais Abdullah&apos;s services or tech!</p>
+                      <p>
+                        Hello! I&apos;m here to help You. Ask anything about
+                        Owais Abdullah&apos;s services or tech!
+                      </p>
                     </div>
                   ) : (
                     messages.map((message, index) =>
