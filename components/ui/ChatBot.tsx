@@ -21,8 +21,8 @@ import Image from "next/image";
 export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const { messages, input, setInput, handleSubmit, isLoading } = useChat();
-  const scrollAreaRef = useRef<HTMLDivElement>(null); // Ref for the ScrollArea viewport
-  const messagesEndRef = useRef<HTMLDivElement>(null); // Add this ref
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -74,7 +74,7 @@ export function ChatBot() {
 
   return (
     <>
-      {/* Animated Trigger Button */}
+      {/* Trigger Button */}
       <motion.div
         className="fixed bottom-6 right-6 z-[5001]"
         initial={{ opacity: 0, scale: 0.8 }}
@@ -129,7 +129,7 @@ export function ChatBot() {
             </AnimatePresence>
           </motion.button>
 
-          {/* Enhanced Tooltip with Attraction Animation */}
+          {/* Chat Tooltip */}
           <AnimatePresence>
             {showTooltip && !isOpen && (
               <motion.div
@@ -169,11 +169,11 @@ export function ChatBot() {
         </div>
       </motion.div>
 
-      {/* Responsive Chat Window */}
+      {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 sm:inset-auto sm:bottom-16 sm:right-6 z-[5000] w-full sm:w-[calc(100%-2rem)] sm:max-w-md"
+            className="fixed inset-x-0 mx-auto bottom-20 sm:inset-auto sm:bottom-16 sm:right-6 z-[5000] w-[95vw] sm:w-[calc(100%-2rem)] sm:max-w-md"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}

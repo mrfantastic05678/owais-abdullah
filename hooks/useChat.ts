@@ -117,7 +117,7 @@ export function useChat() {
       console.error("Error:", error);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "*Sorry, I&#39;m having trouble right now. Try again soon!*" },
+        { role: "assistant", content: "*Sorry, I&apos;m having trouble right now. Try again soon!*" },
       ]);
     } finally {
       setIsLoading(false);
