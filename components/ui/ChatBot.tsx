@@ -88,7 +88,7 @@ export function ChatBot() {
         <div className="relative">
           <motion.button
             onClick={toggleChat}
-            className="flex justify-center items-center h-10 w-10 rounded-full shadow-black/50 shadow-lg bg-accent hover:bg-accent/90 transition-all"
+            className="flex justify-center items-center h-12 w-12 rounded-full shadow-black/50 shadow-lg bg-accent hover:bg-accent/90 transition-all"
             animate={
               !isOpen
                 ? {
@@ -113,7 +113,7 @@ export function ChatBot() {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X size={24} strokeWidth={2} />
+                  <X size={26} strokeWidth={2} />
                 </motion.div>
               ) : (
                 <motion.div
@@ -123,7 +123,7 @@ export function ChatBot() {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <BotMessageSquare size={24} strokeWidth={1.5} />
+                  <BotMessageSquare size={26} strokeWidth={1.5} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -133,7 +133,7 @@ export function ChatBot() {
           <AnimatePresence>
             {showTooltip && !isOpen && (
               <motion.div
-                className="absolute right-14 bottom-1 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm px-3 py-1 rounded-md whitespace-nowrap shadow-lg"
+                className="absolute right-16 bottom-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm px-3 py-1 rounded-md whitespace-nowrap shadow-lg"
                 initial={{ opacity: 0, x: 10, y: 10 }}
                 animate={{
                   opacity: 1,
@@ -173,7 +173,7 @@ export function ChatBot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-x-0 mx-auto bottom-[72px] sm:inset-auto sm:bottom-16 sm:right-6 z-[5000] w-[90vw] sm:w-[calc(100%-2rem)] sm:max-w-md"
+            className="fixed inset-x-0 mx-auto bottom-[72px] sm:inset-auto sm:bottom-16 sm:right-6 z-[5000] w-[90vw] sm:w-[calc(100%-2rem)] sm:max-w-md shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
