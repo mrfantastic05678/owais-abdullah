@@ -1,69 +1,169 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const profile = {
-    name: "Owais Abdullah",
-    email: "mrowaisabdullah@gmail.com",
-    whatsapp: "+923262283140",
-    location: "Karachi, Pakistan",
-    title: "Full-Stack Developer | AI & Automation Specialist",
-
-    summary: "I specialize in crafting intelligent web and app solutions, integrating modern technologies with AI-powered tools and automation workflows.",
-
-    skills: {
-      frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
-      backend: ["Node.js", "Python", "WordPress", "Sanity CMS"],
-      databases: ["PostgreSQL", "SQLite", "Redis"],
-      auth_validation: ["Clerk", "Zod"],
-      ai_automation: ["AI Agents", "Chatbots", "Workflow Automation"],
-      tools: ["Git", "Docker", "Figma"]
+  const profile ={
+    "name": "Owais Abdullah",
+    "initials": "OA",
+    "location": "Based in Pakistan 🇵🇰",
+    "locationLink": "https://www.google.com/maps/place/Pakistan",
+    "about": "Web Developer. AI Integrator. Automation Enthusiast.",
+    "summary": "I design and develop modern websites, web apps, and intelligent automation systems. Skilled in TypeScript, Next.js, WordPress, and AI integrations. Currently learning Agentic AI and building automation tools for creative professionals.",
+    "personalWebsiteUrl": "https://owais-abdullah.vercel.app/",
+    "contact": {
+      "email": "mrowaisabdullah@gmail.com",
+      "social": [
+        {
+          "name": "LinkedIn",
+          "url": "https://linkedin.com/in/mrowaisabdullah"
+        },
+        {
+          "name": "X",
+          "url": "https://x.com/mrowaisabdullah"
+        },
+        {
+          "name": "GitHub",
+          "url": "https://github.com/mrowaisabdullah"
+        },
+        {
+          "name": "Instagram",
+          "url": "https://instagram.com/mrowaisabdullah"
+        },
+        {
+          "name": "Facebook",
+          "url": "https://facebook.com/mrowaisabdullah"
+        }
+      ]
     },
-
-    education: [
+    "education": [
       {
-        degree: "Bachelor of Science in Computer Science",
-        institution: "University of Karachi",
-        year: "2020"
-      }
-    ],
-
-    work_experience: [
-      {
-        role: "Freelance Full-Stack Developer",
-        duration: "2020 - Present",
-        responsibilities: [
-          "Developed and maintained web applications using React and Next.js.",
-          "Integrated AI-powered features into client projects.",
-          "Automated workflows to enhance operational efficiency."
-        ]
-      }
-    ],
-
-    projects: [
-      {
-        name: "FurnitureMart.pk",
-        category: "E-commerce",
-        description: "An online platform for furniture shopping with a user-friendly interface and secure payment integration."
+        "school": "Virtual University of Pakistan",
+        "degree": "BS Software Engineering (Enrolled)",
+        "start": "2025",
+        "end": "Present"
       },
       {
-        name: "AI Content Generator",
-        category: "AI Tool",
-        description: "A tool that generates high-quality content using advanced AI algorithms."
+        "school": "Panaverse | GIAIC",
+        "degree": "Cloud Native Applied Agentic AI",
+        "start": "2024",
+        "end": "Present"
+      }
+    ],
+    "work": [
+      {
+        "company": "Burraq Digits",
+        "title": "Web Developer & AI Specialist",
+        "start": "2025",
+        "end": "Present",
+        "description": "Working on building modern web solutions and integrating AI tools and automation workflows."
       },
       {
-        name: "Resume Builder",
-        category: "Web Application",
-        description: "An application that assists users in creating professional resumes with customizable templates."
+        "company": "AA Marketing",
+        "title": "Assistant Manager (Web)",
+        "start": "2024",
+        "end": "Present",
+        "description": "Managed digital projects and development for clients, focusing on smooth remote execution and web strategy."
+      },
+      {
+        "company": "OneKlick Digital Co.",
+        "title": "Web Developer & Digital Marketer",
+        "start": "2023",
+        "end": "Present",
+        "description": "Built websites using WordPress, Next.js, and Tailwind CSS. Handled SEO and social media campaigns."
+      },
+      {
+        "company": "Marksman Advertising",
+        "title": "SMM Intern",
+        "start": "2023",
+        "end": "2023",
+        "description": "Worked with Facebook Ads Manager to run ad campaigns and boost engagement."
+      },
+      {
+        "company": "Fiverr",
+        "title": "Freelance Graphic Designer",
+        "start": "2018",
+        "end": "2020",
+        "description": "Designed social media graphics, logos, and branding materials."
       }
-      // Add more projects as needed
     ],
-
-    achievements: [
-      "Developed over 50 web applications for clients worldwide.",
-      "Automated business processes leading to a 30% increase in client efficiency.",
-      "Recognized for excellence in integrating AI solutions into traditional web platforms."
+    "skills": [
+      "HTML", "CSS", "JavaScript", "TypeScript", "React.js", "Next.js", "Tailwind CSS", "Node.js", "Python", "SQLite", "PostgreSQL", "Prisma ORM", "Sanity CMS", "WordPress", "Clerk", "Zod", "AI Integrations", "Chatbots", "Automation Scripts", "REST APIs", "Git", "Web Design"
+    ],
+    "projects": [
+      {
+        "title": "FurnitureMart.pk",
+        "category": "Marketplace",
+        "description": "Furniture ecommerce platform built with Next.js, Sanity, Tailwind CSS.",
+        "link": "https://furnituremart.pk"
+      },
+      {
+        "title": "Resume Builder",
+        "category": "Tool",
+        "description": "A resume builder with PDF export, made using TypeScript.",
+        "link": "#"
+      },
+      {
+        "title": "AI Content Generator",
+        "category": "AI Tool",
+        "description": "CLI tool to generate carousels, threads, and captions using OpenAI.",
+        "link": "#"
+      },
+      {
+        "title": "Portfolio Website",
+        "category": "Personal",
+        "description": "Built with Next.js 14 and Tailwind CSS to showcase my work and services.",
+        "link": "https://owais-abdullah.vercel.app/"
+      },
+      {
+        "title": "Education Website",
+        "category": "Institution",
+        "description": "Online presence for Quran academy and LMS platforms using WordPress.",
+        "link": "#"
+      },
+      {
+        "title": "Admin Dashboards",
+        "category": "Dashboard",
+        "description": "Multiple UI dashboards built using React and Tailwind CSS.",
+        "link": "#"
+      }
+    ],
+    "keyHighlights": [
+      {
+        "title": "Experience",
+        "description": "2+ years in the tech industry",
+        "icon": "💼"
+      },
+      {
+        "title": "Projects",
+        "description": "20+ projects delivered",
+        "icon": "🚀"
+      },
+      {
+        "title": "Tech Stack",
+        "description": "React, Next.js, TypeScript, Python, WordPress",
+        "icon": "🛠️"
+      },
+      {
+        "title": "AI Integration",
+        "description": "Built tools with OpenAI & LangChain",
+        "icon": "🤖"
+      },
+      {
+        "title": "Automations",
+        "description": "Created productivity scripts for content creators",
+        "icon": "⚙️"
+      },
+      {
+        "title": "Languages",
+        "description": "English (Professional), Urdu (Native)",
+        "icon": "🗣️"
+      },
+      {
+        "title": "Hobbies",
+        "description": "Exploring tech, building tools, watching documentaries, spending time with family",
+        "icon": "🎯"
+      }
     ]
-  };
+  };  
 
   return NextResponse.json(profile);
 }
