@@ -17,6 +17,14 @@ const projects = {
       tags: ["Next.js", "Sanity", "E-commerce"],
     },
     {
+      title: "Blog Website",
+      description:
+        "A fully functional blog with comments, categories, and dynamic content using Sanity.",
+      image: "/assets/Project (12).png",
+      link: "https://blog-site-green-one.vercel.app/",
+      tags: ["Next.js", "Sanity", "Blog"],
+    },
+    {
       title: "FurnitureMart.pk Admin Dashboard",
       description:
         "A fully dynamic furniture marketplace dashboard built using Next.js, Sanity, and Tailwind CSS.",
@@ -25,20 +33,20 @@ const projects = {
       tags: ["Next.js", "Sanity", "Dashboard"],
     },
     {
+      "title": "Personal AI Assistant",
+      "description": 
+        "An AI-powered chatbot integrated into my portfolio website, allowing visitors to explore my skills, projects, and contact details effortlessly.",
+      "image": "/assets/Project (19).png",
+      "link": "#",
+      "tags": ["Next.js", "AI", "Chatbot", "Portfolio"]
+    },
+    {
       title: "First Portfolio Website 😅",
       description:
         "My First Practice portfolio showcasing my skills, projects, and experience, built with Next.js.",
       image: "/assets/Project (17).png",
       link: "https://portfolio-class-assignment.vercel.app/",
       tags: ["Next.js", "Tailwind", "Portfolio"],
-    },
-    {
-      title: "Blog Website",
-      description:
-        "A fully functional blog with comments, categories, and dynamic content using Sanity.",
-      image: "/assets/Project (12).png",
-      link: "https://blog-site-green-one.vercel.app/",
-      tags: ["Next.js", "Sanity", "Blog"],
     },
   ],
   WordPress: [
