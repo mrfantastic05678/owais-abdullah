@@ -9,7 +9,7 @@ import Script from "next/script";
 
 export const metadata: Metadata = {
   title: {
-    default: "Owais Abdullah | AI Agents Developer & Full Stack Developer",
+    default: "Owais Abdullah | AI Agents & Full Stack Developer",
     template: "%s | Owais Abdullah",
   },
   description:
