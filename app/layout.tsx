@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://owaisabdullah.dev",
-    title: "Owais Abdullah | AI Agents Developer & Full Stack Developer",
+    title: "Owais Abdullah | AI Agents & Full Stack Developer",
     description:
       "Owais Abdullah is a skilled AI Agents Developer, Full Stack Developer, and Next.js specialist. Expert in React, AI integration, and modern web development.",
     siteName: "Owais Abdullah Portfolio",
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Owais Abdullah | AI Agents Developer & Full Stack Developer",
+    title: "Owais Abdullah | AI Agents & Full Stack Developer",
     description:
       "Owais Abdullah is a skilled AI Agents Developer, Full Stack Developer, and Next.js specialist. Expert in React, AI integration, and modern web development.",
     images: ["/assets/Owais Abdullah (2).png"],

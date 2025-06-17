@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 export const dynamic = "force-static"
 
 export const metadata: Metadata = {
-  title: "Owais Abdullah | AI Agents Developer & Full Stack Developer",
+  title: "Owais Abdullah | AI Agents & Full Stack Developer",
   description: "Welcome to Owais Abdullah's portfolio. AI Agents Developer, Full Stack Developer, and Next.js specialist. Explore my projects, skills, and experience in modern web development and AI integration.",
   keywords: [
     "Owais Abdullah Portfolio",
@@ -31,12 +31,12 @@ export const metadata: Metadata = {
         url: '/assets/Owais Abdullah (2).png',
         width: 1200,
         height: 630,
-        alt: 'Owais Abdullah - AI Agents Developer & Full Stack Developer Portfolio',
+        alt: 'Owais Abdullah - AI Agents & Full Stack Developer Portfolio',
       },
     ],
   },
   twitter: {
-    title: "Owais Abdullah | AI Agents Developer & Full Stack Developer",
+    title: "Owais Abdullah | AI Agents & Full Stack Developer",
     description: "Welcome to Owais Abdullah's portfolio. AI Agents Developer, Full Stack Developer, and Next.js specialist. Explore my projects, skills, and experience in modern web development and AI integration.",
   },
   alternates: {
