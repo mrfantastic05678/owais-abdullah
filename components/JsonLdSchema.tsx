@@ -46,11 +46,6 @@ const JsonLdSchema: React.FC<JsonLdSchemaProps> = ({ type, pageUrl }) => {
       "Wordpress Development",
       "Search Engine Optimization",
     ],
-    "hasOccupation": {
-      "@type": "Occupation",
-      "name": "AI Agents Developer",
-      "description": "Specialized in developing AI agents and intelligent systems for web applications"
-    },
     "worksFor": {
       "@type": "Organization",
       "name": "Freelance Developer",

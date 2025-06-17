@@ -6,7 +6,6 @@ import FloatingNavbar from "@/components/FloatingNavbar";
 import { ChatBot } from "@/components/ui/ChatBot";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Script from "next/script";
-import JsonLdSchema from "@/components/JsonLdSchema";
 
 export const metadata: Metadata = {
   title: {
@@ -131,31 +130,22 @@ export default function RootLayout({
         />
         <meta name="application-name" content="Owais Abdullah Portfolio" />
         <meta name="mobile-web-app-capable" content="yes" />
-
-        {/* <!-- Google tag (gtag.js) --> */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-9D686S2PHZ"
-        ></script>
-        <Script
-          id="structured-data"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(JsonLdSchema) }}
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
-            `,
-          }}
-        />
       </head>
       <body>
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+          `}
+        </Script>
+        
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
