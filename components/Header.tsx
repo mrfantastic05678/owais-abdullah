@@ -39,6 +39,7 @@ const Header = () => {
         "flex-wrap",
         "items-center",
         "justify-center",
+        "gap-4"
       ];
     }
     return menuClasses.join(" ");
@@ -47,7 +48,7 @@ const Header = () => {
     <header className="max-w-7xl mx-auto relative z-50 bg-transparent bg-opacity-0">
       <div className="absolute top-0 left-0 w-full h-full z-[-1]" />
 
-      <div className="mx-auto flex flex-wrap p-5 flex-col md:flex-row z-50">
+      <div className="mx-auto flex flex-wrap font-medium p-5 flex-col md:flex-row z-50">
         <Link href={"/"} className="flex mb-4 md:mb-0">
           <Image src={Logo} width={80} height={40} alt={"logo"} />
         </Link>

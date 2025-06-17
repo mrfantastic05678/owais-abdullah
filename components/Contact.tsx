@@ -26,10 +26,10 @@ const Contact = () => {
                 EMAIL
               </h2>
               <Link
-                href="mailto:owais@oneklickdigi.com"
+                href="mailto:mrowaisabdullah@gmail.com"
                 className="text-accent leading-relaxed"
               >
-                owais@oneklickdigi.com
+                mrowaisabdullah@gmail.com
               </Link>
             </div>
             <div>

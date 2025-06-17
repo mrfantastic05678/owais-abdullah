@@ -9,6 +9,7 @@ import { TbBrandTypescript } from "react-icons/tb";
 import Link from "next/link";
 import { HeroHighlight } from "./ui/HeroHighlight";
 import { AnimatedTooltip } from "./ui/AnimatedTooltip";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -20,28 +21,28 @@ const Hero = () => {
               WELCOME TO MY WORLD
             </h2>
             <div className="min-h-60 xs:min-h-44 md:min-h-0">
-            <h1 className="sm:text-5xl text-4xl mb-4 font-montserrat font-bold text-text ">
-              Hi, I&apos;m <span className="text-accent">Owais Abdullah</span>
-              <br />
-              {"a "}
-              <span className="">
-                <Typewriter
-                  words={[
-                    "Web Developer.",
-                    "AI Architect.",
-                    "Full Stack Dev.",
-                    "SEO & Web Strategist.",
-                    "Webflow & WP Dev.",
-                  ]}
-                  loop={0}
-                  cursor
-                  cursorStyle="|"
-                  typeSpeed={70}
-                  deleteSpeed={50}
-                  delaySpeed={1000}
-                />
-              </span>
-            </h1>
+              <h1 className="sm:text-5xl text-4xl mb-4 font-montserrat font-bold text-text ">
+                Hi, I&apos;m <span className="text-accent">Owais Abdullah</span>
+                <br />
+                {"a "}
+                <span className="">
+                  <Typewriter
+                    words={[
+                      "Web Developer.",
+                      "AI Architect.",
+                      "Full Stack Dev.",
+                      "SEO & Web Strategist.",
+                      "Webflow & WP Dev.",
+                    ]}
+                    loop={0}
+                    cursor
+                    cursorStyle="|"
+                    typeSpeed={70}
+                    deleteSpeed={50}
+                    delaySpeed={1000}
+                  />
+                </span>
+              </h1>
             </div>
             <p className="mb-8 leading-relaxed font-poppins text-gray-400">
               I craft high-performing websites, optimize them for search
@@ -53,50 +54,108 @@ const Hero = () => {
               <Link href="#about" className="scroll-smooth duration-300">
                 <button className="group flex items-center text-white bg-gradient-to-br from-blue-900 via-accent to-blue-700 hover:from-blue-950 py-2 hover:bg-blue-500 hover:bg-gradient-to-tr rounded-full font-medium text-lg px-8">
                   About Me
-                    <FaChevronRight className="ml-3 group-hover:mt-2 group-hover:rotate-90 duration-300"/>
+                  <FaChevronRight className="ml-3 group-hover:mt-2 group-hover:rotate-90 duration-300" />
                 </button>
               </Link>
             </div>
-            <p className="mt-8 mb-2 font-bold md:ml-4">BEST SKILL ON:</p>
-            <div className="container flex flex-row items-center gap-3 justify-center md:justify-start ">
-            <AnimatedTooltip tooltipTitle="Wordpress" tooltipDescription="CMS / Blog">
-              <div
-                title="Wordpress"
-                className=" shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
-              >
-                <RiWordpressLine />
+            <div className="flex flex-col lg:flex-row gap-4 items-center justify-center">
+              <div>
+                <p className="mt-8 mb-2 font-bold md:ml-4">BEST SKILL ON:</p>
+                <div className="container flex flex-row items-center gap-3 justify-center md:justify-start ">
+                  <AnimatedTooltip
+                    tooltipTitle="Wordpress"
+                    tooltipDescription="CMS / Blog"
+                  >
+                    <div
+                      title="Wordpress"
+                      className=" shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                    >
+                      <RiWordpressLine />
+                    </div>
+                  </AnimatedTooltip>
+                  <AnimatedTooltip
+                    tooltipTitle="TypeScript"
+                    tooltipDescription="Programming Language"
+                  >
+                    <div
+                      title="TypeScript"
+                      className=" shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                    >
+                      <TbBrandTypescript />
+                    </div>
+                  </AnimatedTooltip>
+                  <AnimatedTooltip
+                    tooltipTitle="Next JS"
+                    tooltipDescription="Framework"
+                  >
+                    <div
+                      title="Next JS"
+                      className=" shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                    >
+                      <RiNextjsLine />
+                    </div>
+                  </AnimatedTooltip>
+                </div>
               </div>
-              </AnimatedTooltip>
-              <AnimatedTooltip tooltipTitle="TypeScript" tooltipDescription="Programming Language">
-              <div
-                title="TypeScript"
-                className=" shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
-              >
-                <TbBrandTypescript />
+
+              <div>
+                <p className="mt-8 mb-2 font-bold md:ml-4">CONNECT WITH ME:</p>
+                <div className="container flex flex-row items-center gap-3 justify-center md:justify-start ">
+                  <AnimatedTooltip
+                    tooltipTitle="Linkedin"
+                    tooltipDescription="Connect with me on Linkedin"
+                  >
+                    <Link
+                      href={"https://www.linkedin.com/in/mrowaisabdullah/"}
+                      className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                      target="_blank"
+                    >
+                      <Linkedin />
+                    </Link>
+                  </AnimatedTooltip>
+                  <AnimatedTooltip
+                    tooltipTitle="Github"
+                    tooltipDescription="Connect with me on Github"
+                  >
+                    <Link
+                      href={"https://github.com/MrOwaisAbdullah"}
+                      className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                      target="_blank"
+                    >
+                      <Github />
+                    </Link>
+                  </AnimatedTooltip>
+                  <AnimatedTooltip
+                    tooltipTitle="Email"
+                    tooltipDescription="Connect with me on Email"
+                  >
+                    <Link
+                      href={"mailto:mrowaisabdullah@gmail.com"}
+                      className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                      target="_blank"
+                    >
+                      <Mail />
+                    </Link>
+                  </AnimatedTooltip>
+                </div>
               </div>
-              </AnimatedTooltip>
-              <AnimatedTooltip tooltipTitle="Next JS" tooltipDescription="Framework">
-              <div
-                title="Next JS"
-                className=" shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
-              >
-                <RiNextjsLine />
-              </div>
-              </AnimatedTooltip>
             </div>
           </div>
+
           <div className="sm:entrance-right lg:max-w-lg md:w-2/5 sm:-ml-16 sm:pt-0 relative lg:-mt-8 xl:-mt-14 md:ml-20 md:-mt-52 ">
             <div className="-mt-56 -mr-[155px] w-11/12 h-[75%] shadow-xl opacity-30 shadow-slate-500 rounded-xl absolute bottom-0 right-40 z-0 bg-black md:w-11/12 md:h-[75%] md:-mr-28 md:bottom-0 xs:h-[75%] xs:bottom-0 sm:bottom-0 sm:-mr-40 sm:w-10/12 lg:w-11/12 lg:-mr-40 xl:w-10/12 xl:-mr-30 xl:h-[75%] xl:bottom-0 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"></div>
-            <AnimatedTooltip tooltipTitle="Owais Abdullah" tooltipDescription="AI & Web Engineer">
-            <Image
-              src={owais}
-              className="relative object-cover object-center -mt-16 xs:-mt-14 z-10 md:mt-32 md:-ml-10 sm:-mt-9 sm:ml-12 lg:ml-2 lg:mt-6 xl:ml-16 xl:mt-8"
-              width={400}
-              height={100}
-              priority
-              placeholder="blur"
-              alt="Owais Abdullah"
-            />
+            <AnimatedTooltip
+              tooltipTitle="Owais Abdullah"
+              tooltipDescription="AI & Web Engineer"
+            >
+              <Image
+                src={owais}
+                className="relative object-cover object-center -mt-16 xs:-mt-14 z-10 md:mt-32 md:-ml-10 sm:-mt-9 sm:ml-12 lg:ml-2 lg:mt-6 xl:ml-16 xl:mt-8"
+                width={400}
+                height={100}
+                priority
+                alt="Owais Abdullah"
+              />
             </AnimatedTooltip>
           </div>
         </div>
