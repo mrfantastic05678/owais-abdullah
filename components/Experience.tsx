@@ -3,10 +3,22 @@ import { Timeline } from './ui/Timeline';
 
 const experienceData = [
   {
+    title: "2025 - Present",
+    content: (
+      <div>
+        <h3 className="text-xl font-bold">Senior Developer</h3>
+        <p className="text-sm text-neutral-400">LionUp Digital</p>
+        <p className="text-neutral-200 text-xs md:text-sm font-normal mt-2">
+          Working as a Senior Developer, managing projects remotely, overseeing web development tasks.
+        </p>
+      </div>
+    ),
+  },
+  {
     title: "2024 - Present",
     content: (
       <div>
-        <h3 className="text-xl font-bold">Assistant Manager</h3>
+        <h3 className="text-xl font-bold">Senior Developer & Manager</h3>
         <p className="text-sm text-neutral-400">AA Marketing</p>
         <p className="text-neutral-200 text-xs md:text-sm font-normal mt-2">
           Managing projects remotely, overseeing web development tasks, and ensuring smooth execution of digital strategies.
@@ -14,8 +26,9 @@ const experienceData = [
       </div>
     ),
   },
+
   {
-    title: "2023 - Present",
+    title: "2023 - 2024",
     content: (
       <div>
         <h3 className="text-xl font-bold">Web Developer & Digital Marketer</h3>
