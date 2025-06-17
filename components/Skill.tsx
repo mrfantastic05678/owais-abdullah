@@ -2,12 +2,18 @@
 
 import type React from "react";
 import SkillCard from "../components/ui/SkillCard";
-import { FaReact, FaWordpress } from "react-icons/fa";
+import { FaReact, FaWordpress, FaNodeJs } from "react-icons/fa";
 import { BiLogoTypescript, BiLogoPython } from "react-icons/bi";
-import { SiNextdotjs,  SiSanity } from "react-icons/si";
+import { SiNextdotjs, SiOpenai, SiSanity, SiTailwindcss, SiSqlite, SiPrisma } from "react-icons/si";
 
 const skills = [
   // Frontend Skills
+  {
+    icon: <SiOpenai />,
+    title: "OpenAI Agents SDK",
+    description: "Developing Powerful AI Agents with Open AI Agents SDK.",
+    progress: 75,
+  },
   {
     icon: <SiNextdotjs />,
     title: "Next.js",
@@ -26,32 +32,32 @@ const skills = [
     description: "Ensuring type safety and scalability in web applications.",
     progress: 80,
   },
-  // {
-  //   icon: <SiTailwindcss />,
-  //   title: "Tailwind CSS",
-  //   description: "Crafting modern and responsive UI with utility-first styling.",
-  //   progress: 90,
-  // },
+  {
+    icon: <SiTailwindcss />,
+    title: "Tailwind CSS",
+    description: "Crafting modern and responsive UI with utility-first styling.",
+    progress: 90,
+  },
 
   // Backend & Database
-  // {
-  //   icon: <FaNodeJs />,
-  //   title: "Node.js",
-  //   description: "Creating backend logic and API services.",
-  //   progress: 75,
-  // },
-  // {
-  //   icon: <SiSqlite />,
-  //   title: "SQLite",
-  //   description: "Lightweight database management for structured data storage.",
-  //   progress: 75,
-  // },
-  // {
-  //   icon: <SiPrisma />,
-  //   title: "Prisma ORM",
-  //   description: "Handling database interactions efficiently with TypeScript.",
-  //   progress: 70,
-  // },
+  {
+    icon: <FaNodeJs />,
+    title: "Node.js",
+    description: "Creating backend logic and API services.",
+    progress: 75,
+  },
+  {
+    icon: <SiSqlite />,
+    title: "SQLite",
+    description: "Lightweight database management for structured data storage.",
+    progress: 75,
+  },
+  {
+    icon: <SiPrisma />,
+    title: "Prisma ORM",
+    description: "Handling database interactions efficiently with TypeScript.",
+    progress: 70,
+  },
   {
     icon: <SiSanity />,
     title: "Sanity CMS",

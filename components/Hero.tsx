@@ -107,10 +107,13 @@ const Hero = () => {
                   >
                     <Link
                       href={"https://www.linkedin.com/in/mrowaisabdullah/"}
-                      className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
                       target="_blank"
                     >
+                      <div                       className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                      >
+                        
                       <Linkedin />
+                      </div>
                     </Link>
                   </AnimatedTooltip>
                   <AnimatedTooltip
@@ -119,10 +122,13 @@ const Hero = () => {
                   >
                     <Link
                       href={"https://github.com/MrOwaisAbdullah"}
-                      className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
                       target="_blank"
                     >
+                      <div                       className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                      >
+
                       <Github />
+                      </div>
                     </Link>
                   </AnimatedTooltip>
                   <AnimatedTooltip
@@ -131,10 +137,13 @@ const Hero = () => {
                   >
                     <Link
                       href={"mailto:mrowaisabdullah@gmail.com"}
-                      className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
                       target="_blank"
                     >
+                      <div                       className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                      >
+
                       <Mail />
+                      </div>
                     </Link>
                   </AnimatedTooltip>
                 </div>
