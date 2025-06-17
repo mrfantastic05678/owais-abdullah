@@ -17,6 +17,14 @@ const projects = {
       tags: ["Next.js", "Sanity", "E-commerce"],
     },
     {
+      title: "AA Marketing",
+      description:
+        "A fully dynamic marketing website built using Next.js, Sanity, and Tailwind CSS.",
+      image: "/assets/Project (20).png",
+      link: "https://aamarktng.com/",
+      tags: ["Next.js", "Typescript", "Marketing"],
+    },
+    {
       title: "Blog Website",
       description:
         "A fully functional blog with comments, categories, and dynamic content using Sanity.",
@@ -31,6 +39,14 @@ const projects = {
       image: "/assets/Project (11).png",
       link: "https://admin.oneklickdigi.com/",
       tags: ["Next.js", "Sanity", "Dashboard"],
+    },
+    {
+      title: "Burraq Digits",
+      description:
+        "A fully dynamic digital marketing agency website built using Next.js, Sanity, and Tailwind CSS.",
+      image: "/assets/Project (21).png",
+      link: "https://burraqdigits.com/",
+      tags: ["Next.js", "Typescript", "Digital Marketing"],
     },
     {
       "title": "Personal AI Assistant",
@@ -58,6 +74,38 @@ const projects = {
       link: "#",
       tags: ["WordPress", "Business", "SEO"],
     },
+        {
+      title: "Four M Enterprises",
+      description:
+        "Created a website for a roofing material supplier, showcasing their expertise.",
+      image: "/assets/Project (01).png",
+      link: "#",
+      tags: ["WordPress", "Business", "SEO"],
+    },
+            {
+      title: "IDI Overseas HR",
+      description:
+        "Created a website for a HR consultancy service provider, showcasing their expertise.",
+      image: "/assets/Project (04).png",
+      link: "#",
+      tags: ["WordPress", "Business", "SEO"],
+    },
+            {
+      title: "Rukhsar Marriage Bureau",
+      description:
+        "Created a website for a marriage bureau, showcasing their expertise.",
+      image: "/assets/Project (03).png",
+      link: "#",
+      tags: ["WordPress", "Business", "SEO"],
+    },
+            {
+      title: "Next Trip & Travels",
+      description:
+        "Created a website for a travel agency, showcasing their expertise.",
+      image: "/assets/Project (02).png",
+      link: "#",
+      tags: ["WordPress", "Business", "SEO"],
+    },
     {
       title: "One Rupee Raffle Website",
       description:
@@ -70,7 +118,7 @@ const projects = {
       title: "Furniture & Interior Design Website",
       description:
         "A premium furniture store website combining stunning visuals and product catalog.",
-      image: "/assets/Project (4).webp",
+      image: "/assets/Project (2).webp",
       link: "#",
       tags: ["WordPress", "Interior Design", "Business"],
     },

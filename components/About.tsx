@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 import { FaArrowRight } from 'react-icons/fa'
+// import { Link } from './ui/link'
 
 const About = () => {
   return (
@@ -25,7 +26,7 @@ const About = () => {
           Contact Me
         </button>
         </Link>
-        <Link href={"#projects"} className="group text-accent-500 inline-flex items-center ml-4">
+        <Link href={"/projects"} className="group text-accent-500 inline-flex items-center ml-4">
           Learn More
           <span className='group-hover:rotate-90 ml-5 duration-300 group-hover:text-accent'><FaArrowRight /></span>
         </Link>

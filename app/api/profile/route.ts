@@ -58,7 +58,7 @@ export async function GET() {
       },
       {
         "company": "AA Marketing",
-        "title": "Assistant Manager (Web)",
+        "title": "Senior Developer (Web)",
         "start": "2024",
         "end": "Present",
         "description": "Managed digital projects and development for clients, focusing on smooth remote execution and web strategy."
@@ -86,7 +86,7 @@ export async function GET() {
       }
     ],
     "skills": [
-      "HTML", "CSS", "JavaScript", "TypeScript", "React.js", "Next.js", "Tailwind CSS", "Node.js", "Python", "SQLite", "PostgreSQL", "Prisma ORM", "Sanity CMS", "WordPress", "Clerk", "Zod", "AI Integrations", "Chatbots", "Automation Scripts", "REST APIs", "Git", "Web Design"
+      "HTML", "CSS", "JavaScript", "TypeScript", "React.js", "Next.js", "Tailwind CSS", "Node.js", "Python", "SQLite", "PostgreSQL", "Prisma ORM", "Sanity CMS", "WordPress", "Clerk", "Zod", "AI Integrations", "Chatbots", "Automation Scripts", "REST APIs", "Git", "Web Design", "Open AI Agents SDK", "Chainlit", "Streamlit"
     ],
     "projects": [
       {
@@ -144,13 +144,18 @@ export async function GET() {
       },
       {
         "title": "AI Integration",
-        "description": "Built tools with OpenAI & LangChain",
+        "description": "Built tools with LLM's",
         "icon": "🤖"
       },
       {
         "title": "Automations",
-        "description": "Created productivity scripts for content creators",
+        "description": "Created productivity scripts for content creators & Bussineses",
         "icon": "⚙️"
+      },
+            {
+        "title": "AI Agents",
+        "description": "Built AI Agents with OpenAI Agents SDK",
+        "icon": "🤖"
       },
       {
         "title": "Languages",
