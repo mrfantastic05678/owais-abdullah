@@ -54,9 +54,9 @@ const ProjectTabs = () => {
                     height={300}
                   />
                   <div className="p-6">
-                    <h1 className="text-xl font-semibold text-white mb-2">
+                    <h2 className="text-xl font-semibold text-white mb-2">
                       {project.title}
-                    </h1>
+                    </h2>
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-3">

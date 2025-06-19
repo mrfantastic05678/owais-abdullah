@@ -10,8 +10,8 @@ import type { Metadata } from "next";
 export const dynamic = "force-static"
 
 export const metadata: Metadata = {
-  title: "Owais Abdullah | AI Agents & Full Stack Developer",
-  description: "AI Agents Developer, Full Stack Developer, and Next.js specialist. Explore my projects, skills, and experience in modern web development and AI integration.",
+  title: "Owais Abdullah | AI Agents Developer & Full Stack Developer",
+  description: "Explore projects, skills, and experience in AI Agents Development, Full Stack Development, and modern web technologies.",
   keywords: [
     "Owais Abdullah Portfolio",
     "AI Agents Developer Portfolio",
@@ -20,7 +20,9 @@ export const metadata: Metadata = {
     "React Developer Portfolio",
     "Web Developer Portfolio",
     "AI Developer Portfolio",
-    "Software Developer Portfolio"
+    "Software Developer Portfolio",
+    "Open AI Agents SDK Developer Portfolio",
+    "Sanity CMS Developer"
   ],
   openGraph: {
     title: "Owais Abdullah | AI Agents & Full Stack Developer",
