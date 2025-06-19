@@ -4,8 +4,8 @@
   "description": "Professional portfolio of Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#212428",
+  "theme_color": "#3a69ff",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
@@ -48,7 +48,7 @@
       "url": "/about",
       "icons": [
         {
-          "src": "/assets/owais_logo.png",
+          "src": "/assets/logo-96.png",
           "sizes": "96x96"
         }
       ]
@@ -60,7 +60,7 @@
       "url": "/projects",
       "icons": [
         {
-          "src": "/assets/owais_logo.png",
+          "src": "/assets/logo-96.png",
           "sizes": "96x96"
         }
       ]
@@ -72,7 +72,7 @@
       "url": "/contact",
       "icons": [
         {
-          "src": "/assets/owais_logo.png",
+          "src": "/assets/logo-96.png",
           "sizes": "96x96"
         }
       ]

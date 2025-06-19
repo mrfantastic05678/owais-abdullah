@@ -54,7 +54,7 @@ export const metadata: Metadata = {
       { url: "/assets/owais_logo.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [
-      { url: "/assets/owais_logo.png", sizes: "180x180", type: "image/png" },
+      { url: "/assets/logo-180.png", sizes: "180x180", type: "image/png" },
     ],
   },
   appleWebApp: {
@@ -102,8 +102,8 @@ export const metadata: Metadata = {
     google: "92FJDtkgr_fHL9xYV5k_H0WlCjrZbHdrJq5I43pw7Zk",
   },
   other: {
-    "msapplication-TileColor": "#000000",
-    "theme-color": "#000000",
+    "msapplication-TileColor": "#212428",
+    "theme-color": "#3a69ff",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "default",
     "apple-mobile-web-app-title": "Owais Abdullah Portfolio",
@@ -121,7 +121,7 @@ export default function RootLayout({
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#3a69ff" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta
