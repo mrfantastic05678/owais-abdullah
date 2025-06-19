@@ -90,9 +90,9 @@ const Skill: React.FC = () => {
           <h3 className="text-base text-accent font-medium sm:text-lg">
             Areas of Expertise
           </h3>
-          <h1 className="text-5xl text-text font-semibold sm:text-6xl">
+          <h2 className="text-5xl text-text font-semibold sm:text-6xl">
             My Skills
-          </h1>
+          </h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skills.map((skill, index) => (

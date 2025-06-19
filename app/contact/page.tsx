@@ -7,7 +7,7 @@ export const dynamic = "force-static"
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist. Available for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
+  description: "Get in touch with Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist.",
   keywords: [
     "Contact Owais Abdullah",
     "Hire Owais Abdullah",

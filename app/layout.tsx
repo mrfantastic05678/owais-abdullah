@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: "%s | Owais Abdullah",
   },
   description:
-    "Owais Abdullah is a skilled AI Agents Developer, Full Stack Developer, and Next.js specialist. Expert in React, AI integration, and modern web development. View portfolio and projects.",
+    "Owais Abdullah is a skilled AI Agents Developer, Full Stack Developer, and Next.js specialist. Expert in React, AI integration, and modern web development.",
   keywords: [
     "Owais Abdullah",
     "Owais",
