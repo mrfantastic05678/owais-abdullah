@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     description: "Discover Owais Abdullah's technical skills and expertise. AI Agents Developer, Full Stack Developer, and Next.js specialist proficient in React, TypeScript, AI integration, and modern web technologies.",
   },
   alternates: {
-    canonical: '/skills',
+    canonical: 'https://owaisabdullah.dev/skills',
   },
 };
 

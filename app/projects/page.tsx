@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     description: "Explore Owais Abdullah's portfolio of projects. AI Agents Developer, Full Stack Developer, and Next.js specialist showcasing innovative web applications, AI integrations, and modern development solutions.",
   },
   alternates: {
-    canonical: '/projects',
+    canonical: 'https://owaisabdullah.dev/projects',
   },
 };
 

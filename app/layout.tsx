@@ -100,6 +100,7 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "92FJDtkgr_fHL9xYV5k_H0WlCjrZbHdrJq5I43pw7Zk",
+    yandex: "c486d8225d022eb7"
   },
   other: {
     "msapplication-TileColor": "#212428",
