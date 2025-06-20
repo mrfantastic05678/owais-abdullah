@@ -57,7 +57,7 @@ const projects = {
       "tags": ["Next.js", "AI", "Chatbot", "Portfolio"]
     },
     {
-      title: "First Portfolio Website 😅",
+      title: "First Practice Portfolio Website 😅",
       description:
         "My First Practice portfolio showcasing dummy data, projects, skills, and experience, built with Next.js.",
       image: "/assets/Project (17).png",
