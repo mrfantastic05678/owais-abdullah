@@ -59,7 +59,7 @@ const projects = {
     {
       title: "First Portfolio Website 😅",
       description:
-        "My First Practice portfolio showcasing my skills, projects, and experience, built with Next.js.",
+        "My First Practice portfolio showcasing dummy data, projects, skills, and experience, built with Next.js.",
       image: "/assets/Project (17).png",
       link: "https://portfolio-class-assignment.vercel.app/",
       tags: ["Next.js", "Tailwind", "Portfolio"],
