@@ -90,7 +90,7 @@ const Header = () => {
             CONTACT
           </Link>
 
-          <button className="group inline-flex items-center font-bold bg-gradient-to-br from-blue-900 via-accent to-blue-700 hover:from-blue-950 hover:bg-blue-500 hover:bg-gradient-to-tr text-white border-0 py-2 px-4 focus:outline-none duration-500 rounded-full text-base mt-4 md:mt-0">
+          <button className="group inline-flex items-center text-center font-bold bg-gradient-to-br from-blue-900 via-accent to-blue-700 hover:from-blue-950 hover:bg-blue-500 hover:bg-gradient-to-tr text-white border-0 py-4 lg:py-2 px-4 focus:outline-none duration-500 rounded-full text-base mt-4 md:mt-0">
             <Link href={"/contact"} onClick={handleLinkClick}>
               HIRE ME
             </Link>

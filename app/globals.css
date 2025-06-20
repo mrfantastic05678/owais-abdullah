@@ -108,10 +108,18 @@
   }
 }
 .animate-infinite-scroll-right {
-  animation: infinite-scroll-right 40s linear infinite;
+  animation: infinite-scroll-right 60s linear infinite;
   will-change: transform;
 }
 .animate-infinite-scroll-left {
-  animation: infinite-scroll-left 50s linear infinite;
+  animation: infinite-scroll-left 60s linear infinite;
   will-change: transform;
+}
+@media (min-width: 1024px) {
+  .animate-infinite-scroll-right {
+    animation-duration: 50s;
+  }
+  .animate-infinite-scroll-left {
+    animation-duration: 40s;
+  }
 }

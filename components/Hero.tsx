@@ -2,7 +2,6 @@
 import React from "react";
 import owais from "../public/assets/Owais Abdullah.png";
 import Image from "next/image";
-import { Typewriter } from "nextjs-simple-typewriter";
 import { FaChevronRight } from "react-icons/fa";
 import { RiNextjsLine, RiWordpressLine } from "react-icons/ri";
 import { TbBrandTypescript } from "react-icons/tb";
@@ -10,6 +9,15 @@ import Link from "next/link";
 import { HeroHighlight } from "./ui/HeroHighlight";
 import { AnimatedTooltip } from "./ui/AnimatedTooltip";
 import { Github, Linkedin, Mail } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const Typewriter = dynamic(
+  () => import("nextjs-simple-typewriter").then((mod) => mod.Typewriter),
+  {
+    ssr: false,
+    loading: () => <span>AI Agent Developer</span>,
+  }
+);
 
 const Hero = () => {
   return (
@@ -29,10 +37,11 @@ const Hero = () => {
                   <Typewriter
                     words={[
                       "Web Developer.",
-                      "AI Architect.",
+                      "AI Agent Developer.",
                       "Full Stack Dev.",
-                      "SEO & Web Strategist.",
-                      "Webflow & WP Dev.",
+                      "AI Architect.",
+                      "Next.js Specialist.",
+                      "Python Enthusiast.",
                     ]}
                     loop={0}
                     cursor
