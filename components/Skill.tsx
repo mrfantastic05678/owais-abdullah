@@ -4,7 +4,7 @@ import type React from "react";
 import SkillCard from "../components/ui/SkillCard";
 import { FaReact, FaWordpress, FaNodeJs } from "react-icons/fa";
 import { BiLogoTypescript, BiLogoPython } from "react-icons/bi";
-import { SiNextdotjs, SiOpenai, SiSanity, SiTailwindcss, SiSqlite, SiPrisma } from "react-icons/si";
+import { SiNextdotjs, SiOpenai, SiSanity, SiTailwindcss, SiSqlite, SiPrisma, SiPostgresql } from "react-icons/si";
 
 const skills = [
   // Frontend Skills
@@ -47,6 +47,12 @@ const skills = [
     progress: 75,
   },
   {
+    icon: <SiPostgresql />,
+    title: "PostgreSQL",
+    description: "Relational database management for robust data handling.",
+    progress: 80,
+  },
+  {
     icon: <SiSqlite />,
     title: "SQLite",
     description: "Lightweight database management for structured data storage.",
@@ -86,14 +92,6 @@ const Skill: React.FC = () => {
   return (
     <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-      <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center">
-          <h3 className="text-base text-accent font-medium sm:text-lg">
-            Areas of Expertise
-          </h3>
-          <h2 className="text-5xl text-text font-semibold sm:text-6xl">
-            My Skills
-          </h2>
-        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skills.map((skill, index) => (
             <SkillCard

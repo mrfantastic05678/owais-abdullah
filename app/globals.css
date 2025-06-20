@@ -1,21 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
+@layer base {
   body {
     color: #fff;
     background-color: #212428;
   }
-  h1,h2,h3,h4,h5,h6 {
-    font-family: 'montserrat', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "montserrat", sans-serif;
   }
   :root {
     --radius: 0.5rem;
   }
-  
 }
 
 :root {
@@ -37,7 +41,7 @@
 .entrance-left {
   opacity: 0;
   animation-timeline: view();
-  animation: slideInLeft 2s ease-in-out forwards; 
+  animation: slideInLeft 2s ease-in-out forwards;
 }
 
 .entrance-right {
@@ -70,7 +74,7 @@
 
 /* entrance animation */
 @keyframes entrance {
-  from{
+  from {
     opacity: 0;
     scale: 0.5;
   }
@@ -80,8 +84,34 @@
   }
 }
 
-.entrance{
+.entrance {
   animation: entrance linear;
   animation-timeline: view();
   animation-range: entry 0% cover 40%;
+}
+
+/* Seamless infinite scroll for skill slider */
+@keyframes infinite-scroll-right {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+@keyframes infinite-scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(50%);
+  }
+}
+.animate-infinite-scroll-right {
+  animation: infinite-scroll-right 40s linear infinite;
+  will-change: transform;
+}
+.animate-infinite-scroll-left {
+  animation: infinite-scroll-left 50s linear infinite;
+  will-change: transform;
 }

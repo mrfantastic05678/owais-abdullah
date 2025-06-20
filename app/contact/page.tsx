@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const dynamic = "force-static"
 
 export const metadata: Metadata = {
-  title: "Contact Owais Abdullah | AI Agents & Full Stack Developer",
+  title: "Contact Owais Abdullah",
   description: "Get in touch with Owais Abdullah for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
   keywords: [
     "Contact Owais Abdullah",

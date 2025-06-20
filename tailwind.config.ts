@@ -14,6 +14,64 @@ export default {
   ],
   theme: {
   	extend: {
+      keyframes: {
+				'accordion-down': {
+					from: {
+						height: '0'
+					},
+					to: {
+						height: 'var(--radix-accordion-content-height)'
+					}
+				},
+				'accordion-up': {
+					from: {
+						height: 'var(--radix-accordion-content-height)'
+					},
+					to: {
+						height: '0'
+					}
+				},
+				'scroll-right': {
+					'0%': {
+						transform: 'translateX(0)'
+					},
+					'100%': {
+						transform: 'translateX(-33.333%)'
+					}
+				},
+				'scroll-left': {
+					'0%': {
+						transform: 'translateX(-33.333%)'
+					},
+					'100%': {
+						transform: 'translateX(0)'
+					}
+				},
+				'scroll-right-fast': {
+					'0%': {
+						transform: 'translateX(0)'
+					},
+					'100%': {
+						transform: 'translateX(-25%)'
+					}
+				},
+				'scroll-left-fast': {
+					'0%': {
+						transform: 'translateX(-25%)'
+					},
+					'100%': {
+						transform: 'translateX(0)'
+					}
+				}
+			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'scroll-right': 'scroll-right 25s linear infinite',
+				'scroll-left': 'scroll-left 25s linear infinite',
+				'scroll-right-fast': 'scroll-right-fast 15s linear infinite',
+				'scroll-left-fast': 'scroll-left-fast 15s linear infinite'
+			},
   		screens: {
   			xs: '360px',
         xss: '450px'

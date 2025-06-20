@@ -9,8 +9,8 @@ import Script from "next/script";
 
 export const metadata: Metadata = {
   title: {
-    default: "Owais Abdullah | AI Agents & Full Stack Developer",
-    template: "%s | Owais Abdullah",
+    default: "Owais Abdullah",
+    template: "%s | AI Agents & Full Stack Developer",
   },
   description:
     "Owais Abdullah is a skilled AI Agents Developer, Full Stack Developer, and Next.js specialist. Expert in React, AI integration, and modern web development.",

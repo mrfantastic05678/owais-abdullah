@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 export const dynamic = "force-static"
 
 export const metadata: Metadata = {
-  title: "About Owais Abdullah | AI Agents & Full Stack Developer",
+  title: "About Owais Abdullah",
   description: "Learn more about Owais Abdullah, his background, expertise in AI Agents Development, Full Stack Development, and passion for modern web technologies.",
   keywords: [
     "About Owais Abdullah",
@@ -51,6 +51,14 @@ const about = () => {
       <JsonLdSchema type="about" pageUrl="https://owaisabdullah.dev/about" />
       <About />
       <Projects />
+            <div className="flex flex-wrap w-full mt-10 mb-20 flex-col items-center text-center">
+          <h3 className="text-base text-accent font-medium sm:text-lg">
+            Areas of Expertise
+          </h3>
+          <h2 className="text-5xl text-text font-semibold sm:text-6xl">
+            My Skills
+          </h2>
+        </div>
       <Skill />
     </>
   )
