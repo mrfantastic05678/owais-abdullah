@@ -54,10 +54,7 @@ const Hero = () => {
               </h1>
             </div>
             <p className="mb-8 leading-relaxed font-poppins text-gray-400">
-              I craft high-performing websites, optimize them for search
-              engines, and develop data-driven digital marketing strategies -
-              all powered by my passion for AI. Let&apos;s discuss how I can
-              help your business flourish online!
+              I am a passionate AI Agents Developer and Full Stack Developer with a focus on Next.js, TypeScript, and Python. I specialize in creating intelligent web applications that leverage the power of AI to enhance user experiences.
             </p>
             <div className="flex justify-center">
               <Link href="#about" className="scroll-smooth duration-300">
