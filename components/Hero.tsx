@@ -32,16 +32,16 @@ const Hero = () => {
               <h1 className="sm:text-5xl text-4xl mb-4 font-montserrat font-bold text-text ">
                 Hi, I&apos;m <span className="text-accent">Owais Abdullah</span>
                 <br />
-                {"a "}
                 <span className="">
                   <Typewriter
                     words={[
-                      "Web Developer.",
-                      "AI Agent Developer.",
-                      "Full Stack Dev.",
-                      "AI Architect.",
-                      "Next.js Specialist.",
-                      "Python Enthusiast.",
+                      "a Web Developer.",
+                      "an AI Agent Developer.",
+                      "a Next.js Specialist.",
+                      "a Full Stack Developer",
+                      "a Python Enthusiast.",
+                      "a TypeScript Advocate.",
+                      "a WordPress Expert.",
                     ]}
                     loop={0}
                     cursor
