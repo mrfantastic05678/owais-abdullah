@@ -49,7 +49,7 @@ const Header = () => {
       <div className="absolute top-0 left-0 w-full h-full z-[-1]" />
 
       <div className="mx-auto flex flex-wrap font-medium p-5 flex-col md:flex-row z-50">
-        <Link href={"/"} className="flex mb-4 md:mb-0">
+        <Link href={"/"} className="flex mb-4 md:mb-0 z-10">
           <Image src={Logo} width={80} height={40} alt={"logo"} />
         </Link>
 
@@ -98,7 +98,7 @@ const Header = () => {
           </button>
         </nav>
         <button
-          className="md:hidden flex items-center justify-end -mt-12 text-2xl text-gray-600 hover:text-accent"
+          className="md:hidden flex items-center justify-end -mt-12 text-2xl text-gray-600 hover:text-accent z-0"
           onClick={() => {
             setisoOpen(!isoOpen);
           }}
