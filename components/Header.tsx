@@ -9,9 +9,11 @@ import { CgClose, CgMenuRight } from "react-icons/cg";
 
 const Header = () => {
   const [isoOpen, setisoOpen] = useState(false);
+  console.log("isoOpen state:", isoOpen);
 
   function handleLinkClick() {
     setisoOpen(false);
+    console.log("Link clicked, isoOpen set to false");
   }
 
   function getMenuClassNames() {
@@ -39,16 +41,16 @@ const Header = () => {
         "flex-wrap",
         "items-center",
         "justify-center",
-        "gap-4"
+        "gap-4",
       ];
     }
     return menuClasses.join(" ");
   }
   return (
     <header className="max-w-7xl mx-auto relative z-50 bg-transparent bg-opacity-0">
-      <div className="absolute top-0 left-0 w-full h-full z-[-1]" />
+      <div className="absolute top-0 left-0 w-full h-full z-[-1] pointer-events-none" />
 
-      <div className="mx-auto flex flex-wrap font-medium p-5 flex-col md:flex-row z-50">
+      <div className="mx-auto flex flex-wrap justify-between font-medium p-5 flex-row z-10">
         <Link href={"/"} className="flex mb-4 md:mb-0 z-10">
           <Image src={Logo} width={80} height={40} alt={"logo"} />
         </Link>
@@ -98,7 +100,7 @@ const Header = () => {
           </button>
         </nav>
         <button
-          className="md:hidden flex items-center justify-end -mt-12 text-2xl text-gray-600 hover:text-accent z-0"
+          className="md:hidden flex items-center justify-end text-3xl text-gray-600 hover:text-accent z-20"
           onClick={() => {
             setisoOpen(!isoOpen);
           }}
