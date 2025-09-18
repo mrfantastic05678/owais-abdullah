@@ -101,7 +101,9 @@ export default {
         dmuted: "#374151",
         dmutedforeground: "#d1d5db",
         dbackground: "#f3f4f6",
-
+		border: "#4b5563",
+		primary: "#3a69ff",
+		secondary: "#1f2937",
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

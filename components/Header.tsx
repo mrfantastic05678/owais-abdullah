@@ -78,6 +78,13 @@ const Header = () => {
             PROJECTS
           </Link>
           <Link
+            href={"/blog"}
+            onClick={handleLinkClick}
+            className="mr-5 text-white text-base hover:text-accent"
+          >
+            BLOG
+          </Link>
+          <Link
             href={"/skills"}
             onClick={handleLinkClick}
             className="mr-5 text-white text-base hover:text-accent"

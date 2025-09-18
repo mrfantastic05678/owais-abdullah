@@ -6,6 +6,7 @@ import ProjectsTab from "@/components/ProjectsTab";
 import JsonLdSchema from "@/components/JsonLdSchema";
 import type { Metadata } from "next";
 import SkillSlider from "@/components/SkillSlider";
+import BlogSection from "@/components/BlogSection";
 
 export const dynamic = "force-static";
 
@@ -65,6 +66,7 @@ export default function Home() {
       </div>
       <SkillSlider />
       <ProjectsTab />
+      <BlogSection limit={3} />
       <Experience />
       <Contact />
     </>

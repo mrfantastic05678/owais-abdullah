@@ -29,6 +29,13 @@ const Footer = () => {
         </p>
         <span className="inline-flex gap-3 sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
           <Link
+            href="/blog"
+            className="text-gray-500 text-base font-semibold hover:text-accent mr-2"
+            prefetch={false}
+          >
+            Blog
+          </Link>
+          <Link
             href={"https://www.twitter.com/MrOwaisAbdullah"}
             className="text-gray-500 text-2xl hover:text-[#171515]"
             target="_blank"
