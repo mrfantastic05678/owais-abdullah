@@ -60,7 +60,7 @@ Owais specializes in creating robust web and app solutions and integrating moder
 - **Backend & Databases:** Python, WordPress, Sanity, PostgreSQL, SQLite, Redis, etc.
 - **Authentication & Validation:** Clerk, Zod, etc.
 - **AI & Automation:** Integration of AI tools and chatbots, along with automation solutions
-- **Additional Services:** Full-stack web development, API integrations, digital marketing strategies, and performance optimization, etc.
+- **Additional Services:** Full-stack web development, API integrations, AI Agents, and performance optimization, etc.
 
 **Projects:**
 
