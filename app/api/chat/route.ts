@@ -109,7 +109,7 @@ Answer only questions related to these areas.
 
     // Call the Gemini API
     const response = await genAI.models.generateContent({
-      model: "gemini-2.0-flash-lite",
+      model: "gemini-2.5-flash",
       contents: adjustedMessages,
     });
 
