@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
-import { motion } from "framer-motion";
+import { motion, MotionStyle } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT";
@@ -84,7 +84,7 @@ export function HoverBorderGradient({
           position: "absolute",
           width: "100%",
           height: "100%",
-        }}
+        } as MotionStyle}
         initial={{ background: movingMap[direction] }}
         animate={{
           background: hovered
