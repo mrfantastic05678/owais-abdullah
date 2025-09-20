@@ -72,7 +72,7 @@ export default function BlogPageClient({
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="bg-background/80 backdrop-blur-sm rounded-2xl shadow-2xl p-4 sm:p-8 lg:p-12"
+          className="bg-background/80 backdrop-blur-sm rounded-2xl shadow-2xl px-2 py-4 sm:p-4 md:p-8 lg:p-12"
         >
           {/* Header */}
           <header className="mb-8">
