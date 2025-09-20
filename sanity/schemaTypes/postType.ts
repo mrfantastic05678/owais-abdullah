@@ -58,6 +58,28 @@ export const postType = defineType({
       type: "blockContent",
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: "faqs",
+      title: "FAQs",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            {
+              name: "question",
+              type: "string",
+              title: "Question",
+            },
+            {
+              name: "answer",
+              type: "text",
+              title: "Answer",
+            },
+          ],
+        }),
+      ],
+    }),
   ],
   preview: {
     select: {

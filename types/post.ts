@@ -1,10 +1,16 @@
 import { PortableTextBlock } from "next-sanity";
 
+export interface Faq {
+  question: string;
+  answer: string;
+}
+
 export interface Post {
   _id: string;
   title: string;
   summary: string;
   content: PortableTextBlock[];
+  faqs: Faq[];
   categories: { title: string }[];
   mainImage: {
     _type: string;

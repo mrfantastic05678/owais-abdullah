@@ -48,7 +48,7 @@ const RelatedPosts = ({ currentSlug, limit = 3 }: RelatedPostsProps) => {
       <h2 className="text-xl lg:text-3xl text-center font-semibold mb-4">
         Related Posts
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 md:px-8 lg:px-10">
         {posts.map((post) => (
           <Link
             key={post._id}

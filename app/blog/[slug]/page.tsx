@@ -75,6 +75,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     mainImage,
     summary,
     content,
+    faqs,
     _createdAt,
     author->{name},
     categories[]->{title}

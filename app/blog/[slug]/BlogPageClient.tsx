@@ -8,6 +8,8 @@ import { TableOfContents } from "@/components/TableOfContents";
 import RelatedPosts from "@/components/RelatedPosts";
 import { Calendar, User } from "lucide-react";
 import { Post } from "@/types/post";
+import FaqSection from "@/components/Faq";
+import { JsonLdFaq } from "@/components/JsonLdFaq";
 
 export default function BlogPageClient({
   blog,
@@ -44,6 +46,7 @@ export default function BlogPageClient({
       transition={{ duration: 0.7, ease: "easeOut" }}
       className="relative -top-[120px] flex flex-col min-h-screen mb-20"
     >
+      {blog.faqs && blog.faqs.length > 0 && <JsonLdFaq faqs={blog.faqs} />}
       {/* Hero Image Section */}
       <motion.div
         className="relative border-b-4 border-border"
@@ -136,6 +139,17 @@ export default function BlogPageClient({
               </div>
             </div>
           </div>
+          {/* FAQ Section */}
+          {blog.faqs && blog.faqs.length > 0 && (
+            <motion.div
+              className="mt-12 lg:mt-16"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
+            >
+              <FaqSection faqs={blog.faqs} />
+            </motion.div>
+          )}
         </motion.div>
       </div>
       {/* Related Posts Section */}
