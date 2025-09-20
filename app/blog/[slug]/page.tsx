@@ -2,6 +2,7 @@ import BlogPageClient from "./BlogPageClient";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { Metadata } from "next";
+import { Post } from "@/types/post";
 
 export const revalidate = 60;
 
@@ -81,7 +82,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     categories[]->{title}
   }[0]`;
 
-  const blog: PostCard = await client.fetch(query);
+  const blog: Post = await client.fetch(query);
 
   return <BlogPageClient blog={blog} slug={slug} />;
 }
