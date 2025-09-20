@@ -83,7 +83,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
       return false;
     });
 
-    content.forEach((block) => {
+    content.forEach((block, index) => {
       if (block.style?.startsWith("h") && block.children?.[0]) {
         const level = parseInt(block.style[1]) || 1;
         Object.keys(numberedSections).forEach((key) => {
@@ -98,7 +98,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
           const id = text
             .toLowerCase()
             .replace(/\s+/g, "-")
-            .replace(/[^\w-]+/g, "");
+            .replace(/[^\w-]+/g, "") + `-${index}`;
           let displayText = text;
           if (!hasNumberedHeadings) {
             const prefix = Object.entries(numberedSections)
