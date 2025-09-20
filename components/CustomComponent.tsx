@@ -2,6 +2,8 @@ import { PortableTextComponents } from "@portabletext/react";
 import { ReactNode } from "react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 export const CustomComponent: PortableTextComponents = {
   block: {
@@ -188,16 +190,39 @@ export const CustomComponent: PortableTextComponents = {
     underline: ({ children }: { children?: ReactNode }) => (
       <span className="underline text-text2">{children}</span>
     ),
-    link: (props: { value?: { href?: string }; children?: ReactNode }) => (
-      <a
-        href={props.value?.href || "#"}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-text2 underline hover:text-primary"
-      >
-        {props.children}
-      </a>
-    ),
+    link: ({
+      value,
+      children,
+    }: {
+      value?: { href?: string };
+      children?: ReactNode;
+    }) => {
+      const href = value?.href || "";
+      const isExternal = href.startsWith("http");
+
+      if (isExternal) {
+        return (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-text2 underline hover:text-primary inline-flex items-center"
+          >
+            {children}
+            <ExternalLink className="w-4 h-4 ml-1" />
+          </a>
+        );
+      }
+
+      return (
+        <Link
+          href={href}
+          className="text-text2 underline hover:text-primary"
+        >
+          {children}
+        </Link>
+      );
+    },
     strong: ({ children }: { children?: ReactNode }) => (
       <strong className="font-bold text-text2">{children}</strong>
     ),
