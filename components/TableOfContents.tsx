@@ -83,7 +83,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
       return false;
     });
 
-    content.forEach((block, index) => {
+    content.forEach((block) => {
       if (block.style?.startsWith("h") && block.children?.[0]) {
         const level = parseInt(block.style[1]) || 1;
         Object.keys(numberedSections).forEach((key) => {
