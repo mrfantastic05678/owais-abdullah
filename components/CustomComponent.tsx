@@ -26,7 +26,7 @@ export const CustomComponent: PortableTextComponents = {
         .replace(/\s+/g, "-")
         .replace(/[^\w-]+/g, "");
       return (
-        <h1 id={id} className="text-2xl md:text-3xl font-bold mt-6 mb-4 text-heading">
+        <h1 id={id} className="text-2xl sm:text-3xl md:text-4xl font-bold mt-6 mb-4 text-heading font-heading">
           {props.children}
         </h1>
       );
@@ -50,7 +50,7 @@ export const CustomComponent: PortableTextComponents = {
         .replace(/\s+/g, "-")
         .replace(/[^\w-]+/g, "");
       return (
-        <h2 id={id} className="text-xl md:text-2xl font-bold mt-10 mb-3 text-heading">
+        <h2 id={id} className="text-xl sm:text-2xl md:text-3xl font-bold mt-10 mb-3 text-heading font-heading">
           {props.children}
         </h2>
       );
@@ -74,7 +74,7 @@ export const CustomComponent: PortableTextComponents = {
         .replace(/\s+/g, "-")
         .replace(/[^\w-]+/g, "");
       return (
-        <h3 id={id} className="text-lg md:text-xl font-semibold mt-8 mb-2 text-heading">
+        <h3 id={id} className="text-lg sm:text-xl md:text-2xl font-semibold mt-8 mb-2 text-heading font-heading">
           {props.children}
         </h3>
       );
@@ -98,7 +98,7 @@ export const CustomComponent: PortableTextComponents = {
         .replace(/\s+/g, "-")
         .replace(/[^\w-]+/g, "");
       return (
-        <h4 id={id} className="text-base md:text-lg font-medium mt-6 mb-1 text-heading">
+        <h4 id={id} className="text-base sm:text-lg md:text-xl font-medium mt-6 mb-1 text-heading font-heading">
           {props.children}
         </h4>
       );
@@ -122,7 +122,7 @@ export const CustomComponent: PortableTextComponents = {
         .replace(/\s+/g, "-")
         .replace(/[^\w-]+/g, "");
       return (
-        <h5 id={id} className="text-base font-medium mt-5 mb-1 text-heading">
+        <h5 id={id} className="text-base sm:text-lg font-medium mt-5 mb-1 text-heading font-heading">
           {props.children}
         </h5>
       );
@@ -146,7 +146,7 @@ export const CustomComponent: PortableTextComponents = {
         .replace(/\s+/g, "-")
         .replace(/[^\w-]+/g, "");
       return (
-        <h6 id={id} className="text-sm font-medium mt-4 mb-1 text-heading">
+        <h6 id={id} className="text-sm sm:text-base font-medium mt-4 mb-1 text-heading font-heading">
           {props.children}
         </h6>
       );

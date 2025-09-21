@@ -81,6 +81,8 @@ export default {
   			padding: '1rem'
   		},
   		fontFamily: {
+        sans: ["var(--font-inter)"],
+        heading: ["var(--font-montserrat)"],
   			montserrat: [
   				'Montserrat',
   				'sans-serif'
@@ -110,7 +112,7 @@ export default {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		}
-  	}
+  		}
   },
   plugins: [
     addVariablesForColors,

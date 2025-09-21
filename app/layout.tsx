@@ -1,13 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import FloatingNavbar from "@/components/FloatingNavbar";
+import { inter, poppins, montserrat } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
 import { ChatBot } from "@/components/ui/ChatBot";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import Script from "next/script";
+import FloatingNavbar from "@/components/FloatingNavbar";
+
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://owaisabdullah.dev"),
   title: {
     default: "Owais Abdullah",
     template: "%s | AI Agents & Full Stack Developer",
@@ -42,7 +46,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://owaisabdullah.dev"),
   alternates: {
     canonical: "/",
   },
@@ -132,7 +135,14 @@ export default function RootLayout({
         <meta name="application-name" content="Owais Abdullah Portfolio" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body>
+      <body
+        className={cn(
+          inter.variable,
+          poppins.variable,
+          montserrat.variable,
+          "font-sans antialiased"
+        )}
+      >
         {/* Google Analytics */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
@@ -149,7 +159,7 @@ export default function RootLayout({
         
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
