@@ -67,7 +67,7 @@ export default function BlogPageClient({
       </motion.div>
 
       {/* Content Section */}
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 -mt-32 sm:-mt-48">
+      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 -mt-32 sm:-mt-20">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}

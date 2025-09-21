@@ -98,7 +98,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
           const id = text
             .toLowerCase()
             .replace(/\s+/g, "-")
-            .replace(/[^\w-]+/g, "") + `-${index}`;
+            .replace(/[^\w-]+/g, "");
           let displayText = text;
           if (!hasNumberedHeadings) {
             const prefix = Object.entries(numberedSections)
