@@ -128,7 +128,7 @@ export default function BlogPageClient({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.1 }}
       >
-        <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-black/90 from-15% via-black/40 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-[30%] bg-gradient-to-b from-black/90 to-transparent" />
         <Image
           className="flex h-[450px] 2xl:h-[750px] w-screen object-cover items-center justify-center"
           src={urlFor(blog.mainImage).url() as string}
@@ -137,7 +137,7 @@ export default function BlogPageClient({
           height={800}
           priority
         />
-        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/90 from-15% via-black/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-[10%] bg-gradient-to-t from-black/40 to-transparent" />
       </motion.div>
 
       {/* Content Section */}
