@@ -6,6 +6,8 @@ import { PortableText } from "@portabletext/react";
 import { CustomComponent } from "@/components/CustomComponent";
 import { TableOfContents } from "@/components/TableOfContents";
 import RelatedPosts from "@/components/RelatedPosts";
+import { useEffect, useState } from "react";
+import LikeDislikeButtons from "@/components/ui/LikeDislikeButtons";
 import { Calendar, User } from "lucide-react";
 import { Post } from "@/types/post";
 import FaqSection from "@/components/Faq";
@@ -20,6 +22,69 @@ export default function BlogPageClient({
   blog: Post;
   slug: string;
 }) {
+  const [likes, setLikes] = useState(blog?.likes || 0);
+  const [dislikes, setDislikes] = useState(blog?.dislikes || 0);
+  const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
+  const [showAnimation, setShowAnimation] = useState<"like" | "dislike" | null>(
+    null
+  );
+
+  useEffect(() => {
+    const vote = localStorage.getItem(`vote_${slug}`);
+    if (vote) {
+      setUserVote(vote as "like" | "dislike");
+    }
+  }, [slug]);
+
+  const handleVote = async (action: "like" | "dislike") => {
+    const newAction = userVote === action ? `un${action}` : action;
+
+    setUserVote(userVote === action ? null : action);
+    if (userVote === action) {
+      localStorage.removeItem(`vote_${slug}`);
+    } else {
+      localStorage.setItem(`vote_${slug}`, action);
+    }
+    if (userVote !== action) {
+      setShowAnimation(action);
+      setTimeout(() => setShowAnimation(null), 1000);
+    }
+
+    const newLikes = newAction === "like" ? likes + 1 : newAction === "unlike" ? likes - 1 : likes;
+    const newDislikes = newAction === "dislike" ? dislikes + 1 : newAction === "undislike" ? dislikes - 1 : dislikes;
+
+    setLikes(newLikes);
+    setDislikes(newDislikes);
+
+    try {
+      const response = await fetch("/api/like", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ slug, action: newAction }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setLikes(data.likes);
+        setDislikes(data.dislikes);
+      } else {
+        // Revert optimistic update on failure
+        setUserVote(null);
+        localStorage.removeItem(`vote_${slug}`);
+        setLikes(action === "like" ? likes : likes);
+        setDislikes(action === "dislike" ? dislikes : dislikes);
+      }
+    } catch (error) {
+      console.error("Error submitting vote:", error);
+      // Revert optimistic update on failure
+      setUserVote(null);
+      localStorage.removeItem(`vote_${slug}`);
+      setLikes(action === "like" ? likes : likes);
+      setDislikes(action === "dislike" ? dislikes : dislikes);
+    }
+  };
   if (!blog) {
     return (
       <motion.article
@@ -63,7 +128,7 @@ export default function BlogPageClient({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.1 }}
       >
-        <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-black/90 from-20% via-black/50 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-black/90 from-15% via-black/40 to-transparent" />
         <Image
           className="flex h-[450px] 2xl:h-[750px] w-screen object-cover items-center justify-center"
           src={urlFor(blog.mainImage).url() as string}
@@ -72,7 +137,7 @@ export default function BlogPageClient({
           height={800}
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/90 from-15% via-black/40 to-transparent" />
       </motion.div>
 
       {/* Content Section */}
@@ -125,6 +190,11 @@ export default function BlogPageClient({
                 </span>
               </div>
             </div>
+            <LikeDislikeButtons
+              handleVote={handleVote}
+              userVote={userVote}
+              showAnimation={showAnimation}
+            />
           </header>
 
           {/* Main Content Layout */}
@@ -151,6 +221,16 @@ export default function BlogPageClient({
               </div>
             </div>
           </div>
+
+          <div className="flex justify-center mt-10 lg:mt-16">
+          <LikeDislikeButtons
+            handleVote={handleVote}
+            userVote={userVote}
+            showAnimation={showAnimation}
+            ctaText="Did you find this article helpful?"
+          />
+          </div>
+
           {/* FAQ Section */}
           {blog.faqs && blog.faqs.length > 0 && (
             <motion.div

@@ -85,7 +85,9 @@ export default async function Page({
     faqs,
     _createdAt,
     author->{name},
-    categories[]->{title}
+    categories[]->{title},
+    likes,
+    dislikes
   }[0]`;
 
   const blog: Post = await client.fetch(query);

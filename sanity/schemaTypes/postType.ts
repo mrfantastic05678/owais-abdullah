@@ -80,6 +80,20 @@ export const postType = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'likes',
+      title: 'Likes',
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+    }),
+    defineField({
+      name: 'dislikes',
+      title: 'Dislikes',
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+    }),
   ],
   preview: {
     select: {
