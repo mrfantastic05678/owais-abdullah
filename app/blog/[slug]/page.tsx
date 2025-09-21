@@ -28,7 +28,8 @@ export async function generateMetadata({
   const query = `*[_type == "post" && slug.current == "${slug}"]{
     title,
     summary,
-    mainImage
+    mainImage,
+    author->{name}
   }[0]`;
 
   const blog = await client.fetch(query);
@@ -43,6 +44,7 @@ export async function generateMetadata({
   return {
     title: blog.title,
     description: blog.summary,
+    authors: [{ name: blog.author.name }],
     openGraph: {
       title: `${blog.title} | Owais Abdullah`,
       description: blog.summary,
@@ -68,7 +70,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
 
   const query = `*[_type == "post" && slug.current == "${slug}"]{

@@ -1,13 +1,15 @@
-import React from 'react'
-import ProjectsTab from '@/components/ProjectsTab'
-import JsonLdSchema from '@/components/JsonLdSchema'
+import React from "react";
+import ProjectsTab from "@/components/ProjectsTab";
+import JsonLdSchema from "@/components/JsonLdSchema";
 import type { Metadata } from "next";
 
-export const dynamic = "force-static"
+export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: "Projects of Owais Abdullah",
-  description: "Explore the portfolio projects of Owais Abdullah, an AI Agents Developer and Full Stack Developer. Discover innovative web applications, AI integrations, and modern development solutions.",
+  description:
+    "Explore the portfolio projects of Owais Abdullah, an AI Agents Developer and Full Stack Developer. Discover innovative web applications, AI integrations, and modern development solutions.",
+  authors: [{ name: "Owais Abdullah" }],
   keywords: [
     "Owais Abdullah Projects",
     "AI Agents Developer Projects",
@@ -20,37 +22,44 @@ export const metadata: Metadata = {
     "Portfolio Projects",
     "Web Applications",
     "AI Integration Projects",
-    "Modern Web Development"
+    "Modern Web Development",
   ],
   openGraph: {
-    title: "Projects | Owais Abdullah - AI Agents Developer & Full Stack Developer",
-    description: "Explore Owais Abdullah's portfolio of projects. AI Agents Developer, Full Stack Developer, and Next.js specialist showcasing innovative web applications, AI integrations, and modern development solutions.",
+    title:
+      "Projects | Owais Abdullah - AI Agents Developer & Full Stack Developer",
+    description:
+      "Explore Owais Abdullah's portfolio of projects. AI Agents Developer, Full Stack Developer, and Next.js specialist showcasing innovative web applications, AI integrations, and modern development solutions.",
     url: "https://owaisabdullah.dev/projects",
     images: [
       {
-        url: '/assets/Owais Abdullah (2).png',
+        url: "/assets/Owais Abdullah (2).png",
         width: 1200,
         height: 630,
-        alt: 'Projects by Owais Abdullah - AI Agents Developer & Full Stack Developer',
+        alt: "Projects by Owais Abdullah - AI Agents Developer & Full Stack Developer",
       },
     ],
   },
   twitter: {
-    title: "Projects | Owais Abdullah - AI Agents Developer & Full Stack Developer",
-    description: "Explore Owais Abdullah's portfolio of projects. AI Agents Developer, Full Stack Developer, and Next.js specialist showcasing innovative web applications, AI integrations, and modern development solutions.",
+    title:
+      "Projects | Owais Abdullah - AI Agents Developer & Full Stack Developer",
+    description:
+      "Explore Owais Abdullah's portfolio of projects. AI Agents Developer, Full Stack Developer, and Next.js specialist showcasing innovative web applications, AI integrations, and modern development solutions.",
   },
   alternates: {
-    canonical: 'https://owaisabdullah.dev/projects',
+    canonical: "https://owaisabdullah.dev/projects",
   },
 };
 
 const projects = () => {
   return (
     <>
-      <JsonLdSchema type="projects" pageUrl="https://owaisabdullah.dev/projects" />
+      <JsonLdSchema
+        type="projects"
+        pageUrl="https://owaisabdullah.dev/projects"
+      />
       <ProjectsTab />
     </>
-  )
-}
+  );
+};
 
-export default projects
+export default projects;

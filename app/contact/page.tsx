@@ -1,13 +1,15 @@
-import React from 'react'
-import Contact from '@/components/Contact'
-import JsonLdSchema from '@/components/JsonLdSchema'
+import React from "react";
+import Contact from "@/components/Contact";
+import JsonLdSchema from "@/components/JsonLdSchema";
 import type { Metadata } from "next";
 
-export const dynamic = "force-static"
+export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: "Contact Owais Abdullah",
-  description: "Get in touch with Owais Abdullah for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
+  description:
+    "Get in touch with Owais Abdullah for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
+  authors: [{ name: "Owais Abdullah" }],
   keywords: [
     "Contact Owais Abdullah",
     "Hire Owais Abdullah",
@@ -22,37 +24,44 @@ export const metadata: Metadata = {
     "Hire Developer",
     "Web Development Services",
     "AI Integration Services",
-    "Professional Contact"
+    "Professional Contact",
   ],
   openGraph: {
-    title: "Contact | Owais Abdullah - AI Agents Developer & Full Stack Developer",
-    description: "Get in touch with Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist. Available for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
+    title:
+      "Contact | Owais Abdullah - AI Agents Developer & Full Stack Developer",
+    description:
+      "Get in touch with Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist. Available for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
     url: "https://owaisabdullah.dev/contact",
     images: [
       {
-        url: '/assets/Owais Abdullah (2).png',
+        url: "/assets/Owais Abdullah (2).png",
         width: 1200,
         height: 630,
-        alt: 'Contact Owais Abdullah - AI Agents Developer & Full Stack Developer',
+        alt: "Contact Owais Abdullah - AI Agents Developer & Full Stack Developer",
       },
     ],
   },
   twitter: {
-    title: "Contact | Owais Abdullah - AI Agents Developer & Full Stack Developer",
-    description: "Get in touch with Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist. Available for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
+    title:
+      "Contact | Owais Abdullah - AI Agents Developer & Full Stack Developer",
+    description:
+      "Get in touch with Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist. Available for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
   },
   alternates: {
-    canonical: 'https://owaisabdullah.dev/contact',
+    canonical: "https://owaisabdullah.dev/contact",
   },
 };
 
 const contact = () => {
   return (
     <>
-      <JsonLdSchema type="contact" pageUrl="https://owaisabdullah.dev/contact" />
+      <JsonLdSchema
+        type="contact"
+        pageUrl="https://owaisabdullah.dev/contact"
+      />
       <Contact />
     </>
-  )
-}
+  );
+};
 
-export default contact
+export default contact;

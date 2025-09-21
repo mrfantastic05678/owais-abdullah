@@ -10,6 +10,8 @@ import { Calendar, User } from "lucide-react";
 import { Post } from "@/types/post";
 import FaqSection from "@/components/Faq";
 import { JsonLdFaq } from "@/components/JsonLdFaq";
+import JsonLdBlog from "@/components/JsonLdBlog";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 export default function BlogPageClient({
   blog,
@@ -39,6 +41,12 @@ export default function BlogPageClient({
     );
   }
 
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Blog", href: "/blog" },
+    { label: blog.title, href: `/blog/${slug}` },
+  ];
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 40 }}
@@ -46,6 +54,7 @@ export default function BlogPageClient({
       transition={{ duration: 0.7, ease: "easeOut" }}
       className="relative -top-[120px] flex flex-col min-h-screen mb-20"
     >
+      <JsonLdBlog blog={blog} slug={slug} />
       {blog.faqs && blog.faqs.length > 0 && <JsonLdFaq faqs={blog.faqs} />}
       {/* Hero Image Section */}
       <motion.div
@@ -76,6 +85,9 @@ export default function BlogPageClient({
         >
           {/* Header */}
           <header className="mb-8">
+            <div className="mb-4">
+              <Breadcrumbs items={breadcrumbItems} />
+            </div>
             <div className="flex flex-wrap gap-2 mb-4 items-center justify-center">
               {!blog.categories || blog.categories.length === 0 ? (
                 <span className="bg-gray-500/70 text-white text-xs px-2 py-1 rounded-full">
