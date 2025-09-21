@@ -85,7 +85,7 @@ export default function BlogPageClient({
         >
           {/* Header */}
           <header className="mb-8">
-            <div className="mb-4">
+            <div className="flex justify-center items-center mb-4 lg:mb-8">
               <Breadcrumbs items={breadcrumbItems} />
             </div>
             <div className="flex flex-wrap gap-2 mb-4 items-center justify-center">
