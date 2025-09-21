@@ -18,13 +18,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }`;
   const posts: Post[] = await client.fetch(postsQuery);
 
-  const postUrls = posts.map((post) => ({
+  const postUrls: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post._updatedAt).toISOString(),
-    changeFrequency: "weekly" as "weekly",
+    changeFrequency: "weekly",
     priority: 0.9,
   }));
-
+  
   return [
     {
       url: baseUrl,
