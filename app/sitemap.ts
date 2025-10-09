@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
 import { client } from "@/sanity/lib/client";
 
+export const revalidate = 60;
+
 type Post = {
   slug: {
     current: string;
@@ -24,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "weekly",
     priority: 0.9,
   }));
-  
+
   return [
     {
       url: baseUrl,
