@@ -216,7 +216,8 @@ export const CustomComponent: PortableTextComponents = {
       children?: ReactNode;
     }) => {
       const href = value?.href || "";
-      const isExternal = href.startsWith("http");
+      const isExternal =
+        href.startsWith("http") && !href.includes("owaisabdullah.dev");
 
       if (isExternal) {
         return (
