@@ -5,9 +5,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { inter, poppins, montserrat } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
-import { ChatBot } from "@/components/ui/ChatBot";
 import Script from "next/script";
-import FloatingNavbar from "@/components/FloatingNavbar";
+import { ConditionalUI } from "@/components/ConditionalUI";
 
 
 export const metadata: Metadata = {
@@ -163,11 +162,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <FloatingNavbar />
+          <ConditionalUI />
           <Header />
           {children}
           <Footer />
-          <ChatBot />
         </ThemeProvider>
       </body>
     </html>
