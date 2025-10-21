@@ -1,7 +1,6 @@
 import { client } from "@/sanity/lib/client";
 import React from "react";
 import BlogCards from "@/components/ui/BlogCards";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { PostCard, BlogSectionProps } from "@/types/blogtypes";
 
 
