@@ -61,7 +61,7 @@ const SkillSlider = () => {
     { name: "Crew AI", icon: Users2, color: "#6366F1" }, // placeholder
 
     // Infra & DevOps
-    { name: "Vercel", icon: Triangle, color: "#ffffff" },
+    { name: "Vercel", icon: Triangle, color: "#000000" },
     { name: "Netlify", icon: Globe2, color: "#00C7B7" },
     { name: "Supabase", icon: ShieldCheck, color: "#3ECF8E" },
     { name: "Railway", icon: TrainFront, color: "#8A63D2" },
@@ -84,8 +84,8 @@ const SkillSlider = () => {
   return (
     <div className="relative w-full overflow-hidden py-6">
       {/* Fade overlays */}
-      <div className="absolute left-0 top-0 w-14 lg:w-32 h-full bg-gradient-to-r from-[#212428] via-[#212428]/80 to-transparent z-10 pointer-events-none"></div>
-      <div className="absolute right-0 top-0 w-14 lg:w-32 h-full bg-gradient-to-l from-[#212428] via-[#212428]/80 to-transparent z-10 pointer-events-none"></div>
+      <div className="absolute left-0 top-0 w-14 lg:w-32 h-full bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
+      <div className="absolute right-0 top-0 w-14 lg:w-32 h-full bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
 
       {/* Top row - sliding right */}
       <div className="mb-8 relative">

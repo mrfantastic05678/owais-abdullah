@@ -57,7 +57,7 @@ export const FloatingNav = ({
           duration: 0.2,
         }}
         className={cn(
-          "flex max-w-[95%] xss:max-w-fit fixed top-7 mx-auto border border-white/[0.2] rounded-full bg-gradient-to-br to-[#1c1f22] from-[#16161f] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[4000] pr-2 pl-8 py-2 items-center justify-center inset-x-0 space-x-4 xs:space-x-8 xss:space-x-10 md:space-x-14",
+          "flex max-w-[95%] xss:max-w-fit fixed top-7 mx-auto border border-border rounded-full bg-card shadow-lg z-[4000] pr-2 pl-8 py-2 items-center justify-center inset-x-0 space-x-4 xs:space-x-8 xss:space-x-10 md:space-x-14",
           className
         )}
       >
@@ -74,7 +74,7 @@ export const FloatingNav = ({
               key={`link=${idx}`}
               href={navItem.link}
               className={cn(
-                "relative text-neutral-50 items-center flex space-x-1 hover:text-accent"
+                "relative text-foreground items-center flex space-x-1 hover:text-accent"
               )}
             >
               <span className="block sm:hidden">{navItem.icon}</span>
@@ -86,7 +86,7 @@ export const FloatingNav = ({
           <HoverBorderGradient
             containerClassName="rounded-full"
             as="button"
-            className="bg-background text-white hover:text-accent flex items-center space-x-2"
+            className="bg-card text-foreground hover:text-accent flex items-center space-x-2"
           >
             <span>Hire Me</span>
           </HoverBorderGradient>

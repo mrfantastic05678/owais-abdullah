@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 const page = () => {
   return (
-    <div className="min-h-screen my-20 ">
+    <div className="min-h-screen mt-2 mb-20 ">
       <BlogSection />
     </div>
   );

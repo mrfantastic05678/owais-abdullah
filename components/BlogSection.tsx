@@ -1,6 +1,8 @@
 import { client } from "@/sanity/lib/client";
 import React from "react";
 import BlogCards from "@/components/ui/BlogCards";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { PostCard, BlogSectionProps } from "@/types/blogtypes";
 
 
 const BlogSection = async ({ limit, excludeLatest }: BlogSectionProps) => {
@@ -29,9 +31,11 @@ const BlogSection = async ({ limit, excludeLatest }: BlogSectionProps) => {
         <h3 className="text-base text-accent font-semibold sm:text-lg">
           Latest News
         </h3>
-        <h2 className="text-3xl text-text font-semibold sm:text-4xl">
-          Our Blog Posts
-        </h2>
+        <div className="flex items-center justify-center gap-4">
+          <h2 className="text-3xl text-foreground font-semibold sm:text-4xl">
+            Our Blog Posts
+          </h2>
+        </div>
       </div>
       {displayedBlogs.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16">
@@ -44,7 +48,7 @@ const BlogSection = async ({ limit, excludeLatest }: BlogSectionProps) => {
           {displayedBlogs.map((blog: PostCard, index: number) => (
             <div
               key={index}
-              className="entrance scroll-smooth border border-gray-800 rounded-lg overflow-hidden hover:scale-105 transition duration-300 shadow-lg bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+              className="entrance scroll-smooth border border-border rounded-lg overflow-hidden hover:scale-105 transition duration-300 shadow-lg bg-card"
             >
               <BlogCards key={index} post={blog} />
             </div>

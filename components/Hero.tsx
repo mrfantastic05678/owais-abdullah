@@ -25,11 +25,11 @@ const Hero = () => {
       <HeroHighlight>
         <div className="max-w-7xl mx-auto flex px-5 pt-40 py-10 md:flex-row flex-col items-center">
           <div className="sm:entrance-left lg:flex-grow md:w-1/2 lg:pr-16 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center lg:w-3/5">
-            <h2 className="title-font sm:text-lg text-base mb-4 font-montserrat text-text">
+            <h2 className="title-font sm:text-lg text-base mb-4 font-montserrat text-foreground">
               WELCOME TO MY WORLD
             </h2>
             <div className="min-h-60 xs:min-h-44 md:min-h-0">
-              <h1 className="sm:text-5xl text-4xl mb-4 font-montserrat font-bold text-text ">
+              <h1 className="sm:text-5xl text-4xl mb-4 font-montserrat font-bold text-foreground ">
                 Hi, I&apos;m <span className="text-accent">Owais Abdullah</span>
                 <br />
                 <span className="">
@@ -174,7 +174,7 @@ const Hero = () => {
             </AnimatedTooltip>
           </div>
         </div>
-        <div className="h-px bg-gray-950 opacity-80 justify-center flex m-auto mt-10"></div>
+        <div className="h-px bg-border opacity-80 justify-center flex m-auto mt-10"></div>
       </HeroHighlight>
     </section>
   );

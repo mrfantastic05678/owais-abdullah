@@ -3,10 +3,11 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
+import { PostCard } from "@/types/blogtypes";
 
 const BlogCards = ({ post }: { post: PostCard }) => {
   return (
-    <div className="flex flex-col gap-4 p-2 hover:scale-[1.03] duration-300 ease-in-out shadow-lg border border-border rounded-lg">
+    <div className="flex flex-col gap-4 p-2 hover:scale-[1.03] duration-300 ease-in-out shadow-lg border border-border rounded-lg bg-card">
       <Link href={`/blog/${post.slug.current}`}>
         <Image
           className="rounded-lg w-full h-36 lg:h-44 object-cover"
@@ -40,17 +41,17 @@ const BlogCards = ({ post }: { post: PostCard }) => {
           )}
         </div>{" "}
         <Link href={`/blog/${post.slug.current}`}>
-          <h2 className="font-semibold text-sm xl:text-base 2xl:text-xl text-heading line-clamp-2">
+          <h2 className="font-semibold text-sm xl:text-base 2xl:text-xl text-foreground line-clamp-2">
             {post.title}
           </h2>
         </Link>
         {/* Displaying the summary of the post */}
-        <p className="text-text opacity-80 line-clamp-2 text-sm">
+        <p className="text-foreground opacity-80 line-clamp-2 text-sm">
           {post.summary}
         </p>
         <div className="flex flex-wrap gap-3 sm:gap-5 mt-2 justify-between items-center">
           <div className="flex flex-wrap max-sm:text-xs text-sm xl:text-base 2xl:text-lg">
-              <p className="text-text opacity-50">
+              <p className="text-foreground opacity-50">
                 {/* Formatting the date */}
                 {new Date(post._createdAt).toLocaleDateString("en-US", {
                   year: "numeric",

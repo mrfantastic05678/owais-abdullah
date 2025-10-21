@@ -13,7 +13,7 @@ const About = () => {
           <h3 className="text-base text-center md:text-left text-accent font-medium sm:text-lg">
             About Me!
           </h3>
-          <h2 className="sm:text-3xl text-center text-2xl md:text-left text-text font-medium title-font mb-2 md:w-2/5">
+          <h2 className="sm:text-3xl text-center text-2xl md:text-left text-foreground font-medium title-font mb-2 md:w-2/5">
             Who I Am and What I Do?
           </h2>
         </div>

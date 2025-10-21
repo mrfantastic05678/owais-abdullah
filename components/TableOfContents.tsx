@@ -158,13 +158,13 @@ export function TableOfContents({ content }: TableOfContentsProps) {
     let headingClass = "";
     if (level === 1) {
       headingClass =
-        "font-semibold text-base md:text-lg text-heading dark:text-white";
+        "font-semibold text-base md:text-lg text-foreground";
     } else if (level === 2) {
       headingClass =
-        "font-semibold text-sm md:text-base text-heading/90 dark:text-white/90";
+        "font-semibold text-sm md:text-base text-foreground/90";
     } else {
       headingClass =
-        "font-medium text-xs sm:text-sm text-heading/60 dark:text-white/60";
+        "font-medium text-xs sm:text-sm text-foreground/60";
     }
     return (
       <li key={id} className="list-none">
@@ -172,7 +172,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
           className={cn(
             "flex items-center gap-2 py-1 cursor-pointer hover:text-primary transition-colors duration-200",
             headingClass,
-            activeId === id ? "text-primary font-bold dark:text-primary" : ""
+            activeId === id ? "text-primary font-bold" : ""
           )}
           style={{ paddingLeft: `${(level - 1) * 0.8}rem` }}
         >
@@ -202,8 +202,8 @@ export function TableOfContents({ content }: TableOfContentsProps) {
 
   return (
     <nav className="">
-      <div className="bg-secondary backdrop-blur-sm border border-border rounded-lg p-3 sm:p-5">
-        <h2 className="text-md sm:text-lg font-semibold mb-4 text-heading">
+      <div className="bg-toc-background backdrop-blur-sm border border-border rounded-lg p-3 sm:p-5">
+        <h2 className="text-md sm:text-lg font-semibold mb-4 text-foreground">
           Table of Contents
         </h2>
         <ul className="space-y-1">

@@ -1,4 +1,4 @@
-interface PostCard {
+export interface PostCard {
   _id: string;
   title: string;
   summary: string;
@@ -21,7 +21,7 @@ interface PostCard {
   }
 };
 
-interface BlogSectionProps {
+export interface BlogSectionProps {
   limit?: number; 
   excludeLatest?: boolean;
 }

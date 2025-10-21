@@ -17,7 +17,7 @@ const ProjectTabs = () => {
         <h3 className="text-base text-accent font-medium sm:text-lg">
           See My Work
         </h3>
-        <h2 className="text-5xl text-text font-semibold sm:text-6xl">
+        <h2 className="text-5xl text-foreground font-semibold sm:text-6xl">
           Projects
         </h2>
       </div>
@@ -30,7 +30,7 @@ const ProjectTabs = () => {
               key={category}
               value={category}
               onClick={() => setSelectedTab(category)}
-              className="px-4 py-2 rounded-lg bg-zinc-800 text-white hover:bg-accent transition"
+              className="px-4 py-2 rounded-lg bg-card text-foreground hover:bg-accent hover:text-accent-foreground transition"
             >
               {category}
             </TabsTrigger>
@@ -44,7 +44,7 @@ const ProjectTabs = () => {
               {projects[category as keyof typeof projects].map((project, index) => (
                 <div
                   key={index}
-                  className="entrance scroll-smooth border border-gray-800 rounded-lg overflow-hidden hover:scale-105 transition duration-300 shadow-lg bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
+                  className="entrance scroll-smooth border border-border rounded-lg overflow-hidden hover:scale-105 transition duration-300 shadow-lg bg-card"
                 >
                   <Image
                     className="lg:h-48 md:h-36 w-full object-cover"
@@ -54,27 +54,27 @@ const ProjectTabs = () => {
                     height={300}
                   />
                   <div className="p-6">
-                    <h2 className="text-xl font-semibold text-white mb-2">
+                    <h2 className="text-xl font-semibold text-foreground mb-2">
                       {project.title}
                     </h2>
 
-                    {/* Tags */}
+                    {/* Tags with theme-aware colors */}
                     <div className="flex flex-wrap gap-2 mb-3">
                       {project.tags.map((tag, i) => (
                         <span
                           key={i}
-                          className="bg-gray-700 text-gray-200 text-xs px-2 py-1 rounded-full"
+                          className="bg-muted text-muted-foreground text-xs px-2 py-1 rounded-full"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
 
-                    <p className="text-gray-400 mb-3">{project.description}</p>
+                    <p className="text-muted-foreground mb-3">{project.description}</p>
                     <div className="flex items-center">
                       <Link
                         href={project.link}
-                        className="text-accent inline-flex items-center group-hover:text-white"
+                        className="text-accent inline-flex items-center group-hover:text-accent/80"
                       >
                         Learn More
                         <span className="ml-3">

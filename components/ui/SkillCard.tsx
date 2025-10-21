@@ -39,19 +39,18 @@ const SkillCard: React.FC<SkillCardProps> = ({
   }, [progress]);
 
   return (
-
-    <div className="entrance scroll-smooth group border border-zinc-800 shadow-lg shadow-zinc-900 p-6 rounded-lg hover:shadow-lg hover:shadow-slate-500/50 hover:border-blue-400 transition-all duration-300 ease-in-out bg-gradient-to-br to-[#1c1f22] from-[#16161f]">
+    <div className="entrance scroll-smooth group border border-border shadow-lg p-6 rounded-lg hover:shadow-lg hover:border-accent transition-all duration-300 ease-in-out bg-card">
       <div className="flex justify-between gap-3">
-      {/* Icon & Details */}
-      <div className="flex flex-col mb-4 max-w-[70%]">
-        <div className="text-4xl text-blue-400 group-hover:text-blue-500 mb-4">{Icon}</div>
-              {/* Title & Description */}
-      <h3 className="text-lg text-white font-semibold mb-2">{title}</h3>
-      <p className="text-gray-400">{description}</p>
-      </div>
+        {/* Icon & Details */}
+        <div className="flex flex-col mb-4 max-w-[70%]">
+          <div className="text-4xl text-accent group-hover:text-accent/80 mb-4">{Icon}</div>
+          {/* Title & Description */}
+          <h3 className="text-lg text-foreground font-semibold mb-2">{title}</h3>
+          <p className="text-muted-foreground">{description}</p>
+        </div>
 
-      {/* Progress */}
-      <div className="w-20 h-20 flex items-center justify-center pt-10">
+        {/* Progress */}
+        <div className="w-20 h-20 flex items-center justify-center pt-10">
           <CircularProgressbar
             value={currentProgress}
             text={`${Math.round(currentProgress)}%`}
@@ -72,8 +71,8 @@ const SkillCard: React.FC<SkillCardProps> = ({
             </defs>
           </svg>
         </div>
-        </div>
-        </div>    
+      </div>
+    </div>
   );
 };
 

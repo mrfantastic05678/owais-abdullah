@@ -28,7 +28,7 @@ export const CustomComponent: PortableTextComponents = {
       return (
         <h1
           id={id}
-          className="text-2xl sm:text-3xl md:text-4xl font-bold mt-6 mb-4 text-heading font-heading"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold mt-6 mb-4 text-foreground font-heading"
         >
           {props.children}
         </h1>
@@ -55,7 +55,7 @@ export const CustomComponent: PortableTextComponents = {
       return (
         <h2
           id={id}
-          className="text-xl sm:text-2xl md:text-3xl font-bold mt-10 mb-3 text-heading font-heading"
+          className="text-xl sm:text-2xl md:text-3xl font-bold mt-10 mb-3 text-foreground font-heading"
         >
           {props.children}
         </h2>
@@ -82,7 +82,7 @@ export const CustomComponent: PortableTextComponents = {
       return (
         <h3
           id={id}
-          className="text-lg sm:text-xl md:text-2xl font-semibold mt-8 mb-2 text-heading font-heading"
+          className="text-lg sm:text-xl md:text-2xl font-semibold mt-8 mb-2 text-foreground font-heading"
         >
           {props.children}
         </h3>
@@ -109,7 +109,7 @@ export const CustomComponent: PortableTextComponents = {
       return (
         <h4
           id={id}
-          className="text-base sm:text-lg md:text-xl font-medium mt-6 mb-1 text-heading font-heading"
+          className="text-base sm:text-lg md:text-xl font-medium mt-6 mb-1 text-foreground font-heading"
         >
           {props.children}
         </h4>
@@ -136,7 +136,7 @@ export const CustomComponent: PortableTextComponents = {
       return (
         <h5
           id={id}
-          className="text-base sm:text-lg font-medium mt-5 mb-1 text-heading font-heading"
+          className="text-base sm:text-lg font-medium mt-5 mb-1 text-foreground font-heading"
         >
           {props.children}
         </h5>
@@ -163,7 +163,7 @@ export const CustomComponent: PortableTextComponents = {
       return (
         <h6
           id={id}
-          className="text-sm sm:text-base font-medium mt-4 mb-1 text-heading font-heading"
+          className="text-sm sm:text-base font-medium mt-4 mb-1 text-foreground font-heading"
         >
           {props.children}
         </h6>
@@ -175,38 +175,38 @@ export const CustomComponent: PortableTextComponents = {
       </blockquote>
     ),
     normal: ({ children }: { children?: ReactNode }) => (
-      <p className="text-base lg:text-lg leading-7 mb-6">{children}</p>
+      <p className="text-base lg:text-lg leading-7 mb-6 text-foreground">{children}</p>
     ),
   },
   list: {
     bullet: ({ children }: { children?: ReactNode }) => (
-      <ul className="list-disc text-base ml-6 mb-8 space-y-2 text-text2 marker:text-primary">
+      <ul className="list-disc text-base ml-6 mb-8 space-y-2 text-foreground marker:text-primary">
         {children}
       </ul>
     ),
     number: ({ children }: { children?: ReactNode }) => (
-      <ol className="list-decimal text-base ml-6 mb-8 space-y-2 text-text2 marker:text-primary">
+      <ol className="list-decimal text-base ml-6 mb-8 space-y-2 text-foreground marker:text-primary">
         {children}
       </ol>
     ),
   },
   listItem: {
     bullet: ({ children }: { children?: ReactNode }) => (
-      <li className="pl-2 leading-relaxed">{children}</li>
+      <li className="pl-2 leading-relaxed text-foreground">{children}</li>
     ),
     number: ({ children }: { children?: ReactNode }) => (
-      <li className="pl-2 leading-relaxed">{children}</li>
+      <li className="pl-2 leading-relaxed text-foreground">{children}</li>
     ),
   },
   marks: {
     bold: ({ children }: { children?: ReactNode }) => (
-      <strong className="font-semibold text-text2">{children}</strong>
+      <strong className="font-semibold text-foreground">{children}</strong>
     ),
     italic: ({ children }: { children?: ReactNode }) => (
-      <em className="italic text-text2">{children}</em>
+      <em className="italic text-foreground">{children}</em>
     ),
     underline: ({ children }: { children?: ReactNode }) => (
-      <span className="underline text-text2">{children}</span>
+      <span className="underline text-foreground">{children}</span>
     ),
     link: ({
       value,
@@ -240,10 +240,10 @@ export const CustomComponent: PortableTextComponents = {
       );
     },
     strong: ({ children }: { children?: ReactNode }) => (
-      <strong className="font-bold text-text2">{children}</strong>
+      <strong className="font-bold text-foreground">{children}</strong>
     ),
     em: ({ children }: { children?: ReactNode }) => (
-      <em className="italic text-text2">{children}</em>
+      <em className="italic text-foreground">{children}</em>
     ),
     code: ({ children }: { children?: ReactNode }) => (
       <code className="bg-gray-800 text-sm p-1 rounded-md text-gray-200 font-mono">
@@ -251,10 +251,10 @@ export const CustomComponent: PortableTextComponents = {
       </code>
     ),
     "strike-through": ({ children }: { children?: ReactNode }) => (
-      <span className="line-through text-text2">{children}</span>
+      <span className="line-through text-foreground">{children}</span>
     ),
     highlight: ({ children }: { children?: ReactNode }) => (
-      <span className="bg-yellow-100 dark:bg-yellow-900 text-text2 px-1 rounded">
+      <span className="bg-yellow-100 dark:bg-yellow-900 text-foreground px-1 rounded">
         {children}
       </span>
     ),

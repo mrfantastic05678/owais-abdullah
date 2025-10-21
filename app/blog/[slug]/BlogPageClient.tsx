@@ -137,16 +137,16 @@ export default function BlogPageClient({
           height={800}
           priority
         />
-        <div className="absolute bottom-0 left-0 right-0 h-[10%] bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-[15%] bg-gradient-to-t from-black/40 to-transparent" />
       </motion.div>
 
       {/* Content Section */}
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 -mt-32 sm:-mt-20">
+      <div className="max-w-[1480px] 2xl:max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 -mt-32 sm:-mt-20">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="bg-background/80 backdrop-blur-sm rounded-2xl shadow-2xl px-2 py-4 sm:p-4 md:p-8 lg:p-12"
+          className="bg-blog backdrop-blur-sm rounded-2xl shadow-2xl px-2 py-4 sm:p-4 md:p-8 lg:p-12"
         >
           {/* Header */}
           <header className="mb-8">

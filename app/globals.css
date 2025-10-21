@@ -6,73 +6,77 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: #f3f4f6; /* light background */
+    --foreground: #1f2937; /* dark foreground */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: #ffffff; /* white card */
+    --card-foreground: #1f2937; /* dark card foreground */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: #ffffff; /* white popover */
+    --popover-foreground: #1f2937; /* dark popover foreground */
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: #3a69ff; /* blue primary */
+    --primary-foreground: #ffffff; /* white primary foreground */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: #1f2937; /* dark secondary */
+    --secondary-foreground: #ffffff; /* white secondary foreground */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: #e5e7eb; /* light muted */
+    --muted-foreground: #4b5563; /* dark muted foreground */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: #3a69ff; /* blue accent */
+    --accent-foreground: #ffffff; /* white accent foreground */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: #ef4444; /* red destructive */
+    --destructive-foreground: #ffffff; /* white destructive foreground */
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: #d1d5db; /* light border */
+    --input: #d1d5db; /* light input */
+    --ring: #3a69ff; /* blue ring */
 
     --radius: 0.5rem;
 
-    --heading: 222.2 84% 4.9%;
-    --text: 222.2 84% 4.9%;
-    --text2: 222.2 84% 4.9%;
+    --heading: #1f2937; /* dark heading */
+    --text: #fff; /* white text */
+    --text2: #4b5563; /* dark text2 */
+    --toc-background: #e5e7eb; /* light TOC background */
+    --blog: #f3f4f6; /* light blog background */
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: #212428; /* dark background */
+    --foreground: #ffffff; /* white foreground */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: #212428; /* dark card */
+    --card-foreground: #ffffff; /* white card foreground */
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: #212428; /* dark popover */
+    --popover-foreground: #ffffff; /* white popover foreground */
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: #3a69ff; /* blue primary */
+    --primary-foreground: #ffffff; /* white primary foreground */
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: #1f2937; /* dark secondary */
+    --secondary-foreground: #ffffff; /* white secondary foreground */
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: #374151; /* dark muted */
+    --muted-foreground: #d1d5db; /* light muted foreground */
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: #3a69ff; /* blue accent */
+    --accent-foreground: #ffffff; /* white accent foreground */
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: #ef4444; /* red destructive */
+    --destructive-foreground: #ffffff; /* white destructive foreground */
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: #374151; /* dark border */
+    --input: #374151; /* dark input */
+    --ring: #3a69ff; /* blue ring */
 
-    --heading: 210 40% 98%;
-    --text: 210 40% 98%;
-    --text2: 215 20.2% 65.1%;
+    --heading: #ffffff; /* white heading */
+    --text: #fff; /* white text */
+    --text2: #d1d5db; /* light text2 */
+    --toc-background: #1F2937; /* dark TOC background */
+    --blog: #212428; /* dark blog background */
   }
 }
 

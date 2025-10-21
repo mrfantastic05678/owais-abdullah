@@ -20,7 +20,7 @@ export default function FaqSection({ faqs }: FaqProps) {
     <div className="my-8 sm:my-12">
       <div className="text-center mb-6 sm:mb-8">
         <h3 className="text-accent font-semibold text-base sm:text-lg mb-1 sm:mb-2">FAQ</h3>
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-heading">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
           Frequently Asked Questions
         </h2>
       </div>
@@ -34,7 +34,7 @@ export default function FaqSection({ faqs }: FaqProps) {
             <AccordionTrigger className="p-3 sm:p-4 text-base sm:text-lg font-semibold text-left hover:text-primary transition-colors duration-300 hover:no-underline">
               {faq.question}
             </AccordionTrigger>
-            <AccordionContent className="p-3 sm:p-4 pt-0 text-sm sm:text-base text-text/80 font-poppins">
+            <AccordionContent className="p-3 sm:p-4 pt-0 text-sm sm:text-base text-muted-foreground font-poppins">
               {faq.answer}
             </AccordionContent>
           </AccordionItem>

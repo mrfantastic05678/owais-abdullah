@@ -113,7 +113,7 @@ export function ChatBot() {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X size={26} strokeWidth={2} />
+                  <X size={26} strokeWidth={2} className="text-white" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -123,7 +123,7 @@ export function ChatBot() {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <BotMessageSquare size={26} strokeWidth={1.5} />
+                  <BotMessageSquare size={26} strokeWidth={1.5} className="text-white" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -179,8 +179,8 @@ export function ChatBot() {
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="h-[70vh] sm:h-[80vh] flex flex-col border shadow-xl bg-gray-50/90 dark:bg-background/95 backdrop-blur-sm">
-              <CardHeader className="flex flex-row items-center justify-between rounded-[10px] bg-gray-50 dark:bg-background border-b px-4 dark:border-gray-900">
+            <Card className="h-[70vh] sm:h-[80vh] flex flex-col border shadow-xl bg-card dark:bg-card/90">
+              <CardHeader className="flex flex-row items-center justify-between rounded-[10px] bg-card dark:bg-card/80 border-b px-4 border-border">
                 <div className="flex items-center gap-4">
                   <Avatar className="h-8 w-8">
                     <div className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground">
@@ -224,7 +224,7 @@ export function ChatBot() {
                       message.role === "user" ? (
                         <div
                           key={index}
-                          className="flex flex-col gap-2 rounded-l-[20px] rounded-tr-[20px] p-3 break-words w-fit max-w-[80%] ml-auto bg-accent/95 text-foreground shadow-sm shadow-accent/20"
+                          className="flex flex-col gap-2 rounded-l-[20px] rounded-tr-[20px] p-3 break-words w-fit max-w-[80%] ml-auto bg-accent text-white shadow-sm shadow-accent/20"
                         >
                           <p className="text-sm whitespace-pre-wrap break-words">
                             {message.content}
@@ -236,7 +236,7 @@ export function ChatBot() {
                           className="flex items-end gap-3 max-w-[90%]"
                         >
                           <Avatar className="h-8 w-8 flex-shrink-0 mb-1">
-                            <div className="flex h-full w-full items-center justify-center bg-blue-300 dark:bg-accent text-foreground ">
+                            <div className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground ">
                               <Image
                                 src="/assets/bot.png"
                                 alt="AI Assistant"
@@ -249,7 +249,7 @@ export function ChatBot() {
                               />
                             </div>
                           </Avatar>
-                          <div className="flex flex-col gap-2 rounded-r-[20px] rounded-tl-[20px] p-3 break-words bg-muted/80 dark:bg-dmuted/80 text-mutedforeground dark:text-dmutedforeground shadow-sm shadow-accent/20">
+                          <div className="flex flex-col gap-2 rounded-r-[20px] rounded-tl-[20px] p-3 break-words bg-muted text-muted-foreground shadow-sm shadow-accent/20">
                             {message.content.includes("rate limit") && (
                               <div className="mb-1 flex items-center gap-1 text-amber-500">
                                 <AlertTriangle className="h-3 w-3" />
@@ -268,23 +268,23 @@ export function ChatBot() {
                   )}
 
                   {isLoading && (
-                    <div className="flex w-max max-w-[80%] flex-col gap-2 rounded-[10px] bg-muted dark:bg-dmuted p-3">
+                    <div className="flex w-max max-w-[80%] flex-col gap-2 rounded-[10px] bg-muted p-3">
                       <div className="flex items-center gap-2">
                         <div className="flex space-x-1">
                           <div
-                            className="h-2 w-2 animate-bounce rounded-full bg-mutedforeground dark:bg-dmutedforeground"
+                            className="h-2 w-2 animate-bounce rounded-full bg-accent"
                             style={{ animationDelay: "0ms" }}
                           ></div>
                           <div
-                            className="h-2 w-2 animate-bounce rounded-full bg-mutedforeground dark:bg-dmutedforeground"
+                            className="h-2 w-2 animate-bounce rounded-full bg-accent"
                             style={{ animationDelay: "150ms" }}
                           ></div>
                           <div
-                            className="h-2 w-2 animate-bounce rounded-full bg-mutedforeground dark:bg-dmutedforeground"
+                            className="h-2 w-2 animate-bounce rounded-full bg-accent"
                             style={{ animationDelay: "300ms" }}
                           ></div>
                         </div>
-                        <p className="text-xs text-mutedforeground dark:text-dmutedforeground">
+                        <p className="text-xs text-mutedforeground">
                           Assistant is typing...
                         </p>
                       </div>
@@ -303,13 +303,13 @@ export function ChatBot() {
                     placeholder="Type your message..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    className="flex-1 focus:outline-none focus:ring-0 dark:focus:ring-0 dark:border-gray-900"
+                    className="flex-1 focus:outline-none focus:ring-0 border-border bg-background text-foreground"
                   />
                   <Button
                     type="submit"
                     size="icon"
                     disabled={isLoading || !input.trim()}
-                    className="bg-accent dark:bg-accent text-foreground hover:bg-blue-900 dark:text-foreground dark:hover:bg-blue-400"
+                    className="bg-accent text-white hover:bg-accent/90"
                   >
                     <Send className="h-4 w-4" />
                   </Button>

@@ -19,7 +19,7 @@ const SkillCards = ({ name, icon: Icon, color }: SkillCardProps) => {
         ></div>
         
         {/* Main card with enhanced styling */}
-        <div className="relative bg-white/[0.05] backdrop-blur-sm border border-white/[0.1] rounded-2xl p-4 w-32 h-24 flex flex-col items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-white/[0.08] group-hover:border-white/[0.2] group-hover:shadow-2xl">
+        <div className="relative bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 w-32 h-24 flex flex-col items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-card/90 group-hover:border-accent/30 group-hover:shadow-2xl">
           {/* Icon container with enhanced glow */}
           <div 
             className="relative p-2 rounded-xl mb-2 transition-all duration-300 group-hover:scale-110"
@@ -30,7 +30,7 @@ const SkillCards = ({ name, icon: Icon, color }: SkillCardProps) => {
           >
             <Icon 
               size={20} 
-              className="text-white transition-all duration-300"
+              className="text-foreground transition-all duration-300"
               style={{ 
                 filter: `drop-shadow(0 0 8px ${color}80)`,
                 color: color
@@ -39,7 +39,7 @@ const SkillCards = ({ name, icon: Icon, color }: SkillCardProps) => {
           </div>
           
           {/* Skill name with better contrast */}
-          <h3 className="text-white/90 font-medium text-center text-xs leading-tight tracking-wide">
+          <h3 className="text-foreground font-medium text-center text-xs leading-tight tracking-wide">
             {name}
           </h3>
           

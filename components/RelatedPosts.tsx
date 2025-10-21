@@ -45,7 +45,7 @@ const RelatedPosts = ({ currentSlug, limit = 3 }: RelatedPostsProps) => {
   if (!posts.length) return null;
   return (
     <>
-      <h2 className="text-xl lg:text-3xl text-center font-semibold mb-4">
+      <h2 className="text-xl lg:text-3xl text-center font-semibold mb-4 text-foreground">
         Related Posts
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 md:px-8 lg:px-10">
@@ -64,10 +64,10 @@ const RelatedPosts = ({ currentSlug, limit = 3 }: RelatedPostsProps) => {
               />
             </div>
             <div className="p-4">
-              <h3 className="font-bold text-base mb-2 text-heading line-clamp-2">
+              <h3 className="font-bold text-base mb-2 text-foreground line-clamp-2">
                 {post.title}
               </h3>
-              <p className="text-sm text-text/80 line-clamp-3">
+              <p className="text-sm text-muted-foreground line-clamp-3">
                 {post.summary}
               </p>
             </div>

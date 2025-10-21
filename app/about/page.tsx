@@ -59,7 +59,7 @@ const about = () => {
         <h3 className="text-base text-accent font-medium sm:text-lg">
           Areas of Expertise
         </h3>
-        <h2 className="text-5xl text-text font-semibold sm:text-6xl">
+        <h2 className="text-5xl text-foreground font-semibold sm:text-6xl">
           My Skills
         </h2>
       </div>
