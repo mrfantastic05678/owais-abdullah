@@ -7,7 +7,7 @@ const Contact = () => {
   return (
     <section className="max-w-7xl mx-auto text-gray-400 body-font relative px-4 py-24">
       <div className="flex flex-col md:flex-row gap-10">
-        <div className="md:w-1/2 w-full opacity-100 rounded-lg overflow-hidden px-5 py-10 bg-card dark:bg-[#2d3136] shadow-xl">
+        <div className="md:w-1/2 w-full opacity-100 rounded-lg overflow-hidden p-5 bg-card dark:bg-[#2d3136] shadow-xl">
           <Image
             src={contactimg}
             alt="contact"
@@ -42,7 +42,7 @@ const Contact = () => {
             </div>
           </div>
         </div>
-        <div className="md:w-1/2 w-full bg-background flex flex-col md:ml-auto md:py-8 mt-8 md:mt-0 font-montserrat">
+        <div className="md:w-1/2 w-full flex flex-col md:ml-auto md:py-8 mt-8 md:mt-0 font-montserrat">
           <h2 className="text-foreground text-2xl mb-1 font-semibold title-font">
             CONNECT WITH ME
           </h2>
@@ -55,7 +55,7 @@ const Contact = () => {
                 type="text"
                 id="name"
                 name="name"
-                className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 text-base outline-none text-foreground py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 text-base outline-none text-foreground py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]"
                 required
               />
             </div>
@@ -70,7 +70,7 @@ const Contact = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 text-base outline-none text-foreground py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 text-base outline-none text-foreground py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]"
                 required
               />
             </div>
@@ -85,7 +85,7 @@ const Contact = () => {
                 type="text"
                 id="subject"
                 name="subject"
-                className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 text-base outline-none text-foreground py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 text-base outline-none text-foreground py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]"
                 required
               />
             </div>
@@ -99,7 +99,7 @@ const Contact = () => {
               <textarea
                 id="message"
                 name="message"
-                className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 h-36 text-base outline-none text-foreground py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 h-36 text-base outline-none text-foreground py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]"
                 defaultValue={""}
                 required
               />
@@ -108,7 +108,7 @@ const Contact = () => {
               SEND MESSAGE
             </button>
           </form>
-          <p className="text-xs text-center text-gray-500 mt-5">
+          <p className="text-xs bg-transparent text-center text-gray-500 mt-5">
             Send me a message, and I&apos;ll contact you shortly.
           </p>
         </div>

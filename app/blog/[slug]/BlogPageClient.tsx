@@ -141,12 +141,12 @@ export default function BlogPageClient({
       </motion.div>
 
       {/* Content Section */}
-      <div className="max-w-[1480px] 2xl:max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 -mt-32 sm:-mt-20">
+      <div className="max-w-[1480px] 2xl:max-w-[1360px] xl:max-w-[1160px] mx-auto px-4 sm:px-6 -mt-32 sm:-mt-20">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="bg-blog backdrop-blur-sm rounded-2xl shadow-2xl px-2 py-4 sm:p-4 md:p-8 lg:p-12"
+          className="bg-blog backdrop-blur-sm rounded-2xl shadow-2xl px-2 py-4 sm:p-4 md:p-8 lg:p-10"
         >
           {/* Header */}
           <header className="mb-8">
@@ -198,7 +198,7 @@ export default function BlogPageClient({
           </header>
 
           {/* Main Content Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-10">
             {/* Table of Contents (Mobile) */}
             <aside className="lg:hidden mb-8">
               <TableOfContents content={blog.content} />
@@ -212,7 +212,7 @@ export default function BlogPageClient({
             </aside>
 
             {/* Article Body */}
-            <div className="lg:col-span-8">
+            <div className="lg:col-span-8 px-2">
               <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-semibold prose-a:text-primary hover:prose-a:text-primary/80 prose-blockquote:border-l-primary">
                 <PortableText
                   value={blog.content}
@@ -246,7 +246,7 @@ export default function BlogPageClient({
       </div>
       {/* Related Posts Section */}
       <motion.div
-        className="max-w-6xl mx-auto mt-14 px-4 sm:px-6 lg:px-8 w-full"
+        className="max-w-7xl mx-auto mt-14 px-4 sm:px-6 lg:px-8 w-full"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.8 }}

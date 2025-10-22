@@ -64,9 +64,9 @@ const Header = () => {
       <div className="absolute top-0 left-0 w-full h-full z-[-1] pointer-events-none" />
 
       <div className="mx-auto flex flex-wrap justify-between font-medium p-5 flex-row z-10">
+        {/* Natural gradient blob coming from above with larger size */}
+        <div className="absolute -top-20 -left-14 w-48 h-48 md:w-56 md:h-56 bg-gradient-to-br from-accent to-black/60 rounded-full blur-2xl opacity-80 md:opacity-50 dark:opacity-30 -z-10"></div>
         <Link href={"/"} className="flex mb-4 md:mb-0 z-10 relative">
-          {/* Natural gradient blob coming from above with larger size */}
-          <div className="absolute -top-20 -left-20 w-64 h-64 bg-gradient-to-br from-accent to-black rounded-full blur-2xl opacity-50 -z-10"></div>
           <Image src={Logo} width={80} height={40} alt={"logo"} className="relative z-10" />
         </Link>
 

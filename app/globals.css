@@ -47,10 +47,10 @@
     --background: #212428; /* dark background */
     --foreground: #ffffff; /* white foreground */
 
-    --card: #212428; /* dark card */
+    --card: #26292b; /* dark card */
     --card-foreground: #ffffff; /* white card foreground */
 
-    --popover: #212428; /* dark popover */
+    --popover: #202224; /* dark popover */
     --popover-foreground: #ffffff; /* white popover foreground */
 
     --primary: #3a69ff; /* blue primary */
@@ -68,7 +68,7 @@
     --destructive: #ef4444; /* red destructive */
     --destructive-foreground: #ffffff; /* white destructive foreground */
 
-    --border: #374151; /* dark border */
+    --border: #2c333f; /* dark border */
     --input: #374151; /* dark input */
     --ring: #3a69ff; /* blue ring */
 
@@ -76,7 +76,7 @@
     --text: #fff; /* white text */
     --text2: #d1d5db; /* light text2 */
     --toc-background: #1F2937; /* dark TOC background */
-    --blog: #212428; /* dark blog background */
+    --blog: #262a2e; /* dark blog background */
   }
 }
 
