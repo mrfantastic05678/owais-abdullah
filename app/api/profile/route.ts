@@ -1,6 +1,457 @@
 import { NextResponse } from "next/server";
 
+// Existing projects from data/projects.ts - these have images and are already on the website
+const existingProjects = [
+  // Next.js Projects
+  {
+    title: "Personal Portfolio Website",
+    description: "My personal portfolio showcasing my skills, projects, and experience, built with Next.js.",
+    image: "/assets/Project (18).png",
+    link: "https://owais-abdullah.vercel.app",
+    repoUrl: "https://github.com/MrOwaisAbdullah/Owais-Abdullah",
+    category: "Next.js",
+    tags: ["Next.js", "Tailwind", "Portfolio"],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Sanity CMS"],
+  },
+  {
+    title: "FurnitureMart.pk",
+    description: "A fully dynamic furniture marketplace built using Next.js, Sanity, and Tailwind CSS.",
+    image: "/assets/Project (10).png",
+    link: "https://furniture-mart-pk.vercel.app/",
+    repoUrl: "https://github.com/MrOwaisAbdullah/Marketplace-Technical-Foundation---FurnitureMart.pk",
+    category: "Next.js",
+    tags: ["Next.js", "Sanity", "E-commerce"],
+    techStack: ["Next.js", "Sanity CMS", "Tailwind CSS"],
+  },
+  {
+    title: "AA Marketing",
+    description: "A fully dynamic marketing website built using Next.js, Sanity, and Tailwind CSS.",
+    image: "/assets/Project (20).png",
+    link: "https://aamarktng.com/",
+    category: "Next.js",
+    tags: ["Next.js", "Typescript", "Marketing"],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+  },
+  {
+    title: "Blog Website",
+    description: "A fully functional blog with comments, categories, and dynamic content using Sanity.",
+    image: "/assets/Project (12).png",
+    link: "https://blog-site-green-one.vercel.app/",
+    category: "Next.js",
+    tags: ["Next.js", "Sanity", "Blog"],
+    techStack: ["Next.js", "Sanity CMS", "Tailwind CSS"],
+  },
+  {
+    title: "FurnitureMart.pk Admin Dashboard",
+    description: "A fully dynamic furniture marketplace dashboard built using Next.js, Sanity, and Tailwind CSS.",
+    image: "/assets/Project (11).png",
+    link: "https://admin.oneklickdigi.com/",
+    category: "Next.js",
+    tags: ["Next.js", "Sanity", "Dashboard"],
+    techStack: ["Next.js", "Sanity CMS", "Tailwind CSS"],
+  },
+  {
+    title: "Burraq Digits",
+    description: "A fully dynamic digital marketing agency website built using Next.js, Sanity, and Tailwind CSS.",
+    image: "/assets/Project (21).png",
+    link: "https://burraqdigits.com/",
+    category: "Next.js",
+    tags: ["Next.js", "Typescript", "Digital Marketing"],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+  },
+  {
+    title: "Personal AI Assistant",
+    description: "An AI-powered chatbot integrated into my portfolio website, allowing visitors to explore my skills, projects, and contact details effortlessly.",
+    image: "/assets/Project (19).png",
+    link: "#",
+    category: "Next.js",
+    tags: ["Next.js", "AI", "Chatbot", "Portfolio"],
+    techStack: ["Next.js", "Gemini AI", "Tailwind CSS"],
+  },
+  {
+    title: "First Practice Portfolio Website",
+    description: "My First Practice portfolio showcasing dummy data, projects, skills, and experience, built with Next.js.",
+    image: "/assets/Project (17).png",
+    link: "https://portfolio-class-assignment.vercel.app/",
+    category: "Next.js",
+    tags: ["Next.js", "Tailwind", "Portfolio"],
+    techStack: ["Next.js", "Tailwind CSS"],
+  },
+  // WordPress Projects
+  {
+    title: "Landscape & Gardening Website",
+    description: "Created a website for a landscape and gardening service provider, showcasing their expertise.",
+    image: "/assets/Project.webp",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Business", "SEO"],
+    techStack: ["WordPress", "PHP", "Elementor"],
+  },
+  {
+    title: "Four M Enterprises",
+    description: "Created a website for a roofing material supplier, showcasing their expertise.",
+    image: "/assets/Project (01).png",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Business", "SEO"],
+    techStack: ["WordPress", "PHP"],
+  },
+  {
+    title: "IDI Overseas HR",
+    description: "Created a website for a HR consultancy service provider, showcasing their expertise.",
+    image: "/assets/Project (04).png",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Business", "SEO"],
+    techStack: ["WordPress", "PHP"],
+  },
+  {
+    title: "Rukhsar Marriage Bureau",
+    description: "Created a website for a marriage bureau, showcasing their expertise.",
+    image: "/assets/Project (03).png",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Business", "SEO"],
+    techStack: ["WordPress", "PHP"],
+  },
+  {
+    title: "Next Trip & Travels",
+    description: "Created a website for a travel agency, showcasing their expertise.",
+    image: "/assets/Project (02).png",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Business", "SEO"],
+    techStack: ["WordPress", "PHP"],
+  },
+  {
+    title: "One Rupee Raffle Website",
+    description: "A new and exciting one-rupee raffle website, designed for an engaging user experience.",
+    image: "/assets/Project (5).webp",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "E-commerce", "Lottery"],
+    techStack: ["WordPress", "WooCommerce"],
+  },
+  {
+    title: "Furniture & Interior Design Website",
+    description: "A premium furniture store website combining stunning visuals and product catalog.",
+    image: "/assets/Project (2).webp",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Interior Design", "Business"],
+    techStack: ["WordPress", "WooCommerce"],
+  },
+  {
+    title: "Coffee Cafe Website",
+    description: "An engaging website designed for a charming coffee cafe with a unique online presence.",
+    image: "/assets/Project (3).webp",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Cafe", "Local Business"],
+    techStack: ["WordPress", "PHP"],
+  },
+  {
+    title: "Online Quran Academy Website",
+    description: "A website for an online Quran academy to communicate their educational offerings.",
+    image: "/assets/Project (4).webp",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Education", "Online Learning"],
+    techStack: ["WordPress", "PHP"],
+  },
+  {
+    title: "Home Improvement Ecommerce Website",
+    description: "A user-friendly online store for home improvement tools and gadgets.",
+    image: "/assets/Project (1).webp",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "E-commerce", "Home Improvement"],
+    techStack: ["WordPress", "WooCommerce"],
+  },
+  // Tools & Automation
+  {
+    title: "AI Content Generator",
+    description: "Tool for generating AI-powered social media content with Youtube videos.",
+    image: "/assets/Project (16).png",
+    link: "https://agentic-socials.streamlit.app/",
+    category: "Tools & Automation",
+    tags: ["Python", "Automation", "AI", "Content"],
+    techStack: ["Python", "Streamlit", "OpenAI API"],
+    repoUrl: "#",
+  },
+  {
+    title: "AI Data Alchemist",
+    description: "Tool that helps users transform, clean, Filter, visualize data (CSV/Excel), and give AI-Powered Suggestions.",
+    image: "/assets/Project (13).png",
+    link: "https://ai-data-alchemist.streamlit.app/",
+    category: "Tools & Automation",
+    tags: ["Python", "AI", "Data", "Converter"],
+    techStack: ["Python", "Streamlit", "Pandas", "Gemini API"],
+    repoUrl: "https://github.com/MrOwaisAbdullah/Web-App-with-Streamlit",
+  },
+  {
+    title: "Password Strength Meter",
+    description: "PassGuard is a sleek, secure Streamlit-based tool designed to evaluate password strength, generate strong passwords.",
+    image: "/assets/Project (15).png",
+    link: "https://passguard.streamlit.app/",
+    category: "Tools & Automation",
+    tags: ["Python", "Streamlit", "AI", "Security"],
+    techStack: ["Python", "Streamlit"],
+    repoUrl: "#",
+  },
+  {
+    title: "SEO Audit Script",
+    description: "Automated script to analyze website SEO and provide optimization recommendations.",
+    image: "/assets/placeholder.png",
+    link: "#",
+    category: "Tools & Automation",
+    tags: ["SEO", "Automation", "CLI Tool"],
+    techStack: ["Python"],
+    repoUrl: "#",
+  },
+  {
+    title: "AI Powered Unit Converter",
+    description: "Tool to convert Units and currency with real time data using AI.",
+    image: "/assets/Project (14).png",
+    link: "https://convertiq.streamlit.app/",
+    category: "Tools & Automation",
+    tags: ["Python", "Streamlit", "AI", "Converter"],
+    techStack: ["Python", "Streamlit"],
+    repoUrl: "https://github.com/MrOwaisAbdullah/1_unit_converter",
+  },
+  // HTML & CSS
+  {
+    title: "Resume Builder",
+    description: "A custom resume-building tool with PDF export functionality.",
+    image: "/assets/Project (8).png",
+    link: "https://resume-builder-phi-olive.vercel.app/",
+    category: "HTML & CSS",
+    tags: ["HTML", "TypeScript", "Tool"],
+    techStack: ["HTML", "TypeScript", "CSS"],
+    repoUrl: "https://github.com/MrOwaisAbdullah/Resume-Builder",
+  },
+  {
+    title: "Inventory Management System",
+    description: "A simple tool to manage inventory.",
+    image: "/assets/Project (7).png",
+    link: "https://inventory-management-sysytem-one.vercel.app/",
+    category: "HTML & CSS",
+    tags: ["HTML", "TypeScript", "Tool"],
+    techStack: ["HTML", "TypeScript", "CSS"],
+    repoUrl: "https://github.com/MrOwaisAbdullah/Basic-Inventory-Management-Sysytem",
+  },
+];
+
+// GitHub repository data - researched and extracted from GitHub
+// Images: Use agent-browser to capture screenshots of deployed websites and save to /public/assets/projects/
+// Fallback: Use GitHub repo screenshot or social preview image
+const githubRepositories = [
+  {
+    title: "SaaS Business Plan Agent",
+    repo: "Saas-Plan-Agent",
+    category: "Tools & Automation",
+    description:
+      "A conversational SaaS Business Plan Generator using OpenAI Agents SDK and Chainlit. Generates investor-focused business plans with specialist agents for market research, product strategy, business modeling, go-to-market planning, and financial projections.",
+    link: "https://github.com/MrOwaisAbdullah/Saas-Plan-Agent",
+    deployedUrl: null,
+    image: null, // TODO: Capture screenshot with agent-browser
+    techStack: ["Python", "OpenAI Agents SDK", "Chainlit", "Tavily API"],
+    tags: ["Python", "AI", "Agents", "Business"],
+    stars: 0,
+    language: "Python",
+  },
+  {
+    title: "Weather Info Agent",
+    repo: "weather-Agent",
+    category: "Tools & Automation",
+    description:
+      "AI agent that fetches real-time weather information via a chat interface. Built with OpenAI Agents SDK, WeatherAPI, and Chainlit. Deployable on Hugging Face Spaces.",
+    link: "https://github.com/MrOwaisAbdullah/weather-Agent",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Python", "OpenAI Agents SDK", "Chainlit", "WeatherAPI", "Gemini API"],
+    tags: ["Python", "AI", "Agents", "Weather"],
+    stars: 0,
+    language: "Python",
+  },
+  {
+    title: "Calculator Agent",
+    repo: "calculator-agent",
+    category: "Tools & Automation",
+    description: "AI-powered calculator agent using Python and OpenAI Agents SDK.",
+    link: "https://github.com/MrOwaisAbdullah/calculator-agent",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Python", "OpenAI Agents SDK"],
+    tags: ["Python", "AI", "Agents", "Calculator"],
+    stars: 0,
+    language: "Python",
+  },
+  {
+    title: "Agent with OpenRouter",
+    repo: "Agent-with-Openrouter",
+    category: "Tools & Automation",
+    description: "AI agent integration with OpenRouter API for enhanced AI capabilities.",
+    link: "https://github.com/MrOwaisAbdullah/Agent-with-Openrouter",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Python"],
+    tags: ["Python", "AI", "Agents"],
+    stars: 0,
+    language: "Python",
+  },
+  {
+    title: "Personal Library Manager",
+    repo: "3_book_library",
+    category: "Tools & Automation",
+    description:
+      "A simple command-line application to manage your personal book collection. Add, remove, search, and track books with statistics and reading recommendations.",
+    link: "https://github.com/MrOwaisAbdullah/3_book_library",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Python"],
+    tags: ["Python", "CLI", "Books", "Library"],
+    stars: 0,
+    language: "Python",
+  },
+  {
+    title: "Assignment Projects",
+    repo: "4_Assingnments",
+    category: "Tools & Automation",
+    description:
+      "Python projects completed for assignment 4. Includes random Python utilities and Tkinter applications.",
+    link: "https://github.com/MrOwaisAbdullah/4_Assingnments",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Python", "Tkinter"],
+    tags: ["Python", "Learning", "Assignments"],
+    stars: 0,
+    language: "Python",
+  },
+  {
+    title: "Secure Data Encryption",
+    repo: "05_secure_data_encryption",
+    category: "Tools & Automation",
+    description:
+      "A complete traditional OOP practice series focused on secure data encryption in Python.",
+    link: "https://github.com/MrOwaisAbdullah/05_secure_data_encryption",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Python"],
+    tags: ["Python", "Security", "Encryption", "OOP"],
+    stars: 0,
+    language: "Python",
+  },
+  {
+    title: "Build Compose and Decorate",
+    repo: "06_Build_Compose_and_Decorate_A_Complete_Traditional_OOP_Practice_Series",
+    category: "Tools & Automation",
+    description:
+      "A complete traditional OOP practice series demonstrating build, compose, and decorate patterns in Python.",
+    link: "https://github.com/MrOwaisAbdullah/06_Build_Compose_and_Decorate_A_Complete_Traditional_OOP_Practice_Series",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Python"],
+    tags: ["Python", "OOP", "Design Patterns"],
+    stars: 0,
+    language: "Python",
+  },
+  {
+    title: "Shopify Liquid Project",
+    repo: "Shopify",
+    category: "WordPress",
+    description: "Shopify-based development project using Liquid templating for e-commerce customization.",
+    link: "https://github.com/MrOwaisAbdullah/Shopify",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Liquid", "Shopify"],
+    tags: ["Shopify", "Liquid", "E-commerce"],
+    stars: 0,
+    language: "Liquid",
+  },
+  {
+    title: "Resume Builder App",
+    repo: "Resume-Builder-App",
+    category: "HTML & CSS",
+    description: "Resume builder with HTML, CSS, & TypeScript. Create professional resumes with export functionality.",
+    link: "https://github.com/MrOwaisAbdullah/Resume-Builder-App",
+    deployedUrl: null,
+    image: null,
+    techStack: ["HTML", "CSS", "TypeScript"],
+    tags: ["HTML", "TypeScript", "Resume"],
+    stars: 0,
+    language: "JavaScript",
+  },
+  {
+    title: "Next.js First App",
+    repo: "next-first-app",
+    category: "Next.js",
+    description: "Initial Next.js application project for learning and experimentation.",
+    link: "https://github.com/MrOwaisAbdullah/next-first-app",
+    deployedUrl: null,
+    image: null,
+    techStack: ["TypeScript", "Next.js"],
+    tags: ["Next.js", "Learning"],
+    stars: 0,
+    language: "TypeScript",
+  },
+  {
+    title: "Next.js Portfolio CSS",
+    repo: "nextjs-portfolio-css",
+    category: "Next.js",
+    description: "Portfolio website variant using CSS-focused approach.",
+    link: "https://github.com/MrOwaisAbdullah/nextjs-portfolio-css",
+    deployedUrl: null,
+    image: null,
+    techStack: ["CSS"],
+    tags: ["Next.js", "CSS", "Portfolio"],
+    stars: 0,
+    language: "CSS",
+  },
+  {
+    title: "Node.js Projects",
+    repo: "Node_Projects",
+    category: "Tools & Automation",
+    description: "Collection of Node.js projects for backend development practice.",
+    link: "https://github.com/MrOwaisAbdullah/Node_Projects",
+    deployedUrl: null,
+    image: null,
+    techStack: ["JavaScript", "Node.js"],
+    tags: ["Node.js", "JavaScript", "Backend"],
+    stars: 0,
+    language: "JavaScript",
+  },
+];
+
+// Helper function to merge projects, avoiding duplicates by title
+function mergeProjects(existing: any[], github: any[]) {
+  const merged = [...existing];
+  const existingTitles = new Set(existing.map((p) => p.title.toLowerCase()));
+
+  for (const repo of github) {
+    if (!existingTitles.has(repo.title.toLowerCase())) {
+      merged.push({
+        title: repo.title,
+        description: repo.description,
+        image: repo.image || "/assets/placeholder.png",
+        link: repo.deployedUrl || repo.link,
+        repoUrl: repo.link,
+        category: repo.category,
+        tags: repo.tags || [],
+        techStack: repo.techStack || [],
+        stars: repo.stars,
+        language: repo.language,
+      });
+    }
+  }
+
+  return merged;
+}
+
 export async function GET() {
+  // Merge existing projects with GitHub repositories
+  const allProjects = mergeProjects(existingProjects, githubRepositories);
+
   const profile = {
     name: "Owais Abdullah",
     initials: "OA",
@@ -23,7 +474,7 @@ export async function GET() {
         },
         {
           name: "GitHub",
-          url: "https://github.com/mrowaisabdullah",
+          url: "https://github.com/MrOwaisAbdullah",
         },
         {
           name: "Instagram",
@@ -38,7 +489,7 @@ export async function GET() {
     education: [
       {
         school: "Virtual University of Pakistan",
-        degree: "BS Software Engineering (Enrolled)",
+        degree: "BSCS - Computer Science (Enrolled)",
         start: "2025",
         end: "Present",
       },
@@ -125,142 +576,30 @@ export async function GET() {
       "Open AI Agents SDK",
       "Chainlit",
       "Streamlit",
+      "WeatherAPI",
+      "Gemini API",
+      "Tavily API",
+      "Liquid",
+      "Tkinter",
+      "Pandas",
+      "Altair",
+      "Shopify",
+      "WooCommerce",
+      "Elementor",
     ],
-    projects: [
-      {
-        title: "FurnitureMart.pk",
-        category: "Marketplace",
-        description:
-          "Furniture ecommerce platform built with Next.js, Sanity, and Tailwind CSS.",
-        link: "https://furnituremart.pk",
-      },
-      {
-        title: "Resume Builder",
-        category: "Tool",
-        description:
-          "A customizable resume builder with PDF export, built using TypeScript and Next.js.",
-        link: "#",
-      },
-      {
-        title: "AI Social Post Agent",
-        category: "AI Tool",
-        description:
-          "Generates LinkedIn posts, tweets, carousels, and captions from or without YouTube transcripts.",
-        link: "#",
-      },
-      {
-        title: "SEO Blog Agent",
-        category: "AI Tool",
-        description:
-          "Researches, writes, and publishes SEO-optimized blogs directly to websites.",
-        link: "#",
-      },
-      {
-        title: "YT-to-Social Post Converter",
-        category: "Tool",
-        description:
-          "Converts YouTube Shorts into ready-to-publish content for multiple social platforms.",
-        link: "#",
-      },
-      {
-        title: "PC Bottleneck Calculator",
-        category: "Tool",
-        description:
-          "A web tool to analyze PC hardware and detect potential performance bottlenecks.",
-        link: "#",
-      },
-      {
-        title: "Instagram Video Downloader",
-        category: "Tool",
-        description:
-          "A secure and easy-to-use web app for downloading Instagram videos.",
-        link: "#",
-      },
-      {
-        title: "Art Prompt & Ideas Platform",
-        category: "Platform",
-        description:
-          "An AI-powered platform for generating unique art prompts and creative ideas.",
-        link: "#",
-      },
-      {
-        title: "Renting Platform",
-        category: "Marketplace",
-        description:
-          "A platform enabling sellers to rent out their goods with ease.",
-        link: "#",
-      },
-      {
-        title: "AI Content Generator",
-        category: "AI Tool",
-        description:
-          "A CLI tool to generate carousels, threads, and captions using OpenAI.",
-        link: "#",
-      },
-      {
-        title: "Portfolio Website",
-        category: "Personal",
-        description:
-          "Personal portfolio built with Next.js 14 and Tailwind CSS to showcase my work and services.",
-        link: "https://owais-abdullah.vercel.app/",
-      },
-      {
-        title: "Admin Dashboards",
-        category: "Dashboard",
-        description:
-          "Multiple interactive admin dashboards designed with React.js and Tailwind CSS.",
-        link: "#",
-      },
-      {
-        title: "Education Website",
-        category: "Institution",
-        description:
-          "Online presence for Quran academy and LMS platforms using WordPress.",
-        link: "#",
-      },
-      {
-        title: "Food & Restaurant Websites",
-        category: "WordPress",
-        description:
-          "Developed WordPress-based websites for cafes, coffee shops, and restaurants.",
-        link: "#",
-      },
-      {
-        title: "Landscape & Gardening Website",
-        category: "WordPress",
-        description:
-          "A professional website for a landscape and gardening service provider.",
-        link: "#",
-      },
-      {
-        title: "One Rupee Raffle Website",
-        category: "WordPress",
-        description:
-          "A user-friendly and trustworthy raffle website built on WordPress.",
-        link: "#",
-      },
-      {
-        title: "Furniture & Interior Design Website",
-        category: "WordPress",
-        description:
-          "A furniture store and interior design firm website blending products with design expertise.",
-        link: "#",
-      },
-      {
-        title: "Online Quran Academy Website",
-        category: "WordPress",
-        description:
-          "A website for an online Quran academy, showcasing courses and services.",
-        link: "#",
-      },
-      {
-        title: "Home Improvement Ecommerce Website",
-        category: "WordPress",
-        description:
-          "User-friendly ecommerce store for homeowners to find tools and gadgets.",
-        link: "#",
-      },
-    ],
+    // Merged projects from existing data and GitHub research
+    // This structure supports dynamic rendering on the website
+    // Images can be captured using agent-browser skill or chrome-devtools MCP
+    projects: allProjects,
+    // Projects grouped by category for easy filtering
+    projectsByCategory: allProjects.reduce((acc, project) => {
+      const category = project.category || "Other";
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(project);
+      return acc;
+    }, {} as Record<string, typeof allProjects>),
     keyHighlights: [
       {
         title: "Experience",
@@ -269,7 +608,7 @@ export async function GET() {
       },
       {
         title: "Projects",
-        description: "30+ projects delivered",
+        description: `${allProjects.length}+ projects delivered`,
         icon: "🚀",
       },
       {
