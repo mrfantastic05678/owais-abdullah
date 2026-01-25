@@ -457,10 +457,12 @@ export async function GET() {
     initials: "OA",
     location: "Based in Pakistan 🇵🇰",
     locationLink: "https://www.google.com/maps/place/Pakistan",
-    about: "Web Developer. AI Integrator. Automation Enthusiast.",
+    about: "Spec-Driven Developer. AI Agent Engineer. SaaS Architect.",
     summary:
-      "I design and develop modern websites, web apps, and intelligent automation systems. Skilled in TypeScript, Next.js, WordPress, and AI integrations. Currently learning Agentic AI and building automation tools for creative professionals.",
+      "I build production-ready web applications and AI agents using spec-driven development and AI-driven engineering. Specializing in Next.js SaaS products, full-time digital solutions, and intelligent automation that scales with businesses. Expert in TypeScript, OpenAI Agents SDK, and building robust architectures from the ground up.",
     personalWebsiteUrl: "https://owaisabdullah.dev/",
+    githubUrl: "https://github.com/MrOwaisAbdullah",
+    linkedInUrl: "https://www.linkedin.com/in/mrowaisabdullah/",
     contact: {
       email: "mrowaisabdullah@gmail.com",
       social: [
@@ -507,7 +509,7 @@ export async function GET() {
         start: "2025",
         end: "Present",
         description:
-          "Working on building modern web solutions and integrating AI tools and automation workflows.",
+          "Building spec-driven SaaS products and AI-powered automation solutions. Implementing OpenAI Agents SDK for intelligent workflows and full-time digital products.",
       },
       {
         company: "Burraq Digits",
@@ -515,7 +517,7 @@ export async function GET() {
         start: "2025",
         end: "2025",
         description:
-          "Working on building modern web solutions and integrating AI tools and automation workflows.",
+          "Developed AI-driven web solutions using Next.js and TypeScript. Built production-ready applications with spec-first development methodology.",
       },
       {
         company: "AA Marketing",
@@ -531,7 +533,7 @@ export async function GET() {
         start: "2023",
         end: "Present",
         description:
-          "Built websites using WordPress, Next.js, and Tailwind CSS. Handled SEO and social media campaigns.",
+          "Built WordPress and Next.js websites with focus on SEO and performance. Implemented marketing campaigns.",
       },
       {
         company: "Marksman Advertising",
@@ -547,37 +549,47 @@ export async function GET() {
         start: "2018",
         end: "2020",
         description:
-          "Designed social media graphics, logos, and branding materials.",
+          "Designed branding materials, logos, and social media graphics for diverse clients.",
       },
     ],
     skills: [
+      "Spec-Driven Development",
+      "AI-Driven Engineering",
       "HTML",
       "CSS",
       "JavaScript",
       "TypeScript",
+      "Next.js",
+      "OpenAI Agents SDK",
+      "SaaS Architecture",
       "React.js",
       "Next.js",
       "Tailwind CSS",
       "Node.js",
       "Python",
       "SQLite",
+      "AI Agents",
+      "AI Automation",
+      "WordPress",
+      "WooCommerce",
+      "Sanity CMS",
+      "Shopify",
+      "Full-Stack Development",
+      "REST APIs",
       "PostgreSQL",
       "Prisma ORM",
-      "Sanity CMS",
-      "WordPress",
       "Clerk",
       "Zod",
       "AI Integrations",
       "Chatbots",
-      "Automation Scripts",
-      "REST APIs",
       "Git",
       "Web Design",
       "Open AI Agents SDK",
+      "Automation Scripts",
       "Chainlit",
       "Streamlit",
-      "WeatherAPI",
       "Gemini API",
+      "WeatherAPI",
       "Tavily API",
       "Liquid",
       "Tkinter",
@@ -586,6 +598,9 @@ export async function GET() {
       "Shopify",
       "WooCommerce",
       "Elementor",
+      "Digital Marketing",
+      "SEO",
+      "Social Media Management",
     ],
     // Merged projects from existing data and GitHub research
     // This structure supports dynamic rendering on the website
@@ -612,26 +627,24 @@ export async function GET() {
         icon: "🚀",
       },
       {
-        title: "Tech Stack",
-        description:
-          "React, Next.js, TypeScript, Python, WordPress, OpenAI Agents SDK",
-        icon: "🛠️",
-      },
-      {
-        title: "AI Integration",
-        description: "Built tools with LLM's",
-        icon: "🤖",
-      },
-      {
-        title: "Automations",
-        description:
-          "Created productivity scripts for content creators & Businesses",
-        icon: "⚙️",
+        title: "Development",
+        description: "Spec-Driven & AI-Driven Engineering",
+        icon: "📋",
       },
       {
         title: "AI Agents",
-        description: "Built AI Agents with OpenAI Agents SDK",
+        description: "OpenAI Agents SDK & Automation",
         icon: "🤖",
+      },
+      {
+        title: "SaaS Solutions",
+        description: "Next.js full-time digital products",
+        icon: "☁️",
+      },
+      {
+        title: "Tech Stack",
+        description: "TypeScript, Next.js, Python, WordPress",
+        icon: "🛠️",
       },
       {
         title: "Languages",
@@ -639,9 +652,8 @@ export async function GET() {
         icon: "🗣️",
       },
       {
-        title: "Hobbies",
-        description:
-          "Exploring tech, building tools, watching documentaries, spending time with family",
+        title: "Focus",
+        description: "Production-ready & scalable architectures",
         icon: "🎯",
       },
     ],

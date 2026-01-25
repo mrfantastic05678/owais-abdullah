@@ -35,13 +35,13 @@ const Hero = () => {
                 <span className="">
                   <Typewriter
                     words={[
-                      "a Web Developer.",
+                      "a Spec-Driven Developer.",
                       "an AI Agent Developer.",
-                      "a Next.js Specialist.",
-                      "a Full Stack Developer",
-                      "a Python Enthusiast.",
-                      "a TypeScript Advocate.",
-                      "a WordPress Expert.",
+                      "an AI-Driven Engineer.",
+                      "a Next.js & SaaS Architect.",
+                      "a Full Stack Digital FTE.",
+                      "a TypeScript Specialist.",
+                      "a WordPress & CMS Expert.",
                     ]}
                     loop={0}
                     cursor
@@ -54,7 +54,7 @@ const Hero = () => {
               </h1>
             </div>
             <p className="mb-8 leading-relaxed font-poppins text-gray-400">
-              I am a passionate AI Agents Developer and Full Stack Developer with a focus on Next.js, TypeScript, and Python. I specialize in creating intelligent web applications that leverage the power of AI to enhance user experiences.
+              I build production-ready web applications and AI agents using <span className="text-accent font-semibold">spec-driven development</span> and <span className="text-accent font-semibold">AI-driven engineering</span>. Specializing in Next.js SaaS products, full-time digital solutions, and intelligent automation that scales with your business.
             </p>
             <div className="flex justify-center">
               <Link href="#about" className="scroll-smooth duration-300">
@@ -70,7 +70,7 @@ const Hero = () => {
                 <div className="container flex flex-row items-center gap-3 justify-center md:justify-start ">
                   <AnimatedTooltip
                     tooltipTitle="Wordpress"
-                    tooltipDescription="CMS / Blog"
+                    tooltipDescription="CMS / SaaS / E-commerce"
                   >
                     <div
                       title="Wordpress"
@@ -81,7 +81,7 @@ const Hero = () => {
                   </AnimatedTooltip>
                   <AnimatedTooltip
                     tooltipTitle="TypeScript"
-                    tooltipDescription="Programming Language"
+                    tooltipDescription="Type-Safe Development"
                   >
                     <div
                       title="TypeScript"
@@ -92,7 +92,7 @@ const Hero = () => {
                   </AnimatedTooltip>
                   <AnimatedTooltip
                     tooltipTitle="Next JS"
-                    tooltipDescription="Framework"
+                    tooltipDescription="SaaS & Full-Stack"
                   >
                     <div
                       title="Next JS"
@@ -117,14 +117,14 @@ const Hero = () => {
                     >
                       <div                       className="shadow-sm opacity-50 hover:opacity-100 shadow-slate-700 rounded-lg bg-gray-900 p-3 text-2xl text-text  hover:bg-gray-950 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"
                       >
-                        
+
                       <Linkedin />
                       </div>
                     </Link>
                   </AnimatedTooltip>
                   <AnimatedTooltip
                     tooltipTitle="Github"
-                    tooltipDescription="Connect with me on Github"
+                    tooltipDescription="View my repositories on Github"
                   >
                     <Link
                       href={"https://github.com/MrOwaisAbdullah"}
@@ -139,7 +139,7 @@ const Hero = () => {
                   </AnimatedTooltip>
                   <AnimatedTooltip
                     tooltipTitle="Email"
-                    tooltipDescription="Connect with me on Email"
+                    tooltipDescription="Send me an email"
                   >
                     <Link
                       href={"mailto:mrowaisabdullah@gmail.com"}
@@ -161,7 +161,7 @@ const Hero = () => {
             <div className="-mt-56 -mr-[155px] w-11/12 h-[75%] shadow-xl opacity-30 shadow-slate-500 rounded-xl absolute bottom-0 right-40 z-0 bg-black md:w-11/12 md:h-[75%] md:-mr-28 md:bottom-0 xs:h-[75%] xs:bottom-0 sm:bottom-0 sm:-mr-40 sm:w-10/12 lg:w-11/12 lg:-mr-40 xl:w-10/12 xl:-mr-30 xl:h-[75%] xl:bottom-0 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"></div>
             <AnimatedTooltip
               tooltipTitle="Owais Abdullah"
-              tooltipDescription="AI & Web Engineer"
+              tooltipDescription="Spec-Driven & AI Engineer"
             >
               <Image
                 src={owais}
@@ -169,7 +169,7 @@ const Hero = () => {
                 width={400}
                 height={100}
                 priority
-                alt="Owais Abdullah"
+                alt="Owais Abdullah - Spec-Driven Developer & AI Engineer"
               />
             </AnimatedTooltip>
           </div>

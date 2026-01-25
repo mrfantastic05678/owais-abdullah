@@ -11,42 +11,63 @@ import BlogSection from "@/components/BlogSection";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "Owais Abdullah | AI Agents Developer & Full Stack Developer",
+  title: "Owais Abdullah | Spec-Driven Developer & AI Agent Engineer",
   description:
-    "Explore projects, skills, and experience in AI Agents Development, Full Stack Development, and modern web technologies.",
+    "Spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and full-time digital solutions. Building production-ready web applications with TypeScript, OpenAI Agents SDK, and modern architectures.",
   keywords: [
     "Owais Abdullah Portfolio",
-    "AI Agents Developer Portfolio",
-    "Full Stack Developer Portfolio",
-    "Next.js Developer Portfolio",
-    "React Developer Portfolio",
-    "Web Developer Portfolio",
-    "AI Developer Portfolio",
-    "Software Developer Portfolio",
-    "Open AI Agents SDK Developer Portfolio",
+    "Spec-Driven Developer",
+    "AI Agent Developer",
+    "AI-Driven Development",
+    "Next.js SaaS Developer",
+    "Full Stack Digital FTE",
+    "OpenAI Agents SDK Developer",
+    "TypeScript Developer",
+    "AI Automation Engineer",
+    "SaaS Architect",
+    "WordPress Developer",
     "Sanity CMS Developer",
+    "Full Stack Developer",
+    "React Developer",
+    "Python Developer",
   ],
   openGraph: {
-    title: "Owais Abdullah | AI Agents & Full Stack Developer",
+    title: "Owais Abdullah | Spec-Driven Developer & AI Agent Engineer",
     description:
-      "Welcome to Owais Abdullah's portfolio. AI Agents Developer, Full Stack Developer, and Next.js specialist. Explore my projects, skills, and experience in modern web development and AI integration.",
+      "Spec-driven developer and AI engineer building Next.js SaaS products, AI agents, and full-time digital solutions. Expert in TypeScript, OpenAI Agents SDK, and production-ready web architectures.",
     url: "https://owaisabdullah.dev",
+    siteName: "Owais Abdullah Portfolio",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: "/assets/Owais Abdullah (2).png",
         width: 1200,
         height: 630,
-        alt: "Owais Abdullah - AI Agents & Full Stack Developer Portfolio",
+        alt: "Owais Abdullah - Spec-Driven Developer & AI Agent Engineer",
       },
     ],
   },
   twitter: {
-    title: "Owais Abdullah | AI Agents & Full Stack Developer",
+    title: "Owais Abdullah | Spec-Driven Developer & AI Agent Engineer",
     description:
-      "Welcome to Owais Abdullah's portfolio. AI Agents Developer, Full Stack Developer, and Next.js specialist. Explore my projects, skills, and experience in modern web development and AI integration.",
+      "Spec-driven developer and AI engineer building Next.js SaaS products, AI agents, and full-time digital solutions. Expert in TypeScript, OpenAI Agents SDK, and production-ready web architectures.",
+    card: "summary_large_image",
+    images: ["/assets/Owais Abdullah (2).png"],
   },
   alternates: {
     canonical: "https://owaisabdullah.dev/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
