@@ -71,14 +71,6 @@ const skills = () => {
       <div className="my-10">
         <SkillSlider />
       </div>
-      <div className="flex flex-wrap w-full mt-10 mb-20 flex-col items-center text-center">
-        <h2 className="text-base text-accent font-medium sm:text-lg">
-          Areas of Expertise
-        </h2>
-        <h1 className="text-5xl text-text font-semibold sm:text-6xl">
-          My Skills
-        </h1>
-      </div>
       <Skill />
     </>
   );

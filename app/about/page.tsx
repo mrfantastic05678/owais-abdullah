@@ -1,11 +1,5 @@
-import React from "react";
-import About from "@/components/About";
-import Skill from "@/components/Skill";
-import Projects from "@/components/Projects";
-import JsonLdSchema from "@/components/JsonLdSchema";
-import type { Metadata } from "next";
-
-export const dynamic = "force-static";
+import { Metadata } from "next";
+import AboutPageContent from "./AboutPageContent";
 
 export const metadata: Metadata = {
   title: "About Owais Abdullah | Spec-Driven Developer & AI Engineer",
@@ -54,23 +48,8 @@ export const metadata: Metadata = {
   },
 };
 
-const about = () => {
-  return (
-    <>
-      <JsonLdSchema type="about" pageUrl="https://owaisabdullah.dev/about" />
-      <About />
-      <Projects />
-      <div className="flex flex-wrap w-full mt-10 mb-20 flex-col items-center text-center">
-        <h3 className="text-base text-accent font-medium sm:text-lg">
-          Areas of Expertise
-        </h3>
-        <h2 className="text-5xl text-foreground font-semibold sm:text-6xl">
-          My Skills
-        </h2>
-      </div>
-      <Skill />
-    </>
-  );
+const AboutPage = () => {
+  return <AboutPageContent />;
 };
 
-export default about;
+export default AboutPage;

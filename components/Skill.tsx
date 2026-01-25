@@ -1,13 +1,14 @@
 "use client";
 
 import type React from "react";
+import { motion } from "framer-motion";
 import SkillCard from "../components/ui/SkillCard";
 import { FaReact, FaWordpress, FaNodeJs } from "react-icons/fa";
 import { BiLogoTypescript, BiLogoPython } from "react-icons/bi";
 import { SiNextdotjs, SiOpenai, SiSanity, SiTailwindcss, SiSqlite, SiPrisma, SiPostgresql } from "react-icons/si";
 
 const skills = [
-  // Frontend Skills
+  // Frontend & AI Skills
   {
     icon: <SiOpenai />,
     title: "OpenAI Agents SDK",
@@ -88,23 +89,75 @@ const skills = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5
+    }
+  }
+};
+
 const Skill: React.FC = () => {
   return (
-    <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-background py-16 px-4 sm:px-6 lg:px-8"
+    >
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h3 className="text-base text-accent font-medium sm:text-lg mb-2">
+            Expertise
+          </h3>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+            Skills & Technologies
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
+            A comprehensive toolkit for building modern web applications, AI-powered solutions, and scalable digital products. From frontend frameworks to backend infrastructure and intelligent automation.
+          </p>
+        </motion.div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {skills.map((skill, index) => (
-            <SkillCard
-              key={index}
-              icon={skill.icon}
-              title={skill.title}
-              description={skill.description}
-              progress={skill.progress}
-            />
+            <motion.div key={index} variants={itemVariants}>
+              <SkillCard
+                icon={skill.icon}
+                title={skill.title}
+                description={skill.description}
+                progress={skill.progress}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.section>
   );
 };
 
