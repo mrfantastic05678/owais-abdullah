@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { services, type Service } from "@/data/services";
+import { services } from "@/data/services";
 import JsonLdSchema from "@/components/JsonLdSchema";
 import ServiceTechStack from "@/components/ServiceTechStack";
 import ServiceHeroContent from "@/components/ServiceHeroContent";
@@ -12,9 +12,10 @@ import Link from "next/link";
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const service = services[params.slug];
+  const { slug } = await params;
+  const service = services[slug];
 
   if (!service) {
     return {
@@ -37,11 +38,11 @@ export async function generateMetadata({
     openGraph: {
       title: `${service.title} | Owais Abdullah`,
       description: service.description,
-      url: `https://owaisabdullah.dev/services/${service.slug}`,
+      url: `https://owaisabdullah.dev/services/${slug}`,
       type: "website",
     },
     alternates: {
-      canonical: `https://owaisabdullah.dev/services/${service.slug}`,
+      canonical: `https://owaisabdullah.dev/services/${slug}`,
     },
   };
 }
@@ -53,12 +54,13 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ServicePage({
+export default async function ServicePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const service = services[params.slug];
+  const { slug } = await params;
+  const service = services[slug];
 
   if (!service) {
     notFound();
@@ -84,7 +86,7 @@ export default function ServicePage({
         <section className="py-20 bg-muted/30">
           <div className="max-w-7xl mx-auto px-5">
             <h2 className="text-3xl font-bold text-foreground mb-12 text-center">
-              What's Included
+              What&apos;s Included
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {service.features.map((feature, index) => (
@@ -101,7 +103,7 @@ export default function ServicePage({
         </section>
 
         {/* Tech Stack Section */}
-        <ServiceTechStack techStack={service.techStack} gradient={service.gradient} />
+        <ServiceTechStack techStack={service.techStack} />
 
         {/* Process Section */}
         <section className="py-20 bg-muted/30">
@@ -211,7 +213,7 @@ export default function ServicePage({
               Ready to Get Started?
             </h2>
             <p className="text-muted-foreground text-lg mb-8">
-              Let's discuss your project and how I can help you achieve your
+              Let&apos;s discuss your project and how I can help you achieve your
               goals.
             </p>
             <div className="flex flex-wrap justify-center gap-4">

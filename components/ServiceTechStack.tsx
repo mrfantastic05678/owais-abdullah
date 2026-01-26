@@ -5,12 +5,10 @@ import { motion } from "framer-motion";
 
 interface ServiceTechStackProps {
   techStack: string[];
-  gradient: string;
 }
 
 const ServiceTechStack: React.FC<ServiceTechStackProps> = ({
   techStack,
-  gradient,
 }) => {
   const containerVariants = {
     hidden: { opacity: 0 },

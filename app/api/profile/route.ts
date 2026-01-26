@@ -423,8 +423,23 @@ const githubRepositories = [
   },
 ];
 
+// Project type definition
+interface Project {
+  title: string;
+  description: string;
+  image: string | null;
+  link: string;
+  repoUrl?: string;
+  category: string;
+  tags: string[];
+  techStack: string[];
+  deployedUrl?: string | null;
+  stars?: number;
+  language?: string;
+}
+
 // Helper function to merge projects, avoiding duplicates by title
-function mergeProjects(existing: any[], github: any[]) {
+function mergeProjects(existing: Project[], github: Project[]) {
   const merged = [...existing];
   const existingTitles = new Set(existing.map((p) => p.title.toLowerCase()));
 

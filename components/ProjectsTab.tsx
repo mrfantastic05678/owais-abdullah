@@ -2,12 +2,11 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaRegArrowAltCircleRight, faSpinner } from "react-icons/fa";
+import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import { RiRefreshLine } from "react-icons/ri";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 
 interface Project {
   title: string;

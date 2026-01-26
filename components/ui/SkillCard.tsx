@@ -10,7 +10,6 @@ interface SkillCardProps {
   title: string;
   description: string;
   progress: number;
-  gradient?: string;
 }
 
 const SkillCard: React.FC<SkillCardProps> = ({
@@ -18,7 +17,6 @@ const SkillCard: React.FC<SkillCardProps> = ({
   title,
   description,
   progress,
-  gradient = "from-accent/80 to-accent",
 }) => {
   const [currentProgress, setCurrentProgress] = useState(0);
 

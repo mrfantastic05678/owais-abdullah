@@ -1,29 +1,8 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { services } from "@/data/services";
 import JsonLdSchema from "@/components/JsonLdSchema";
-import {
-  Bot,
-  Zap,
-  Rocket,
-  ShoppingCart,
-  Lightbulb,
-  Cpu,
-  ArrowRight,
-} from "lucide-react";
-
-// Client component for motion animations
+import { ArrowRight } from "lucide-react";
 import ServicesGrid from "@/components/ServicesGrid";
-
-// Icon mapping
-const iconMap = {
-  Bot,
-  Zap,
-  Rocket,
-  ShoppingCart,
-  Lightbulb,
-  Cpu,
-};
 
 export const metadata: Metadata = {
   title: "Services | Owais Abdullah - Spec-Driven Developer & AI Engineer",
@@ -64,8 +43,6 @@ export const metadata: Metadata = {
 };
 
 export default function ServicesPage() {
-  const servicesList = Object.values(services);
-
   return (
     <>
       <JsonLdSchema type="services" pageUrl="https://owaisabdullah.dev/services" />
@@ -210,7 +187,7 @@ export default function ServicesPage() {
               Ready to Start Your Project?
             </h2>
             <p className="text-muted-foreground text-lg mb-8">
-              Let's discuss how I can help bring your vision to life.
+              Let&apos;s discuss how I can help bring your vision to life.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/contact">

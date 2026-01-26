@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface JsonLdSchemaProps {
-  type: 'home' | 'about' | 'projects' | 'skills' | 'contact';
+  type: 'home' | 'about' | 'projects' | 'skills' | 'contact' | 'services' | 'service';
   pageUrl: string;
 }
 
@@ -201,7 +201,9 @@ function getPageTitle(type: string): string {
     about: "About Owais Abdullah | AI Agents Developer & Full Stack Developer",
     projects: "Projects | Owais Abdullah - AI Agents Developer & Full Stack Developer",
     skills: "Skills | Owais Abdullah - AI Agents Developer & Full Stack Developer",
-    contact: "Contact | Owais Abdullah - AI Agents Developer & Full Stack Developer"
+    contact: "Contact | Owais Abdullah - AI Agents Developer & Full Stack Developer",
+    services: "Services | Owais Abdullah - Spec-Driven Developer & AI Engineer",
+    service: "Service | Owais Abdullah - Spec-Driven Developer & AI Engineer"
   };
   return titles[type as keyof typeof titles] || titles.home;
 }
@@ -212,7 +214,9 @@ function getPageDescription(type: string): string {
     about: "Learn more about Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist. Discover my background, expertise, and passion for AI integration and modern web development.",
     projects: "Explore Owais Abdullah's portfolio of projects. AI Agents Developer, Full Stack Developer, and Next.js specialist showcasing innovative web applications, AI integrations, and modern development solutions.",
     skills: "Discover Owais Abdullah's technical skills and expertise. AI Agents Developer, Full Stack Developer, and Next.js specialist proficient in React, TypeScript, AI integration, and modern web technologies.",
-    contact: "Get in touch with Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist. Available for freelance projects, collaborations, and professional opportunities in web development and AI integration."
+    contact: "Get in touch with Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist. Available for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
+    services: "Explore services offered by Owais Abdullah: Digital FTE Development, AI Agents & Automations, Next.js SaaS Development, CMS & E-commerce, Technical Consulting, and API Development.",
+    service: "Professional services by Owais Abdullah - Spec-Driven Developer & AI Engineer specializing in AI Agents, Next.js, and modern web development."
   };
   return descriptions[type as keyof typeof descriptions] || descriptions.home;
 }
@@ -237,6 +241,14 @@ function getBreadcrumbItems(type: string, baseUrl: string) {
     contact: [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl },
       { "@type": "ListItem", "position": 2, "name": "Contact", "item": `${baseUrl}/contact` }
+    ],
+    services: [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl },
+      { "@type": "ListItem", "position": 2, "name": "Services", "item": `${baseUrl}/services` }
+    ],
+    service: [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl },
+      { "@type": "ListItem", "position": 2, "name": "Services", "item": `${baseUrl}/services` }
     ]
   };
   return breadcrumbs[type as keyof typeof breadcrumbs] || breadcrumbs.home;
