@@ -97,7 +97,7 @@ export const services: Record<string, Service> = {
     pricing: [
       {
         name: "Starter",
-        price: "$2,500",
+        price: "$800",
         period: "project",
         features: [
           "Single AI Employee Agent",
@@ -110,7 +110,7 @@ export const services: Record<string, Service> = {
       },
       {
         name: "Professional",
-        price: "$5,000",
+        price: "$1,500",
         period: "project",
         highlighted: true,
         features: [
@@ -226,7 +226,7 @@ export const services: Record<string, Service> = {
     pricing: [
       {
         name: "Starter",
-        price: "$1,500",
+        price: "$500",
         period: "project",
         features: [
           "Single automation workflow",
@@ -238,7 +238,7 @@ export const services: Record<string, Service> = {
       },
       {
         name: "Professional",
-        price: "$3,500",
+        price: "$1,200",
         period: "project",
         highlighted: true,
         features: [
@@ -349,7 +349,7 @@ export const services: Record<string, Service> = {
     pricing: [
       {
         name: "MVP",
-        price: "$5,000",
+        price: "$1,500",
         period: "starting at",
         features: [
           "Core feature set",
@@ -364,7 +364,7 @@ export const services: Record<string, Service> = {
       },
       {
         name: "Production",
-        price: "$15,000",
+        price: "$4,000",
         period: "starting at",
         highlighted: true,
         features: [
@@ -478,7 +478,7 @@ export const services: Record<string, Service> = {
     pricing: [
       {
         name: "WordPress",
-        price: "$2,000",
+        price: "$600",
         period: "starting at",
         features: [
           "Custom theme",
@@ -490,8 +490,22 @@ export const services: Record<string, Service> = {
         ],
       },
       {
+        name: "WordPress + WooCommerce",
+        price: "$1,000",
+        period: "starting at",
+        features: [
+          "Custom WordPress theme",
+          "WooCommerce setup",
+          "Product catalog configuration",
+          "Payment gateway integration",
+          "Shipping & tax setup",
+          "E-commerce optimization",
+          "2 months support",
+        ],
+      },
+      {
         name: "Shopify",
-        price: "$3,000",
+        price: "$700",
         period: "starting at",
         features: [
           "Custom theme",
@@ -504,7 +518,7 @@ export const services: Record<string, Service> = {
       },
       {
         name: "Headless CMS",
-        price: "$4,000",
+        price: "$1,500",
         period: "starting at",
         highlighted: true,
         features: [
@@ -601,7 +615,7 @@ export const services: Record<string, Service> = {
     pricing: [
       {
         name: "Strategy Session",
-        price: "$500",
+        price: "$200",
         period: "one-time",
         features: [
           "1 hour consultation",
@@ -613,7 +627,7 @@ export const services: Record<string, Service> = {
       },
       {
         name: "MVP Package",
-        price: "$3,000",
+        price: "$1,000",
         period: "starting at",
         highlighted: true,
         features: [
@@ -626,7 +640,7 @@ export const services: Record<string, Service> = {
       },
       {
         name: "Advisory Retainer",
-        price: "$2,000",
+        price: "$800",
         period: "/month",
         features: [
           "Ongoing technical guidance",
@@ -723,7 +737,7 @@ export const services: Record<string, Service> = {
     pricing: [
       {
         name: "Single Integration",
-        price: "$500",
+        price: "$200",
         period: "starting at",
         features: [
           "One third-party integration",
@@ -735,7 +749,7 @@ export const services: Record<string, Service> = {
       },
       {
         name: "Custom API",
-        price: "$2,500",
+        price: "$800",
         period: "starting at",
         highlighted: true,
         features: [
