@@ -3,12 +3,14 @@
 import React, { useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { motion } from "framer-motion";
 
 interface SkillCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
   progress: number;
+  gradient?: string;
 }
 
 const SkillCard: React.FC<SkillCardProps> = ({
@@ -16,6 +18,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
   title,
   description,
   progress,
+  gradient = "from-accent/80 to-accent",
 }) => {
   const [currentProgress, setCurrentProgress] = useState(0);
 
@@ -38,12 +41,50 @@ const SkillCard: React.FC<SkillCardProps> = ({
     requestAnimationFrame(animate);
   }, [progress]);
 
+  // Gradient colors mapping for skill icons
+  const getGradientStyle = (title: string) => {
+    const gradients: Record<string, { from: string; to: string }> = {
+      "OpenAI Agents SDK": { from: "#a855f7", to: "#ec4899" },
+      "Next.js": { from: "#000000", to: "#ffffff" },
+      "React.js": { from: "#61dafb", to: "#21a1f1" },
+      "TypeScript": { from: "#3178c6", to: "#007acc" },
+      "Tailwind CSS": { from: "#06b6d4", to: "#14b8a6" },
+      "Node.js": { from: "#68a063", to: "#3c873a" },
+      "PostgreSQL": { from: "#336791", to: "#1d4ed8" },
+      "SQLite": { from: "#0078d4", to: "#004488" },
+      "Prisma ORM": { from: "#0c344b", to: "#0e7490" },
+      "Sanity CMS": { from: "#f03e2f", to: "#c4325f" },
+      "Python & AI Integration": { from: "#ffd43b", to: "#3776ab" },
+      "WordPress": { from: "#00749c", to: "#005177" },
+    };
+
+    const colors = gradients[title];
+    if (colors) {
+      return `linear-gradient(to bottom right, ${colors.from}, ${colors.to})`;
+    }
+    return `linear-gradient(to bottom right, #6366f1, #a855f7)`;
+  };
+
   return (
     <div className="entrance scroll-smooth group border border-border shadow-lg p-6 rounded-lg hover:shadow-lg hover:border-accent transition-all duration-300 ease-in-out bg-card">
       <div className="flex justify-between gap-3">
         {/* Icon & Details */}
         <div className="flex flex-col mb-4 max-w-[70%]">
-          <div className="text-4xl text-accent group-hover:text-accent/80 mb-4">{Icon}</div>
+          {/* Icon with gradient border */}
+          <motion.div
+            whileHover={{ rotate: 5, scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+            className="relative w-16 h-16 rounded-xl mb-4"
+            style={{
+              background: getGradientStyle(title),
+              padding: "3px"
+            }}
+          >
+            <div className="w-full h-full rounded-xl bg-card flex items-center justify-center">
+              <div className="text-2xl text-accent">{Icon}</div>
+            </div>
+          </motion.div>
+
           {/* Title & Description */}
           <h3 className="text-lg text-foreground font-semibold mb-2">{title}</h3>
           <p className="text-muted-foreground">{description}</p>

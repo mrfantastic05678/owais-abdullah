@@ -7,6 +7,7 @@ import JsonLdSchema from "@/components/JsonLdSchema";
 import type { Metadata } from "next";
 import SkillSlider from "@/components/SkillSlider";
 import BlogSection from "@/components/BlogSection";
+import Services from "@/components/Services";
 
 export const dynamic = "force-static";
 
@@ -77,6 +78,7 @@ export default function Home() {
       <JsonLdSchema type="home" pageUrl="https://owaisabdullah.dev" />
       <Hero />
       <About />
+      <Services />
       <div className="flex flex-wrap w-full mt-10 mb-20 flex-col items-center text-center">
         <h3 className="text-base text-accent font-medium sm:text-lg">
           Areas of Expertise

@@ -107,6 +107,13 @@ const Header = () => {
             SKILLS
           </Link>
           <Link
+            href={"/services"}
+            onClick={handleLinkClick}
+            className={`mr-5 ${textColorClass} text-base ${hoverColorClass}`}
+          >
+            SERVICES
+          </Link>
+          <Link
             href={"/contact"}
             onClick={handleLinkClick}
             className={`mr-5 ${textColorClass} text-base ${hoverColorClass}`}
