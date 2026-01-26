@@ -183,14 +183,14 @@ const Hero = () => {
           </div>
 
           <div className="sm:entrance-right lg:max-w-lg md:w-2/5 sm:-ml-16 sm:pt-0 relative lg:-mt-8 xl:-mt-14 md:ml-20 md:-mt-52 ">
-            <div className="-mt-56 -mr-[155px] w-11/12 h-[70%] shadow-xl opacity-30 shadow-slate-500 rounded-xl absolute bottom-0 right-40 z-0 bg-black md:w-11/12 md:h-[75%] md:-mr-28 md:bottom-0 xs:h-[75%] xs:bottom-0 sm:bottom-0 sm:-mr-40 sm:w-10/12  lg:-mr-40 xl:w-10/12 xl:-mr-30 xl:h-[75%] xl:bottom-0 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"></div>
+            <div className="-mt-56 -mr-[155px] w-11/12 sm:w-[24rem] h-[70%] shadow-xl opacity-30 shadow-slate-500 rounded-xl absolute bottom-0 right-40 z-0 bg-black md:w-11/12 md:h-[75%] md:-mr-28 md:bottom-0 xs:h-[75%] xs:bottom-0 sm:bottom-0 sm:-mr-40 sm:w-10/12  lg:-mr-40 xl:w-10/12 xl:-mr-30 xl:h-[75%] xl:bottom-0 bg-gradient-to-br to-[#1c1f22] from-[#16161f]"></div>
             <AnimatedTooltip
               tooltipTitle="Owais Abdullah"
               tooltipDescription="Spec-Driven & AI Engineer"
             >
               <Image
                 src={owais}
-                className="relative object-cover object-center -mt-16 xs:-mt-14 z-10 md:mt-32 md:-ml-10 sm:-mt-9 sm:ml-12 lg:ml-6 lg:mt-6 xl:ml-20 xl:mt-8"
+                className="relative object-cover object-center -mt-16 xs:ml-5 xs:-mt-14 z-10 md:mt-32 md:-ml-10 sm:-mt-9 sm:ml-16 lg:ml-6 lg:mt-6 xl:ml-20 xl:mt-8"
                 width={400}
                 height={100}
                 priority
