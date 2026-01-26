@@ -190,9 +190,11 @@ const Hero = () => {
             >
               <Image
                 src={owais}
-                className="relative object-cover object-center -mt-16 xs:ml-5 xs:-mt-14 z-10 md:mt-32 md:-ml-10 sm:-mt-9 sm:ml-16 lg:ml-6 lg:mt-6 xl:ml-20 xl:mt-8"
+                className="relative object-contain object-center -mt-16 xs:ml-5 xs:-mt-14 z-10 md:mt-32 md:-ml-10 sm:-mt-9 sm:ml-16 lg:ml-6 lg:mt-6 xl:ml-20 xl:mt-8"
                 width={400}
-                height={100}
+                height={500}
+                quality={100}
+                unoptimized
                 priority
                 alt="Owais Abdullah - Spec-Driven Developer & AI Engineer"
               />
