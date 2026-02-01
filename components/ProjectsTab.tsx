@@ -193,7 +193,6 @@ const ProjectTabs = () => {
           return (
             <TabsContent key={category} value={category} className="mt-6">
               <motion.div
-                key={`${category}-${visibleCount[category]}`}
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -279,12 +278,12 @@ const ProjectTabs = () => {
 
               {/* Load More Button */}
               {hasMore && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex justify-center mt-10"
-                >
+                <div className="flex justify-center mt-10">
                   <motion.button
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.3 }}
                     onClick={() => handleLoadMore(category)}
                     disabled={isLoading}
                     whileHover={{ scale: isLoading ? 1 : 1.02 }}
@@ -303,7 +302,7 @@ const ProjectTabs = () => {
                       </>
                     )}
                   </motion.button>
-                </motion.div>
+                </div>
               )}
             </TabsContent>
           );

@@ -54,7 +54,7 @@ const existingProjects = [
     title: "Burraq Digits",
     description: "A fully dynamic digital marketing agency website built using Next.js, Sanity, and Tailwind CSS.",
     image: "/assets/Project (21).png",
-    link: "https://burraqdigits.com/",
+    link: "https://burraq-digits.vercel.app/",
     category: "Next.js",
     tags: ["Next.js", "Typescript", "Digital Marketing"],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
@@ -80,7 +80,7 @@ const existingProjects = [
   {
     title: "TeamFlow",
     description: "An AI-powered team management and task assignment platform designed for agencies. Features intelligent task distribution, team workload balancing, and automated project tracking.",
-    image: "/assets/placeholder.png",
+    image: "/assets/projects/teamflow.png",
     link: "https://teamflow-sigma-opal.vercel.app/",
     category: "Next.js",
     tags: ["Next.js", "AI", "SaaS", "Team Management", "Agencies", "Task Assignment"],
@@ -89,7 +89,7 @@ const existingProjects = [
   {
     title: "RentParlo",
     description: "A peer-to-peer marketplace for renting goods. Connects lenders with borrowers, featuring secure transactions, rental agreements, and item verification.",
-    image: "/assets/placeholder.png",
+    image: "/assets/projects/rentparlo.png",
     link: "https://rentparlo.vercel.app/",
     category: "Next.js",
     tags: ["Next.js", "Marketplace", "Rental", "P2P", "E-commerce"],
@@ -98,7 +98,7 @@ const existingProjects = [
   {
     title: "OWFlex",
     description: "An all-in-one project management, time tracking, and invoice creator platform for freelancers. Uses AI for smart task categorization and automated invoice generation.",
-    image: "/assets/placeholder.png",
+    image: "/assets/projects/owflex.png",
     link: "https://owflex.vercel.app/",
     category: "Next.js",
     tags: ["Next.js", "AI", "Freelance", "Time Tracking", "Invoicing", "Project Management"],
@@ -107,7 +107,7 @@ const existingProjects = [
   {
     title: "Voice of Holy Quran",
     description: "An interactive Quran learning platform where students can register, find qualified teachers, schedule sessions, and learn Quran online with progress tracking.",
-    image: "/assets/placeholder.png",
+    image: "/assets/projects/vhq.png",
     link: "https://voiceofholyquran.com/",
     category: "Next.js",
     tags: ["Next.js", "Education", "Quran", "E-Learning", "Islamic", "Teaching Platform"],
@@ -116,7 +116,7 @@ const existingProjects = [
   {
     title: "Art Prompts Pro",
     description: "An AI-powered art prompt generator and creative platform for artists, helping spark creativity with unique prompt suggestions.",
-    image: "/assets/placeholder.png",
+    image: "/assets/projects/art-prompt.png",
     link: "https://artpromptspro.com/",
     category: "Next.js",
     tags: ["Next.js", "AI", "Art", "Creativity", "Prompts"],
@@ -125,7 +125,7 @@ const existingProjects = [
   {
     title: "Al-Rehman",
     description: "A restaurant website specializing in pulao and biryani. Features online ordering, menu display, and delivery management for authentic cuisine.",
-    image: "/assets/placeholder.png",
+    image: "/assets/projects/al-rehman.png",
     link: "https://al-rehman.vercel.app/",
     category: "Next.js",
     tags: ["Next.js", "Restaurant", "Food Ordering", "Menu", "Delivery"],
