@@ -6,8 +6,8 @@ const existingProjects = [
   {
     title: "Personal Portfolio Website",
     description: "My personal portfolio showcasing my skills, projects, and experience, built with Next.js.",
-    image: "/assets/Project (18).png",
-    link: "https://owais-abdullah.vercel.app",
+    image: "/assets/projects/owais-portfolio.png",
+    link: "https://owaisabdullah.dev",
     repoUrl: "https://github.com/MrOwaisAbdullah/Owais-Abdullah",
     category: "Next.js",
     tags: ["Next.js", "Tailwind", "Portfolio"],
