@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
-import Logo from "../public/assets/owais_logo.png";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
 import { CgClose, CgMenuRight } from "react-icons/cg";
@@ -67,7 +66,7 @@ const Header = () => {
         {/* Natural gradient blob coming from above with larger size */}
         <div className="absolute -top-20 -left-14 w-48 h-48 md:w-56 md:h-56 bg-gradient-to-br from-accent to-black/60 rounded-full blur-2xl opacity-80 md:opacity-50 dark:opacity-30 -z-10"></div>
         <Link href={"/"} className="flex mb-4 md:mb-0 z-10 relative">
-          <Image src={Logo} width={80} height={40} alt={"logo"} className="relative z-10" />
+          <Image src="/assets/owais_logo.png" width={80} height={40} alt={"logo"} className="relative z-10" unoptimized />
         </Link>
 
         <nav className={getMenuClassNames()}>

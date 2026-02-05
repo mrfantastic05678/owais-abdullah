@@ -146,6 +146,7 @@ const Projects = () => {
                   alt={project.title}
                   width={500}
                   height={300}
+                  unoptimized
                 />
               </motion.div>
               <div className="p-6">
