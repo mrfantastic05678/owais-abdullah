@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import Logo from "../public/assets/owais_logo.png";
 import Link from "next/link";
 import {
   FaLinkedin,
@@ -18,7 +17,7 @@ const Footer = () => {
       
       <div className="px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
         <Link href={"/"} className="flex mb-4 md:mb-0 relative">
-          <Image src={Logo} width={80} height={40} alt={"logo"} className="relative z-10" />
+          <Image src="/assets/owais_logo.png" width={80} height={40} alt={"logo"} className="relative z-10" unoptimized />
         </Link>
         <p className="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">
           © 2025 Owais Abdullah —
