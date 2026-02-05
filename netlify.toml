@@ -1,0 +1,48 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+# Environment variables for Netlify build
+[build.environment]
+  NEXT_DISABLE_ESLINT = "true"
+  NODE_VERSION = "20"
+
+# Secrets scanning - omit build output paths from scanning
+# These paths contain Next.js compiled files that may include environment variable references
+[build.secrets-scan]
+  omit-paths = [
+    ".netlify/.next/**",
+    ".netlify/standalone/**",
+    ".next/**",
+    "node_modules/**"
+  ]
+
+# Omit public environment variables from secrets scanning (these are meant to be public)
+[build.secrets-scan.omit-keys]
+  keys = [
+    "NEXT_PUBLIC_GA_ID",
+    "NEXT_PUBLIC_SANITY_DATASET",
+    "NEXT_PUBLIC_SANITY_PROJECT_ID"
+  ]
+
+# Headers for caching
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects for SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
