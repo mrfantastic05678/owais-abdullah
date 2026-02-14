@@ -16,7 +16,7 @@ const existingProjects = [
   {
     title: "FurnitureMart.pk",
     description: "A fully dynamic furniture marketplace built using Next.js, Sanity, and Tailwind CSS.",
-    image: "/assets/Project (10).png",
+    image: "/assets/project-10.png",
     link: "https://furniture-mart-pk.vercel.app/",
     repoUrl: "https://github.com/MrOwaisAbdullah/Marketplace-Technical-Foundation---FurnitureMart.pk",
     category: "Next.js",
@@ -26,7 +26,7 @@ const existingProjects = [
   {
     title: "AA Marketing",
     description: "A fully dynamic marketing website built using Next.js, Sanity, and Tailwind CSS.",
-    image: "/assets/Project (20).png",
+    image: "/assets/project-20.png",
     link: "https://aamarktng.com/",
     category: "Next.js",
     tags: ["Next.js", "Typescript", "Marketing"],
@@ -35,7 +35,7 @@ const existingProjects = [
   {
     title: "Blog Website",
     description: "A fully functional blog with comments, categories, and dynamic content using Sanity.",
-    image: "/assets/Project (12).png",
+    image: "/assets/project-12.png",
     link: "https://blog-site-green-one.vercel.app/",
     category: "Next.js",
     tags: ["Next.js", "Sanity", "Blog"],
@@ -44,7 +44,7 @@ const existingProjects = [
   {
     title: "FurnitureMart.pk Admin Dashboard",
     description: "A fully dynamic furniture marketplace dashboard built using Next.js, Sanity, and Tailwind CSS.",
-    image: "/assets/Project (11).png",
+    image: "/assets/project-11.png",
     link: "https://admin.oneklickdigi.com/",
     category: "Next.js",
     tags: ["Next.js", "Sanity", "Dashboard"],
@@ -53,7 +53,7 @@ const existingProjects = [
   {
     title: "Burraq Digits",
     description: "A fully dynamic digital marketing agency website built using Next.js, Sanity, and Tailwind CSS.",
-    image: "/assets/Project (21).png",
+    image: "/assets/project-21.png",
     link: "https://burraq-digits.vercel.app/",
     category: "Next.js",
     tags: ["Next.js", "Typescript", "Digital Marketing"],
@@ -62,7 +62,7 @@ const existingProjects = [
   {
     title: "Personal AI Assistant",
     description: "An AI-powered chatbot integrated into my portfolio website, allowing visitors to explore my skills, projects, and contact details effortlessly.",
-    image: "/assets/Project (19).png",
+    image: "/assets/project-19.png",
     link: "#",
     category: "Next.js",
     tags: ["Next.js", "AI", "Chatbot", "Portfolio"],
@@ -71,7 +71,7 @@ const existingProjects = [
   {
     title: "First Practice Portfolio Website",
     description: "My First Practice portfolio showcasing dummy data, projects, skills, and experience, built with Next.js.",
-    image: "/assets/Project (17).png",
+    image: "/assets/project-17.png",
     link: "https://portfolio-class-assignment.vercel.app/",
     category: "Next.js",
     tags: ["Next.js", "Tailwind", "Portfolio"],
@@ -144,7 +144,7 @@ const existingProjects = [
   {
     title: "Four M Enterprises",
     description: "Created a website for a roofing material supplier, showcasing their expertise.",
-    image: "/assets/Project (01).png",
+    image: "/assets/project-01.png",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "Business", "SEO"],
@@ -153,7 +153,7 @@ const existingProjects = [
   {
     title: "IDI Overseas HR",
     description: "Created a website for a HR consultancy service provider, showcasing their expertise.",
-    image: "/assets/Project (04).png",
+    image: "/assets/project-04.png",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "Business", "SEO"],
@@ -162,7 +162,7 @@ const existingProjects = [
   {
     title: "Rukhsar Marriage Bureau",
     description: "Created a website for a marriage bureau, showcasing their expertise.",
-    image: "/assets/Project (03).png",
+    image: "/assets/project-03.png",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "Business", "SEO"],
@@ -171,7 +171,7 @@ const existingProjects = [
   {
     title: "Next Trip & Travels",
     description: "Created a website for a travel agency, showcasing their expertise.",
-    image: "/assets/Project (02).png",
+    image: "/assets/project-02.png",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "Business", "SEO"],
@@ -180,7 +180,7 @@ const existingProjects = [
   {
     title: "One Rupee Raffle Website",
     description: "A new and exciting one-rupee raffle website, designed for an engaging user experience.",
-    image: "/assets/Project (5).webp",
+    image: "/assets/project-5.webp",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "E-commerce", "Lottery"],
@@ -189,7 +189,7 @@ const existingProjects = [
   {
     title: "Furniture & Interior Design Website",
     description: "A premium furniture store website combining stunning visuals and product catalog.",
-    image: "/assets/Project (2).webp",
+    image: "/assets/project-2.webp",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "Interior Design", "Business"],
@@ -198,7 +198,7 @@ const existingProjects = [
   {
     title: "Coffee Cafe Website",
     description: "An engaging website designed for a charming coffee cafe with a unique online presence.",
-    image: "/assets/Project (3).webp",
+    image: "/assets/project-3.webp",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "Cafe", "Local Business"],
@@ -207,7 +207,7 @@ const existingProjects = [
   {
     title: "Online Quran Academy Website",
     description: "A website for an online Quran academy to communicate their educational offerings.",
-    image: "/assets/Project (4).webp",
+    image: "/assets/project-4.webp",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "Education", "Online Learning"],
@@ -216,7 +216,7 @@ const existingProjects = [
   {
     title: "Home Improvement Ecommerce Website",
     description: "A user-friendly online store for home improvement tools and gadgets.",
-    image: "/assets/Project (1).webp",
+    image: "/assets/project-1.webp",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "E-commerce", "Home Improvement"],
@@ -226,7 +226,7 @@ const existingProjects = [
   {
     title: "AI Content Generator",
     description: "Tool for generating AI-powered social media content with Youtube videos.",
-    image: "/assets/Project (16).png",
+    image: "/assets/project-16.png",
     link: "https://agentic-socials.streamlit.app/",
     category: "Tools & Automation",
     tags: ["Python", "Automation", "AI", "Content"],
@@ -236,7 +236,7 @@ const existingProjects = [
   {
     title: "AI Data Alchemist",
     description: "Tool that helps users transform, clean, Filter, visualize data (CSV/Excel), and give AI-Powered Suggestions.",
-    image: "/assets/Project (13).png",
+    image: "/assets/project-13.png",
     link: "https://ai-data-alchemist.streamlit.app/",
     category: "Tools & Automation",
     tags: ["Python", "AI", "Data", "Converter"],
@@ -246,7 +246,7 @@ const existingProjects = [
   {
     title: "Password Strength Meter",
     description: "PassGuard is a sleek, secure Streamlit-based tool designed to evaluate password strength, generate strong passwords.",
-    image: "/assets/Project (15).png",
+    image: "/assets/project-15.png",
     link: "https://passguard.streamlit.app/",
     category: "Tools & Automation",
     tags: ["Python", "Streamlit", "AI", "Security"],
@@ -266,7 +266,7 @@ const existingProjects = [
   {
     title: "AI Powered Unit Converter",
     description: "Tool to convert Units and currency with real time data using AI.",
-    image: "/assets/Project (14).png",
+    image: "/assets/project-14.png",
     link: "https://convertiq.streamlit.app/",
     category: "Tools & Automation",
     tags: ["Python", "Streamlit", "AI", "Converter"],
@@ -277,7 +277,7 @@ const existingProjects = [
   {
     title: "Resume Builder",
     description: "A custom resume-building tool with PDF export functionality.",
-    image: "/assets/Project (8).png",
+    image: "/assets/project-8.png",
     link: "https://resume-builder-phi-olive.vercel.app/",
     category: "HTML & CSS",
     tags: ["HTML", "TypeScript", "Tool"],
@@ -287,7 +287,7 @@ const existingProjects = [
   {
     title: "Inventory Management System",
     description: "A simple tool to manage inventory.",
-    image: "/assets/Project (7).png",
+    image: "/assets/project-7.png",
     link: "https://inventory-management-sysytem-one.vercel.app/",
     category: "HTML & CSS",
     tags: ["HTML", "TypeScript", "Tool"],

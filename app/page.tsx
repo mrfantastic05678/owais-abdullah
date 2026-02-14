@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/assets/Owais Abdullah (2).png",
+        url: "/assets/owais-abdullah-og.png",
         width: 1200,
         height: 630,
         alt: "Owais Abdullah - Spec-Driven Developer & AI Agent Engineer",

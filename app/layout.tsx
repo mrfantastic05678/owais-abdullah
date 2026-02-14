@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     siteName: "Owais Abdullah Portfolio",
     images: [
       {
-        url: "/assets/Owais Abdullah (2).png",
+        url: "/assets/owais-abdullah-og.png",
         width: 1200,
         height: 630,
         alt: "Owais Abdullah - Spec-Driven Developer & AI Engineer",
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
     title: "Owais Abdullah | Spec-Driven Developer & AI Engineer",
     description:
       "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and full-time digital solutions. Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures.",
-    images: ["/assets/Owais Abdullah (2).png"],
+    images: ["/assets/owais-abdullah-og.png"],
     creator: "@mrowaisabdullah",
   },
   robots: {
