@@ -135,7 +135,7 @@ const existingProjects = [
   {
     title: "Landscape & Gardening Website",
     description: "Created a website for a landscape and gardening service provider, showcasing their expertise.",
-    image: "/assets/Project.webp",
+    image: "/assets/project.webp",
     link: "#",
     category: "WordPress",
     tags: ["WordPress", "Business", "SEO"],
