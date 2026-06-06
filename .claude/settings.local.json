@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git mv:*)",
+      "mcp__tavily__tavily_search"
+    ]
+  }
+}

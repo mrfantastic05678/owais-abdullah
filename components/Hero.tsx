@@ -188,7 +188,7 @@ const Hero = () => {
               tooltipDescription="Spec-Driven & AI Engineer"
             >
               <Image
-                src="/assets/owais.webp"
+                src="/assets/owais-abdullah.webp"
                 className="relative object-contain object-center -mt-16 xs:ml-5 xs:-mt-14 z-10 md:mt-32 md:-ml-10 sm:-mt-9 sm:ml-16 lg:ml-6 lg:mt-6 xl:ml-20 xl:mt-8"
                 width={400}
                 height={500}
