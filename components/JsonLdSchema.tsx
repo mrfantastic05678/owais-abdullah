@@ -18,7 +18,7 @@ const JsonLdSchema: React.FC<JsonLdSchemaProps> = ({ type, pageUrl }) => {
     "jobTitle": ["AI Agents Developer", "Full Stack Developer", "Next.js Developer", "React Developer", "Web Developer"],
     "description": "AI Agents Developer, Full Stack Developer, and Next.js specialist. Expert in React, AI integration, and modern web development.",
     "url": baseUrl,
-    "image": `${baseUrl}/assets/owais-abdullah.png`,
+    "image": `${baseUrl}/assets/owais-abdullah.webp`,
     "sameAs": [
       "https://twitter.com/mrowaisabdullah",
       "https://linkedin.com/in/mrowaisabdullah",
