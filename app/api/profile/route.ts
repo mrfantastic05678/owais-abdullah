@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 // Existing projects from data/projects.ts - these have images and are already on the website
 const existingProjects = [
   // Next.js Projects

@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaRegArrowAltCircleRight } from "react-icons/fa";
@@ -46,14 +46,18 @@ const ProjectTabs = () => {
   const [projectsByCategory, setProjectsByCategory] = useState<ProjectsByCategory>({});
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState<string>("");
+  const imageVersion = useMemo(() => Date.now(), []);
   const [visibleCount, setVisibleCount] = useState<Record<string, number>>({});
   const [loadingMore, setLoadingMore] = useState<Record<string, boolean>>({});
   const PROJECTS_PER_PAGE = 9;
 
+  const getProjectImage = (image: string) =>
+    `${image}${image.includes("?") ? "&" : "?"}v=${imageVersion}`;
+
   useEffect(() => {
     async function fetchProjects() {
       try {
-        const response = await fetch("/api/profile");
+        const response = await fetch(`/api/profile?ts=${Date.now()}`, { cache: "no-store" });
         const data = await response.json();
         setProjectsByCategory(data.projectsByCategory || {});
 
@@ -215,7 +219,7 @@ const ProjectTabs = () => {
                         >
                           <Image
                             className="w-full h-full object-cover"
-                            src={project.image}
+                            src={getProjectImage(project.image)}
                             alt={project.title}
                             width={500}
                             height={300}
