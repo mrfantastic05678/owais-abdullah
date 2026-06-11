@@ -13,16 +13,18 @@ interface ProjectsByCategory {
 
 interface ProjectsTabProps {
   projectsByCategory: ProjectsByCategory;
+  allProjects: Project[];
 }
 
 const PROJECTS_PER_PAGE = 9;
+const ALL_TAB = "All";
 
 const hasValidLink = (link: string) => link && link !== "#";
 
-const ProjectTabs = ({ projectsByCategory }: ProjectsTabProps) => {
+const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
   const [visibleCount, setVisibleCount] = useState<Record<string, number>>({});
-  const categories = Object.keys(projectsByCategory);
-  const [activeTab, setActiveTab] = useState(categories[0]);
+  const categories = [ALL_TAB, ...Object.keys(projectsByCategory)];
+  const [activeTab, setActiveTab] = useState(ALL_TAB);
 
   // Deep-link support (?tab=WordPress) without useSearchParams, which would
   // force a client-side rendering bailout on this statically rendered page
@@ -115,7 +117,7 @@ const ProjectTabs = ({ projectsByCategory }: ProjectsTabProps) => {
 
         {/* Tab Content */}
         {categories.map((category) => {
-          const projects = projectsByCategory[category] || [];
+          const projects = category === ALL_TAB ? allProjects : (projectsByCategory[category] || []);
           const visibleProjects = projects.slice(0, visibleCount[category] || PROJECTS_PER_PAGE);
           const hasMore = projects.length > (visibleCount[category] || PROJECTS_PER_PAGE);
 

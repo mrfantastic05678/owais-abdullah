@@ -2,7 +2,7 @@ import React from "react";
 import ProjectsTab from "@/components/ProjectsTab";
 import JsonLdSchema from "@/components/JsonLdSchema";
 import type { Metadata } from "next";
-import { projectsByCategory } from "@/data/profile";
+import { projectsByCategory, allProjects } from "@/data/profile";
 
 export const dynamic = "force-static";
 
@@ -60,7 +60,7 @@ const projects = () => {
         type="projects"
         pageUrl="https://owaisabdullah.dev/projects"
       />
-      <ProjectsTab projectsByCategory={projectsByCategory} />
+      <ProjectsTab projectsByCategory={projectsByCategory} allProjects={allProjects} />
     </>
   );
 };

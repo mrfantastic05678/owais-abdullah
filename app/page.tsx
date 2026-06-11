@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import SkillSlider from "@/components/SkillSlider";
 import BlogSection from "@/components/BlogSection";
 import Services from "@/components/Services";
-import { projectsByCategory } from "@/data/profile";
+import { projectsByCategory, allProjects } from "@/data/profile";
 
 // ISR: prerendered HTML (projects + blog posts crawlable), refreshed every 30 min
 export const revalidate = 1800;
@@ -90,7 +90,7 @@ export default function Home() {
         </h2>
       </div>
       <SkillSlider />
-      <ProjectsTab projectsByCategory={projectsByCategory} />
+      <ProjectsTab projectsByCategory={projectsByCategory} allProjects={allProjects} />
       <BlogSection limit={3} />
       <Experience />
       <Contact />
