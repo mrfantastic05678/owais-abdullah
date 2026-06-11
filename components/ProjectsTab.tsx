@@ -108,7 +108,7 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
               >
                 {category}
                 <span className="ml-2 text-xs opacity-70">
-                  ({projectsByCategory[category]?.length || 0})
+                  ({category === ALL_TAB ? allProjects.length : (projectsByCategory[category]?.length || 0)})
                 </span>
               </TabsTrigger>
             ))}
