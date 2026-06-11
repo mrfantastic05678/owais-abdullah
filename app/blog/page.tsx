@@ -2,6 +2,9 @@ import React from "react";
 import BlogSection from "@/components/BlogSection";
 import { Metadata } from "next";
 
+// ISR: prerendered HTML with posts, refreshed every 30 min
+export const revalidate = 1800;
+
 export const metadata: Metadata = {
   title: "Blog | Owais Abdullah - Spec-Driven Development & AI Insights",
   description:
@@ -30,7 +33,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/assets/Owais Abdullah (2).png",
+        url: "/assets/owais-abdullah-og.png",
         width: 1200,
         height: 630,
         alt: "Blog by Owais Abdullah - Spec-Driven Developer & AI Engineer",
@@ -42,7 +45,7 @@ export const metadata: Metadata = {
     description:
       "Get the latest insights on spec-driven development, AI agents, SaaS architecture, and Next.js best practices. Sharing practical tips on AI-driven engineering and production-ready web development.",
     card: "summary_large_image",
-    images: ["/assets/Owais Abdullah (2).png"],
+    images: ["/assets/owais-abdullah-og.png"],
   },
   alternates: {
     canonical: "https://owaisabdullah.dev/blog",

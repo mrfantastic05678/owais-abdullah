@@ -81,16 +81,12 @@ export default {
   			padding: '1rem'
   		},
   		fontFamily: {
-        sans: ["var(--font-inter)"],
-        heading: ["var(--font-montserrat)"],
-  			montserrat: [
-  				'Montserrat',
-  				'sans-serif'
-  			],
-  			poppins: [
-  				'Poppins',
-  				'sans-serif'
-  			]
+        sans: ["var(--font-satoshi)", "sans-serif"],
+        heading: ["var(--font-clash-display)", "sans-serif"],
+  			// Legacy aliases — existing font-montserrat/font-poppins classes
+  			// now resolve to the new pairing
+  			montserrat: ["var(--font-clash-display)", "sans-serif"],
+  			poppins: ["var(--font-satoshi)", "sans-serif"]
   		},
   		colors: {
   			accent: 'var(--accent)',

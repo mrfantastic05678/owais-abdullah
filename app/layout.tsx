@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { inter, poppins, montserrat } from "@/lib/fonts";
+import { clashDisplay, satoshi } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
 import { ConditionalUI } from "@/components/ConditionalUI";
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | Spec-Driven Developer & AI Engineer",
   },
   description:
-    "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and full-time digital solutions. Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures with AI-driven engineering.",
+    "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures with AI-driven engineering.",
   keywords: [
     "Owais Abdullah",
     "Owais",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     url: "https://owaisabdullah.dev",
     title: "Owais Abdullah | Spec-Driven Developer & AI Engineer",
     description:
-      "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and full-time digital solutions. Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures.",
+      "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures.",
     siteName: "Owais Abdullah Portfolio",
     images: [
       {
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Owais Abdullah | Spec-Driven Developer & AI Engineer",
     description:
-      "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and full-time digital solutions. Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures.",
+      "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures.",
     images: ["/assets/owais-abdullah-og.png"],
     creator: "@mrowaisabdullah",
   },
@@ -107,7 +107,7 @@ export const metadata: Metadata = {
   },
   other: {
     "msapplication-TileColor": "#212428",
-    "theme-color": "#3a69ff",
+    "theme-color": "#212428",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "default",
     "apple-mobile-web-app-title": "Owais Abdullah Portfolio",
@@ -125,7 +125,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#3a69ff" />
+        <meta name="theme-color" content="#212428" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta
@@ -137,9 +137,8 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          inter.variable,
-          poppins.variable,
-          montserrat.variable,
+          clashDisplay.variable,
+          satoshi.variable,
           "font-sans antialiased"
         )}
       >

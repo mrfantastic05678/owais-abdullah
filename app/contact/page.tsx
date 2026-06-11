@@ -8,7 +8,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "Contact Owais Abdullah | Spec-Driven Developer & AI Engineer",
   description:
-    "Get in touch with Owais Abdullah for spec-driven SaaS projects, AI agent development, and full-time digital solutions. Expert in Next.js, TypeScript, and OpenAI Agents SDK.",
+    "Get in touch with Owais Abdullah for spec-driven SaaS projects, AI agent development, and Digital FTEs (AI employees). Expert in Next.js, TypeScript, and OpenAI Agents SDK.",
   authors: [{ name: "Owais Abdullah", url: "https://owaisabdullah.dev" }],
   keywords: [
     "Contact Owais Abdullah",
@@ -30,13 +30,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Contact Owais Abdullah | Spec-Driven Developer & AI Engineer",
     description:
-      "Get in touch with Owais Abdullah for spec-driven SaaS projects, AI agent development, and full-time digital solutions. Expert in Next.js, TypeScript, and OpenAI Agents SDK.",
+      "Get in touch with Owais Abdullah for spec-driven SaaS projects, AI agent development, and Digital FTEs (AI employees). Expert in Next.js, TypeScript, and OpenAI Agents SDK.",
     url: "https://owaisabdullah.dev/contact",
     siteName: "Owais Abdullah Portfolio",
     type: "website",
     images: [
       {
-        url: "/assets/Owais Abdullah (2).png",
+        url: "/assets/owais-abdullah-og.png",
         width: 1200,
         height: 630,
         alt: "Contact Owais Abdullah - Spec-Driven Developer & AI Engineer",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
   twitter: {
     title: "Contact Owais Abdullah | Spec-Driven Developer & AI Engineer",
     description:
-      "Get in touch with Owais Abdullah for spec-driven SaaS projects, AI agent development, and full-time digital solutions. Expert in Next.js, TypeScript, and OpenAI Agents SDK.",
+      "Get in touch with Owais Abdullah for spec-driven SaaS projects, AI agent development, and Digital FTEs (AI employees). Expert in Next.js, TypeScript, and OpenAI Agents SDK.",
     card: "summary_large_image",
-    images: ["/assets/Owais Abdullah (2).png"],
+    images: ["/assets/owais-abdullah-og.png"],
   },
   alternates: {
     canonical: "https://owaisabdullah.dev/contact",

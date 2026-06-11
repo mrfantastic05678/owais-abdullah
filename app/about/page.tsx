@@ -4,7 +4,7 @@ import AboutPageContent from "./AboutPageContent";
 export const metadata: Metadata = {
   title: "About Owais Abdullah | Spec-Driven Developer & AI Engineer",
   description:
-    "Learn about Owais Abdullah, a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and full-time digital solutions. Discover my expertise in OpenAI Agents SDK and production-ready architectures.",
+    "Learn about Owais Abdullah, a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Discover my expertise in OpenAI Agents SDK and production-ready architectures.",
   authors: [{ name: "Owais Abdullah", url: "https://owaisabdullah.dev" }],
   keywords: [
     "About Owais Abdullah",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/assets/Owais Abdullah (2).png",
+        url: "/assets/owais-abdullah-og.png",
         width: 1200,
         height: 630,
         alt: "About Owais Abdullah - Spec-Driven Developer & AI Engineer",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     description:
       "Discover Owais Abdullah's journey as a spec-driven developer and AI engineer. Expert in Next.js SaaS products, AI agents, OpenAI Agents SDK, and building production-ready architectures.",
     card: "summary_large_image",
-    images: ["/assets/Owais Abdullah (2).png"],
+    images: ["/assets/owais-abdullah-og.png"],
   },
   alternates: {
     canonical: "https://owaisabdullah.dev/about",

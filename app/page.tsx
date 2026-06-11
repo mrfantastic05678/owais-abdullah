@@ -8,13 +8,15 @@ import type { Metadata } from "next";
 import SkillSlider from "@/components/SkillSlider";
 import BlogSection from "@/components/BlogSection";
 import Services from "@/components/Services";
+import { projectsByCategory } from "@/data/profile";
 
-export const dynamic = "force-static";
+// ISR: prerendered HTML (projects + blog posts crawlable), refreshed every 30 min
+export const revalidate = 1800;
 
 export const metadata: Metadata = {
   title: "Owais Abdullah | Spec-Driven Developer & AI Agent Engineer",
   description:
-    "Spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and full-time digital solutions. Building production-ready web applications with TypeScript, OpenAI Agents SDK, and modern architectures.",
+    "Spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Building production-ready web applications with TypeScript, OpenAI Agents SDK, and modern architectures.",
   keywords: [
     "Owais Abdullah Portfolio",
     "Spec-Driven Developer",
@@ -35,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Owais Abdullah | Spec-Driven Developer & AI Agent Engineer",
     description:
-      "Spec-driven developer and AI engineer building Next.js SaaS products, AI agents, and full-time digital solutions. Expert in TypeScript, OpenAI Agents SDK, and production-ready web architectures.",
+      "Spec-driven developer and AI engineer building Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Expert in TypeScript, OpenAI Agents SDK, and production-ready web architectures.",
     url: "https://owaisabdullah.dev",
     siteName: "Owais Abdullah Portfolio",
     locale: "en_US",
@@ -52,9 +54,9 @@ export const metadata: Metadata = {
   twitter: {
     title: "Owais Abdullah | Spec-Driven Developer & AI Agent Engineer",
     description:
-      "Spec-driven developer and AI engineer building Next.js SaaS products, AI agents, and full-time digital solutions. Expert in TypeScript, OpenAI Agents SDK, and production-ready web architectures.",
+      "Spec-driven developer and AI engineer building Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Expert in TypeScript, OpenAI Agents SDK, and production-ready web architectures.",
     card: "summary_large_image",
-    images: ["/assets/Owais Abdullah (2).png"],
+    images: ["/assets/owais-abdullah-og.png"],
   },
   alternates: {
     canonical: "https://owaisabdullah.dev/",
@@ -80,15 +82,15 @@ export default function Home() {
       <About />
       <Services />
       <div className="flex flex-wrap w-full mt-10 mb-20 flex-col items-center text-center">
-        <h3 className="text-base text-accent font-medium sm:text-lg">
+        <p className="text-base text-accent font-medium sm:text-lg">
           Areas of Expertise
-        </h3>
+        </p>
         <h2 className="text-5xl text-foreground font-semibold sm:text-6xl">
           Tech Stack
         </h2>
       </div>
       <SkillSlider />
-      <ProjectsTab />
+      <ProjectsTab projectsByCategory={projectsByCategory} />
       <BlogSection limit={3} />
       <Experience />
       <Contact />

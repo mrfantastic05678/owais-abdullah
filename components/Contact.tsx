@@ -34,13 +34,13 @@ const Contact = () => {
           </h2>
           <div className="mt-4 space-y-2">
             <div>
-              <h2 className="font-semibold text-foreground text-xs">ADDRESS</h2>
+              <p className="font-semibold text-foreground text-xs">ADDRESS</p>
               <p className="mt-1 text-foreground">Karachi, Pakistan</p>
             </div>
             <div>
-              <h2 className="title-font font-semibold text-foreground text-xs">
+              <p className="title-font font-semibold text-foreground text-xs">
                 EMAIL
-              </h2>
+              </p>
               <Link
                 href="mailto:mrowaisabdullah@gmail.com"
                 className="text-accent leading-relaxed"
@@ -49,11 +49,11 @@ const Contact = () => {
               </Link>
             </div>
             <div>
-              <h2 className="title-font font-semibold text-foreground text-xs">
+              <p className="title-font font-semibold text-foreground text-xs">
                 PHONE
-              </h2>
-              <Link href={"tel:+923262283140"}>
-                <p className="leading-relaxed">+923262283140</p>
+              </p>
+              <Link href={"tel:+923262283140"} className="leading-relaxed">
+                +92 326 2283140
               </Link>
             </div>
           </div>
@@ -94,6 +94,7 @@ const Contact = () => {
                 type="text"
                 id="name"
                 name="name"
+                autoComplete="name"
                 className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 text-base outline-none text-foreground py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]"
                 required
               />
@@ -113,6 +114,8 @@ const Contact = () => {
                 type="email"
                 id="email"
                 name="email"
+                autoComplete="email"
+                spellCheck={false}
                 className="w-full bg-card rounded border border-border focus:border-accent focus:ring-1 text-base outline-none text-foreground py-1 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]"
                 required
               />

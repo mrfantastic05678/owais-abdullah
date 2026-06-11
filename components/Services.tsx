@@ -14,9 +14,9 @@ const Services = () => {
         transition={{ duration: 0.6 }}
         className="text-center py-16 px-4"
       >
-        <h3 className="text-base text-accent font-medium sm:text-lg mb-2">
+        <p className="text-base text-accent font-medium sm:text-lg mb-2">
           What I Offer
-        </h3>
+        </p>
         <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
           Services
         </h2>

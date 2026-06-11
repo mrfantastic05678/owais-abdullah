@@ -1,0 +1,30 @@
+# Owais Abdullah — Spec-Driven Developer & AI Agent Engineer
+
+> Personal portfolio of Owais Abdullah, a spec-driven developer and AI engineer
+> based in Karachi, Pakistan. Specializes in Next.js SaaS products, AI agents
+> built with the OpenAI Agents SDK, Digital FTEs (AI employees that handle
+> business operations 24/7), and WordPress/CMS development.
+
+Currently Senior Developer (Web & AI) at LionUp Digital and Senior Developer &
+Manager at AA Marketing (concurrent roles). 3+ years in the industry, 40+
+projects delivered across SaaS, e-commerce, AI tools, and automation.
+
+Core stack: TypeScript, Next.js, React, Tailwind CSS, Python, OpenAI Agents
+SDK, PostgreSQL, Prisma, Sanity CMS, WordPress, Shopify.
+
+## Pages
+
+- [Home](https://owaisabdullah.dev/): Overview, services, projects, experience
+- [About](https://owaisabdullah.dev/about): Background and approach
+- [Projects](https://owaisabdullah.dev/projects): Full portfolio — Next.js SaaS, WordPress, AI tools and automation
+- [Services](https://owaisabdullah.dev/services): Digital FTE (AI employee) development, custom AI agents & automations, Next.js SaaS development, CMS & e-commerce, technical consulting & MVPs, API development
+- [Blog](https://owaisabdullah.dev/blog): Articles on AI, agents, and modern web development
+- [Skills](https://owaisabdullah.dev/skills): Detailed tech stack and proficiencies
+- [Contact](https://owaisabdullah.dev/contact): Project inquiries and collaboration
+
+## Contact
+
+- Email: mrowaisabdullah@gmail.com
+- GitHub: https://github.com/MrOwaisAbdullah
+- LinkedIn: https://www.linkedin.com/in/mrowaisabdullah/
+- X (Twitter): https://x.com/mrowaisabdullah

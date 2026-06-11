@@ -1,8 +1,13 @@
-import { LucideIcon } from 'lucide-react';
+// Accepts both lucide-react and react-icons components
+type SkillIcon = React.ComponentType<{
+  size?: number | string;
+  className?: string;
+  style?: React.CSSProperties;
+}>;
 
 interface SkillCardProps {
   name: string;
-  icon: LucideIcon;
+  icon: SkillIcon;
   color: string;
 }
 
