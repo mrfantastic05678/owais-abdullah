@@ -22,8 +22,9 @@ export interface PostCard {
 };
 
 export interface BlogSectionProps {
-  limit?: number; 
+  limit?: number;
   excludeLatest?: boolean;
+  showViewAll?: boolean;
 }
 
 interface BlogComment {

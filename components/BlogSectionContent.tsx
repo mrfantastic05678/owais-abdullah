@@ -27,7 +27,7 @@ const itemVariants = {
   }
 };
 
-const BlogSectionContent = ({ blogs }: { blogs: PostCard[] }) => {
+const BlogSectionContent = ({ blogs, showViewAll = false }: { blogs: PostCard[]; showViewAll?: boolean }) => {
   return (
     <section className="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8">
       <motion.div
@@ -75,8 +75,8 @@ const BlogSectionContent = ({ blogs }: { blogs: PostCard[] }) => {
             ))}
           </motion.div>
 
-          {/* View All Button */}
-          <motion.div
+          {/* View All Button — only shown when explicitly requested (homepage) */}
+          {showViewAll && <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -93,7 +93,7 @@ const BlogSectionContent = ({ blogs }: { blogs: PostCard[] }) => {
                 <FaArrowRight />
               </motion.button>
             </Link>
-          </motion.div>
+          </motion.div>}
         </>
       )}
     </section>

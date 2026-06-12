@@ -91,7 +91,7 @@ export default function Home() {
       </div>
       <SkillSlider />
       <ProjectsTab projectsByCategory={projectsByCategory} allProjects={allProjects} />
-      <BlogSection limit={3} />
+      <BlogSection limit={3} showViewAll />
       <Experience />
       <Contact />
     </>
