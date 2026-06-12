@@ -29,7 +29,7 @@ const Contact = () => {
             height={400}
             unoptimized
           />
-          <h2 className="font-semibold text-foreground text-2xl sm:text-3xl">
+          <h2 className="font-semibold text-foreground text-2xl sm:text-3xl tracking-wide">
             OWAIS ABDULLAH
           </h2>
           <div className="mt-4 space-y-2">
@@ -72,7 +72,7 @@ const Contact = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h2 className="text-foreground text-2xl font-semibold title-font mb-2">
+            <h2 className="text-foreground text-2xl font-semibold tracking-wide title-font mb-2">
               CONNECT WITH ME
             </h2>
             <p className="text-muted-foreground text-sm">

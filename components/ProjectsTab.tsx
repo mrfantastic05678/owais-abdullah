@@ -44,11 +44,15 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
   };
 
   const handleLoadMore = (category: string) => {
+    const total =
+      category === ALL_TAB
+        ? allProjects.length
+        : (projectsByCategory[category] || []).length;
     setVisibleCount(prev => ({
       ...prev,
       [category]: Math.min(
         (prev[category] || PROJECTS_PER_PAGE) + PROJECTS_PER_PAGE,
-        (projectsByCategory[category] || []).length
+        total
       )
     }));
   };
@@ -86,7 +90,7 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
         <p className="text-base text-accent font-medium sm:text-lg">
           See My Work
         </p>
-        <h2 className="text-5xl text-foreground font-semibold sm:text-6xl">
+        <h2 className="text-4xl text-foreground font-semibold sm:text-5xl">
           Projects
         </h2>
       </motion.div>
@@ -156,7 +160,7 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
                       <div className="p-6">
-                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                        <h3 className="text-xl font-medium text-foreground mb-2">
                           {project.title}
                         </h3>
 

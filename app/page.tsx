@@ -85,7 +85,7 @@ export default function Home() {
         <p className="text-base text-accent font-medium sm:text-lg">
           Areas of Expertise
         </p>
-        <h2 className="text-5xl text-foreground font-semibold sm:text-6xl">
+        <h2 className="text-4xl text-foreground font-semibold sm:text-5xl">
           Tech Stack
         </h2>
       </div>

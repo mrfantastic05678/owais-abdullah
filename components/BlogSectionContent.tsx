@@ -41,7 +41,7 @@ const BlogSectionContent = ({ blogs }: { blogs: PostCard[] }) => {
           From the Blog
         </p>
         <div className="flex items-center justify-center gap-4">
-          <h2 className="text-3xl text-foreground font-semibold sm:text-4xl">
+          <h2 className="text-4xl text-foreground font-semibold sm:text-5xl">
             Latest Articles
           </h2>
         </div>

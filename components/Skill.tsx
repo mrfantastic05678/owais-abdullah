@@ -127,10 +127,10 @@ const Skill: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h3 className="text-base text-accent font-medium sm:text-lg mb-2">
+          <p className="text-base text-accent font-medium sm:text-lg mb-2">
             Expertise
-          </h3>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+          </p>
+          <h2 className="text-4xl md:text-5xl font-semibold text-foreground mb-3">
             Skills & Technologies
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">

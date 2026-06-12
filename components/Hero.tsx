@@ -36,7 +36,7 @@ const Hero = () => {
             </div>
 
             <div className="min-h-60 xs:min-h-44 md:min-h-0">
-              <h1 className="sm:text-5xl text-4xl mb-4 font-montserrat font-bold text-foreground ">
+              <h1 className="sm:text-5xl text-4xl mb-4 font-heading font-semibold text-foreground ">
                 Hi, I&apos;m <span className="text-accent">Owais Abdullah</span>
                 <br />
                 <span className="">

@@ -90,10 +90,10 @@ const Projects = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mt-20 text-center"
         >
-          <h3 className="text-base text-accent font-medium sm:text-lg">
+          <p className="text-base text-accent font-medium sm:text-lg">
             See My Previous Work
-          </h3>
-          <h2 className="text-5xl text-foreground font-semibold sm:text-6xl">
+          </p>
+          <h2 className="text-4xl text-foreground font-semibold sm:text-5xl">
             Projects
           </h2>
         </motion.div>
@@ -117,10 +117,10 @@ const Projects = () => {
         transition={{ duration: 0.6 }}
         className="mt-20 text-center"
       >
-        <h3 className="text-base text-accent font-medium sm:text-lg">
+        <p className="text-base text-accent font-medium sm:text-lg">
           See My Previous Work
-        </h3>
-        <h2 className="text-5xl text-foreground font-semibold sm:text-6xl">
+        </p>
+        <h2 className="text-4xl text-foreground font-semibold sm:text-5xl">
           Projects
         </h2>
       </motion.div>

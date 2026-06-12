@@ -110,7 +110,7 @@ const ServicesGrid = () => {
                     </motion.div>
                   </div>
 
-                  <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-accent transition-colors">
+                  <h3 className="text-xl font-medium text-foreground mb-3 group-hover:text-accent transition-colors">
                     {service.title}
                   </h3>
 

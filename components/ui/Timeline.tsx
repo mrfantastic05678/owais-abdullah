@@ -38,7 +38,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
           <span className="hidden sm:inline">My Journey</span>
           <span className="inline sm:hidden">Journey</span>
         </p>
-        <h2 className="text-4xl md:text-6xl font-medium mb-4 text-center text-foreground">
+        <h2 className="text-4xl md:text-5xl font-semibold mb-4 text-center text-foreground">
           Job Experience
         </h2>
         <p className="text-muted-foreground text-sm md:text-base text-center max-w-2xl mx-auto">
