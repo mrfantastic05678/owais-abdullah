@@ -1,74 +1,85 @@
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight, Calendar, User } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import { PostCard } from "@/types/blogtypes";
 
 const BlogCards = ({ post }: { post: PostCard }) => {
+  const formattedDate = new Date(post._createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
   return (
-    <div className="flex flex-col gap-4 p-2 hover:scale-[1.03] duration-300 ease-in-out shadow-lg border border-border rounded-lg bg-card">
-      <Link href={`/blog/${post.slug.current}`}>
+    <Link
+      href={`/blog/${post.slug.current}`}
+      className="group flex flex-col h-full bg-card border border-border rounded-xl overflow-hidden transition-all duration-300 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5 hover:-translate-y-1"
+    >
+      {/* Thumbnail */}
+      <div className="relative overflow-hidden aspect-video">
         <Image
-          className="rounded-lg w-full h-36 lg:h-44 object-cover"
-          src={urlFor(post.mainImage).url() as string}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src={urlFor(post.mainImage).width(640).height(360).url()}
           alt={post.title}
-          width={300}
-          height={150}
-        />{" "}
-      </Link>
-      {/* Displaying the categories, title, summary, and date */}
-      <div className="flex flex-col gap-2 p-3">
-        <div className="flex flex-wrap gap-2 mb-3">
+          width={640}
+          height={360}
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        {/* Category badges overlaid on image bottom-left */}
+        <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
           {!post.categories || post.categories.length === 0 ? (
-            <span className="bg-gray-500/70 text-white text-xs px-2 py-1 rounded-full">
+            <span className="bg-muted/80 backdrop-blur-sm text-muted-foreground text-xs font-medium px-2.5 py-1 rounded-full">
               Uncategorized
             </span>
           ) : (
-            post.categories.map(
-              (
-                category: { title: string },
-                i: React.Key | null | undefined
-              ) => (
-                <span
-                  key={i}
-                  className="bg-[#db4a4a]/70 text-white text-xs px-2 py-1 rounded-full"
-                >
-                  {category.title}
-                </span>
-              )
-            )
+            post.categories.slice(0, 2).map((category, i) => (
+              <span
+                key={i}
+                className="bg-accent/90 backdrop-blur-sm text-accent-foreground text-xs font-medium px-2.5 py-1 rounded-full"
+              >
+                {category.title}
+              </span>
+            ))
           )}
-        </div>{" "}
-        <Link href={`/blog/${post.slug.current}`}>
-          <h2 className="font-semibold text-sm xl:text-base 2xl:text-xl text-foreground line-clamp-2">
-            {post.title}
-          </h2>
-        </Link>
-        {/* Displaying the summary of the post */}
-        <p className="text-foreground opacity-80 line-clamp-2 text-sm">
-          {post.summary}
-        </p>
-        <div className="flex flex-wrap gap-3 sm:gap-5 mt-2 justify-between items-center">
-          <div className="flex flex-wrap max-sm:text-xs text-sm xl:text-base 2xl:text-lg">
-              <p className="text-foreground opacity-50">
-                {/* Formatting the date */}
-                {new Date(post._createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                })}
-              </p>
-          </div>
-          {/* Dynamically adding the slug in Read More Button */}
-          <Link href={`/blog/${post.slug.current}`}>
-            <button className="group border-border border-2 rounded-lg py-1 px-2 flex gap-2 lg:gap-3 sm:mt-0 mt-2">
-              Read More{" "}
-              <ArrowRight className="text-primary group-hover:-rotate-45 duration-200 " />
-            </button>
-          </Link>
         </div>
       </div>
-    </div>
+
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-5 gap-3">
+        <h2 className="font-semibold text-base leading-snug text-foreground line-clamp-2 group-hover:text-accent transition-colors duration-200">
+          {post.title}
+        </h2>
+
+        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2 flex-1">
+          {post.summary}
+        </p>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-3 border-t border-border mt-auto">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            {post.author?.name && (
+              <span className="flex items-center gap-1">
+                <User size={12} />
+                {post.author.name}
+              </span>
+            )}
+            <span className="flex items-center gap-1">
+              <Calendar size={12} />
+              {formattedDate}
+            </span>
+          </div>
+
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-accent group-hover:gap-2 transition-all duration-200">
+            Read
+            <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+          </span>
+        </div>
+      </div>
+    </Link>
   );
 };
 

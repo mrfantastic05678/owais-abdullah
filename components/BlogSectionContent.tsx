@@ -67,8 +67,7 @@ const BlogSectionContent = ({ blogs, showViewAll = false }: { blogs: PostCard[];
               <motion.div
                 key={blog.slug?.current || index}
                 variants={itemVariants}
-                whileHover={{ y: -5 }}
-                className="scroll-smooth border border-border rounded-lg overflow-hidden transition duration-300 shadow-lg bg-card"
+                className="h-full"
               >
                 <BlogCards post={blog} />
               </motion.div>
