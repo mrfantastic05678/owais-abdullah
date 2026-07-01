@@ -1,33 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { ContactSchema } from "@/lib/contact-schema";
 import { getResend, FROM_ADDRESS, TO_ADDRESS } from "@/lib/email/clients";
 import { contactEmailHtml, contactEmailText } from "@/lib/email/contact-template";
-
-// ── Zod schema (single source of truth — shared with client via lib/contact-schema.ts) ──
-export const ContactSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Name must be at least 2 characters.")
-    .max(100, "Name must be under 100 characters.")
-    .regex(/^[\p{L}\p{M}\s'\-\.]+$/u, "Name contains invalid characters."),
-  email: z
-    .string()
-    .email("Please enter a valid email address.")
-    .max(254, "Email address is too long."),
-  subject: z
-    .string()
-    .min(2, "Subject must be at least 2 characters.")
-    .max(200, "Subject must be under 200 characters."),
-  message: z
-    .string()
-    .min(10, "Message must be at least 10 characters.")
-    .max(5000, "Message must be under 5000 characters."),
-  // Honeypot — must be empty; bots fill these
-  website: z.string().max(0).optional(),
-  _trap: z.string().max(0).optional(),
-});
-
-export type ContactInput = z.infer<typeof ContactSchema>;
 
 // ── Rate limiting (in-memory sliding window) ─────────────────────────────────
 const WINDOW_MS = 60_000; // 1 minute

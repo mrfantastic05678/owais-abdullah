@@ -503,6 +503,71 @@ async def test_threshold_impact():
 
 ---
 
+---
+
+### 8. ONNX Model Dimension Upgrade (768 → 1024) Requires Schema Migration
+
+**Issue:** Upgrading from `Xenova/bge-base-en-v1.5` (768-dim) to `Xenova/bge-m3` (1024-dim) causes `NeonDbError: expected 1024 dimensions, not 768` on every ingest after the code deploys but before the DB schema is migrated.
+
+**Root cause:** pgvector column is typed `vector(768)`. New model outputs 1024-dim. The mismatch is caught by Postgres on INSERT.
+
+**Migration pattern (pgvector + HNSW):**
+```sql
+-- Drop HNSW index first (can't ALTER TYPE with index present)
+DROP INDEX IF EXISTS "document_chunks_embedding_hnsw_idx";
+-- Clear all existing chunks (old vectors are incompatible; don't try to mix)
+DELETE FROM "document_chunks";
+-- Widen the column
+ALTER TABLE "document_chunks" ALTER COLUMN "embedding" TYPE vector(1024);
+-- Recreate index
+CREATE INDEX "document_chunks_embedding_hnsw_idx"
+  ON "document_chunks" USING hnsw ("embedding" vector_cosine_ops)
+  WITH (m = 16, ef_construction = 64);
+```
+Run the migration SQL in Neon console BEFORE deploying the new code. After the deploy, re-index all documents manually.
+
+**BGE-M3 differences from bge-base-en-v1.5:**
+- Dimensions: 1024 (not 768)
+- Pooling: `cls` (not `mean`)
+- No query prefix needed (BGE-M3 handles retrieval without instruction tuning)
+- Jina fallback must also be 1024-dim: use `jina-embeddings-v3` not v5-text-small
+
+---
+
+### 9. Never Expose Raw ORM/SQL Errors in the UI
+
+**Issue:** `classifyError()` in the ingest pipeline was passing raw Drizzle error messages
+(`"Failed query: insert into \"document_chunks\"..."`) directly to `errorMsg`, which was
+then displayed in the dashboard UI.
+
+**Why it's bad:** Exposes internal table names, column names, and query structure to users.
+
+**Pattern — sanitize at the error classification layer, never at the display layer:**
+```ts
+function classifyError(err: unknown): { errorCode: string; errorMsg: string } {
+  // ... specific error types first (ParseError, QuotaExhaustedError) ...
+
+  const msg = err instanceof Error ? err.message : String(err)
+  const cause = err instanceof Error && (err as Error & { cause?: unknown }).cause
+  const causeMsg = cause instanceof Error ? cause.message : ''
+
+  // Dimension mismatch (pgvector) — give actionable message
+  if (causeMsg.includes('expected') && causeMsg.includes('dimensions')) {
+    return { errorCode: 'DIMENSION_MISMATCH', errorMsg: 'Vector dimension mismatch. Re-index after model upgrade.' }
+  }
+  // Any raw DB/SQL message — sanitize completely
+  if (msg.startsWith('Failed query:') || msg.includes('insert into') || msg.includes('NeonDbError')) {
+    return { errorCode: 'DB_ERROR', errorMsg: 'Database error while saving chunks. Try re-indexing.' }
+  }
+
+  return { errorCode: 'INGEST_FAILED', errorMsg: msg }
+}
+```
+
+The UI then handles specific `errorCode` values to show appropriate messages/CTAs.
+
+---
+
 ## Next Steps
 
 1. **Add Caching**: Cache embeddings to avoid re-generation

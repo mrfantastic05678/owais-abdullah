@@ -117,3 +117,23 @@
 - **Slow builds**: Optimize Docker layer caching
 - **High memory**: Check resource limits
 - **Slow API**: Add caching, optimize queries
+
+### VPS Disk Issues (Docker image accumulation)
+Each deploy push to GHCR leaves old image layers on the VPS — 20–50 GB can accumulate
+within weeks on an active CI/CD pipeline.
+
+**One-time cleanup:**
+```bash
+docker system prune -f   # safe on live servers; never add --volumes
+```
+
+**Permanent fix — weekly server-side cron (run on the VPS, NOT from GitHub Actions):**
+```bash
+(crontab -l 2>/dev/null; echo "0 2 * * 0 docker system prune -f >> /var/log/docker-prune.log 2>&1") | crontab -
+```
+
+Do NOT trigger pruning via SSH from GitHub Actions workflows — it requires a private key
+in GitHub secrets with no benefit over a simple cron. Server-side cron is simpler and safer.
+
+**Verified on Octively CX33 (Hetzner):** freed 20.26 GB in a single prune, dropping disk
+from 34.2 GB → 14.39 GB and Docker total from 50.35 GB → 11.06 GB.

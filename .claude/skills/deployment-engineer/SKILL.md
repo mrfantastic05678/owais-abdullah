@@ -21,6 +21,12 @@ Use this skill when:
 - Troubleshooting deployment failures
 - Setting up monitoring and health checks
 
+> **VPS + Dokploy deployments** (Hetzner + Docker Swarm + Traefik): use the dedicated
+> `.claude/skills/vps-dokploy-nextjs/` skill instead — it covers the full bootstrap,
+> GitHub Actions → GHCR → Dokploy pipeline, Cloudflare SSL setup, and 22 documented
+> pitfalls specific to that stack (including Ubuntu 26.04 quirks, ADVERTISE_ADDR, heredoc
+> issues in SSH sessions, NEXT_PUBLIC_* build-arg patterns, and more).
+
 ## Core Deployment Patterns
 
 ### 1. Multi-Platform Deployment Strategy
@@ -694,6 +700,245 @@ api.restart_space(repo_id=SPACE_NAME, repo_type="space", token=HF_TOKEN)
 - Then restart is triggered via API (modern method)
 - This ensures Space rebuilds automatically
 - No manual intervention needed
+
+---
+
+### 20. Next.js Standalone Output for Docker/VPS (not Vercel/Netlify)
+**Problem**: `node server.js` fails (`Cannot find module`) because the image doesn't contain the standalone server, OR Vercel/Netlify deploys break because `output: 'standalone'` was forced on for everyone.
+
+**Cause**: Next.js only emits `.next/standalone/server.js` when `output: 'standalone'` is set, but that mode is only wanted for the self-hosted Docker/VPS build. Vercel and Netlify use their own output and should be left untouched.
+
+```ts
+// ❌ Wrong - forces standalone everywhere, breaks managed platforms
+const nextConfig = { output: 'standalone' }
+
+// ✅ Correct - conditional on a Docker-only build flag
+const nextConfig = {
+  output: process.env.DOCKER_BUILD ? 'standalone' : undefined,
+}
+```
+**Dockerfile sets the flag and copies the three standalone artifacts:**
+```dockerfile
+ENV DOCKER_BUILD=1            # builder stage, before `next build`
+# runner stage:
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+CMD ["node", "server.js"]
+```
+**Key**: standalone traces only the modules it detects via static analysis. Set `HOSTNAME=0.0.0.0` so the server binds outside the container.
+**Files Affected**: `next.config.ts`, `Dockerfile`
+
+### 21. Native Packages Not Traced into the Standalone Bundle
+**Problem**: Runtime `Cannot find module 'onnxruntime-node'` (or any package with `.node` binaries) even though it's in `package.json`. Next.js standalone tracing does not reliably include native addons.
+
+**Fix (two parts):**
+```ts
+// 1. Keep native, server-only packages OUT of the compiler bundle
+const nextConfig = {
+  serverExternalPackages: ['@huggingface/transformers', 'onnxruntime-node'],
+}
+```
+```dockerfile
+# 2. Copy the native modules explicitly into the runner (belt-and-suspenders)
+COPY --from=builder /app/node_modules/@huggingface ./node_modules/@huggingface
+COPY --from=builder /app/node_modules/onnxruntime-node ./node_modules/onnxruntime-node
+COPY --from=builder /app/node_modules/onnxruntime-common ./node_modules/onnxruntime-common
+COPY --from=builder /app/node_modules/sharp ./node_modules/sharp
+# Fallback if a transitive native dep still goes missing: copy the whole node_modules.
+```
+**Key**: `serverExternalPackages` stops bundling/mangling; the explicit `COPY` guarantees the `.node` binaries physically exist in the image. Use a dynamic `import()` in code so platforms that don't use the native path never load it.
+**Files Affected**: `next.config.ts`, `Dockerfile`, the module doing the dynamic import
+
+### 22. Node Engine Mismatch (EBADENGINE) for ONNX/Transformers
+**Problem**: `npm install` warns `EBADENGINE` and the runtime later crashes. `@huggingface/transformers` v4 requires Node `^22.22 || ^24.15 || >=26`.
+
+```dockerfile
+# ❌ Wrong - Node 20 base, transformers v4 silently incompatible
+ARG NODE_VERSION=20-slim
+
+# ✅ Correct - match the package's engines field
+ARG NODE_VERSION=22-slim
+```
+**Lesson**: When adding any heavy native dependency, check its `engines` field FIRST and bump the Docker base image to match. EBADENGINE is a warning, not an error, so it's easy to miss until runtime.
+**Files Affected**: `Dockerfile`
+
+### 23. NEXT_PUBLIC_* Are Build-Time, Server Secrets Are Runtime
+**Problem**: Either `NEXT_PUBLIC_*` values come out `undefined` in the browser, OR server secrets get baked into the image (a leak).
+
+**Rule**: `NEXT_PUBLIC_*` are inlined into the client bundle **at build time** — they must be present as Docker `ARG`/`ENV` during `next build`. Everything else (DB URL, auth secret, API keys) is read **at runtime** and must be injected by the host (Dokploy/K8s env), never copied into the image.
+```dockerfile
+# builder stage - public vars become real values at build
+ARG NEXT_PUBLIC_APP_URL
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+RUN npm run build
+# runner stage - NO server secrets here; set them in the platform's env panel
+```
+```yaml
+# CI passes only public vars as build-args (from GH secrets)
+build-args: |
+  NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
+```
+Add server secrets to `.dockerignore` (`.env`, `.env.*`) so they can't sneak into the build context.
+**Files Affected**: `Dockerfile`, `.dockerignore`, CI workflow
+
+### 24. npm Workspaces Break `npm ci` in Docker
+**Problem**: `npm ci` fails in the deps stage with a missing-workspace error because only the root `package.json` was copied.
+
+**Cause**: `npm ci` resolves every workspace listed in the root `package.json` `workspaces` array; their `package.json` files must exist in the build context.
+```dockerfile
+# ❌ Wrong - workspace package.json missing
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# ✅ Correct - copy each workspace's manifest before ci
+COPY package.json package-lock.json ./
+COPY embed/package.json ./embed/package.json
+RUN npm ci --no-audit --no-fund
+```
+**Files Affected**: `Dockerfile`
+
+### 25. Dokploy Deploy: Build Off-Box, Trigger via API
+**Problem**: Building the Docker image on a small VPS (e.g. Hetzner CX33, 4 vCPU) is slow and can OOM. And pushing code alone doesn't redeploy.
+
+**Pattern**: Build the image in GitHub Actions, push to GHCR, then call Dokploy's API to pull + deploy. Match the image platform to the VPS CPU arch.
+```yaml
+- uses: docker/build-push-action@v6
+  with:
+    platforms: linux/amd64        # Intel/AMD VPS; use arm64 for Ampere/Graviton
+    push: true
+    tags: ghcr.io/${{ github.repository_owner }}/app:latest
+    cache-from: type=gha
+    cache-to: type=gha,mode=max
+- name: Trigger Dokploy deploy
+  run: |
+    curl -fsSL -X POST "${{ secrets.DOKPLOY_URL }}/api/application.deploy" \
+      -H "x-api-key: ${{ secrets.DOKPLOY_API_KEY }}" \
+      -H "Content-Type: application/json" \
+      -d '{"applicationId":"${{ secrets.DOKPLOY_APP_ID }}"}'
+```
+**Chicken-and-egg**: `DOKPLOY_URL` / `DOKPLOY_API_KEY` / `DOKPLOY_APP_ID` can't be set as CI secrets until Dokploy is installed on the VPS and the app is created. Order: provision VPS → install Dokploy → create app → grab IDs → set GH secrets → push the release branch. GHCR auth uses the built-in `GITHUB_TOKEN` (`packages: write` permission), no extra secret.
+**Files Affected**: `.github/workflows/deploy.yml`
+
+### 26. Self-Hosted ONNX Embeddings: Cache Volume + Schema-Matched Dimensions
+**Problem**: The embedding model re-downloads (~110 MB) on every container restart, and/or switching from an API embedder to a local one breaks the vector DB because the dimension changed.
+
+**Fixes:**
+- Mount a **persistent volume** at the model cache path so the download survives restarts:
+  ```dockerfile
+  ENV TRANSFORMERS_CACHE=/app/.cache/transformers   # mount a volume here in Dokploy/K8s
+  ```
+- **Pick a model whose dimension matches the existing `vector(N)` column** to avoid a migration. `bge-base-en-v1.5` is 768-dim (drop-in for a 768 schema); `bge-large` is 1024 and `bge-small` is 384, both of which force a pgvector column + HNSW index rebuild.
+- Use a **provider switch** (env var) so serverless deploys keep the API embedder and only the long-running VPS uses ONNX — ONNX's native runtime cannot run on a serverless function:
+  ```ts
+  const PROVIDER = process.env.EMBEDDING_PROVIDER === 'onnx' ? 'onnx' : 'api'
+  ```
+- BGE models want a query instruction prefix on the **query side only** (`"Represent this sentence for searching relevant passages: "`); passages are embedded as-is.
+**Files Affected**: embedder module, `Dockerfile`, `.env.example`, host volume config
+
+---
+
+### 27. GHCR Push Fails: "repository name must be lowercase"
+**Problem**: GitHub Actions fails instantly with:
+```
+invalid tag "ghcr.io/YourName/app:latest": repository name must be lowercase
+```
+
+**Root cause**: `${{ github.repository_owner }}` preserves the original GitHub username casing (e.g. `MrOwaisAbdullah`). Docker/GHCR requires all-lowercase image names.
+
+**Fix**: Hardcode the lowercase image name in the workflow env:
+```yaml
+env:
+  # Do NOT use github.repository_owner — it preserves casing (e.g. MrOwaisAbdullah)
+  IMAGE: ghcr.io/yourusername/your-app   # always lowercase
+```
+
+---
+
+### 28. `npm ci` Fails: "Missing: @package@x.y.z from lock file" (cross-platform optional deps)
+**Problem**: Docker build fails at `npm ci` with:
+```
+npm error Missing: @some-package@x.y.z from lock file
+npm error `npm ci` can only install packages when your package.json and package-lock.json are in sync
+```
+...even though the package IS visually present in `package-lock.json`.
+
+**Root cause**: A cpu-specific optional package (e.g. `@rolldown/binding-wasm32-wasi`, cpu: wasm32) is in the lock file and pins a dependency to an exact version. On a linux-x64 machine, `npm install` never downloads wasm32 packages, so their nested exact-version entries are never written to the lock file. `npm ci` on linux/amd64 CI then can't find those exact versions and fails. Upgrading npm (10→11) does not fix this — the lock file is genuinely incomplete for cross-platform optional entries.
+
+**Fix**: Use `npm install` instead of `npm ci` in the Dockerfile deps stage:
+```dockerfile
+FROM node:22-slim AS deps
+WORKDIR /app
+# Upgrade npm to match local version (node:22-slim ships with npm 10).
+RUN npm install -g npm@11 --quiet
+COPY package.json package-lock.json* ./
+COPY embed/package.json ./embed/package.json
+# npm install (not npm ci) — cross-platform optional packages pin exact dep versions
+# that are never written to the lock file on linux-x64, causing npm ci to fail.
+RUN npm install --no-audit --no-fund
+```
+
+**Prevention**: Docker layer caching means `npm install` is just as fast as `npm ci` after the first run — the install layer only re-executes when `package.json` or `package-lock.json` changes.
+
+---
+
+### 29. `next build` Fails: SDK Throws "Missing API key" During Page Data Collection
+**Problem**: Build passes TypeScript but fails at "Collecting page data" with:
+```
+Error: Missing API key. Pass it to the constructor `new Resend("re_123")`
+Error: Failed to collect page data for /api/auth/[...all]
+```
+
+**Root cause**: An SDK (Resend, Stripe, Twilio, etc.) is instantiated at module level and its constructor throws when the env var is `undefined`. Runtime secrets are intentionally absent from the Docker builder stage — they live in the deployment platform's env panel (Dokploy, Railway, etc.) and are injected at container startup. `next build` evaluates all route modules to extract static params, which triggers module-level SDK instantiation and the throw.
+
+**Fix**: Add a non-empty fallback so the constructor doesn't throw at build time:
+```ts
+// Before — throws at build time when RESEND_API_KEY is not set
+export const resend = new Resend(process.env.RESEND_API_KEY)
+
+// After — loads cleanly at build time; fails gracefully at runtime if key missing
+export const resend = new Resend(process.env.RESEND_API_KEY ?? 'not-configured')
+```
+
+Apply to any SDK that throws on a missing key in its constructor: Resend, Stripe, SendGrid, Twilio, etc.
+
+**Key distinction:**
+- `NEXT_PUBLIC_*` vars → pass as Docker `ARG`/`ENV` build args, present at `next build` ✓
+- Server secrets (`RESEND_API_KEY`, `DATABASE_URL`, etc.) → injected at runtime by platform, NOT present at build time — must handle gracefully ✓
+
+---
+
+### 30. Dokploy Deploy Webhook Returns 404
+**Problem**: CI deploy job fails with:
+```
+curl: (22) The requested URL returned error: 404
+```
+
+**Root cause**: The `DOKPLOY_APP_ID` secret points to an application that doesn't exist in the Dokploy panel — either it was never created, or the wrong ID was copied. A 404 (not a connection error) confirms that `DOKPLOY_URL` and `DOKPLOY_API_KEY` are correct — only the application lookup fails.
+
+**Fix**:
+1. Open the Dokploy panel → create a new Application (Source: Docker Image)
+2. Get the Application ID from the URL: `.../project/xxx/application/APP_ID_HERE`
+3. Update the `DOKPLOY_APP_ID` GitHub secret
+4. Re-run the failed deploy job from the Actions tab — no code push needed
+
+---
+
+### 31. GitHub Actions Node.js 24 Deprecation Warning
+**Problem**: Every CI run shows:
+```
+Node.js 20 actions are deprecated. Actions will be forced to run with Node.js 24
+by default starting June 16th, 2026.
+```
+
+**Root cause**: `actions/checkout@v4`, `docker/login-action@v3`, etc. run on Node.js 20 internally. GitHub forced the switch to Node.js 24 on June 16, 2026.
+
+**Fix**: Add one env var to the workflow to opt in explicitly and silence the warning:
+```yaml
+env:
+  IMAGE: ghcr.io/yourname/app
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+```
 
 ---
 

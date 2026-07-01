@@ -2,6 +2,154 @@
 
 Complete guide for rendering blog content from Sanity CMS with Next.js, including Portable Text components, code syntax highlighting, images, table of contents, FAQs, and more.
 
+---
+
+## ⚠️ Critical Pitfalls (Learn from Production Issues)
+
+### 1. The `results[0]` Bug - #1 Cause of 404s
+
+**Problem:** Blog detail pages return 404 even though content exists in Sanity.
+
+**Root Cause:** When using `sanityFetch` with Next.js 15 ISR, the helper returns **data directly**, NOT an array. Using `results[0]` on an object always returns `undefined`.
+
+```typescript
+// ❌ WRONG - This causes 404s!
+export const getPostBySlug = cache(async (slug: string) => {
+  const results = await sanityFetch({ query, params });
+  return results[0] || null; // ❌ sanityFetch returns object, not array!
+});
+
+// ✅ CORRECT - Direct return
+export const getPostBySlug = cache(async (slug: string) => {
+  const post = await sanityFetch({ query, params });
+  return post || null; // ✅ Direct return
+});
+```
+
+**For array-returning queries, add fallback:**
+```typescript
+// ✅ With array fallback
+export const getPosts = cache(async (limit = 10) => {
+  const posts = await sanityFetch({ query });
+  return posts || []; // ✅ Prevents undefined errors
+});
+```
+
+---
+
+### 2. Missing `dynamicParams = true` for ISR
+
+**Problem:** New blog posts added after build return 404.
+
+**Root Cause:** Without `dynamicParams = true`, Next.js only serves pages that were generated at build time.
+
+```typescript
+// ✅ REQUIRED for ISR to generate new pages on-demand
+export const dynamicParams = true; // Allows on-demand generation
+export const revalidate = 3600; // Time-based fallback
+```
+
+---
+
+### 3. CDN vs ISR Caching Conflict
+
+**Problem:** Webhook fires successfully but content doesn't update immediately.
+
+**Root Cause:** Sanity CDN serves stale content even after Next.js cache revalidation.
+
+**Solution:** When using ISR with webhooks, **disable CDN** and let Next.js handle all caching:
+
+```typescript
+// sanity/lib/client.ts
+export function getClient() {
+  return createClient({
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: false, // ✅ Disable CDN when using ISR with webhooks
+    // Let Next.js handle caching instead
+  });
+}
+```
+
+**When to enable CDN:**
+- ❌ **With webhooks:** Never (causes stale content)
+- ✅ **Time-based only:** Yes, in production (`useCdn: process.env.NODE_ENV === "production"`)
+
+---
+
+### 4. Missing Fields in Related Posts Query
+
+**Problem:** Build fails with `Cannot read properties of undefined (reading '_id')` when rendering related posts.
+
+**Root Cause:** `getRelatedPosts` query doesn't include all required fields for the component.
+
+```typescript
+// ❌ WRONG - Missing author field
+const query = `
+  *[_type == "post" && _id != $id] | order(publishedAt desc)[0...${limit}]{
+    _id,
+    title,
+    "slug": slug.current,
+    // ❌ Missing author!
+  }
+`;
+
+// ✅ CORRECT - Includes author
+const query = `
+  *[_type == "post" && _id != $id] | order(publishedAt desc)[0...${limit}]{
+    _id,
+    title,
+    "slug": slug.current,
+    author-> { _id, name, "slug": slug.current }, // ✅ Include author
+    excerpt,
+    mainImage { asset-> { url } },
+    publishedAt
+  }
+`;
+```
+
+**Also filter out undefined elements:**
+```typescript
+{relatedPosts.filter(Boolean).map((post) => (
+  <RelatedPostCard key={post._id} post={post} />
+))}
+```
+
+---
+
+### 5. Wrong Webhook Package for Next.js
+
+**Problem:** Webhook signature verification returns 401 even with correct secret.
+
+**Root Cause:** Using `@sanity/webhook` instead of `next-sanity/webhook`.
+
+```typescript
+// ✅ CORRECT - For Next.js App Router
+import { parseBody } from "next-sanity/webhook";
+
+const { isValidSignature, body } = await parseBody<WebhookPayload>(
+  req,
+  WEBHOOK_SECRET
+);
+
+// ❌ WRONG - Wrong package
+import { isValidSignature } from "@sanity/webhook";
+```
+
+---
+
+## Quick Debug Checklist for Blog 404s
+
+1. [ ] Query tested in Sanity Vision → Returns results?
+2. [ ] `getPostBySlug` returns `post` directly (not `results[0]`)
+3. [ ] `dynamicParams = true` is set on page component
+4. [ ] `useCdn: false` when using webhooks
+5. [ ] Related posts query includes all required fields
+6. [ ] Using `next-sanity/webhook` `parseBody`, not `@sanity/webhook`
+
+---
+
 ## Table of Contents
 
 1. [Portable Text Setup](#portable-text-setup)

@@ -1,11 +1,21 @@
 ---
 name: rag-pipeline-builder
-description: Complete RAG (Retrieval-Augmented Generation) pipeline implementation with document ingestion, vector storage, semantic search, and response generation. Supports FastAPI backends with OpenRouter/OpenAI and Qdrant. LangChain-free architecture.
+description: Complete RAG (Retrieval-Augmented Generation) pipeline implementation with document ingestion, vector storage, semantic search, and response generation. Two stacks supported — (A) FastAPI + OpenRouter/OpenAI + Qdrant, and (B) Next.js + Drizzle + Neon pgvector + pluggable embeddings (Jina serverless / ONNX BGE-M3 on a VPS / Gemini). LangChain-free.
 category: backend
-version: 2.1.0
+version: 2.2.0
 ---
 
 # RAG Pipeline Builder Skill
+
+## Stack variants — pick one first
+
+- **Next.js / Drizzle / Neon pgvector** (recommended when the app is already Next.js + Postgres):
+  read [references/nextjs-drizzle-pgvector.md](./references/nextjs-drizzle-pgvector.md). Vectors live
+  in Postgres (`vector(N)` + HNSW), retrieval is raw SQL via the `<=>` operator, embeddings are
+  provider-pluggable. **Use this variant if your stack is Next.js + Drizzle + Neon.**
+- **FastAPI / Qdrant / OpenAI** (this skill's original body, below): standalone Python RAG service.
+
+The FastAPI body below does NOT apply to the Next.js variant — do not introduce Python/Qdrant into a Next.js + Drizzle app.
 
 ## ⚠️ Production Lessons Learned (UPDATED)
 

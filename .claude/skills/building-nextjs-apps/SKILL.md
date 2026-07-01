@@ -335,6 +335,48 @@ const nextConfig: NextConfig = {
 
 ---
 
+## JSON-LD + RSC Payload: Duplicate Structured Data
+
+**Symptom:** Google Search Console URL Inspection reports "2 FAQPage items" or "Duplicate field" on a page that only has one `<JsonLd>` component.
+
+**Why it happens:**
+
+Next.js App Router does two things for every page:
+1. Renders the SSR HTML — your `<script type="application/ld+json">` appears here once.
+2. Embeds an RSC payload — a `self.__next_f.push(...)` script containing serialized props for all client components. If you pass `post.faq` to a `'use client'` component, that FAQ data (including `@type`, `question`, `answer` strings) lands in the RSC payload too.
+
+Google's structured data crawler parses ALL script content aggressively. It finds the schema data in both scripts and counts them as two separate structured data entities.
+
+**The fix — single `@graph` block:**
+
+```tsx
+// ❌ DON'T — separate blocks + client component props = Google sees FAQPage twice
+<JsonLd schema={articleSchema(...)} />
+<JsonLd schema={breadcrumbSchema(...)} />
+{post.faq && <JsonLd schema={faqSchema(post.faq)} />}
+<BlogPostView post={post} />  {/* 'use client' — faq ends up in RSC payload */}
+
+// ✅ DO — one @graph block, one <script> tag, no duplicate
+<JsonLd schema={blogPostSchema({ ...post, faq: post.faq })} />
+<BlogPostView post={post} />
+```
+
+Where `blogPostSchema()` returns:
+```json
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Article", ... },
+    { "@type": "BreadcrumbList", ... },
+    { "@type": "FAQPage", "mainEntity": [...] }
+  ]
+}
+```
+
+**Rule:** Any schema type whose data also exists in a client component's props must be merged into a single `@graph` block — never emitted as a standalone `<script type="application/ld+json">` tag.
+
+---
+
 ## Next.js DevTools MCP
 
 Use the next-devtools-mcp server for runtime diagnostics and development automation.
