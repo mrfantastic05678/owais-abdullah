@@ -296,6 +296,7 @@
     "regenerator-runtime": "^0.14.1",
     "regexp.prototype.flags": "^1.5.3",
     "remark-gfm": "^4.0.1",
+    "resend": "^6.16.0",
     "resize-observer-polyfill": "^1.5.1",
     "resolve": "^1.22.8",
     "resolve-from": "^4.0.0",
