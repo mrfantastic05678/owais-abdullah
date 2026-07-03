@@ -83,12 +83,12 @@ const existingProjects: Project[] = [
   },
   {
     title: "Digital FTE",
-    description: "Autonomous AI employees built with the OpenAI Agents SDK — tiered agents that handle email, reporting, and day-to-day business operations without supervision.",
+    description: "Autonomous AI employees powered by Claude Code — an Obsidian vault for memory, MCPs for tools, Python scripts the agent can execute, and tiered agents that handle email, reporting, and day-to-day operations without supervision.",
     image: "/assets/projects/digital-fte.svg",
     link: "#",
     category: "AI Tool",
-    tags: ["Python", "AI Agents", "Automation", "OpenAI Agents SDK"],
-    techStack: ["Python", "OpenAI Agents SDK"],
+    tags: ["Claude Code", "AI Agents", "Obsidian", "MCPs", "Python", "Automation"],
+    techStack: ["Claude Code", "Obsidian", "MCPs", "Python"],
   },
   // Remaining projects
   {

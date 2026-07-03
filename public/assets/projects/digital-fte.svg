@@ -5,12 +5,12 @@
       <stop offset="100%" style="stop-color:#1e293b"/>
     </linearGradient>
     <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#3b82f6"/>
-      <stop offset="100%" style="stop-color:#60a5fa"/>
+      <stop offset="0%" style="stop-color:#d97706"/>
+      <stop offset="100%" style="stop-color:#f59e0b"/>
     </linearGradient>
     <linearGradient id="glow" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.3"/>
-      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0"/>
+      <stop offset="0%" style="stop-color:#d97706;stop-opacity:0.25"/>
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:0"/>
     </linearGradient>
   </defs>
 
@@ -18,7 +18,7 @@
   <rect width="800" height="500" fill="url(#bg)"/>
 
   <!-- Grid pattern -->
-  <g opacity="0.05" stroke="#fff" stroke-width="0.5">
+  <g opacity="0.04" stroke="#fff" stroke-width="0.5">
     <line x1="0" y1="0" x2="0" y2="500"/><line x1="50" y1="0" x2="50" y2="500"/>
     <line x1="100" y1="0" x2="100" y2="500"/><line x1="150" y1="0" x2="150" y2="500"/>
     <line x1="200" y1="0" x2="200" y2="500"/><line x1="250" y1="0" x2="250" y2="500"/>
@@ -34,87 +34,78 @@
     <line x1="0" y1="450" x2="800" y2="450"/>
   </g>
 
-  <!-- Glow circle behind agents -->
-  <circle cx="580" cy="250" r="180" fill="url(#glow)"/>
+  <!-- Glow behind diagram -->
+  <circle cx="560" cy="230" r="170" fill="url(#glow)"/>
 
-  <!-- Agent cards -->
-  <!-- Agent 1 - Email -->
-  <g transform="translate(420, 120)">
-    <rect width="120" height="90" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
-    <rect x="10" y="10" width="28" height="28" rx="6" fill="#3b82f6" opacity="0.2"/>
-    <text x="24" y="29" font-family="monospace" font-size="14" fill="#60a5fa" text-anchor="middle">&#9993;</text>
-    <text x="70" y="24" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">AGENT</text>
-    <text x="70" y="42" font-family="sans-serif" font-size="11" fill="#e2e8f0" text-anchor="middle" font-weight="600">Email</text>
-    <rect x="20" y="58" width="80" height="4" rx="2" fill="#334155"/>
-    <rect x="20" y="58" width="55" height="4" rx="2" fill="#3b82f6"/>
-    <text x="70" y="76" font-family="monospace" font-size="7" fill="#64748b" text-anchor="middle">AUTONOMOUS</text>
+  <!-- Architecture diagram -->
+  <!-- Claude Code - central brain -->
+  <g transform="translate(500, 150)">
+    <rect width="120" height="80" rx="10" fill="#1e293b" stroke="#d97706" stroke-width="2"/>
+    <rect x="10" y="10" width="30" height="30" rx="8" fill="#d97706" opacity="0.2"/>
+    <text x="25" y="32" font-family="sans-serif" font-size="18" fill="#f59e0b" text-anchor="middle">&#x1F9E0;</text>
+    <text x="76" y="30" font-family="sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">POWERED BY</text>
+    <text x="76" y="48" font-family="sans-serif" font-size="13" fill="#f1f5f9" text-anchor="middle" font-weight="700">Claude Code</text>
+    <text x="60" y="70" font-family="monospace" font-size="7" fill="#64748b" text-anchor="middle">GENERAL AGENT</text>
   </g>
 
-  <!-- Agent 2 - Reporting (center, larger) -->
-  <g transform="translate(520, 90)">
-    <rect width="140" height="110" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
-    <rect x="12" y="12" width="32" height="32" rx="8" fill="#3b82f6" opacity="0.2"/>
-    <text x="28" y="34" font-family="sans-serif" font-size="16" fill="#60a5fa" text-anchor="middle">&#x1F4CA;</text>
-    <text x="84" y="28" font-family="sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">AGENT</text>
-    <text x="84" y="48" font-family="sans-serif" font-size="13" fill="#e2e8f0" text-anchor="middle" font-weight="700">Reporting</text>
-    <rect x="22" y="65" width="96" height="4" rx="2" fill="#334155"/>
-    <rect x="22" y="65" width="72" height="4" rx="2" fill="#3b82f6"/>
-    <rect x="22" y="75" width="96" height="4" rx="2" fill="#334155"/>
-    <rect x="22" y="75" width="48" height="4" rx="2" fill="#60a5fa"/>
-    <text x="84" y="98" font-family="monospace" font-size="7" fill="#64748b" text-anchor="middle">AUTONOMOUS</text>
+  <!-- Obsidian Vault - memory -->
+  <g transform="translate(440, 280)">
+    <rect width="110" height="70" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <rect x="10" y="10" width="26" height="26" rx="6" fill="#7c3aed" opacity="0.2"/>
+    <text x="23" y="29" font-family="sans-serif" font-size="14" fill="#a78bfa" text-anchor="middle">&#x1F4C1;</text>
+    <text x="72" y="24" font-family="sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">MEMORY</text>
+    <text x="72" y="40" font-family="sans-serif" font-size="11" fill="#e2e8f0" text-anchor="middle" font-weight="600">Obsidian</text>
+    <text x="72" y="56" font-family="monospace" font-size="7" fill="#64748b" text-anchor="middle">VAULT + FILES</text>
   </g>
 
-  <!-- Agent 3 - Operations -->
-  <g transform="translate(420, 250)">
-    <rect width="120" height="90" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
-    <rect x="10" y="10" width="28" height="28" rx="6" fill="#3b82f6" opacity="0.2"/>
-    <text x="24" y="29" font-family="sans-serif" font-size="14" fill="#60a5fa" text-anchor="middle">&#x2699;</text>
-    <text x="70" y="24" font-family="sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">AGENT</text>
-    <text x="70" y="42" font-family="sans-serif" font-size="11" fill="#e2e8f0" text-anchor="middle" font-weight="600">Operations</text>
-    <rect x="20" y="58" width="80" height="4" rx="2" fill="#334155"/>
-    <rect x="20" y="58" width="60" height="4" rx="2" fill="#3b82f6"/>
-    <text x="70" y="76" font-family="monospace" font-size="7" fill="#64748b" text-anchor="middle">AUTONOMOUS</text>
+  <!-- MCPs - tools -->
+  <g transform="translate(570, 280)">
+    <rect width="110" height="70" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <rect x="10" y="10" width="26" height="26" rx="6" fill="#0891b2" opacity="0.2"/>
+    <text x="23" y="29" font-family="sans-serif" font-size="14" fill="#22d3ee" text-anchor="middle">&#x2699;</text>
+    <text x="72" y="24" font-family="sans-serif" font-size="8" fill="#94a3b8" text-anchor="middle">TOOLS</text>
+    <text x="72" y="40" font-family="sans-serif" font-size="11" fill="#e2e8f0" text-anchor="middle" font-weight="600">MCPs</text>
+    <text x="72" y="56" font-family="monospace" font-size="7" fill="#64748b" text-anchor="middle">PROTOCOL</text>
   </g>
 
   <!-- Connection lines -->
-  <g stroke="#3b82f6" stroke-width="1" opacity="0.3" stroke-dasharray="4,4">
-    <line x1="480" y1="200" x2="560" y2="190"/>
-    <line x1="480" y1="200" x2="560" y2="290"/>
-    <line x1="540" y1="180" x2="540" y2="250"/>
+  <g stroke="#d97706" stroke-width="1.5" opacity="0.4">
+    <line x1="560" y1="230" x2="495" y2="280"/>
+    <line x1="560" y1="230" x2="625" y2="280"/>
   </g>
 
   <!-- Tier badge -->
-  <g transform="translate(620, 220)">
-    <rect width="100" height="28" rx="14" fill="#3b82f6" opacity="0.15" stroke="#3b82f6" stroke-width="1"/>
-    <text x="50" y="18" font-family="monospace" font-size="9" fill="#60a5fa" text-anchor="middle" font-weight="600">PLATINUM TIER</text>
+  <g transform="translate(630, 170)">
+    <rect width="90" height="24" rx="12" fill="#d97706" opacity="0.15" stroke="#d97706" stroke-width="1"/>
+    <text x="45" y="16" font-family="monospace" font-size="8" fill="#f59e0b" text-anchor="middle" font-weight="600">PLATINUM TIER</text>
   </g>
 
   <!-- Text content -->
   <g>
-    <text x="60" y="160" font-family="sans-serif" font-size="11" fill="#3b82f6" font-weight="600" letter-spacing="3">OPENAI AGENTS SDK</text>
-    <text x="60" y="200" font-family="sans-serif" font-size="40" fill="#f1f5f9" font-weight="800">Digital FTE</text>
-    <text x="60" y="230" font-family="sans-serif" font-size="16" fill="#94a3b8">AI employees that work like</text>
-    <text x="60" y="252" font-family="sans-serif" font-size="16" fill="#94a3b8">full-time staff — 24/7.</text>
+    <text x="60" y="140" font-family="sans-serif" font-size="11" fill="#d97706" font-weight="600" letter-spacing="3">AI AGENT SYSTEM</text>
+    <text x="60" y="180" font-family="sans-serif" font-size="40" fill="#f1f5f9" font-weight="800">Digital FTE</text>
+    <text x="60" y="210" font-family="sans-serif" font-size="15" fill="#94a3b8">Autonomous AI employees that</text>
+    <text x="60" y="232" font-family="sans-serif" font-size="15" fill="#94a3b8">handle business operations.</text>
 
-    <!-- Tier indicators -->
-    <g transform="translate(60, 290)">
-      <rect width="60" height="24" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
-      <text x="30" y="16" font-family="monospace" font-size="8" fill="#94a3b8" text-anchor="middle">BRONZE</text>
+    <!-- Tech stack labels -->
+    <g transform="translate(60, 268)">
+      <rect width="80" height="22" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="40" y="15" font-family="monospace" font-size="8" fill="#94a3b8" text-anchor="middle">CLAUDE CODE</text>
     </g>
-    <g transform="translate(130, 290)">
-      <rect width="60" height="24" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
-      <text x="30" y="16" font-family="monospace" font-size="8" fill="#94a3b8" text-anchor="middle">SILVER</text>
+    <g transform="translate(150, 268)">
+      <rect width="80" height="22" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="40" y="15" font-family="monospace" font-size="8" fill="#94a3b8" text-anchor="middle">OBSIDIAN</text>
     </g>
-    <g transform="translate(200, 290)">
-      <rect width="60" height="24" rx="4" fill="#3b82f6" opacity="0.2" stroke="#3b82f6" stroke-width="1"/>
-      <text x="30" y="16" font-family="monospace" font-size="8" fill="#60a5fa" text-anchor="middle">GOLD</text>
+    <g transform="translate(240, 268)">
+      <rect width="50" height="22" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="25" y="15" font-family="monospace" font-size="8" fill="#94a3b8" text-anchor="middle">MCPS</text>
     </g>
-    <g transform="translate(270, 290)">
-      <rect width="72" height="24" rx="4" fill="#3b82f6" opacity="0.2" stroke="#3b82f6" stroke-width="1"/>
-      <text x="36" y="16" font-family="monospace" font-size="8" fill="#60a5fa" text-anchor="middle">PLATINUM</text>
+    <g transform="translate(300, 268)">
+      <rect width="60" height="22" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="30" y="15" font-family="monospace" font-size="8" fill="#94a3b8" text-anchor="middle">PYTHON</text>
     </g>
   </g>
 
   <!-- Bottom line -->
-  <rect x="60" y="340" width="200" height="2" rx="1" fill="url(#accent)"/>
+  <rect x="60" y="320" width="180" height="2" rx="1" fill="url(#accent)"/>
 </svg>
