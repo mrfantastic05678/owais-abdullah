@@ -90,6 +90,7 @@ export default {
   		},
   		colors: {
   			accent: 'var(--accent)',
+  			'accent-hover': 'var(--accent-hover)',
   			background: 'var(--background)',
   			foreground: 'var(--foreground)',
   			card: 'var(--card)',

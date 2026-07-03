@@ -6,8 +6,15 @@
 > business operations 24/7), and WordPress/CMS development.
 
 Currently Senior Developer (Web & AI) at LionUp Digital and Senior Developer &
-Manager at AA Marketing (concurrent roles). 3+ years in the industry, 40+
-projects delivered across SaaS, e-commerce, AI tools, and automation.
+Manager at AA Marketing (concurrent roles). Founder of Octively
+(https://octively.com), an AI chatbot SaaS that lets agencies add branded AI
+chatbots to client sites. 3+ years in the industry, 40+ projects delivered
+across SaaS, e-commerce, AI tools, and automation.
+
+Notable projects: Octively (AI chatbot SaaS, founder), Digital FTE (autonomous
+AI employees on the OpenAI Agents SDK), Visati (visa services SaaS), GigBillow
+(freelance business toolkit), ContentSpark AI (automated SEO blog agent),
+TeamFlow (AI team management), FurnitureMart.pk (e-commerce marketplace).
 
 Core stack: TypeScript, Next.js, React, Tailwind CSS, Python, OpenAI Agents
 SDK, PostgreSQL, Prisma, Sanity CMS, WordPress, Shopify.

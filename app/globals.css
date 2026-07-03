@@ -13,7 +13,7 @@
     --popover: #ffffff; /* white popover */
     --popover-foreground: #1f2937; /* dark popover foreground */
 
-    --primary: #3a69ff; /* blue primary */
+    --primary: #2b55e6; /* deep blue primary (buttons, emphasis) */
     --primary-foreground: #ffffff; /* white primary foreground */
 
     --secondary: #1f2937; /* dark secondary */
@@ -22,7 +22,8 @@
     --muted: #e5e7eb; /* light muted */
     --muted-foreground: #4b5563; /* dark muted foreground */
 
-    --accent: #3a69ff; /* blue accent */
+    --accent: #3a69ff; /* blue accent (links, highlights) */
+    --accent-hover: #2b55e6; /* darker accent for hover states */
     --accent-foreground: #ffffff; /* white accent foreground */
 
     --destructive: #ef4444; /* red destructive */
@@ -35,7 +36,7 @@
     --radius: 0.5rem;
 
     --heading: #1f2937; /* dark heading */
-    --text: #fff; /* white text */
+    --text: #1f2937; /* dark text (light theme) */
     --text2: #4b5563; /* dark text2 */
     --toc-background: #e5e7eb; /* light TOC background */
     --blog: #f3f4f6; /* light blog background */
@@ -51,7 +52,7 @@
     --popover: #202224; /* dark popover */
     --popover-foreground: #ffffff; /* white popover foreground */
 
-    --primary: #3a69ff; /* blue primary */
+    --primary: #2b55e6; /* deep blue primary (buttons, emphasis) */
     --primary-foreground: #ffffff; /* white primary foreground */
 
     --secondary: #1f2937; /* dark secondary */
@@ -60,7 +61,8 @@
     --muted: #374151; /* dark muted */
     --muted-foreground: #d1d5db; /* light muted foreground */
 
-    --accent: #3a69ff; /* blue accent */
+    --accent: #3a69ff; /* blue accent (links, highlights) */
+    --accent-hover: #5c82ff; /* lighter accent for hover on dark */
     --accent-foreground: #ffffff; /* white accent foreground */
 
     --destructive: #ef4444; /* red destructive */
