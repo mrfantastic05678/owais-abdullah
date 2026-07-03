@@ -13,8 +13,9 @@ across SaaS, e-commerce, AI tools, and automation.
 
 Notable projects: Octively (AI chatbot SaaS, founder), Digital FTE (autonomous
 AI employees on the OpenAI Agents SDK), Visati (visa services SaaS), GigBillow
-(freelance business toolkit), ContentSpark AI (automated SEO blog agent),
-TeamFlow (AI team management), FurnitureMart.pk (e-commerce marketplace).
+(freelance business toolkit), Yousuf Living (furniture ecommerce), ContentSpark AI
+(automated SEO blog agent), TeamFlow (AI team management), FurnitureMart.pk
+(e-commerce marketplace).
 
 Core stack: TypeScript, Next.js, React, Tailwind CSS, Python, OpenAI Agents
 SDK, PostgreSQL, Prisma, Sanity CMS, WordPress, Shopify.
