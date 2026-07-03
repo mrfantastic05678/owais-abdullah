@@ -40,8 +40,8 @@ const existingProjects: Project[] = [
   {
     title: "Visati",
     description: "Visa services SaaS that takes applicants from eligibility check to submitted application — document uploads, payments, and PDF generation built in.",
-    image: "/assets/placeholder.png",
-    link: "#",
+    image: "/assets/projects/visati.png",
+    link: "https://visati-dubai.vercel.app/",
     category: "Platform",
     tags: ["Next.js", "SaaS", "Visa Services", "Stripe", "Payments"],
     techStack: ["Next.js", "TypeScript", "Stripe", "Drizzle ORM", "Neon Postgres", "BetterAuth", "Sanity CMS"],
@@ -106,8 +106,8 @@ const existingProjects: Project[] = [
   {
     title: "NextLevel Marketerz",
     description: "Marketing agency site with 3D and scroll-driven animation on a Sanity-backed Next.js stack.",
-    image: "/assets/placeholder.png",
-    link: "#",
+    image: "/assets/projects/nextlevel-marketerz.png",
+    link: "https://www.nextlevelmarketerz.com/",
     category: "Platform",
     tags: ["Next.js", "Three.js", "GSAP", "Agency"],
     techStack: ["Next.js", "TypeScript", "Three.js", "GSAP", "Sanity CMS"],
@@ -188,7 +188,7 @@ const existingProjects: Project[] = [
   {
     title: "GigBillow",
     description: "Freelance business toolkit — time tracking, invoicing, proposals, and project management in one app, with AI handling task categorization and invoice generation.",
-    image: "/assets/placeholder.png",
+    image: "/assets/projects/owflex.png",
     link: "https://gigbillow.vercel.app/",
     category: "Tool",
     tags: ["Next.js", "AI", "Freelance", "Time Tracking", "Invoicing"],
