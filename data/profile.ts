@@ -37,15 +37,6 @@ const existingProjects: Project[] = [
     techStack: ["Next.js", "TypeScript", "Gemini AI", "Neon pgvector", "AWS S3", "Brevo"],
   },
   {
-    title: "Visati",
-    description: "Visa services SaaS that takes applicants from eligibility check to submitted application — document uploads, payments, and PDF generation built in.",
-    image: "/assets/projects/visati.png",
-    link: "https://visati-dubai.vercel.app/",
-    category: "Platform",
-    tags: ["Next.js", "SaaS", "Visa Services", "Stripe", "Payments"],
-    techStack: ["Next.js", "TypeScript", "Stripe", "Drizzle ORM", "Neon Postgres", "BetterAuth", "Sanity CMS"],
-  },
-  {
     title: "TeamFlow",
     description: "An AI-powered team management and task assignment platform designed for agencies. Features intelligent task distribution, team workload balancing, and automated project tracking.",
     image: "/assets/projects/teamflow.png",
@@ -53,6 +44,15 @@ const existingProjects: Project[] = [
     category: "Platform",
     tags: ["Next.js", "AI", "SaaS", "Team Management", "Agencies", "Task Assignment"],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "AI Integration", "Supabase"],
+  },
+  {
+    title: "Visati",
+    description: "Visa services SaaS that takes applicants from eligibility check to submitted application — document uploads, payments, and PDF generation built in.",
+    image: "/assets/projects/visati.png",
+    link: "https://visati-dubai.vercel.app/",
+    category: "Platform",
+    tags: ["Next.js", "SaaS", "Visa Services", "Stripe", "Payments"],
+    techStack: ["Next.js", "TypeScript", "Stripe", "Drizzle ORM", "Neon Postgres", "BetterAuth", "Sanity CMS"],
   },
   {
     title: "Yousuf Living",
