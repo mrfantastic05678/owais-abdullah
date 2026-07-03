@@ -123,6 +123,15 @@ const existingProjects: Project[] = [
     techStack: ["Next.js", "Sanity CMS", "Tailwind CSS"],
   },
   {
+    title: "Yousuf Living",
+    description: "Workshop-built furniture store in Karachi — bedroom sets, beds, wardrobes with custom sizing, WhatsApp ordering, and city-wide delivery.",
+    image: "/assets/projects/yousuf-living.png",
+    link: "https://yousufliving.vercel.app/",
+    category: "Ecommerce",
+    tags: ["Next.js", "E-commerce", "Furniture", "WhatsApp"],
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS"],
+  },
+  {
     title: "AA Marketing",
     description: "Marketing agency site with dynamic content management through Sanity CMS — services, portfolio, and contact.",
     image: "/assets/project-20.png",
