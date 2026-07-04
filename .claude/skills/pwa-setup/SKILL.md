@@ -336,3 +336,26 @@ Or manually check:
 | `references/nextjs-patterns.md` | Next.js-specific setup, App Router patterns |
 | `references/anti-patterns.md` | What to avoid, common mistakes |
 | `references/lighthouse-audit.md` | Lighthouse requirements, validation checklist |
+| `references/troubleshooting.md` | Known issues and solutions encountered during setup |
+
+## Troubleshooting
+
+### Build Issues
+
+| Problem | Solution |
+|---------|----------|
+| Large chunk warning (2+ MB) | Set `maximumFileSizeToCacheInBytes: 5 * 1024 * 1024` in PWA config |
+| Build timeout / slow compilation | Delete `.next` cache first: `rm -rf .next && npm run build` |
+| EPIPE error at build end | Ignore if `public/sw.js` exists — pipe breaks after successful build |
+
+### Runtime Issues
+
+| Problem | Solution |
+|---------|----------|
+| SW not registering in dev | Expected — PWA disabled in dev mode. Test with `npm run build && npm run start` |
+| Offline page not loading | Use `app/~offline/page.tsx` NOT `app/offline/page.tsx` |
+| Duplicate meta tags | Remove raw `<head>` JSX — use `Metadata` export only |
+| Not installable | Check: manifest has `name/icons/start_url/display`, SW registered, HTTPS |
+| iOS no install prompt | Tap Share → "Add to Home Screen" (iOS doesn't auto-prompt) |
+
+See `references/troubleshooting.md` for detailed diagnostics and commands.
