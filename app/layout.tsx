@@ -123,18 +123,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#212428" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta
-          name="apple-mobile-web-app-title"
-          content="Owais Abdullah Portfolio"
-        />
-        <meta name="application-name" content="Owais Abdullah Portfolio" />
-        <meta name="mobile-web-app-capable" content="yes" />
-      </head>
       <body
         className={cn(
           clashDisplay.variable,
