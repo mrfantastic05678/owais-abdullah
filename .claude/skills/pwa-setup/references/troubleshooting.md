@@ -173,6 +173,176 @@ Users tap Share → "Add to Home Screen" manually on iOS.
 
 ---
 
+### 9. Serwist + Turbopack Incompatibility
+
+**Symptom:** Build fails with errors about webpack when using `@serwist/next` with Next.js 16+.
+
+```
+Error: @serwist/next requires webpack but Turbopack is enabled
+```
+
+**Cause:** `@serwist/next` is a webpack plugin. Next.js 16 enables Turbopack by default, which doesn't support webpack plugins.
+
+**Solution:** Add `turbopack: {}` to `next.config.ts` to force webpack mode:
+```typescript
+const nextConfig: NextConfig = {
+  turbopack: {}, // Forces webpack instead of Turbopack
+  // ... other config
+};
+```
+
+**Alternative:** Use `@serwist/turbopack` instead, which uses a Route Handler pattern instead of a bundler plugin.
+
+---
+
+### 10. Serwist v9 API Changed from v8
+
+**Symptom:** TypeScript errors about `precacheAndRoute` not being a function:
+```
+TypeError: precacheAndRoute is not a function
+```
+
+**Cause:** Serwist v9 changed the API. `precacheAndRoute` is no longer exported as a standalone function. The `Serwist` class now handles precaching internally.
+
+**Solution:** Use the new `Serwist` class pattern:
+```typescript
+// OLD (v8) - DO NOT USE:
+import { precacheAndRoute } from 'workbox-precaching';
+precacheAndRoute(self.__WB_MANIFEST);
+
+// NEW (v9) - USE THIS:
+import { Serwist } from 'serwist';
+
+const serwist = new Serwist({
+  precacheEntries: self.__WB_MANIFEST,
+  skipWaiting: true,
+  clientsClaim: true,
+});
+
+serwist.install();
+serwist.activate();
+```
+
+---
+
+### 11. TypeScript Errors in Service Worker Context
+
+**Symptom:** TS errors about service worker globals not being recognized:
+```
+Cannot find name 'FetchEvent'
+Property 'request' does not exist on type 'Event'
+Cannot find name 'clients'
+```
+
+**Cause:** TypeScript doesn't recognize service worker APIs (`FetchEvent`, `clients`, `caches`) by default. These aren't in the standard DOM types.
+
+**Solution:**
+
+**Option A:** Exclude SW files from TypeScript:
+```json
+// tsconfig.json
+{
+  "exclude": ["node_modules", "scripts", "src/sw.ts", "public/sw.js"]
+}
+```
+
+**Option B:** Add SW types explicitly:
+```typescript
+// src/sw.ts or service-worker.ts
+/// <reference lib="webworker" />
+
+declare const self: ServiceWorkerGlobalScope;
+declare const clients: Clients;
+declare const caches: CacheStorage;
+
+// Use FetchEvent with explicit type
+self.addEventListener('fetch', (event: FetchEvent) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
+    })
+  );
+});
+```
+
+**Option C:** Use `@types/serviceworker` package:
+```bash
+npm install -D @types/serviceworker
+```
+
+---
+
+### 12. noUncheckedIndexedAccess Causing Cascading Build Failures
+
+**Symptom:** Build fails with type errors on array access across multiple files:
+```
+Type 'T' is not assignable to type 'T'
+Object is possibly 'undefined'
+```
+
+**Cause:** TypeScript's `noUncheckedIndexedAccess` option (enabled in strict mode) makes array index access return `T | undefined`. This breaks code like:
+```typescript
+const item = array[0]; // Now typed as T | undefined, not T
+```
+
+**Solution:** Fix with non-null assertions or optional chaining:
+
+```typescript
+// BEFORE (broken):
+const first = array[0].name;
+const value = data[key];
+
+// AFTER (fixed):
+const first = array[0]!.name;        // Non-null assertion
+const value = data[key] ?? '';        // Default value
+const value = data?.[key];           // Optional chaining
+const value = data[key] as string;   // Type assertion
+```
+
+**Files commonly affected:**
+- Recommendation engines (array[0])
+- Filter/search components (filteredItems[0])
+- Shop/product listings (products[index])
+
+---
+
+### 13. Playwright Module Not Installed for PWA Screenshot Capture
+
+**Symptom:** Build fails when including screenshot scripts:
+```
+Cannot find module 'playwright'
+Module not found: Can't resolve 'playwright'
+```
+
+**Cause:** `scripts/capture-pwa-assets.ts` (or similar) references `playwright`, but it's not in `package.json` dependencies. When `npm run build` type-checks all `.ts` files, it fails on the missing import.
+
+**Solution:**
+
+**Option A:** Install Playwright:
+```bash
+npm install -D playwright
+```
+
+**Option B:** Exclude scripts from TypeScript compilation:
+```json
+// tsconfig.json
+{
+  "exclude": ["node_modules", "scripts"]
+}
+```
+
+**Option C:** Move capture scripts outside the project:
+```bash
+# Create a separate directory for scripts
+mkdir -p tools/screenshots
+cd tools/screenshots
+npm init -y
+npm install playwright
+# Run scripts from here instead of project root
+```
+
+---
+
 ## Quick Diagnostic Commands
 
 ```bash

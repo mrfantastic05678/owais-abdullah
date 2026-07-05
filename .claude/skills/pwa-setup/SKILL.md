@@ -347,6 +347,9 @@ Or manually check:
 | Large chunk warning (2+ MB) | Set `maximumFileSizeToCacheInBytes: 5 * 1024 * 1024` in PWA config |
 | Build timeout / slow compilation | Delete `.next` cache first: `rm -rf .next && npm run build` |
 | EPIPE error at build end | Ignore if `public/sw.js` exists — pipe breaks after successful build |
+| Serwist + Turbopack incompatibility | Add `turbopack: {}` to next.config.ts to force webpack mode |
+| Serwist v9 API changed | Use `new Serwist({ precacheEntries, skipWaiting, clientsClaim })` instead of `precacheAndRoute` |
+| noUncheckedIndexedAccess errors | Fix with `!` assertions, `?.` chaining, or `??` defaults |
 
 ### Runtime Issues
 
@@ -357,5 +360,12 @@ Or manually check:
 | Duplicate meta tags | Remove raw `<head>` JSX — use `Metadata` export only |
 | Not installable | Check: manifest has `name/icons/start_url/display`, SW registered, HTTPS |
 | iOS no install prompt | Tap Share → "Add to Home Screen" (iOS doesn't auto-prompt) |
+
+### TypeScript Issues
+
+| Problem | Solution |
+|---------|----------|
+| SW globals not recognized (`FetchEvent`, `clients`) | Exclude SW files from tsconfig or add `/// <reference lib="webworker" />` |
+| Playwright module not found | Exclude `scripts/` from tsconfig or install `playwright` as devDep |
 
 See `references/troubleshooting.md` for detailed diagnostics and commands.
