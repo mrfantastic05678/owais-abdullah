@@ -47,6 +47,7 @@ I'm a Forward Deployed Engineer (FDE) who builds AI Workers — Digital FTEs tha
 | Framer Motion | UI animations, layout transitions |
 | GSAP | Scroll-triggered animations, scroll effects |
 | Three.js | 3D visuals, WebGL |
+| Scroll Story 3D *(planned)* | Apple/Nike-style scroll-scrubbed product reveals |
 
 ### Backend & Data
 
@@ -111,6 +112,7 @@ I'm a Forward Deployed Engineer (FDE) who builds AI Workers — Digital FTEs tha
 - **Animations** — Framer Motion + GSAP ScrollTrigger
 - **ISR** — Incremental Static Regeneration for blog and projects
 - **Email** — Resend (transactional) + Brevo (marketing)
+- **Scroll Story 3D** *(planned)* — Apple/Nike-style scroll-triggered product reveal using canvas frame sequences
 
 ---
 
