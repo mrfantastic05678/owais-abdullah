@@ -1,0 +1,149 @@
+{% comment %}
+  Scroll Story section — 3-act scroll-scrubbed product reveal.
+
+  Setup (one-time, per theme):
+    1. Copy assets/standalone/scroll-story.css and scroll-story.js from this
+       skill into the theme's /assets folder, unmodified.
+    2. Copy this file into the theme's /sections folder.
+    3. In "video" mode (default) merchants just upload a clip via the
+       section's native video picker — no CLI needed.
+    4. For "frames" mode (better perf): run scripts/extract-frames.sh on the
+       merchant's source video, upload the resulting .webp files under
+       Settings -> Files in the Shopify admin, then paste the shared URL
+       prefix into the section's "Frame sequence base URL" setting.
+       See references/shopify-section-schema.md for why frames mode can't
+       be fully self-serve from the theme editor.
+{% endcomment %}
+
+{{ 'scroll-story.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign mode = section.settings.mode
+  assign frame_count = section.settings.frame_count
+  assign frames_base_url = section.settings.frames_base_url
+-%}
+
+<section
+  class="scroll-story"
+  id="scroll-story-{{ section.id }}"
+  data-scroll-story='{
+    "mode": "{{ mode }}",
+    "framesBaseUrl": "{{ frames_base_url | escape }}",
+    "frameCount": {{ frame_count }},
+    "framePad": 3,
+    "frameExt": "webp",
+    "videoSelector": "#scroll-story-{{ section.id }} video",
+    "canvasSelector": "#scroll-story-{{ section.id }} canvas"
+  }'
+  style="--scroll-story-text-color: {{ section.settings.text_color }};"
+>
+  <div class="scroll-story__pin-wrapper">
+    <div class="scroll-story__sticky">
+
+      {% if mode == 'video' and section.settings.story_video %}
+        <video
+          muted
+          playsinline
+          preload="auto"
+          poster="{{ section.settings.story_video.preview_image | image_url: width: 1600 }}"
+        >
+          <source src="{{ section.settings.story_video.sources.last.url }}" type="video/mp4">
+        </video>
+      {% else %}
+        <canvas class="scroll-story__canvas"></canvas>
+      {% endif %}
+
+      {% for block in section.blocks %}
+        {% if block.type == 'act' %}
+          <div
+            class="scroll-story__overlay"
+            data-act
+            data-start="{{ block.settings.start_pct }}"
+            data-end="{{ block.settings.end_pct }}"
+            {{ block.shopify_attributes }}
+          >
+            {% if block.settings.heading != blank %}
+              <h2>{{ block.settings.heading }}</h2>
+            {% endif %}
+            {% if block.settings.subheading != blank %}
+              <p>{{ block.settings.subheading }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'scroll-story.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Scroll Story",
+  "tag": "section",
+  "class": "scroll-story-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Playback mode",
+      "options": [
+        { "value": "video", "label": "Video (simple — upload one clip)" },
+        { "value": "frames", "label": "Frame sequence (best performance, needs extract-frames.sh)" }
+      ],
+      "default": "video"
+    },
+    {
+      "type": "video",
+      "id": "story_video",
+      "label": "Story video",
+      "info": "A seamless loop clip: calm -> dramatic -> calm. Use scripts/build-loop.sh to generate one from two source clips."
+    },
+    {
+      "type": "text",
+      "id": "frames_base_url",
+      "label": "Frame sequence base URL",
+      "info": "Frame sequence mode only. Everything before the 3-digit frame number, e.g. https://cdn.shopify.com/.../product-"
+    },
+    {
+      "type": "range",
+      "id": "frame_count",
+      "label": "Frame count",
+      "min": 10,
+      "max": 200,
+      "step": 1,
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Overlay text color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "act",
+      "name": "Act overlay",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Still. Perfect. Waiting." },
+        { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Every detail, exactly as it should be." },
+        { "type": "range", "id": "start_pct", "label": "Show from scroll %", "min": 0, "max": 100, "step": 1, "default": 0 },
+        { "type": "range", "id": "end_pct", "label": "Show until scroll %", "min": 0, "max": 100, "step": 1, "default": 28 }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Scroll Story",
+      "blocks": [
+        { "type": "act", "settings": { "heading": "Still. Perfect. Waiting.", "subheading": "Every detail, exactly as it should be.", "start_pct": 0, "end_pct": 28 } },
+        { "type": "act", "settings": { "heading": "Then everything changes.", "subheading": "Scroll to watch it unfold.", "start_pct": 30, "end_pct": 66 } },
+        { "type": "act", "settings": { "heading": "Reborn.", "subheading": "Built to do this again and again.", "start_pct": 72, "end_pct": 100 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

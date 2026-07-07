@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scroll Story — demo</title>
+  <link rel="stylesheet" href="scroll-story.css" />
+  <style>
+    /* page chrome only — not part of the reusable engine */
+    body { margin: 0; font-family: system-ui, sans-serif; background: #0c0a09; color: #fff; }
+    .spacer { height: 60vh; display: flex; align-items: center; justify-content: center; opacity: 0.6; }
+  </style>
+</head>
+<body>
+
+  <div class="spacer">Scroll down ↓</div>
+
+  <!--
+    Three-act formula (defaults, override via data-start/data-end below):
+      Act 1  0%-28%   calm / floating / still
+      Act 2  28%-68%  dramatic transformation
+      Act 3  68%-100% rebuild / resolve
+
+    Swap mode to "video" + point videoSelector at a <video src="loop.mp4">
+    if you don't want to run extract-frames.sh yet.
+  -->
+  <section
+    class="scroll-story"
+    data-scroll-story='{
+      "mode": "frames",
+      "framesBaseUrl": "frames/product-",
+      "frameCount": 60,
+      "framePad": 3,
+      "frameExt": "webp",
+      "staticFrameUrl": "frames/product-001.webp"
+    }'
+  >
+    <div class="scroll-story__pin-wrapper">
+      <div class="scroll-story__sticky">
+        <canvas class="scroll-story__canvas"></canvas>
+
+        <div class="scroll-story__overlay" data-act data-start="0" data-end="26">
+          <h2>Still. Perfect. Waiting.</h2>
+          <p>Every detail, exactly as it should be.</p>
+        </div>
+
+        <div class="scroll-story__overlay" data-act data-start="30" data-end="66">
+          <h2>Then everything changes.</h2>
+          <p>Scroll to watch it unfold.</p>
+        </div>
+
+        <div class="scroll-story__overlay" data-act data-start="72" data-end="100">
+          <h2>Reborn.</h2>
+          <p>Built to do this again and again.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="spacer">More content below</div>
+
+  <script src="scroll-story.js"></script>
+</body>
+</html>
