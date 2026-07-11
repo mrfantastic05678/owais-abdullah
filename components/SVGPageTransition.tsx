@@ -70,33 +70,30 @@ export default function SVGPageTransition({
             return;
           }
           leaveTlRef.current?.kill();
-          const tl = gsap.timeline();
+          // next() must fire only once the cover fully draws — calling it
+          // earlier swaps the page while the stroke is still thin, so the
+          // new page appears through a half-finished overlay. The actual
+          // SPA navigation this triggers is fast (Header/Footer live inside
+          // this provider, so auto mode intercepts the click instead of
+          // falling back to a full browser reload) — the visible wait is
+          // just this draw, not the navigation itself.
+          const tl = gsap.timeline({ onComplete: next });
           leaveTlRef.current = tl;
 
           tl.to(overlayRef.current, {
             opacity: 1,
             duration: 0.12,
             ease: "power2.inOut",
-          })
-            .to(
-              pathRef.current,
-              {
-                strokeDashoffset: 0,
-                strokeWidth: maxStrokeWidth,
-                duration: leaveDuration,
-                ease: "power2.inOut",
-              },
-              0
-            )
-            // next() starts the actual route navigation — fire it as soon as
-            // the stroke has fattened enough to cover the viewport, so the
-            // new page loads BEHIND the animation instead of after it. The
-            // rest of the draw keeps playing while Next.js works.
-            .call(next, [], 0.18);
-
-          // No returned cleanup: the library may run it as soon as next()
-          // resolves, which would kill the still-playing draw. The enter
-          // callback and unmount effect own this timeline's teardown.
+          }).to(
+            pathRef.current,
+            {
+              strokeDashoffset: 0,
+              strokeWidth: maxStrokeWidth,
+              duration: leaveDuration,
+              ease: "power2.inOut",
+            },
+            0
+          );
         }}
         enter={(next) => {
           if (reducedRef.current) {

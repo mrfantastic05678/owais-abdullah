@@ -45,7 +45,9 @@ const Hero = () => {
             Hi, I&apos;m{" "}
             <span className="text-highlight">Owais Abdullah</span>
             <br />
-            <span>
+            {/* Reserves 2 lines at the h1's line-height so the longest
+                rotating phrase (which wraps) never shifts content below */}
+            <span className="block min-h-[2.16em]">
               <Typewriter
                 words={[
                   "a Spec-Driven Developer.",
