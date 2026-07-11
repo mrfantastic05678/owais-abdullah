@@ -45,18 +45,20 @@ const Hero = () => {
             Hi, I&apos;m{" "}
             <span className="text-highlight">Owais Abdullah</span>
             <br />
-            {/* Reserves 2 lines at the h1's line-height so the longest
-                rotating phrase (which wraps) never shifts content below */}
-            <span className="block min-h-[2.16em]">
+            {/* Every phrase below is short enough to stay on one line at
+                the largest clamp size, so no wrap-induced layout shift.
+                min-h is just a safety margin, not a multi-line reservation. */}
+            <span className="block min-h-[1.1em]">
               <Typewriter
                 words={[
                   "a Spec-Driven Developer.",
                   "an AI Agent Developer.",
                   "an AI-Driven Engineer.",
-                  "a Next.js & SaaS Architect.",
+                  "a Next.js SaaS Architect.",
                   "a Full Stack Digital FTE.",
                   "a TypeScript Specialist.",
-                  "a WordPress & CMS Expert.",
+                  "a Python AI Developer.",
+                  "a CMS Expert.",
                 ]}
                 loop={0}
                 cursor
