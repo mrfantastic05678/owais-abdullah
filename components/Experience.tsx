@@ -18,7 +18,7 @@ const experienceData = work.map((entry) => ({
 
 const Experience = () => {
   return  (
-    <div className="w-full">
+    <div id="experience" className="w-full">
       <Timeline data={experienceData} />
     </div>
   );

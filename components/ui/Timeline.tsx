@@ -5,6 +5,7 @@ import {
   motion,
 } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
+import CharRevealHeading from "@/components/CharRevealHeading";
 
 interface TimelineEntry {
   title: string;
@@ -38,9 +39,13 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
           <span className="hidden sm:inline">My Journey</span>
           <span className="inline sm:hidden">Journey</span>
         </p>
-        <h2 className="text-4xl md:text-5xl font-semibold mb-4 text-center text-foreground">
+        <CharRevealHeading
+          as="h2"
+          className="text-4xl md:text-5xl font-semibold mb-4 text-center text-foreground"
+          highlightWords={["Experience"]}
+        >
           Job Experience
-        </h2>
+        </CharRevealHeading>
         <p className="text-muted-foreground text-sm md:text-base text-center max-w-2xl mx-auto">
           Over the past few years, I&apos;ve been building my expertise in web
           development, AI integrations, and digital marketing. Here&apos;s a timeline

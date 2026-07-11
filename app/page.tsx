@@ -1,13 +1,20 @@
-import About from "@/components/About";
+import AboutSection from "@/components/AboutSection";
 import Contact from "@/components/Contact";
 import Experience from "@/components/Experience";
 import Hero from "@/components/Hero";
+import ScatterText from "@/components/ScatterText";
 import ProjectsTab from "@/components/ProjectsTab";
 import JsonLdSchema from "@/components/JsonLdSchema";
 import type { Metadata } from "next";
 import SkillSlider from "@/components/SkillSlider";
 import BlogSection from "@/components/BlogSection";
 import Services from "@/components/Services";
+import FTEStory from "@/components/FTEStory";
+import StatsBand from "@/components/StatsBand";
+import IndustriesStrip from "@/components/IndustriesStrip";
+import HomeFaq from "@/components/HomeFaq";
+import DotRail from "@/components/DotRail";
+import CharRevealHeading from "@/components/CharRevealHeading";
 import { projectsByCategory, allProjects } from "@/data/profile";
 
 // ISR: prerendered HTML (projects + blog posts crawlable), refreshed every 30 min
@@ -78,21 +85,31 @@ export default function Home() {
   return (
     <>
       <JsonLdSchema type="home" pageUrl="https://owaisabdullah.dev" />
+      <DotRail />
       <Hero />
-      <About />
+      <ScatterText />
+      <AboutSection />
+      <StatsBand />
       <Services />
+      <IndustriesStrip />
+      <FTEStory />
       <div className="flex flex-wrap w-full mt-10 mb-20 flex-col items-center text-center">
         <p className="text-base text-accent font-medium sm:text-lg">
           Areas of Expertise
         </p>
-        <h2 className="text-4xl text-foreground font-semibold sm:text-5xl">
+        <CharRevealHeading
+          as="h2"
+          className="text-4xl text-foreground font-semibold sm:text-5xl"
+          highlightWords={["Stack"]}
+        >
           Tech Stack
-        </h2>
+        </CharRevealHeading>
       </div>
       <SkillSlider />
       <ProjectsTab projectsByCategory={projectsByCategory} allProjects={allProjects} />
-      <BlogSection limit={3} showViewAll />
+      <BlogSection limit={12} showViewAll />
       <Experience />
+      <HomeFaq />
       <Contact />
     </>
   );

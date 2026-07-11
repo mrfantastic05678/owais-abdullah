@@ -1,0 +1,146 @@
+/* ============================================================
+   Operator Interactions — CSS layer
+   Requires these tokens to already exist on :root / .dark:
+     --accent, --accent-hover, --signal-500, --brand-400, --ink-950, --border
+   Add this file's contents into your global stylesheet (not @import'd,
+   since it relies on custom properties defined elsewhere in the theme).
+   ============================================================ */
+
+/* Dual-accent gradient word inside headings — blue leads (60%), green
+   closes (40%). Apply directly to a SINGLE element that owns its own text
+   (background-clip: text needs real glyphs on the element itself — see
+   components/CharRevealHeading.tsx in this skill for the char-split-safe
+   version that slices the gradient across multiple spans). */
+.text-highlight {
+  color: transparent;
+  background-image: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) 60%,
+    var(--signal-500) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* 02 — Scan-line hover sweep. Add to any solid-fill button. */
+.btn-scan-sweep { position: relative; overflow: hidden; }
+.btn-scan-sweep::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -60%;
+  width: 45%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+  transform: skewX(-20deg);
+  transition: left .6s cubic-bezier(.2,.8,.2,1);
+  pointer-events: none;
+}
+.btn-scan-sweep:hover::before { left: 130%; }
+
+/* 07 — Progress-drain border. Needs an inset <svg><rect/></svg> child —
+   see MagneticButton/Hero usage pattern in the skill body for markup. */
+.btn-progress-drain { position: relative; }
+.btn-progress-drain svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.btn-progress-drain rect { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 0 1000; }
+.btn-progress-drain:hover rect { animation: btn-drain 1.4s linear infinite; }
+@keyframes btn-drain {
+  0%   { stroke: var(--accent);      stroke-dasharray: 0 1000; }
+  45%  { stroke: var(--accent); }
+  55%  { stroke: var(--signal-500); }
+  100% { stroke: var(--signal-500);  stroke-dasharray: 1000 0; }
+}
+
+/* 09 — Split-flap label swap. Parent element needs Tailwind's `group`
+   class (or any class literally named "group" — plain CSS selector, not
+   Tailwind-specific). Use components/SplitFlapLabel.tsx for the markup. */
+.split-flap { position: relative; display: inline-block; overflow: hidden; height: 1.2em; perspective: 300px; }
+.split-flap .face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; white-space: nowrap; backface-visibility: hidden; transition: transform .45s cubic-bezier(.6,0,.4,1), opacity .45s; }
+.split-flap .face-b { transform: rotateX(90deg); opacity: 0; color: var(--signal-500); }
+.group:hover .split-flap .face-a { transform: rotateX(-90deg); opacity: 0; }
+.group:hover .split-flap .face-b { transform: rotateX(0deg); opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-scan-sweep::before { display: none; }
+  .btn-progress-drain:hover rect { animation: none; }
+  .split-flap .face { transition: none; }
+  .split-flap .face-a { position: static; }
+  .split-flap .face-b { display: none; }
+}
+
+/* ── Labeled cursor follower (see components/CursorFollower.tsx) ──
+   States: default (10px dot) → .is-link (34px ring, any <a>/<button>) →
+   [data-state="view"] (64px filled, blue) → [data-state="live"] (58px
+   filled, green) → [data-state="scroll"/"drag"] (64px outlined, green).
+   Add `data-cursor="<state>" data-cursor-label="<TEXT>"` to any element to
+   claim a state while hovered; nearest ancestor wins. Give an element
+   `data-cursor="link"` (no matching rule below) to opt OUT of an ancestor's
+   big-circle state and fall back to the plain 34px is-link ring — this is
+   how individual cards inside a `data-cursor="drag"` slider stay small. */
+.cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100000; /* above sticky headers and page-transition overlays */
+  pointer-events: none;
+  will-change: transform;
+  transition: opacity 0.2s;
+}
+.cursor-core {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--brand-400);
+  display: grid;
+  place-items: center;
+  transition: width 0.25s, height 0.25s, border-radius 0.25s, background 0.25s, border-color 0.25s;
+}
+.cursor-core span {
+  font-family: ui-monospace, "Cascadia Code", Menlo, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-950);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+body.has-cursor,
+body.has-cursor a,
+body.has-cursor button,
+body.has-cursor summary {
+  cursor: none;
+}
+.cursor-follower.is-link .cursor-core {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border-color: var(--accent);
+}
+.cursor-follower[data-state="view"] .cursor-core {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--brand-400);
+  border-color: var(--brand-400);
+}
+.cursor-follower[data-state="view"] .cursor-core span { opacity: 1; }
+.cursor-follower[data-state="live"] .cursor-core {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--signal-500);
+  border-color: var(--signal-500);
+}
+.cursor-follower[data-state="live"] .cursor-core span { opacity: 1; }
+.cursor-follower[data-state="scroll"] .cursor-core,
+.cursor-follower[data-state="drag"] .cursor-core {
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+  background: transparent;
+  border-color: var(--signal-500);
+}
+.cursor-follower[data-state="scroll"] .cursor-core span,
+.cursor-follower[data-state="drag"] .cursor-core span {
+  opacity: 1;
+  color: var(--signal-500);
+}

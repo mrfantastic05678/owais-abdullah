@@ -1,0 +1,333 @@
+{% comment %}
+  Card Convergence section — scattered cards converge to center on scroll.
+
+  Setup:
+    1. Copy assets/card-convergence/standalone/app.js into the theme's /assets
+       as card-convergence.js, and rename + adapt for Shopify's no-module scripts.
+       Alternatively, embed the GSAP + ScrollTrigger logic directly in the
+       theme's theme.js or as an inline script block.
+    2. Copy this file into the theme's /sections folder.
+    3. Merchants add images via the native image_picker, and the section handles
+       positioning offsets (x, y % from center) in the block settings.
+
+  Dependencies: GSAP + ScrollTrigger (loaded via CDN or theme assets).
+{% endcomment %}
+
+{%- liquid
+  assign heading = section.settings.heading
+  assign text = section.settings.text
+  assign cta = section.settings.cta
+  assign cta_url = section.settings.cta_url
+  assign bg_color = section.settings.bg_color
+-%}
+
+<section
+  class="card-convergence"
+  id="card-convergence-{{ section.id }}"
+  style="--bg-color: {{ bg_color }};"
+>
+  <div class="card-convergence__inner">
+    {% if heading != blank %}
+      <h2 class="card-convergence__heading">{{ heading }}</h2>
+    {% endif %}
+    {% if text != blank %}
+      <p class="card-convergence__text">{{ text }}</p>
+    {% endif %}
+    {% if cta != blank and cta_url != blank %}
+      <a href="{{ cta_url }}" class="card-convergence__btn">{{ cta }}</a>
+    {% endif %}
+
+    <div class="card-convergence__cards">
+      {% for block in section.blocks %}
+        {% if block.type == 'card' %}
+          {%- liquid
+            assign image = block.settings.image
+            assign offset_x = block.settings.offset_x
+            assign offset_y = block.settings.offset_y
+            assign card_bg = block.settings.card_bg
+          -%}
+          <div
+            class="card-convergence__card"
+            data-offset-x="{{ offset_x }}"
+            data-offset-y="{{ offset_y }}"
+            style="background-color: {{ card_bg }};"
+            {{ block.shopify_attributes }}
+          >
+            {% if image != blank %}
+              {{ image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'card-convergence__image' }}
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .card-convergence {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--bg-color, #f5f5f0);
+  }
+
+  .card-convergence__inner {
+    text-align: center;
+    max-width: 600px;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-convergence__heading {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    color: #1a1a1a;
+  }
+
+  .card-convergence__text {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    line-height: 1.6;
+    opacity: 0.7;
+    max-width: 45ch;
+    margin: 0 auto 2rem;
+    color: #1a1a1a;
+  }
+
+  .card-convergence__btn {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    border-radius: 999px;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .card-convergence__btn:hover {
+    opacity: 0.85;
+    color: #fff;
+  }
+
+  .card-convergence__cards {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .card-convergence__card {
+    position: absolute;
+    width: clamp(140px, 16vw, 220px);
+    height: clamp(180px, 20vw, 280px);
+    border-radius: 16px;
+    overflow: hidden;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .card-convergence__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var section = document.getElementById('card-convergence-{{ section.id }}');
+    if (!section) return;
+
+    // Load GSAP if not already loaded
+    function loadScript(src) {
+      return new Promise(function (resolve, reject) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    function init() {
+      gsap.registerPlugin(ScrollTrigger);
+
+      var cards = section.querySelectorAll('.card-convergence__card');
+
+      if (cards.length === 0) return;
+
+      var initial = [];
+      cards.forEach(function (card) {
+        initial.push({
+          rotation: (Math.random() - 0.5) * 24,
+          zIndex: Math.floor(Math.random() * cards.length),
+        });
+      });
+
+      cards.forEach(function (card, i) {
+        var offsetX = parseFloat(card.getAttribute('data-offset-x') || '0');
+        var offsetY = parseFloat(card.getAttribute('data-offset-y') || '0');
+        card.style.left = 'calc(50% + ' + offsetX + '%)';
+        card.style.top = 'calc(50% + ' + offsetY + '%)';
+        card.style.transform = 'translate(-50%, -50%)';
+        card.style.zIndex = initial[i].zIndex;
+      });
+
+      function measureOffset(el) {
+        var wr = el.getBoundingClientRect();
+        var sr = section.getBoundingClientRect();
+        return {
+          x: wr.left + wr.width / 2 - (sr.left + sr.width / 2),
+          y: wr.top + wr.height / 2 - (sr.top + sr.height / 2),
+        };
+      }
+
+      var ctx = gsap.context(function () {
+        cards.forEach(function (card, i) {
+          var offset = measureOffset(card);
+          gsap.fromTo(card, {
+            x: offset.x,
+            y: offset.y,
+            scale: 1,
+            rotation: initial[i].rotation,
+          }, {
+            x: 0,
+            y: 0,
+            scale: 1,
+            rotation: 0,
+            scrollTrigger: {
+              trigger: section,
+              start: 'top bottom',
+              end: 'center center',
+              scrub: 1.5,
+            },
+          });
+        });
+      }, section);
+
+      window.addEventListener('resize', function () {
+        ctx.revert();
+        cards.forEach(function (card, i) {
+          var offset = measureOffset(card);
+          gsap.set(card, {
+            x: offset.x,
+            y: offset.y,
+            scale: 1,
+            rotation: initial[i].rotation,
+          });
+        });
+        ScrollTrigger.refresh();
+      });
+    }
+
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      init();
+    } else {
+      loadScript('https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js')
+        .then(function () {
+          return loadScript('https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js');
+        })
+        .then(init)
+        .catch(function () {});
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Card Convergence",
+  "tag": "section",
+  "class": "card-convergence-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Crafted for impact"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Every detail thoughtfully composed to create an immersive experience that feels both intentional and effortless."
+    },
+    {
+      "type": "text",
+      "id": "cta",
+      "label": "Button label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#f5f5f0"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card image"
+        },
+        {
+          "type": "range",
+          "id": "offset_x",
+          "label": "Horizontal offset (%)",
+          "min": -80,
+          "max": 80,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "offset_y",
+          "label": "Vertical offset (%)",
+          "min": -80,
+          "max": 80,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "color",
+          "id": "card_bg",
+          "label": "Card background",
+          "default": "#e5ddd5"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Card Convergence",
+      "blocks": [
+        { "type": "card", "settings": { "offset_x": -40, "offset_y": -50, "card_bg": "#f0ebe3" } },
+        { "type": "card", "settings": { "offset_x": 45, "offset_y": -40, "card_bg": "#e8e0d8" } },
+        { "type": "card", "settings": { "offset_x": -50, "offset_y": 45, "card_bg": "#d9d0c5" } },
+        { "type": "card", "settings": { "offset_x": 50, "offset_y": 50, "card_bg": "#c8bfb5" } },
+        { "type": "card", "settings": { "offset_x": 0, "offset_y": -60, "card_bg": "#e5ddd5" } },
+        { "type": "card", "settings": { "offset_x": -55, "offset_y": 0, "card_bg": "#d5ccc5" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

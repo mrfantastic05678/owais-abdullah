@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fella Nav</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section class="hero">
+    <h1 class="hero__title">Unique Full screen<br />navigation</h1>
+  </section>
+
+  <nav class="nav" id="nav">
+    <p class="nav__logo">Wolf</p>
+    <div class="nav__toggle" id="navToggle">
+      <p class="nav__toggle-text" id="toggleText">Menu</p>
+      <div class="nav__hamburger">
+        <span class="nav__line nav__line--top" id="lineTop"></span>
+        <span class="nav__line nav__line--bottom" id="lineBottom"></span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="menu" id="menu">
+    <div class="menu__inner">
+      <div class="menu__links" id="linksContainer">
+        <div class="menu__indicator" id="indicator"></div>
+        <div class="menu__link-row" data-index="0"><a href="#" class="menu__link menu__link--active">Home</a></div>
+        <div class="menu__link-row" data-index="1"><a href="#" class="menu__link">Work</a></div>
+        <div class="menu__link-row" data-index="2"><a href="#" class="menu__link">Pricing</a></div>
+        <div class="menu__link-row" data-index="3"><a href="#" class="menu__link">About</a></div>
+        <div class="menu__link-row" data-index="4"><a href="#" class="menu__link">Contact</a></div>
+      </div>
+
+      <div class="menu__contact" id="contactInfo">
+        <div>
+          <p class="menu__label">Contact</p>
+          <p class="menu__text" data-split>test@example.com</p>
+        </div>
+        <div>
+          <p class="menu__label">Team</p>
+          <p class="menu__text" data-split>John: john@test.com</p>
+          <p class="menu__text" data-split>Jane: jane@test.com</p>
+        </div>
+        <div>
+          <p class="menu__label">Social</p>
+          <p class="menu__text" data-split>Instagram: @random_test_123</p>
+          <p class="menu__text" data-split>Linkedin: @test-company</p>
+          <p class="menu__text" data-split>Github: @TestUser42</p>
+        </div>
+        <div>
+          <p class="menu__label">Status</p>
+          <p class="menu__text" data-split>Lorem ipsum dolor sit amet</p>
+          <p class="menu__text" data-split>Random test data 12345</p>
+        </div>
+      </div>
+
+      <div class="menu__images">
+        <div class="menu__image-col">
+          <p class="menu__label">About the studio</p>
+          <div class="menu__image-frame">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400" alt="Studio team" />
+          </div>
+        </div>
+        <div class="menu__image-col">
+          <p class="menu__label">Feature project</p>
+          <div class="menu__image-frame menu__image-frame--accent">
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" alt="Feature project" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -58,13 +58,13 @@ export const AnimatedTooltip = ({
               rotate: rotate,
               whiteSpace: "nowrap",
             }}
-            className=" absolute -top-16 left-1/2 flex flex-col items-center justify-center rounded-md bg-gray-950 z-50 shadow-xl px-4 py-2 text-xs"
+            className=" absolute -top-16 left-1/2 flex flex-col items-center justify-center rounded-md bg-popover border border-border z-50 shadow-xl px-4 py-2 text-xs"
           >
-            <div className="font-bold text-white relative z-30 text-base">
+            <div className="font-bold text-popover-foreground relative z-30 text-base">
               {tooltipTitle}
             </div>
             {tooltipDescription && (
-              <div className="text-white text-xs">{tooltipDescription}</div>
+              <div className="text-muted-foreground text-xs">{tooltipDescription}</div>
             )}
           </motion.div>
         )}

@@ -1,0 +1,44 @@
+.svg-page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.svg-page-transition-overlay svg {
+  width: 100%;
+  height: 100%;
+  transform: scale(1.3);
+}
+
+.svg-page-transition-overlay path {
+  stroke-dasharray: 6000;
+  stroke-dashoffset: 6000;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.22, 1, 0.36, 1),
+              stroke-width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Trigger class added via JS */
+.svg-page-transition-overlay.is-leaving {
+  opacity: 1;
+  pointer-events: none;
+}
+
+.svg-page-transition-overlay.is-leaving path {
+  stroke-dashoffset: 0;
+  stroke-width: 300;
+}
+
+.svg-page-transition-overlay.is-entering path {
+  stroke-dashoffset: 0;
+  stroke-width: 2;
+}
+
+.svg-page-transition-overlay.is-done {
+  opacity: 0;
+}

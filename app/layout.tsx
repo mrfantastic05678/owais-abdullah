@@ -7,6 +7,9 @@ import { clashDisplay, satoshi } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
 import { ConditionalUI } from "@/components/ConditionalUI";
+import LenisSmoothScroll from "@/components/LenisSmoothScroll";
+import SVGPageTransition from "@/components/SVGPageTransition";
+import CursorFollower from "@/components/CursorFollower";
 
 
 export const metadata: Metadata = {
@@ -153,10 +156,18 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ConditionalUI />
-          <Header />
-          {children}
-          <Footer />
+          <LenisSmoothScroll>
+              {/* Header/Footer must live INSIDE the transition provider —
+                  auto mode only intercepts links within its subtree, so nav
+                  clicks outside it would hard-navigate with no animation */}
+              <SVGPageTransition>
+                <ConditionalUI />
+                <CursorFollower />
+                <Header />
+                <main className="pt-24">{children}</main>
+                <Footer />
+              </SVGPageTransition>
+          </LenisSmoothScroll>
         </ThemeProvider>
       </body>
     </html>

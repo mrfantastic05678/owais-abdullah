@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
+
 import { CgClose, CgMenuRight } from "react-icons/cg";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { usePathname } from "next/navigation";
@@ -15,11 +15,8 @@ const Header = () => {
   // Check if we're on a blog detail page
   const isBlogDetailPage = pathname?.startsWith("/blog/") && pathname !== "/blog";
   
-  console.log("isoOpen state:", isoOpen);
-
   function handleLinkClick() {
     setisoOpen(false);
-    console.log("Link clicked, isoOpen set to false");
   }
 
   function getMenuClassNames() {
@@ -35,8 +32,13 @@ const Header = () => {
         "gap-10",
         "flex-col",
         "left-0",
-        "top-[60px]",
-        "bg-card", // Theme-aware background
+        "top-[70px]",
+        "rounded-3xl",
+        "bg-card/95", // Theme-aware background with blur
+        "backdrop-blur-xl",
+        "border",
+        "border-border",
+        "shadow-2xl",
         "z-50",
       ];
     } else {
@@ -55,16 +57,16 @@ const Header = () => {
   
   // Determine text color classes based on page and theme
   // Keep existing logic for desktop (isBlogDetailPage makes text white)
-  const textColorClass = isBlogDetailPage ? "text-foreground md:text-white" : "text-foreground";
-  const hoverColorClass = isBlogDetailPage ? "hover:text-white" : "hover:text-accent";
+  const textColorClass = isBlogDetailPage ? "text-foreground md:text-card-foreground" : "text-foreground";
+  const hoverColorClass = isBlogDetailPage ? "hover:text-card-foreground" : "hover:text-accent";
   
   return (
-    <header className="max-w-[1400px] mx-auto relative z-50 bg-transparent">
-      <div className="absolute top-0 left-0 w-full h-full z-[-1] pointer-events-none" />
+    <header className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-5xl z-50 rounded-lg border border-border bg-card/80 backdrop-blur-md shadow-xl transition-all duration-300">
+      <div className="absolute top-0 left-0 w-full h-full z-[-1] pointer-events-none rounded-lg overflow-hidden" />
 
-      <div className="mx-auto flex flex-wrap justify-between font-medium p-5 flex-row z-10">
+      <div className="mx-auto flex flex-wrap items-center justify-between font-medium py-2 px-6 md:px-8 z-10">
         {/* Natural gradient blob coming from above with larger size */}
-        <div className="absolute -top-20 -left-14 w-48 h-48 md:w-56 md:h-56 bg-gradient-to-br from-accent to-black/60 rounded-full blur-2xl opacity-80 md:opacity-50 dark:opacity-30 -z-10"></div>
+        <div className="absolute -top-20 -left-14 w-48 h-48 md:w-56 md:h-56 bg-gradient-to-br from-accent to-black/60 rounded-full blur-2xl opacity-40 dark:opacity-20 -z-10 pointer-events-none"></div>
         <Link href={"/"} className="flex mb-4 md:mb-0 z-10 relative">
           <Image src="/assets/owais_logo.png" width={80} height={40} alt={"logo"} className="relative z-10" unoptimized />
         </Link>
@@ -120,13 +122,14 @@ const Header = () => {
             CONTACT
           </Link>
 
-          {/* hire button */}
-            <button className="group inline-flex items-center text-center font-bold bg-gradient-to-br from-blue-900 via-accent to-blue-700 hover:from-blue-950 hover:bg-blue-500 hover:bg-gradient-to-tr text-white border-0 py-4 lg:py-2 px-6 focus:outline-none duration-500 rounded-full text-base mt-4 md:mt-0">
-              <Link href={"/contact"} onClick={handleLinkClick}>
-                HIRE ME
-              </Link>
-              <FaArrowRight className="pl-3 text-2xl" />
-            </button>
+          {/* hire button — scan-line sweep on hover */}
+          <Link
+            href={"/contact"}
+            onClick={handleLinkClick}
+            className="btn-scan-sweep hidden lg:inline-flex items-center text-center font-bold bg-accent hover:bg-accent-hover text-accent-foreground py-2 px-6 focus:outline-none transition-colors duration-300 rounded-md text-sm"
+          >
+            HIRE ME
+          </Link>
         </nav>
         <div className="flex items-center gap-4">
           <div>

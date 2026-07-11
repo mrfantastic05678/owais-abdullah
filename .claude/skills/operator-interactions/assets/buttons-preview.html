@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Button Lab — Owais Abdullah</title>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600&f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink-950:#0B0E13; --ink-900:#11151C; --ink-800:#1A2029;
+    --brand-500:#3D7BFF; --brand-400:#6B9AFF; --signal-500:#2FD97B;
+    --line-700:#232B37; --fg:#E8ECF2; --fg-muted:#8A94A6;
+    --font-display:"Clash Display",sans-serif; --font-body:"Satoshi",sans-serif;
+    --font-mono:ui-monospace,"Cascadia Code",Menlo,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink-950);color:var(--fg);font-family:var(--font-body);line-height:1.6;padding:48px 24px 120px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(1.8rem,3.4vw,2.6rem);letter-spacing:-0.01em;max-width:900px;margin:0 auto 8px;}
+  .lede{max-width:900px;margin:0 auto 56px;color:var(--fg-muted);font-size:.95rem;}
+  .grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;}
+  .cell{border:1px solid var(--line-700);border-radius:6px;padding:32px 24px 28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;min-height:180px;background:var(--ink-900);position:relative;overflow:hidden;}
+  .cell .tag{position:absolute;top:12px;left:14px;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-muted);}
+  .cell .num{position:absolute;top:12px;right:14px;font-family:var(--font-mono);font-size:.62rem;color:var(--brand-400);}
+  .stage{display:flex;align-items:center;justify-content:center;min-height:52px;}
+  button{font-family:var(--font-body);cursor:pointer;border:none;background:none;}
+  .desc{font-size:.76rem;color:var(--fg-muted);text-align:center;max-width:26ch;}
+
+  /* ============ 1. MAGNETIC PULL ============ */
+  .btn-magnet{position:relative;padding:14px 30px;border:1px solid var(--line-700);border-radius:4px;color:var(--fg);font-size:.92rem;font-weight:500;transition:border-color .3s,color .3s;}
+  .btn-magnet:hover{border-color:var(--brand-400);color:var(--brand-400);}
+  .magnet-wrap{display:inline-block;}
+
+  /* ============ 2. SCAN LINE ============ */
+  .btn-scan{position:relative;padding:14px 30px;border:1px solid var(--line-700);border-radius:4px;color:var(--fg);font-size:.92rem;font-weight:500;font-family:var(--font-mono);letter-spacing:.06em;overflow:hidden;}
+  .btn-scan::before{content:"";position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--brand-400) 35%,transparent),transparent);transition:left .6s cubic-bezier(.2,.8,.2,1);}
+  .btn-scan:hover::before{left:120%;}
+  .btn-scan:hover{border-color:var(--brand-400);}
+
+  /* ============ 3. STATUS CONFIRM ============ */
+  .btn-status{position:relative;padding:14px 30px;border:1px solid var(--brand-500);border-radius:4px;color:#fff;background:var(--brand-500);font-size:.92rem;font-weight:500;display:inline-flex;align-items:center;gap:10px;transition:background .35s,border-color .35s;}
+  .btn-status.done{background:var(--signal-500);border-color:var(--signal-500);}
+  .btn-status svg{width:16px;height:16px;flex-shrink:0;}
+  .btn-status .check-path{stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .35s ease .1s;}
+  .btn-status.done .check-path{stroke-dashoffset:0;}
+  .btn-status .label{position:relative;}
+
+  /* ============ 4. CHAR SHUFFLE ============ */
+  .btn-shuffle{position:relative;padding:14px 30px;border:1px solid var(--line-700);border-radius:4px;color:var(--fg);font-size:.92rem;font-weight:500;font-family:var(--font-mono);min-width:170px;transition:border-color .3s;}
+  .btn-shuffle:hover{border-color:var(--signal-500);}
+  .btn-shuffle .ch{display:inline-block;}
+
+  /* ============ 5. DIAGONAL FILL ============ */
+  .btn-diag{position:relative;padding:14px 30px;border:1px solid var(--brand-400);border-radius:4px;color:var(--brand-400);font-size:.92rem;font-weight:500;overflow:hidden;z-index:0;transition:color .35s;}
+  .btn-diag::before{content:"";position:absolute;inset:0;background:var(--brand-500);clip-path:polygon(0 100%,0% 100%,0% 100%);transition:clip-path .45s cubic-bezier(.65,0,.35,1);z-index:-1;}
+  .btn-diag:hover{color:#fff;}
+  .btn-diag:hover::before{clip-path:polygon(0 100%,0 0,150% 0,150% 100%);}
+
+  /* ============ 6. BRACKET EXPAND ============ */
+  .btn-bracket{position:relative;padding:14px 14px;color:var(--fg);font-size:.92rem;font-weight:500;font-family:var(--font-mono);display:inline-flex;align-items:center;}
+  .btn-bracket .bracket{color:var(--signal-500);transition:transform .3s cubic-bezier(.2,.8,.2,1);display:inline-block;}
+  .btn-bracket .lb{transform:translateX(6px);}
+  .btn-bracket .rb{transform:translateX(-6px);}
+  .btn-bracket:hover .lb{transform:translateX(0);}
+  .btn-bracket:hover .rb{transform:translateX(0);}
+  .btn-bracket .lbl{padding:0 10px;}
+
+  /* ============ 7. PROGRESS DRAIN (SVG border) ============ */
+  .btn-progress{position:relative;padding:14px 30px;color:var(--fg);font-size:.92rem;font-weight:500;background:var(--ink-800);border-radius:4px;}
+  .btn-progress svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+  .btn-progress rect{fill:none;stroke:var(--brand-400);stroke-width:1.5;rx:4;stroke-dasharray:0 1000;}
+  .btn-progress:hover rect{animation:drain 1.4s linear infinite;}
+  @keyframes drain{
+    0%{stroke:var(--brand-400);stroke-dasharray:0 1000;}
+    45%{stroke:var(--brand-400);}
+    55%{stroke:var(--signal-500);}
+    100%{stroke:var(--signal-500);stroke-dasharray:1000 0;}
+  }
+
+  /* ============ 8. PIXEL DISSOLVE ============ */
+  .btn-pixel{position:relative;padding:14px 30px;border:1px solid var(--line-700);border-radius:4px;color:var(--fg);font-size:.92rem;font-weight:500;min-width:160px;overflow:hidden;}
+  .btn-pixel:hover{border-color:var(--brand-400);}
+  .btn-pixel .layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+  .btn-pixel .layer.a{position:static;}
+  .btn-pixel canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+
+  /* ============ 9. SPLIT FLAP ============ */
+  .btn-flap{position:relative;padding:14px 30px;border:1px solid var(--line-700);border-radius:4px;color:var(--fg);font-size:.92rem;font-weight:500;font-family:var(--font-mono);perspective:400px;min-width:170px;transition:border-color .3s;}
+  .btn-flap:hover{border-color:var(--signal-500);}
+  .flap-inner{position:relative;display:inline-block;height:1.2em;overflow:hidden;width:100%;}
+  .flap-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;transition:transform .45s cubic-bezier(.6,0,.4,1),opacity .45s;}
+  .flap-a{transform:rotateX(0deg);}
+  .flap-b{transform:rotateX(90deg);opacity:0;color:var(--signal-500);}
+  .btn-flap:hover .flap-a{transform:rotateX(-90deg);opacity:0;}
+  .btn-flap:hover .flap-b{transform:rotateX(0deg);opacity:1;}
+
+  /* ============ 10. SIGNAL PING ============ */
+  .btn-ping{position:relative;padding:14px 32px 14px 40px;border:1px solid var(--line-700);border-radius:4px;color:var(--fg);font-size:.92rem;font-weight:500;transition:border-color .3s,padding-left .3s;}
+  .btn-ping:hover{border-color:var(--signal-500);padding-left:44px;}
+  .btn-ping .dot-wrap{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:8px;height:8px;}
+  .btn-ping .dot{position:absolute;inset:0;background:var(--signal-500);border-radius:50%;}
+  .btn-ping .ring{position:absolute;inset:0;border:1px solid var(--signal-500);border-radius:50%;opacity:0;}
+  .btn-ping:hover .ring{animation:ping 1.1s cubic-bezier(0,.6,.4,1) infinite;}
+  @keyframes ping{0%{transform:scale(1);opacity:.7;}100%{transform:scale(3.2);opacity:0;}}
+
+  footer{max-width:1100px;margin:64px auto 0;font-family:var(--font-mono);font-size:.7rem;color:var(--fg-muted);text-align:center;letter-spacing:.06em;}
+  @media (prefers-reduced-motion: reduce){
+    .btn-scan::before,.btn-diag::before,.btn-bracket .bracket,.btn-progress rect,.btn-ping .ring,.flap-face{transition:none!important;animation:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<h1>Button Lab</h1>
+<p class="lede">Ten interaction styles built from motifs already on the site — the status-dot pulse, scatter-text, pixel-image reveal, and terminal-console voice — instead of generic Dribbble hovers. Hover each to see it; all respect <code>prefers-reduced-motion</code>.</p>
+
+<div class="grid">
+
+  <div class="cell">
+    <span class="tag">01 · magnetic pull</span><span class="num">GSAP quickTo</span>
+    <div class="stage"><div class="magnet-wrap"><button class="btn-magnet" data-magnet>Start a project</button></div></div>
+    <p class="desc">Button drifts toward the cursor within a radius, snaps back on leave.</p>
+  </div>
+
+  <div class="cell">
+    <span class="tag">02 · scan line</span><span class="num">CSS</span>
+    <div class="stage"><button class="btn-scan">RUN_DIAGNOSTIC</button></div>
+    <p class="desc">A light sweep passes through on hover, like a terminal scan.</p>
+  </div>
+
+  <div class="cell">
+    <span class="tag">03 · status confirm</span><span class="num">click state</span>
+    <div class="stage">
+      <button class="btn-status" data-status>
+        <svg viewBox="0 0 24 24" fill="none"><path class="check-path" d="M5 12.5l4.5 4.5L19 7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="label">Send message</span>
+      </button>
+    </div>
+    <p class="desc">Click: blue → green, checkmark draws in. Confirms an action landed.</p>
+  </div>
+
+  <div class="cell">
+    <span class="tag">04 · char shuffle</span><span class="num">setInterval</span>
+    <div class="stage"><button class="btn-shuffle" data-shuffle="View Projects">View Projects</button></div>
+    <p class="desc">Hover scrambles the label briefly before it resolves — echoes ScatterText.</p>
+  </div>
+
+  <div class="cell">
+    <span class="tag">05 · diagonal fill</span><span class="num">clip-path</span>
+    <div class="stage"><button class="btn-diag">Get in touch</button></div>
+    <p class="desc">Fill sweeps in from the bottom-left corner instead of a flat wipe.</p>
+  </div>
+
+  <div class="cell">
+    <span class="tag">06 · bracket expand</span><span class="num">CSS</span>
+    <div class="stage">
+      <button class="btn-bracket"><span class="bracket lb">[</span><span class="lbl">See work</span><span class="bracket rb">]</span></button>
+    </div>
+    <p class="desc">Terminal brackets spring open on hover, console-native feel.</p>
+  </div>
+
+  <div class="cell">
+    <span class="tag">07 · progress drain</span><span class="num">SVG stroke</span>
+    <div class="stage">
+      <button class="btn-progress">
+        <svg><rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)"/></svg>
+        Processing agent
+      </button>
+    </div>
+    <p class="desc">Border draws like a loading bar, blue → green — "agent is working."</p>
+  </div>
+
+  <div class="cell">
+    <span class="tag">08 · pixel dissolve</span><span class="num">Canvas</span>
+    <div class="stage"><button class="btn-pixel" data-pixel-a="Live demo" data-pixel-b="Open →"></button></div>
+    <p class="desc">Label pixelates out and back in as a new one — same technique as project card reveals.</p>
+  </div>
+
+  <div class="cell">
+    <span class="tag">09 · split flap</span><span class="num">3D flip</span>
+    <div class="stage">
+      <button class="btn-flap">
+        <span class="flap-inner">
+          <span class="flap-face flap-a">Read more</span>
+          <span class="flap-face flap-b">Open post</span>
+        </span>
+      </button>
+    </div>
+    <p class="desc">Departure-board flip reveals a second, more specific label.</p>
+  </div>
+
+  <div class="cell">
+    <span class="tag">10 · signal ping</span><span class="num">CSS radar</span>
+    <div class="stage">
+      <button class="btn-ping"><span class="dot-wrap"><span class="ring"></span><span class="dot"></span></span>Available now</button>
+    </div>
+    <p class="desc">Radar ping from the status dot — same motif as the hero's "online" badge.</p>
+  </div>
+
+</div>
+
+<footer>owaisabdullah.dev · button lab · operator theme</footer>
+
+<script>
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* 01 — magnetic pull */
+if (!reduced) {
+  document.querySelectorAll("[data-magnet]").forEach((btn) => {
+    const wrap = btn.parentElement;
+    const strength = 0.35;
+    let raf;
+    const onMove = (e) => {
+      const r = btn.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) * strength;
+      const dy = (e.clientY - (r.top + r.height / 2)) * strength;
+      btn.style.transform = `translate(${dx}px, ${dy}px)`;
+    };
+    wrap.addEventListener("mousemove", onMove);
+    wrap.addEventListener("mouseleave", () => {
+      btn.style.transition = "transform .4s cubic-bezier(.2,.8,.2,1)";
+      btn.style.transform = "translate(0,0)";
+      setTimeout(() => (btn.style.transition = ""), 400);
+    });
+    wrap.addEventListener("mouseenter", () => (btn.style.transition = ""));
+  });
+}
+
+/* 03 — status confirm */
+document.querySelectorAll("[data-status]").forEach((btn) => {
+  const label = btn.querySelector(".label");
+  const original = label.textContent;
+  btn.addEventListener("click", () => {
+    if (btn.classList.contains("done")) return;
+    btn.classList.add("done");
+    label.textContent = "Sent";
+    setTimeout(() => {
+      btn.classList.remove("done");
+      label.textContent = original;
+    }, 1800);
+  });
+});
+
+/* 04 — char shuffle */
+const GLYPHS = "!<>-_\\/[]{}—=+*^?#";
+document.querySelectorAll("[data-shuffle]").forEach((btn) => {
+  const original = btn.dataset.shuffle;
+  let interval, frame = 0;
+  btn.addEventListener("mouseenter", () => {
+    if (reduced) return;
+    clearInterval(interval);
+    frame = 0;
+    interval = setInterval(() => {
+      btn.textContent = original
+        .split("")
+        .map((ch, i) => {
+          if (ch === " ") return " ";
+          if (i < frame) return original[i];
+          return GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        })
+        .join("");
+      frame += 1;
+      if (frame > original.length) {
+        clearInterval(interval);
+        btn.textContent = original;
+      }
+    }, 35);
+  });
+  btn.addEventListener("mouseleave", () => {
+    clearInterval(interval);
+    btn.textContent = original;
+  });
+});
+
+/* 08 — pixel dissolve */
+function initPixelButton(btn) {
+  const labelA = btn.dataset.pixelA;
+  const labelB = btn.dataset.pixelB;
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;";
+  btn.appendChild(canvas);
+  btn.style.color = "transparent";
+  const ctx = canvas.getContext("2d");
+  let current = labelA;
+  let raf;
+
+  function draw(px) {
+    const w = (canvas.width = btn.offsetWidth * devicePixelRatio);
+    const h = (canvas.height = btn.offsetHeight * devicePixelRatio);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--fg");
+    ctx.font = `500 ${14 * devicePixelRatio}px Satoshi, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    if (px <= 1) {
+      ctx.fillText(current, w / 2, h / 2);
+      return;
+    }
+    // render text to an offscreen buffer at low res, then upscale (pixelation)
+    const off = document.createElement("canvas");
+    off.width = Math.max(1, Math.floor(w / px));
+    off.height = Math.max(1, Math.floor(h / px));
+    const octx = off.getContext("2d");
+    octx.fillStyle = ctx.fillStyle;
+    octx.font = `500 ${(14 * devicePixelRatio) / px}px Satoshi, sans-serif`;
+    octx.textAlign = "center";
+    octx.textBaseline = "middle";
+    octx.fillText(current, off.width / 2, off.height / 2);
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(off, 0, 0, off.width, off.height, 0, 0, w, h);
+  }
+
+  const STEPS = [1, 6, 14, 24, 14, 6, 1];
+  function playSwap(nextLabel) {
+    if (reduced) {
+      current = nextLabel;
+      draw(1);
+      return;
+    }
+    cancelAnimationFrame(raf);
+    let i = 0;
+    const mid = Math.floor(STEPS.length / 2);
+    function step() {
+      if (i === mid) current = nextLabel;
+      draw(STEPS[i]);
+      i++;
+      if (i < STEPS.length) raf = requestAnimationFrame(() => setTimeout(step, 35));
+    }
+    step();
+  }
+
+  draw(1);
+  btn.addEventListener("mouseenter", () => playSwap(labelB));
+  btn.addEventListener("mouseleave", () => playSwap(labelA));
+  window.addEventListener("resize", () => draw(1));
+}
+document.querySelectorAll("[data-pixel-a]").forEach(initPixelButton);
+</script>
+</body>
+</html>

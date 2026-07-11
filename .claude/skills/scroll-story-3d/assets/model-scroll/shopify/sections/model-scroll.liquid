@@ -1,0 +1,233 @@
+{{ 'model-scroll.css' | asset_url | stylesheet_tag }}
+{{ 'https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js' | script_tag }}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+  }
+  #shopify-section-{{ section.id }} .hero-title {
+    color: {{ section.settings.accent_color }};
+  }
+  #shopify-section-{{ section.id }} .content-inner h2 {
+    color: {{ section.settings.accent_color }};
+  }
+  #shopify-section-{{ section.id }} .content-inner p {
+    color: {{ section.settings.muted_color }};
+  }
+  #shopify-section-{{ section.id }} .grid-lines span {
+    background: {{ section.settings.grid_line_color }};
+  }
+{%- endstyle -%}
+
+<section class="model-scroll-section" data-section-id="{{ section.id }}">
+  <div class="grid-lines">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="model-scroll-viewer">
+    {% if section.settings.model_3d != blank %}
+      <model-viewer
+        id="model-{{ section.id }}"
+        src="{{ section.settings.model_3d }}"
+        alt="{{ section.settings.model_alt | escape }}"
+        auto-rotate
+        rotation-per-second="{{ section.settings.rotation_speed }}deg"
+        camera-controls
+        disable-zoom
+        shadow-intensity="1"
+        exposure="0.8"
+        environment-image="neutral"
+        style="width: 100%; height: 100%; --poster-color: transparent;"
+      >
+      </model-viewer>
+    {% else %}
+      <div class="model-fallback">
+        <svg viewBox="0 0 100 100" fill="none" stroke="{{ section.settings.accent_color }}" stroke-width="2">
+          <circle cx="50" cy="50" r="30" />
+          <circle cx="50" cy="50" r="15" fill="{{ section.settings.accent_color }}20" />
+          <path d="M50 20 L50 80 M20 50 L80 50" />
+        </svg>
+        <p>{{ 'No 3D model selected' | escape }}</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">{{ section.settings.hero_title }}</h1>
+  </div>
+
+  <div class="scroll-content">
+    {% for block in section.blocks %}
+      <div class="content-block {% if block.settings.align == 'right' %}content-block--right{% endif %}">
+        <div class="content-inner">
+          <h2>{{ block.settings.title }}</h2>
+          <p>{{ block.settings.description }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var section = document.querySelector('[data-section-id="{{ section.id }}"]')
+    var viewer = document.getElementById('model-{{ section.id }}')
+    if (!viewer) return
+
+    function updateRotation() {
+      var rect = section.getBoundingClientRect()
+      var windowHeight = window.innerHeight
+      var sectionHeight = rect.height
+      var scrollable = Math.max(sectionHeight - windowHeight, 1)
+      var scrolled = Math.max(-rect.top, 0)
+      var progress = Math.min(Math.max(scrolled / scrollable, 0), 1)
+
+      viewer.autoRotate = true
+      viewer.rotationPerSecond = (progress * 360) + 'deg'
+    }
+
+    window.addEventListener('scroll', updateRotation, { passive: true })
+    updateRotation()
+  })
+</script>
+
+{% schema %}
+{
+  "name": "3D Model Scroll",
+  "settings": [
+    {
+      "type": "header",
+      "content": "3D Model"
+    },
+    {
+      "type": "text",
+      "id": "model_3d",
+      "label": "GLB model URL",
+      "info": "URL to a .glb 3D model file"
+    },
+    {
+      "type": "text",
+      "id": "model_alt",
+      "label": "Model alt text",
+      "default": "3D model"
+    },
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "label": "Max rotation speed (deg/s)",
+      "min": 0,
+      "max": 720,
+      "step": 10,
+      "default": 360,
+      "unit": "deg"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "Timeless"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent / headings",
+      "default": "#7c3a1e"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Body text",
+      "default": "rgba(120, 60, 30, 0.7)"
+    },
+    {
+      "type": "color",
+      "id": "grid_line_color",
+      "label": "Grid lines",
+      "default": "rgba(120, 60, 30, 0.15)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Content Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Section Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Add a description for this section."
+        },
+        {
+          "type": "select",
+          "id": "align",
+          "label": "Alignment",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "3D Model Scroll",
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "title": "Ancient Artistry",
+            "description": "Discover the beauty of classical sculptures that have withstood the test of time, each piece telling a story of civilizations past.",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "title": "Living History",
+            "description": "Experience the craftsmanship of ancient artisans whose work continues to inspire and captivate audiences worldwide.",
+            "align": "right"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "title": "Eternal Beauty",
+            "description": "Our collection showcases masterpieces from ancient Greece and Rome, preserved through centuries of history.",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "title": "Timeless Elegance",
+            "description": "Each piece in our collection is a testament to the timeless beauty and craftsmanship of ancient civilizations.",
+            "align": "right"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

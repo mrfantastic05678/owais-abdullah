@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixel Image Reveal</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1 class="hero__title">Scroll to Reveal<br />Pixel Magic</h1>
+  </header>
+
+  <section class="works" id="works">
+    <h2 class="works__heading">Selected Works</h2>
+
+    <div class="works__row">
+      <div class="works__col works__col--5">
+        <div class="pixel-image pixel-image--h32" data-trigger="top+=20% bottom">
+          <img src="https://images.unsplash.com/photo-1745613846928-3ff838e4cd05?q=80&w=1170&auto=format&fit=crop" alt="Architecture Study" />
+        </div>
+        <p class="works__label">Architecture Study — 2024</p>
+      </div>
+      <div class="works__col works__col--2"></div>
+      <div class="works__col works__col--5 works__col--offset-top">
+        <div class="pixel-image pixel-image--h24" data-trigger="top+=20% bottom">
+          <img src="https://images.unsplash.com/photo-1772440428276-79f044085e53?q=80&w=686&auto=format&fit=crop" alt="Urban Landscapes" />
+        </div>
+        <p class="works__label">Urban Landscapes — 2024</p>
+      </div>
+    </div>
+
+    <div class="works__row">
+      <div class="works__col works__col--3"></div>
+      <div class="works__col works__col--4">
+        <div class="pixel-image pixel-image--h28" data-trigger="top+=20% bottom">
+          <img src="https://images.unsplash.com/photo-1745613944320-1f14580bb0db?q=80&w=687&auto=format&fit=crop" alt="Abstract Forms" />
+        </div>
+        <p class="works__label">Abstract Forms — 2023</p>
+      </div>
+      <div class="works__col works__col--1"></div>
+      <div class="works__col works__col--4 works__col--offset-large">
+        <div class="pixel-image pixel-image--h36" data-trigger="top+=20% bottom">
+          <img src="https://images.unsplash.com/photo-1772480476707-cc5170235189?q=80&w=687&auto=format&fit=crop" alt="Light & Shadow" />
+        </div>
+        <p class="works__label">Light & Shadow — 2023</p>
+      </div>
+    </div>
+
+    <div class="works__row">
+      <div class="works__col works__col--3">
+        <div class="pixel-image pixel-image--h30" data-trigger="top+=20% bottom">
+          <img src="https://images.unsplash.com/photo-1766852150180-e0ffbe7e3c36?q=80&w=687&auto=format&fit=crop" alt="Mountain Peaks" />
+        </div>
+        <p class="works__label">Mountain Peaks — 2023</p>
+      </div>
+      <div class="works__col works__col--4"></div>
+      <div class="works__col works__col--5 works__col--offset-medium">
+        <div class="pixel-image pixel-image--h20" data-trigger="top+=20% bottom">
+          <img src="https://images.unsplash.com/photo-1723553495282-5fecd038e9c6?q=80&w=723&auto=format&fit=crop" alt="Nature's Canvas" />
+        </div>
+        <p class="works__label">Nature's Canvas — 2022</p>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://unpkg.com/lenis@1.3.19/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

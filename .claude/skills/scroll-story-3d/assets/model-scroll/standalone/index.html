@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Model Scroll Animation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section class="experience" id="experience">
+    <div class="grid-lines">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="hero">
+      <h1 class="hero-title">Timeless</h1>
+    </div>
+
+    <div class="content">
+      <div class="content-block">
+        <div class="content-inner">
+          <h2>Ancient Artistry</h2>
+          <p>Discover the beauty of classical sculptures that have withstood the test of time, each piece telling a story of civilizations past.</p>
+        </div>
+      </div>
+
+      <div class="content-block right">
+        <div class="content-inner">
+          <h2>Living History</h2>
+          <p>Experience the craftsmanship of ancient artisans whose work continues to inspire and captivate audiences worldwide.</p>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <div class="content-inner">
+          <h2>Eternal Beauty</h2>
+          <p>Our collection showcases masterpieces from ancient Greece and Rome, preserved through centuries of history.</p>
+        </div>
+      </div>
+
+      <div class="content-block right">
+        <div class="content-inner">
+          <h2>Timeless Elegance</h2>
+          <p>Each piece in our collection is a testament to the timeless beauty and craftsmanship of ancient civilizations.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="canvas-container"></div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.182.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.182.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

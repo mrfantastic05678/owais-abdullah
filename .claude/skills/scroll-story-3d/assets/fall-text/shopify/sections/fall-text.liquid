@@ -1,0 +1,236 @@
+<!--
+  Falling Text Animation — Shopify Online Store 2.0 section
+  Scroll-triggered "color boxes falling off words" text reveal.
+  Dependencies (loaded via CDN): GSAP, ScrollTrigger, Lenis.
+  ⚠️ SplitText is a GSAP Membership plugin — manual word splitting used instead.
+-->
+{{ 'fall-text.css' | asset_url | stylesheet_tag }}
+
+<div class="ft-wrapper">
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'hero' %}
+        <section class="ft-section ft-section--dark">
+          {% if block.settings.background_image %}
+            <img
+              src="{{ block.settings.background_image | image_url: width: 1200 }}"
+              alt=""
+              class="ft-section__bg"
+              loading="lazy"
+            />
+          {% endif %}
+          <div class="ft-section__overlay">
+            <div
+              class="fall-text"
+              data-color="{{ block.settings.color | default: '#171717' }}"
+              data-delay="{{ block.settings.delay | default: 0 }}"
+              data-trigger-start="{{ block.settings.trigger_start | default: 'top 80%' }}"
+              data-trigger-end="{{ block.settings.trigger_end | default: 'bottom 30%' }}"
+            >
+              <h1 class="ft-heading ft-heading--hero">{{ block.settings.text }}</h1>
+            </div>
+          </div>
+        </section>
+
+      {% when 'text' %}
+        <section class="ft-section ft-section--light">
+          <div
+            class="fall-text"
+            data-color="{{ block.settings.color | default: '#005E53' }}"
+            data-delay="{{ block.settings.delay | default: 0 }}"
+            data-trigger-start="{{ block.settings.trigger_start | default: 'top 80%' }}"
+            data-trigger-end="{{ block.settings.trigger_end | default: 'bottom 30%' }}"
+          >
+            <h2 class="ft-heading ft-heading--sub">{{ block.settings.text }}</h2>
+          </div>
+        </section>
+    {% endcase %}
+  {% endfor %}
+</div>
+
+<script src="https://unpkg.com/lenis@1.3.17/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/gsap@3.14.2/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
+<script>
+(function() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  var lenis = new Lenis({ duration: 1.2, touchMultiplier: 2, smoothTouch: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+
+  document.querySelectorAll('.fall-text').forEach(function(container) {
+    var color = container.getAttribute('data-color') || '#ededed';
+    var delay = parseFloat(container.getAttribute('data-delay') || '0') / 1000;
+    var triggerStart = container.getAttribute('data-trigger-start') || 'top 80%';
+    var triggerEnd = container.getAttribute('data-trigger-end') || 'bottom 30%';
+
+    var textEl = container.querySelector('h1, h2');
+    if (!textEl) return;
+
+    /* Manual word split (no SplitText dependency) */
+    var words = textEl.textContent.trim().split(/\s+/);
+    textEl.innerHTML = words.map(function(w) {
+      return '<span class="ft-word">' + w + '</span>';
+    }).join(' ');
+
+    var colorBoxes = [];
+    textEl.querySelectorAll('.ft-word').forEach(function(wordEl) {
+      var rect = wordEl.getBoundingClientRect();
+      var box = document.createElement('div');
+      box.className = 'ft-color-box';
+      box.style.cssText =
+        'position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10;' +
+        'width:' + (rect.width * 1.1) + 'px;height:' + (rect.height * 0.9) + 'px;' +
+        'background:' + color + ';border-radius:0.5vw;pointer-events:none;';
+      wordEl.style.position = 'relative';
+      wordEl.style.display = 'inline-block';
+      wordEl.appendChild(box);
+      colorBoxes.push(box);
+    });
+
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: container,
+        start: triggerStart,
+        end: triggerEnd,
+      },
+      delay: delay,
+      onComplete: function() {
+        colorBoxes.forEach(function(b) { b.style.display = 'none'; });
+      },
+    });
+
+    tl.to(colorBoxes, {
+      y: function() { return gsap.utils.random(1200, 1600); },
+      x: function() { return gsap.utils.random(-150, 150); },
+      rotation: function() { return gsap.utils.random(-360, 360); },
+      duration: 1,
+      ease: 'power2.in',
+      stagger: 0.02,
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Falling Text",
+  "tag": "section",
+  "class": "falling-text-section",
+  "limit": 1,
+  "blocks": [
+    {
+      "type": "hero",
+      "name": "Hero section",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background image"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Heading text",
+          "default": "Chase Your Dreams,\nNever Look Back",
+          "info": "Use \\n for line breaks"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Color box color",
+          "default": "#171717"
+        },
+        {
+          "type": "range",
+          "id": "delay",
+          "label": "Delay (ms)",
+          "min": 0,
+          "max": 2000,
+          "step": 100,
+          "default": 0
+        },
+        {
+          "type": "text",
+          "id": "trigger_start",
+          "label": "ScrollTrigger start",
+          "default": "top 80%",
+          "info": "e.g. \"top 80%\" or \"top+=100px bottom\""
+        },
+        {
+          "type": "text",
+          "id": "trigger_end",
+          "label": "ScrollTrigger end",
+          "default": "bottom 30%"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text section",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Body text",
+          "default": "Dreams are the compass that guide your soul, Follow them boldly and you'll reach your goal. Keep moving forward."
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Color box color",
+          "default": "#005E53"
+        },
+        {
+          "type": "range",
+          "id": "delay",
+          "label": "Delay (ms)",
+          "min": 0,
+          "max": 2000,
+          "step": 100,
+          "default": 200
+        },
+        {
+          "type": "text",
+          "id": "trigger_start",
+          "label": "ScrollTrigger start",
+          "default": "top 80%"
+        },
+        {
+          "type": "text",
+          "id": "trigger_end",
+          "label": "ScrollTrigger end",
+          "default": "bottom 30%"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Falling Text",
+      "blocks": [
+        {
+          "type": "hero",
+          "settings": {
+            "text": "Chase Your Dreams,\nNever Look Back",
+            "color": "#171717",
+            "delay": 0
+          }
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "Dreams are the compass that guide your soul, Follow them boldly and you'll reach your goal. Keep moving forward.",
+            "color": "#005E53",
+            "delay": 200
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

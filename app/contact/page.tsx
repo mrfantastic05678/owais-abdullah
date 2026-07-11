@@ -62,6 +62,7 @@ const contact = () => {
         type="contact"
         pageUrl="https://owaisabdullah.dev/contact"
       />
+      <h1 className="sr-only">Contact Owais Abdullah — Spec-Driven Developer &amp; AI Engineer</h1>
       <Contact />
     </>
   );

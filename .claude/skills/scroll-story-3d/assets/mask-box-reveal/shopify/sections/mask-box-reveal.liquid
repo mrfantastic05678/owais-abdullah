@@ -1,0 +1,242 @@
+{{ 'mask-box-reveal.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .mask {
+    border-color: {{ section.settings.border_color }};
+    border-width: {{ section.settings.border_width }}px;
+  }
+{%- endstyle -%}
+
+<div class="mask-box-reveal" data-section-id="{{ section.id }}">
+  <video
+    id="mask-video-{{ section.id }}"
+    src="{{ section.settings.video_url }}"
+    muted
+    autoplay
+    loop
+    playsinline
+  ></video>
+
+  {% for block in section.blocks %}
+    <div
+      class="mask"
+      data-mask
+      style="
+        width: {{ block.settings.width }};
+        height: {{ block.settings.height }};
+        top: {{ block.settings.top }};
+        left: {{ block.settings.left }};
+        {% if block.settings.right != blank %}right: {{ block.settings.right }};{% endif %}
+      "
+    >
+      <canvas></canvas>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]')
+    const video = document.getElementById('mask-video-{{ section.id }}')
+    if (!section || !video) return
+
+    function drawClipped(ctx, video, rect) {
+      const videoAspect = video.videoWidth / video.videoHeight
+      const windowAspect = window.innerWidth / window.innerHeight
+
+      let displayWidth, displayHeight, displayX, displayY
+
+      if (videoAspect > windowAspect) {
+        displayHeight = window.innerHeight
+        displayWidth = displayHeight * videoAspect
+        displayX = (window.innerWidth - displayWidth) / 2
+        displayY = 0
+      } else {
+        displayWidth = window.innerWidth
+        displayHeight = displayWidth / videoAspect
+        displayX = 0
+        displayY = (window.innerHeight - displayHeight) / 2
+      }
+
+      const scaleX = video.videoWidth / displayWidth
+      const scaleY = video.videoHeight / displayHeight
+
+      const sourceX = (rect.left - displayX) * scaleX
+      const sourceY = (rect.top - displayY) * scaleY
+      const sourceWidth = rect.width * scaleX
+      const sourceHeight = rect.height * scaleY
+
+      ctx.drawImage(video, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, rect.width, rect.height)
+    }
+
+    function draw() {
+      const masks = section.querySelectorAll('.mask')
+      masks.forEach(function (mask) {
+        const canvas = mask.querySelector('canvas')
+        if (!canvas) return
+
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return
+
+        const rect = mask.getBoundingClientRect()
+
+        canvas.width = rect.width
+        canvas.height = rect.height
+
+        ctx.imageSmoothingEnabled = true
+        ctx.imageSmoothingQuality = 'high'
+
+        drawClipped(ctx, video, rect)
+      })
+
+      requestAnimationFrame(draw)
+    }
+
+    video.addEventListener('loadeddata', function () {
+      video.play()
+      draw()
+    })
+
+    var dragTarget = null
+    var offsetX = 0
+    var offsetY = 0
+
+    section.addEventListener('mousedown', function (e) {
+      var mask = e.target.closest('.mask')
+      if (!mask) return
+
+      dragTarget = mask
+      offsetX = e.clientX - mask.offsetLeft
+      offsetY = e.clientY - mask.offsetTop
+      mask.style.cursor = 'grabbing'
+    })
+
+    document.addEventListener('mousemove', function (e) {
+      if (!dragTarget) return
+      dragTarget.style.left = e.clientX - offsetX + 'px'
+      dragTarget.style.top = e.clientY - offsetY + 'px'
+    })
+
+    document.addEventListener('mouseup', function () {
+      if (dragTarget) {
+        dragTarget.style.cursor = 'grab'
+        dragTarget = null
+      }
+    })
+  })
+</script>
+
+{% schema %}
+{
+  "name": "Mask Box Reveal",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "URL to the video file (MP4 recommended)"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Mask border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Mask border width (px)",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "mask",
+      "name": "Mask Box",
+      "settings": [
+        {
+          "type": "text",
+          "id": "width",
+          "label": "Width",
+          "default": "60vw",
+          "info": "Use CSS units like 60vw, 50%, 400px"
+        },
+        {
+          "type": "text",
+          "id": "height",
+          "label": "Height",
+          "default": "35vw",
+          "info": "Use CSS units like 35vw, 40%, 300px"
+        },
+        {
+          "type": "text",
+          "id": "top",
+          "label": "Top position",
+          "default": "10vh",
+          "info": "Use CSS units like 10vh, 20%, 50px"
+        },
+        {
+          "type": "text",
+          "id": "left",
+          "label": "Left position",
+          "default": "10vw",
+          "info": "Use CSS units like 10vw, 5%, 20px"
+        },
+        {
+          "type": "text",
+          "id": "right",
+          "label": "Right position (overrides left)",
+          "info": "Use CSS units like 5vw, 10%, 30px"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mask Box Reveal",
+      "blocks": [
+        {
+          "type": "mask",
+          "settings": {
+            "width": "60vw",
+            "height": "35vw",
+            "top": "10vh",
+            "left": "10vw"
+          }
+        },
+        {
+          "type": "mask",
+          "settings": {
+            "width": "17vw",
+            "height": "9vw",
+            "top": "5vh",
+            "left": "5vw"
+          }
+        },
+        {
+          "type": "mask",
+          "settings": {
+            "width": "35vw",
+            "height": "19vw",
+            "top": "5vh",
+            "right": "5vw",
+            "left": "auto"
+          }
+        },
+        {
+          "type": "mask",
+          "settings": {
+            "width": "38vw",
+            "height": "22vw",
+            "top": "50vh",
+            "left": "5vw"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

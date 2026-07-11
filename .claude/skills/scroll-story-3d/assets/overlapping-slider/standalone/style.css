@@ -1,0 +1,98 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: 'Inter Tight', Arial, Helvetica, sans-serif;
+}
+
+.slider-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  gap: 2vw;
+}
+
+.slider-left {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 4vw;
+}
+
+.slider-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14vw;
+  text-transform: uppercase;
+  line-height: 0.8;
+  font-weight: 700;
+  color: #000;
+}
+
+.slider-desc {
+  font-size: 1.5vw;
+  font-weight: 500;
+  color: rgba(0,0,0,0.6);
+  margin-top: 2vw;
+  width: 60%;
+}
+
+.slider-right {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider-track {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  will-change: transform;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+.slider-track:active {
+  cursor: grabbing;
+}
+
+.slide-card {
+  flex-shrink: 0;
+  pointer-events: none;
+  width: 30vw;
+  height: 40vw;
+  border-radius: 2vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2vw;
+  border: 2px solid rgba(0, 0, 0, 0.6);
+}
+
+.slide-card + .slide-card {
+  margin-left: 2vw;
+}
+
+.slide-text {
+  font-size: 2vw;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #000;
+}
+
+.slide-username {
+  font-size: 1.5vw;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}

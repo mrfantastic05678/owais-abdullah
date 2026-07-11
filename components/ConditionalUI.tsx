@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import FloatingNavbar from "@/components/FloatingNavbar";
+
 import { ChatBot } from "@/components/ui/ChatBot";
 
 export function ConditionalUI() {
@@ -10,7 +10,6 @@ export function ConditionalUI() {
 
   return (
     <>
-      {!isBlogPost && <FloatingNavbar />}
       {!isBlogPost && <ChatBot />}
     </>
   );

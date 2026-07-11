@@ -37,11 +37,11 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
             return (
               <li key={index} className="inline-flex items-center">
                 {index > 0 && (
-                  <ChevronRight className="w-4 h-4 text-gray-400 mx-1" />
+                  <ChevronRight className="w-4 h-4 text-muted-foreground mx-1" />
                 )}
                 <Link
                   href={item.href}
-                  className="inline-flex items-center text-sm font-medium text-gray-400 hover:text-white"
+                  className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground"
                 >
                   {isLast ? (
                     <span className="max-w-[150px] truncate sm:max-w-none">

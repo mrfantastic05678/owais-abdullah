@@ -1,0 +1,320 @@
+{% comment %}
+  Shader Loader section — full-screen shader-based loading animation with
+  pixelation, Perlin noise distortion, radial reveal, and volumetric edge glow.
+
+  Setup:
+    1. This section requires Three.js and GSAP. Load them via CDN in theme.liquid
+       or let the inline script handle it dynamically.
+    2. The loader covers the page until the user clicks. Place this section FIRST
+       in your theme's template, before any content sections.
+    3. Content sections appear underneath and are revealed once the animation completes.
+{% endcomment %}
+
+{%- liquid
+  assign prompt_text = section.settings.prompt_text
+  assign border_color = section.settings.border_color
+  assign transition_duration = section.settings.transition_duration
+  assign hide_loader_on_complete = section.settings.hide_loader_on_complete
+-%}
+
+<section
+  class="shader-loader"
+  id="shader-loader-{{ section.id }}"
+  data-prompt="{{ prompt_text | escape }}"
+  data-border-color="{{ border_color }}"
+  data-duration="{{ transition_duration }}"
+  data-hide="{{ hide_loader_on_complete }}"
+  style="--loader-border-color: {{ border_color }};"
+>
+  <div class="shader-loader__overlay" id="shader-loader-overlay-{{ section.id }}">
+    <canvas id="shader-loader-canvas-{{ section.id }}" class="shader-loader__canvas"></canvas>
+    <p class="shader-loader__prompt" id="shader-loader-prompt-{{ section.id }}">{{ prompt_text }}</p>
+  </div>
+
+  <div class="shader-loader__content">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'heading' %}
+          <h1 class="shader-loader__heading" {{ block.shopify_attributes }}>
+            {{ block.settings.text }}
+          </h1>
+        {% when 'text' %}
+          <p class="shader-loader__text" {{ block.shopify_attributes }}>
+            {{ block.settings.text }}
+          </p>
+      {% endcase %}
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  .shader-loader {
+    width: 100%;
+  }
+
+  .shader-loader__overlay {
+    height: 100dvh;
+    width: 100%;
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: all;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .shader-loader__canvas {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .shader-loader__prompt {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    cursor: pointer;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+  }
+
+  .shader-loader__content {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .shader-loader__heading {
+    font-size: 6vw;
+    font-family: Helvetica, Arial, sans-serif;
+    letter-spacing: -0.03em;
+  }
+
+  .shader-loader__text {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    max-width: 40ch;
+    margin-top: 1rem;
+    opacity: 0.7;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var section = document.getElementById('shader-loader-{{ section.id }}');
+  if (!section) return;
+
+  var prompt = section.getAttribute('data-prompt') || 'CLICK TO REVEAL';
+  var borderColor = section.getAttribute('data-border-color') || '#0066ff';
+  var duration = parseFloat(section.getAttribute('data-duration')) || 3.0;
+
+  function loadThree() {
+    return new Promise(function (resolve, reject) {
+      if (typeof THREE !== 'undefined') { resolve(); return; }
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.min.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  function loadGSAP() {
+    return new Promise(function (resolve, reject) {
+      if (typeof gsap !== 'undefined') { resolve(); return; }
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  Promise.all([loadThree(), loadGSAP()]).then(function () {
+    var canvas = document.getElementById('shader-loader-canvas-{{ section.id }}');
+    var promptEl = document.getElementById('shader-loader-prompt-{{ section.id }}');
+    var overlay = document.getElementById('shader-loader-overlay-{{ section.id }}');
+    if (!canvas) return;
+
+    var vs = [
+      'varying vec2 vUv;',
+      'void main() { vUv = uv; gl_Position = vec4(position, 1.0); }'
+    ].join('\n');
+
+    var fs = [
+      'uniform float uTransition;',
+      'uniform vec2 uResolution;',
+      'uniform float uTime;',
+      'uniform vec3 uBorderColor;',
+      'varying vec2 vUv;',
+      'vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}',
+      'vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}',
+      'vec3 fade(vec3 t){return t*t*t*(t*(t*6.0-15.0)+10.0);}',
+      'float cnoise(vec3 P){',
+      'vec3 Pi0=floor(P),Pi1=Pi0+vec3(1.0);',
+      'Pi0=mod(Pi0,289.0);Pi1=mod(Pi1,289.0);',
+      'vec3 Pf0=fract(P),Pf1=Pf0-vec3(1.0);',
+      'vec4 ix=vec4(Pi0.x,Pi1.x,Pi0.x,Pi1.x);',
+      'vec4 iy=vec4(Pi0.yy,Pi1.yy);',
+      'vec4 iz0=Pi0.zzzz,iz1=Pi1.zzzz;',
+      'vec4 ixy=permute(permute(ix)+iy);',
+      'vec4 ixy0=permute(ixy+iz0),ixy1=permute(ixy+iz1);',
+      'vec4 gx0=ixy0/7.0,gy0=fract(floor(gx0)/7.0)-0.5;gx0=fract(gx0);',
+      'vec4 gz0=vec4(0.5)-abs(gx0)-abs(gy0);vec4 sz0=step(gz0,vec4(0.0));',
+      'gx0-=sz0*(step(0.0,gx0)-0.5);gy0-=sz0*(step(0.0,gy0)-0.5);',
+      'vec4 gx1=ixy1/7.0,gy1=fract(floor(gx1)/7.0)-0.5;gx1=fract(gx1);',
+      'vec4 gz1=vec4(0.5)-abs(gx1)-abs(gy1);vec4 sz1=step(gz1,vec4(0.0));',
+      'gx1-=sz1*(step(0.0,gx1)-0.5);gy1-=sz1*(step(0.0,gy1)-0.5);',
+      'vec3 g000=vec3(gx0.x,gy0.x,gz0.x),g100=vec3(gx0.y,gy0.y,gz0.y);',
+      'vec3 g010=vec3(gx0.z,gy0.z,gz0.z),g110=vec3(gx0.w,gy0.w,gz0.w);',
+      'vec3 g001=vec3(gx1.x,gy1.x,gz1.x),g101=vec3(gx1.y,gy1.y,gz1.y);',
+      'vec3 g011=vec3(gx1.z,gy1.z,gz1.z),g111=vec3(gx1.w,gy1.w,gz1.w);',
+      'vec4 n0=taylorInvSqrt(vec4(dot(g000,g000),dot(g100,g100),dot(g010,g010),dot(g110,g110)));',
+      'g000*=n0.x;g100*=n0.y;g010*=n0.z;g110*=n0.w;',
+      'vec4 n1=taylorInvSqrt(vec4(dot(g001,g001),dot(g101,g101),dot(g011,g011),dot(g111,g111)));',
+      'g001*=n1.x;g101*=n1.y;g011*=n1.z;g111*=n1.w;',
+      'float n000=dot(g000,Pf0),n100=dot(g100,vec3(Pf1.x,Pf0.yz));',
+      'float n010=dot(g010,vec3(Pf0.x,Pf1.y,Pf0.z)),n110=dot(g110,vec3(Pf1.xy,Pf0.z));',
+      'float n001=dot(g001,vec3(Pf0.xy,Pf1.z)),n101=dot(g101,vec3(Pf1.x,Pf0.y,Pf1.z));',
+      'float n011=dot(g011,vec3(Pf0.x,Pf1.yz)),n111=dot(g111,Pf1);',
+      'vec3 f_=fade(Pf0);',
+      'return 2.2*mix(mix(mix(n000,n100,f_.x),mix(n010,n110,f_.x),f_.y),mix(mix(n001,n101,f_.x),mix(n011,n111,f_.x),f_.y),f_.z);',
+      '}',
+      'void main(){',
+      'float pixelSize=10.0;vec2 grid=uResolution/pixelSize;',
+      'vec2 pixelatedUv=floor(vUv*grid)/grid;',
+      'float aspect=uResolution.x/uResolution.y;',
+      'vec2 correctedUv=(pixelatedUv-0.5)*vec2(aspect,1.0)+0.5;',
+      'float maxDistance=length(vec2(aspect,1.0))*0.5;',
+      'vec2 displacedUv=correctedUv+cnoise(vec3(correctedUv*5.0,uTime*0.1));',
+      'float strength=cnoise(vec3(displacedUv*5.0,uTime*0.2));',
+      'float d=length(correctedUv-0.5);float normalizedDistance=d/maxDistance;',
+      'float radialGradient=normalizedDistance*12.5+(1.0-uTransition)*2.0-15.0*uTransition;',
+      'float rawStrength=strength+radialGradient;strength=clamp(rawStrength,0.0,1.0);',
+      'float edge=smoothstep(0.0,0.7,rawStrength)*smoothstep(2.5,0.7,rawStrength);',
+      'edge*=min(uTransition*5.0,1.0);',
+      'vec3 deepMidnightColor=uBorderColor*0.015;vec3 richGlowingColor=uBorderColor*1.5;',
+      'vec3 edgeColor=mix(deepMidnightColor,richGlowingColor,sin(uTime*1.5)*0.5+0.5);',
+      'vec3 planeColor=mix(vec3(0.0),edgeColor*6.5,edge);',
+      'float finalAlpha=max(strength,edge);',
+      'gl_FragColor=vec4(planeColor,finalAlpha);',
+      '}'
+    ].join('\n');
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+
+    var color = new THREE.Color(borderColor);
+    var uniforms = {
+      uTransition: { value: 0.0 },
+      uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+      uTime: { value: 0.0 },
+      uBorderColor: { value: color }
+    };
+
+    var geo = new THREE.PlaneGeometry(2, 2);
+    var mat = new THREE.ShaderMaterial({ vertexShader: vs, fragmentShader: fs, uniforms: uniforms, transparent: true, depthWrite: false, depthTest: false });
+    scene.add(new THREE.Mesh(geo, mat));
+
+    window.addEventListener('resize', function () {
+      var w = window.innerWidth, h = window.innerHeight;
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      uniforms.uResolution.value.set(w, h);
+    });
+
+    var isRevealed = false;
+    window.addEventListener('click', function () {
+      if (isRevealed) return;
+      isRevealed = true;
+      if (promptEl) gsap.to(promptEl, { opacity: 0, y: -25, duration: 0.5, ease: 'power2.inOut' });
+      gsap.to(uniforms.uTransition, {
+        value: 1.0, duration: duration, ease: 'power2.inOut',
+        onComplete: function () { overlay.style.pointerEvents = 'none'; }
+      });
+    });
+
+    var clock = new THREE.Clock();
+    function tick() { uniforms.uTime.value = clock.getElapsedTime(); renderer.render(scene, camera); requestAnimationFrame(tick); }
+    tick();
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Shader Loader",
+  "tag": "section",
+  "class": "shader-loader-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "prompt_text",
+      "label": "Prompt text",
+      "default": "CLICK TO REVEAL"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border glow color",
+      "default": "#0066ff"
+    },
+    {
+      "type": "range",
+      "id": "transition_duration",
+      "label": "Transition duration (seconds)",
+      "min": 1,
+      "max": 8,
+      "step": 0.5,
+      "default": 3.0
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_loader_on_complete",
+      "label": "Hide loader after reveal",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Heading text", "default": "WEBGL LOADER" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "limit": 1,
+      "settings": [
+        { "type": "textarea", "id": "text", "label": "Body text", "default": "A premium shader-based loading experience." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shader Loader",
+      "category": "Loader",
+      "blocks": [
+        { "type": "heading", "settings": { "text": "WEBGL LOADER" } },
+        { "type": "text", "settings": { "text": "A premium shader-based loading experience." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

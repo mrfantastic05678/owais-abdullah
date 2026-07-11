@@ -1,10 +1,13 @@
 "use client";
-import Image from "next/image";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, AlertCircle, Loader2, Send } from "lucide-react";
+import { CheckCircle, AlertCircle, Loader2, Send, MapPin, Mail, Phone } from "lucide-react";
+import { FaLinkedin, FaGithubSquare, FaInstagramSquare } from "react-icons/fa";
+import { FaSquareXTwitter } from "react-icons/fa6";
 import { ContactSchema } from "@/lib/contact-schema";
+import CharRevealHeading from "@/components/CharRevealHeading";
+import StatusDot from "@/components/ui/StatusDot";
 
 type Status = "idle" | "loading" | "success" | "error";
 type FieldErrors = Partial<Record<"name" | "email" | "subject" | "message", string>>;
@@ -13,14 +16,81 @@ const baseInputClass =
   "w-full bg-card rounded border focus:ring-1 text-base outline-none text-foreground py-2 px-3 leading-8 transition-colors duration-200 ease-in-out shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]";
 
 function fieldClass(err?: string) {
-  return `${baseInputClass} ${err ? "border-red-500 focus:border-red-500" : "border-border focus:border-accent"}`;
+  return `${baseInputClass} ${err ? "border-red-500 focus:border-red-500 focus:ring-red-500/25" : "border-border focus:border-accent focus:ring-accent/25"}`;
 }
+
+const fieldLabelClass = "font-mono text-xs tracking-widest text-muted-foreground";
+
+const HELP_WITH = [
+  "Digital FTEs (AI employees)",
+  "Custom AI agents & automations",
+  "Next.js SaaS products",
+];
+
+const SOCIALS = [
+  { Icon: FaLinkedin, href: "https://www.linkedin.com/in/mrowaisabdullah/", label: "Connect with me on LinkedIn" },
+  { Icon: FaGithubSquare, href: "https://github.com/MrOwaisAbdullah", label: "View my repositories on GitHub" },
+  { Icon: FaSquareXTwitter, href: "https://www.twitter.com/MrOwaisAbdullah", label: "Follow me on X (Twitter)" },
+  { Icon: FaInstagramSquare, href: "https://www.instagram.com/mrowaisabdullah/", label: "Follow me on Instagram" },
+];
+
+const CONTACT_ROWS = [
+  { Icon: MapPin, label: "Address", content: <span className="text-foreground text-sm mt-0.5 block">Karachi, Pakistan</span> },
+  {
+    Icon: Mail,
+    label: "Email",
+    content: (
+      <Link href="mailto:mrowaisabdullah@gmail.com" className="text-accent text-sm mt-0.5 block hover:text-accent-hover transition-colors">
+        mrowaisabdullah@gmail.com
+      </Link>
+    ),
+  },
+  {
+    Icon: Phone,
+    label: "Phone",
+    content: (
+      <Link href="tel:+923262283140" className="text-foreground text-sm mt-0.5 block hover:text-accent transition-colors">
+        +92 326 2283140
+      </Link>
+    ),
+  },
+];
 
 const Contact = () => {
   const [status, setStatus] = useState<Status>("idle");
   const [serverError, setServerError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  // Brief blue→green checkmark morph on the button itself before the
+  // success panel swaps in, so the confirm state is actually seen
+  const [justSent, setJustSent] = useState(false);
+  // Mounted a frame after justSent so the checkmark's stroke-dashoffset has
+  // a "from" state to transition out of, instead of appearing pre-drawn
+  const [checkDrawn, setCheckDrawn] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  // Local Karachi time — computed client-side to avoid an SSR/client mismatch
+  const [karachiTime, setKarachiTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Karachi",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+    const tick = () => setKarachiTime(formatter.format(new Date()));
+    tick();
+    const id = setInterval(tick, 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    if (!justSent) {
+      setCheckDrawn(false);
+      return;
+    }
+    const raf = requestAnimationFrame(() => setCheckDrawn(true));
+    return () => cancelAnimationFrame(raf);
+  }, [justSent]);
 
   const clearFieldError = (field: keyof FieldErrors) =>
     setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -64,8 +134,12 @@ const Contact = () => {
         setServerError(json.error ?? "Something went wrong. Please try again.");
         setStatus("error");
       } else {
-        setStatus("success");
-        formRef.current?.reset();
+        setJustSent(true);
+        setTimeout(() => {
+          setJustSent(false);
+          setStatus("success");
+          formRef.current?.reset();
+        }, 900);
       }
     } catch {
       setServerError("Network error. Please check your connection and try again.");
@@ -75,6 +149,7 @@ const Contact = () => {
 
   return (
     <motion.section
+      id="contact"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -82,44 +157,89 @@ const Contact = () => {
       className="max-w-7xl mx-auto text-muted-foreground body-font relative px-4 py-24"
     >
       <div className="flex flex-col md:flex-row gap-10">
-        {/* Left panel */}
-        <motion.div
+        {/* Left panel — agent-status styled contact card, matches AboutSection */}
+        <motion.aside
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="md:w-1/2 w-full rounded-lg overflow-hidden p-5 bg-card shadow-xl"
+          data-cursor="live"
+          data-cursor-label="LIVE"
+          className="relative md:w-1/2 w-full rounded-xl bg-card border border-border overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.35)]"
         >
-          <Image
-            src="/assets/contact.png"
-            alt="contact"
-            className="rounded-md mb-5 object-cover w-full h-52 md:h-64"
-            width={600}
-            height={400}
-            unoptimized
-          />
-          <h2 className="font-semibold text-foreground text-2xl sm:text-3xl tracking-wide">
-            OWAIS ABDULLAH
-          </h2>
-          <div className="mt-4 space-y-2">
-            <div>
-              <p className="font-semibold text-foreground text-xs">ADDRESS</p>
-              <p className="mt-1 text-foreground">Karachi, Pakistan</p>
-            </div>
-            <div>
-              <p className="font-semibold text-foreground text-xs">EMAIL</p>
-              <Link href="mailto:mrowaisabdullah@gmail.com" className="text-accent leading-relaxed">
-                mrowaisabdullah@gmail.com
-              </Link>
-            </div>
-            <div>
-              <p className="font-semibold text-foreground text-xs">PHONE</p>
-              <Link href="tel:+923262283140" className="leading-relaxed text-foreground">
-                +92 326 2283140
-              </Link>
+          {/* Token-derived accent glow so the card has presence in light mode too */}
+          <div
+            className="absolute -top-24 -right-24 w-64 h-64 rounded-full blur-3xl opacity-40 dark:opacity-25 pointer-events-none"
+            style={{ background: "radial-gradient(circle, color-mix(in srgb, var(--accent) 40%, transparent) 0%, transparent 70%)" }}
+          ></div>
+
+          <header className="relative px-5 py-3 border-b border-border flex justify-between items-center bg-background text-[0.72rem] tracking-[0.08em] text-muted-foreground">
+            <span className="font-mono uppercase">contact-channel</span>
+            <span className="inline-flex items-center gap-2 text-signal-500 font-mono uppercase font-bold">
+              <StatusDot size={6} />
+              ONLINE
+            </span>
+          </header>
+
+          <div className="relative px-5 py-6">
+            <h2 className="font-semibold text-foreground text-2xl tracking-wide">OWAIS ABDULLAH</h2>
+            <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
+              Founder, Octively — building AI employees from Karachi, working with teams worldwide.
+            </p>
+            <p className="font-mono text-[0.68rem] tracking-wide text-muted-foreground uppercase mt-4">
+              {karachiTime ? `${karachiTime} local time · Karachi, PKT` : "Karachi, PKT"}
+            </p>
+          </div>
+
+          <div className="relative">
+            {CONTACT_ROWS.map(({ Icon, label, content }) => (
+              <div key={label} className="flex items-start gap-3 px-5 py-5 border-t border-border/50">
+                <Icon className="w-4 h-4 text-accent mt-0.5 shrink-0" aria-hidden="true" />
+                <div>
+                  <p className={fieldLabelClass}>{label.toUpperCase()}</p>
+                  {content}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="relative px-5 py-6 border-t border-border/50">
+            <p className={`${fieldLabelClass} mb-3`}>WHAT I HELP WITH</p>
+            <ul className="space-y-2.5">
+              {HELP_WITH.map((item) => (
+                <li key={item} className="flex items-center gap-2.5 text-sm text-foreground">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" aria-hidden="true" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="relative px-5 py-4 border-t border-border/50 flex items-center gap-2">
+            <StatusDot size={7} />
+            <span className="font-mono text-[0.68rem] tracking-wide text-muted-foreground uppercase">
+              Available for AI Agent &amp; SaaS projects
+            </span>
+          </div>
+
+          <div className="relative px-5 py-4 border-t border-border/50 bg-background/40 flex items-center justify-between">
+            <span className={fieldLabelClass}>ELSEWHERE</span>
+            <div className="flex items-center gap-3">
+              {SOCIALS.map(({ Icon, href, label }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="text-muted-foreground hover:text-accent text-lg transition-colors"
+                >
+                  <Icon aria-hidden="true" />
+                </Link>
+              ))}
             </div>
           </div>
-        </motion.div>
+        </motion.aside>
 
         {/* Right panel */}
         <motion.div
@@ -130,12 +250,15 @@ const Contact = () => {
           className="md:w-1/2 w-full flex flex-col md:ml-auto md:py-8 mt-8 md:mt-0"
         >
           <div className="mb-6">
-            <h2 className="text-foreground text-2xl font-semibold tracking-wide mb-1">
+            <CharRevealHeading
+              as="h2"
+              className="text-foreground text-2xl font-semibold tracking-wide mb-1"
+              highlightWords={["WITH", "ME"]}
+            >
               CONNECT WITH ME
-            </h2>
+            </CharRevealHeading>
             <p className="text-muted-foreground text-sm">
-              Have a project in mind or want to discuss opportunities? Send me a
-              message and I&apos;ll get back to you shortly.
+              Have a project in mind or want to discuss opportunities?
             </p>
           </div>
 
@@ -148,7 +271,7 @@ const Contact = () => {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="flex flex-col items-center justify-center gap-4 py-16 px-8 bg-card border border-border rounded-xl text-center"
               >
-                <CheckCircle className="w-12 h-12 text-green-500" />
+                <CheckCircle className="w-12 h-12 text-signal-500" />
                 <div>
                   <p className="text-foreground font-semibold text-lg mb-1">Message sent!</p>
                   <p className="text-muted-foreground text-sm">
@@ -180,7 +303,7 @@ const Contact = () => {
 
                 {/* Name */}
                 <div className="relative mb-4">
-                  <label htmlFor="name" className="leading-7 text-sm text-muted-foreground">
+                  <label htmlFor="name" className={`leading-7 ${fieldLabelClass}`}>
                     NAME
                   </label>
                   <input
@@ -204,7 +327,7 @@ const Contact = () => {
 
                 {/* Email */}
                 <div className="relative mb-4">
-                  <label htmlFor="email" className="leading-7 text-sm text-muted-foreground">
+                  <label htmlFor="email" className={`leading-7 ${fieldLabelClass}`}>
                     EMAIL
                   </label>
                   <input
@@ -228,7 +351,7 @@ const Contact = () => {
 
                 {/* Subject */}
                 <div className="relative mb-4">
-                  <label htmlFor="subject" className="leading-7 text-sm text-muted-foreground">
+                  <label htmlFor="subject" className={`leading-7 ${fieldLabelClass}`}>
                     SUBJECT
                   </label>
                   <input
@@ -251,7 +374,7 @@ const Contact = () => {
 
                 {/* Message */}
                 <div className="relative mb-4">
-                  <label htmlFor="message" className="leading-7 text-sm text-muted-foreground">
+                  <label htmlFor="message" className={`leading-7 ${fieldLabelClass}`}>
                     MESSAGE
                   </label>
                   <textarea
@@ -287,13 +410,31 @@ const Contact = () => {
                 </AnimatePresence>
 
                 <motion.button
-                  whileHover={{ scale: status === "loading" ? 1 : 1.02 }}
-                  whileTap={{ scale: status === "loading" ? 1 : 0.98 }}
+                  whileHover={{ scale: status === "loading" || justSent ? 1 : 1.02 }}
+                  whileTap={{ scale: status === "loading" || justSent ? 1 : 0.98 }}
                   type="submit"
-                  disabled={status === "loading"}
-                  className="w-full inline-flex items-center justify-center gap-2 text-white bg-gradient-to-br from-blue-600 via-accent to-blue-500 border-0 py-4 px-6 focus:outline-none rounded text-sm font-semibold tracking-wide uppercase transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={status === "loading" || justSent}
+                  className={`w-full inline-flex items-center justify-center gap-2 text-accent-foreground border-0 py-4 px-6 focus:outline-none rounded text-sm font-semibold tracking-wide uppercase transition-colors duration-300 disabled:cursor-not-allowed ${
+                    justSent
+                      ? "bg-signal-500"
+                      : "bg-gradient-to-br from-accent-hover to-accent disabled:opacity-60"
+                  }`}
                 >
-                  {status === "loading" ? (
+                  {justSent ? (
+                    <>
+                      <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 shrink-0">
+                        <path
+                          d="M5 12.5l4.5 4.5L19 7"
+                          stroke="currentColor"
+                          strokeWidth="2.4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ strokeDasharray: 24, strokeDashoffset: checkDrawn ? 0 : 24, transition: "stroke-dashoffset 0.35s ease 0.1s" }}
+                        />
+                      </svg>
+                      Sent
+                    </>
+                  ) : status === "loading" ? (
                     <>
                       <Loader2 size={16} className="animate-spin" />
                       Sending…

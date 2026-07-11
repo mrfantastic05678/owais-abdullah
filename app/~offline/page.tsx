@@ -13,7 +13,7 @@ export default function OfflinePage() {
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="px-6 py-3 rounded-lg font-medium text-white transition-colors"
+          className="px-6 py-3 rounded-lg font-medium text-accent-foreground transition-colors"
           style={{ backgroundColor: "var(--accent)" }}
           onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "var(--accent-hover)")}
           onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "var(--accent)")}

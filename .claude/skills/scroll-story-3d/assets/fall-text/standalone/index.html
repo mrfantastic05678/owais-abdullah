@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Falling Text Animation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrapper">
+    <section class="section section--dark">
+      <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200" alt="background" class="section__bg" />
+      <div class="section__overlay">
+        <div class="fall-text" data-color="#171717">
+          <h1 class="fall-text__heading">Chase Your Dreams,<br />Never Look Back</h1>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--light">
+      <div class="fall-text" data-color="#005E53" data-delay="200">
+        <h2 class="fall-text__subheading">Dreams are the compass that guide your soul, Follow them boldly and you'll reach your goal. Keep moving forward.</h2>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/lenis@1.3.17/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Preview · Ember — Owais Abdullah</title>
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600&f[]=satoshi@400,500,700&f[]=satoshi@1,400&display=swap" rel="stylesheet" />
+<style>
+  /* Layer 1: primitives (design.md · Ember) */
+  :root {
+    --ink-950:#171310; --ink-900:#201B16; --ink-800:#2B241D;
+    --brand-500:#FF8A3D; --brand-400:#FFB07A; --brand-600:#D96A1E;
+    --line-700:#3A3128; --fg:#F2EDE6; --fg-muted:#A99F92;
+    --background:var(--ink-950); --card:var(--ink-900); --muted:var(--ink-800);
+    --accent:var(--brand-500); --accent-hover:var(--brand-400); --border:var(--line-700);
+    --font-display:"Clash Display",sans-serif; --font-body:"Satoshi",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{overflow-x:clip}
+  body{background:var(--background);color:var(--fg);font-family:var(--font-body);line-height:1.7;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");}
+  h1,h2,h3{font-family:var(--font-display);font-weight:500;letter-spacing:-0.01em}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  .runhead{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--fg-muted);display:flex;align-items:center;gap:16px}
+  .runhead::after{content:"";flex:1;height:1px;background:var(--border)}
+  .runhead b{color:var(--accent);font-weight:500}
+  section{padding:96px 0}
+  .pull{font-style:italic;color:var(--fg-muted)}
+
+  /* masthead nav — editorial voice */
+  nav{border-bottom:1px solid var(--border)}
+  nav .wrap{display:flex;align-items:baseline;justify-content:space-between;padding-top:20px;padding-bottom:20px}
+  nav .mark{font-family:var(--font-display);font-weight:600;font-size:1.05rem}
+  nav .links{display:flex;gap:26px;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-muted)}
+  nav .links a:hover{color:var(--accent)}
+
+  /* statement hero */
+  .hero{padding:120px 0 72px;text-align:left}
+  .hero h1{font-size:clamp(2.6rem,6.4vw,4.6rem);line-height:1.08;max-width:18ch}
+  .hero .sub{margin-top:28px;max-width:44ch;color:var(--fg-muted);font-size:1.05rem}
+  .hero .sub em{color:var(--accent);font-style:normal}
+  .cta{display:inline-block;margin-top:36px;border:1px solid var(--accent);color:var(--accent);padding:14px 34px;border-radius:2px;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem;transition:all .25s}
+  .cta:hover{background:var(--accent);color:var(--ink-950)}
+
+  /* ledger comparison — typographic, no card chrome */
+  .ledger{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:48px 0;margin-top:88px}
+  .ledger .cols{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:28px}
+  .ledger h3{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;font-family:var(--font-body);font-weight:700}
+  .ledger h3.fte{color:var(--accent)}
+  .ledger ul{list-style:none;margin-top:16px}
+  .ledger li{padding:10px 0;border-bottom:1px dotted var(--line-700);font-size:.92rem;color:var(--fg-muted)}
+  .ledger .cols div:last-child li{color:var(--fg)}
+
+  .founder-line{padding:26px 0;font-size:.85rem;color:var(--fg-muted)}
+  .founder-line b{color:var(--fg);font-weight:500}
+
+  /* services — numbered editorial index, not cards */
+  .index-list{margin-top:40px}
+  .index-item{display:grid;grid-template-columns:64px 1fr auto;gap:24px;align-items:baseline;padding:26px 0;border-bottom:1px solid var(--border);transition:padding-left .25s}
+  .index-item:first-child{border-top:1px solid var(--border)}
+  .index-item:hover{padding-left:12px}
+  .index-item .no{font-family:var(--font-display);color:var(--accent);font-size:.9rem}
+  .index-item h3{font-size:1.35rem}
+  .index-item p{font-size:.85rem;color:var(--fg-muted);margin-top:4px;max-width:52ch}
+  .index-item .proof{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-muted)}
+  .index-item:hover .proof{color:var(--accent)}
+
+  /* story band */
+  .story{text-align:center}
+  .story .frame{margin:44px auto 0;max-width:720px;aspect-ratio:16/9;border:1px solid var(--border);border-radius:4px;display:grid;place-items:center;
+    background:radial-gradient(ellipse at center,color-mix(in srgb,var(--brand-600) 14%,transparent),transparent 70%),var(--ink-900)}
+  .story .frame span{color:var(--fg-muted);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase}
+
+  /* products — pixel-image reveals on real screenshots */
+  .prods{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:44px}
+  .prod{position:relative}
+  .prod .pixel-image{position:relative;aspect-ratio:16/10;overflow:hidden;border:1px solid var(--border);border-radius:4px;opacity:0;background:var(--ink-900)}
+  .prod figcaption{margin-top:14px}
+  .prod figcaption .tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .prod figcaption h3{font-size:1.15rem;margin-top:4px}
+  .prod figcaption p{font-size:.85rem;color:var(--fg-muted);margin-top:4px}
+
+  /* process — prose steps */
+  .prose-steps{margin-top:36px;max-width:60ch}
+  .prose-steps p{margin-top:18px;color:var(--fg-muted)}
+  .prose-steps p b{color:var(--fg);font-weight:500}
+  .prose-steps p .no{color:var(--accent);font-family:var(--font-display);margin-right:10px}
+
+  details{border-bottom:1px solid var(--border);padding:20px 0}
+  details:first-of-type{border-top:1px solid var(--border);margin-top:36px}
+  details summary{cursor:pointer;font-weight:500;font-size:1.02rem;list-style:none;display:flex;justify-content:space-between;font-family:var(--font-display)}
+  details summary::after{content:"+";color:var(--accent)}
+  details[open] summary::after{content:"–"}
+  details p{margin-top:12px;font-size:.9rem;color:var(--fg-muted);max-width:60ch}
+
+  .close{padding:120px 0;text-align:center;border-top:1px solid var(--border)}
+  .close h2{font-size:clamp(2rem,4.6vw,3.2rem);max-width:22ch;margin:0 auto}
+  footer{padding:36px 0;border-top:1px solid var(--border);color:var(--fg-muted);font-size:.78rem}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  /* ── custom cursor (Ember: warm dot + editorial states) ── */
+  .cursor{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;will-change:transform}
+  .cursor .core{position:absolute;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:var(--accent);transition:width .25s,height .25s,border-radius .25s,background .25s,border-color .25s;display:grid;place-items:center}
+  .cursor .core span{font-family:var(--font-body);font-size:.65rem;font-style:italic;color:var(--ink-950);opacity:0;transition:opacity .2s;white-space:nowrap}
+  body.has-cursor, body.has-cursor a, body.has-cursor summary, body.has-cursor button{cursor:none}
+  .cursor.is-link .core{width:32px;height:32px;background:transparent;border:1px solid var(--accent)}
+  .cursor[data-state="view"] .core{width:64px;height:64px;background:var(--accent);border-radius:50%}
+  .cursor[data-state="view"] .core span{opacity:1}
+  .cursor[data-state="read"] .core{width:64px;height:64px;background:var(--accent);border-radius:50%}
+  .cursor[data-state="read"] .core span{opacity:1}
+  .cursor[data-state="scroll"] .core{width:56px;height:56px;background:transparent;border:1.5px solid var(--accent)}
+  .cursor[data-state="scroll"] .core span{opacity:1;color:var(--accent)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <span class="mark">Owais Abdullah</span>
+    <div class="links"><a href="#work">Work</a><a href="#services">Services</a><a href="#faq">Notes</a><a href="#contact">Contact</a></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <!-- scroll-story-3d: fall-text (skill effect — words revealed as amber blocks fall away) -->
+    <div class="fall-text" data-color="#FF8A3D" data-delay="200">
+      <h1>Your next hire doesn't need a desk.</h1>
+    </div>
+    <p class="sub">I build <em>AI employees</em> — agents that read the inbox, file the reports, and run the workflows your team shouldn't be doing by hand. Founder of Octively. Karachi, working worldwide.</p>
+    <a class="cta" href="#contact">Start a conversation</a>
+
+    <div class="ledger">
+      <span class="runhead">The <b>ledger</b></span>
+      <div class="cols">
+        <div>
+          <h3>A human hire</h3>
+          <ul><li>Works 9–5, weekends off</li><li>Weeks of onboarding</li><li>Scaling means hiring again</li><li>Output varies with the day</li></ul>
+        </div>
+        <div>
+          <h3 class="fte">A Digital FTE</h3>
+          <ul><li>Works around the clock</li><li>Deployed with your SOPs</li><li>Scaling means cloning</li><li>Same output, every run</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="founder-line">Founder of <b>Octively</b> · Senior Developer at <b>LionUp Digital</b> &amp; <b>AA Marketing</b> · 40+ projects shipped</p>
+  </div>
+</header>
+
+<section id="services">
+  <div class="wrap">
+    <span class="runhead">What I <b>build</b></span>
+    <div class="index-list">
+      <div class="index-item reveal"><span class="no">01</span><div><h3>Digital FTEs (AI Employees)</h3><p>Autonomous agents that own a role — inbox, reporting, operations — around the clock.</p></div><span class="proof">Digital-FTE tiers</span></div>
+      <div class="index-item reveal"><span class="no">02</span><div><h3>AI Agent Systems</h3><p>Multi-agent orchestration with the OpenAI Agents SDK, MCP tooling, memory pipelines.</p></div><span class="proof">agent systems</span></div>
+      <div class="index-item reveal"><span class="no">03</span><div><h3>AI Chatbots</h3><p>RAG chatbots trained on your documents, embedded on your site with one script.</p></div><span class="proof">Octively — founder</span></div>
+      <div class="index-item reveal"><span class="no">04</span><div><h3>Workflow Automation</h3><p>n8n pipelines and AI integrations that remove the repetitive work between your tools.</p></div><span class="proof">ContentSpark AI</span></div>
+      <div class="index-item reveal"><span class="no">05</span><div><h3>SaaS &amp; Web Apps</h3><p>Next.js products end to end — auth, billing, database, deploy.</p></div><span class="proof">TeamFlow · Visati</span></div>
+      <div class="index-item reveal"><span class="no">06</span><div><h3>CMS &amp; E-commerce</h3><p>Sanity, WordPress, and Shopify builds for content and storefronts.</p></div><span class="proof">FurnitureMart.pk</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="story" data-cursor="scroll" data-cursor-label="SCROLL">
+  <div class="wrap">
+    <span class="runhead">The <b>story</b></span>
+    <h2 class="reveal" style="font-size:2rem;margin-top:36px;">Watch a Digital FTE take a job</h2>
+    <p class="reveal pull" style="max-width:44ch;margin:14px auto 0;">Production: a pinned frame-sequence, warm-graded. In this direction, product images cross-fade with the skill's <b>shader-dissolve</b> (Three.js — see it in the production build).</p>
+    <div class="frame reveal"><span>[ frame-sequence · warm grade · shader-dissolve on product shots ]</span></div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <span class="runhead">Founder <b>proof</b></span>
+    <div class="prods">
+      <!-- scroll-story-3d: pixel-image (skill effect — coarse-to-fine reveal) -->
+      <figure class="prod reveal" data-cursor="view" data-cursor-label="VIEW">
+        <div class="pixel-image" data-speed="80" data-delay="300"><img src="../public/assets/projects/octively.png" alt="Octively" /></div>
+        <figcaption><span class="tag">Live · SaaS · Founder</span><h3>Octively</h3><p>AI chatbot platform for agencies — branded bots on client sites with one embed script.</p></figcaption>
+      </figure>
+      <figure class="prod reveal" data-cursor="view" data-cursor-label="VIEW">
+        <div class="pixel-image" data-speed="80" data-delay="450"><img src="../public/assets/projects/teamflow.png" alt="TeamFlow" /></div>
+        <figcaption><span class="tag">SaaS</span><h3>TeamFlow</h3><p>AI-powered team &amp; task management for agencies.</p></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="runhead">The <b>method</b></span>
+    <div class="prose-steps">
+      <p class="reveal"><span class="no">I.</span><b>Spec.</b> We write down exactly what the system must do before any code exists.</p>
+      <p class="reveal"><span class="no">II.</span><b>Build.</b> Agents, app, or automation — built against the spec, not around it.</p>
+      <p class="reveal"><span class="no">III.</span><b>Deploy.</b> Production infrastructure, monitoring, and handover documentation.</p>
+      <p class="reveal"><span class="no">IV.</span><b>Operate.</b> The system runs. You get reports, not surprises.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <span class="runhead">Questions I <b>get</b></span>
+    <details class="reveal"><summary>What exactly is a Digital FTE?</summary><p>An AI agent set up to own a specific role in your business — with your SOPs, your tools, and defined outputs — rather than a chatbot that waits to be asked.</p></details>
+    <details class="reveal"><summary>How long does an AI chatbot take?</summary><p>A document-trained, embedded chatbot is typically live in days. Custom agent systems depend on scope — the spec phase tells us before you commit.</p></details>
+    <details class="reveal"><summary>Do you hand over the code?</summary><p>Yes. You get the repository, deployment access, and documentation. No lock-in.</p></details>
+  </div>
+</section>
+
+<section class="close" id="contact" data-cursor="read" data-cursor-label="EMAIL">
+  <h2 class="reveal">Have a role an agent could own? Write to me.</h2>
+  <a class="cta reveal" style="margin-top:40px;" href="mailto:mrowaisabdullah@gmail.com">mrowaisabdullah@gmail.com</a>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Owais Abdullah · Karachi, Pakistan</span>
+    <span>design preview · ember · fall-text + pixel-image</span>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lenis@1.3.17/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/gsap@3.14.2/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (!reduced) {
+  const lenis = new Lenis({ duration: 1.2, touchMultiplier: 2, smoothTouch: true });
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((t) => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+/* ── scroll-story-3d: fall-text (skill code) ── */
+function initFallText(container) {
+  const color = container.getAttribute("data-color") || "#ededed";
+  const delay = parseFloat(container.getAttribute("data-delay") || "0") / 1000;
+  const textEl = container.querySelector("h1, h2");
+  if (!textEl) return;
+  if (reduced) return; /* text stays visible, no boxes */
+
+  const words = textEl.textContent.trim().split(/\s+/);
+  textEl.innerHTML = words.map((w) => `<span class="fall-word">${w}</span>`).join(" ");
+
+  const colorBoxes = [];
+  textEl.querySelectorAll(".fall-word").forEach((wordEl) => {
+    const rect = wordEl.getBoundingClientRect();
+    const box = document.createElement("div");
+    box.className = "fall-color-box";
+    box.style.cssText = `position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10;width:${rect.width * 1.1}px;height:${rect.height * 0.9}px;background:${color};border-radius:0.5vw;pointer-events:none;`;
+    wordEl.style.position = "relative";
+    wordEl.style.display = "inline-block";
+    wordEl.appendChild(box);
+    colorBoxes.push(box);
+  });
+
+  const tl = gsap.timeline({
+    scrollTrigger: { trigger: container, start: "top 80%", end: "bottom 30%" },
+    delay,
+    onComplete: () => colorBoxes.forEach((b) => (b.style.display = "none")),
+  });
+  tl.to(colorBoxes, {
+    y: () => gsap.utils.random(1200, 1600),
+    x: () => gsap.utils.random(-150, 150),
+    rotation: () => gsap.utils.random(-360, 360),
+    duration: 1, ease: "power2.in", stagger: 0.02,
+  });
+}
+document.querySelectorAll(".fall-text").forEach(initFallText);
+
+/* ── scroll-story-3d: pixel-image (skill code) ── */
+const DEFAULT_PX_STEPS = [2, 5, 6, 8, 100];
+function initPixelImage(container) {
+  const hiddenImg = container.querySelector("img");
+  if (reduced) { container.style.opacity = 1; hiddenImg.style.cssText = "width:100%;height:100%;object-fit:cover;"; return; }
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;";
+  container.appendChild(canvas);
+  const img = new Image();
+  img.src = hiddenImg.src;
+  hiddenImg.style.cssText = "position:absolute;opacity:0;pointer-events:none;";
+  const ctx = canvas.getContext("2d");
+  const state = { pxIndex: 0, imgRatio: 1, pxSteps: DEFAULT_PX_STEPS };
+  const triggerStart = container.getAttribute("data-trigger") || "top+=20% bottom";
+  const speed = parseInt(container.getAttribute("data-speed") || "80", 10);
+  const initialDelay = parseInt(container.getAttribute("data-delay") || "300", 10);
+
+  function render() {
+    const cw = container.offsetWidth, ch = container.offsetHeight;
+    canvas.width = cw; canvas.height = ch;
+    const w = cw * 1.05, h = ch * 1.05;
+    let newWidth = w, newHeight = h, newX = 0, newY = 0;
+    if (w / h > state.imgRatio) { newHeight = Math.round(w / state.imgRatio); }
+    else { newWidth = Math.round(h * state.imgRatio); newX = (w - newWidth) / 2; }
+    const size = state.pxSteps[state.pxIndex] * 0.01;
+    ctx.imageSmoothingEnabled = size === 1;
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.drawImage(img, 0, 0, w * size, h * size);
+    ctx.drawImage(canvas, 0, 0, w * size, h * size, newX, newY, newWidth, newHeight);
+  }
+  function animatePixels() {
+    if (state.pxIndex < state.pxSteps.length) {
+      setTimeout(() => { render(); state.pxIndex++; animatePixels(); }, state.pxIndex === 0 ? initialDelay : speed);
+    }
+  }
+  img.onload = () => {
+    state.imgRatio = img.width / img.height;
+    render();
+    window.addEventListener("resize", render);
+    ScrollTrigger.create({ trigger: container, start: triggerStart, onEnter: animatePixels, once: true });
+    ScrollTrigger.create({ trigger: container, start: "top bottom", onEnter: () => gsap.set(container, { opacity: 1 }), once: true });
+  };
+}
+document.querySelectorAll(".pixel-image").forEach(initPixelImage);
+
+const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: 0.15 });
+document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+/* ── Custom Cursor JS ── */
+if (!reduced) {
+  const cursor = document.createElement("div");
+  cursor.className = "cursor";
+  cursor.innerHTML = '<div class="core"><span></span></div>';
+  document.body.appendChild(cursor);
+  document.body.classList.add("has-cursor");
+
+  const coreSpan = cursor.querySelector(".core span");
+  
+  // Custom cursor movement
+  window.addEventListener("mousemove", (e) => {
+    gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.08, ease: "power2.out" });
+  });
+
+  // Track hover states for specific data-cursor attributes
+  document.querySelectorAll("[data-cursor]").forEach((el) => {
+    el.addEventListener("mouseenter", () => {
+      const state = el.getAttribute("data-cursor");
+      const label = el.getAttribute("data-cursor-label") || "";
+      cursor.setAttribute("data-state", state);
+      coreSpan.textContent = label;
+    });
+    
+    el.addEventListener("mouseleave", () => {
+      cursor.removeAttribute("data-state");
+      coreSpan.textContent = "";
+    });
+  });
+
+  // Track hover states for standard interactive elements
+  document.querySelectorAll("a, button, summary, details, .cta").forEach((el) => {
+    if (!el.hasAttribute("data-cursor")) {
+      el.addEventListener("mouseenter", () => cursor.classList.add("is-link"));
+      el.addEventListener("mouseleave", () => cursor.classList.remove("is-link"));
+    }
+  });
+}
+</script>
+</body>
+</html>

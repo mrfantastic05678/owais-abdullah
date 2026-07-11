@@ -6,6 +6,10 @@ import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Project } from "@/data/profile";
+import PixelImage from "@/components/PixelImage";
+import CharRevealHeading from "@/components/CharRevealHeading";
+import PixelTextButton from "@/components/ui/PixelTextButton";
+import CharShuffleText from "@/components/ui/CharShuffleText";
 
 interface ProjectsByCategory {
   [category: string]: Project[];
@@ -90,9 +94,13 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
         <p className="text-base text-accent font-medium sm:text-lg">
           See My Work
         </p>
-        <h2 className="text-4xl text-foreground font-semibold sm:text-5xl">
-          Projects
-        </h2>
+        <CharRevealHeading
+          as="h2"
+          className="text-4xl text-foreground font-semibold sm:text-5xl"
+          highlightWords={["Projects"]}
+        >
+          Selected Projects
+        </CharRevealHeading>
       </motion.div>
 
       {/* Tabs */}
@@ -146,18 +154,20 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
                         <motion.div
                           whileHover={{ scale: 1.05 }}
                           transition={{ duration: 0.3 }}
-                          className="lg:h-48 md:h-36 w-full"
+                          className="lg:h-48 md:h-36 w-full relative bg-muted"
                         >
-                          <Image
-                            className="w-full h-full object-cover"
-                            src={project.image || "/assets/placeholder.png"}
-                            alt={project.title}
-                            width={500}
-                            height={300}
-                            loading="lazy"
-                          />
+                          <PixelImage className="w-full h-full">
+                            <Image
+                              className="w-full h-full object-cover"
+                              src={project.image || "/assets/placeholder.png"}
+                              alt={project.title}
+                              width={500}
+                              height={300}
+                              loading="lazy"
+                            />
+                          </PixelImage>
                         </motion.div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
                       <div className="p-6">
                         <h3 className="text-xl font-medium text-foreground mb-2">
@@ -169,7 +179,7 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
                             <motion.span
                               key={i}
                               whileHover={{ scale: 1.05 }}
-                              className="bg-muted text-muted-foreground text-xs px-2 py-1 rounded-full"
+                              className="bg-muted text-muted-foreground text-xs px-2 py-1 rounded-md"
                             >
                               {tag}
                             </motion.span>
@@ -186,7 +196,7 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                View Project
+                                <PixelTextButton label="View Project" hoverLabel="Open live →" fontSize={16} />
                                 <span className="ml-2">
                                   <FaRegArrowAltCircleRight />
                                 </span>
@@ -230,10 +240,13 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
                     onClick={() => handleLoadMore(category)}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="inline-flex items-center gap-2 px-8 py-3 text-foreground bg-card hover:bg-accent hover:text-accent-foreground border-2 border-border hover:border-accent rounded-full font-medium transition-all duration-300 shadow-lg"
+                    className="group relative inline-flex items-center gap-2 px-8 py-3 text-foreground bg-card border-2 border-border rounded-md font-medium shadow-lg overflow-hidden"
                   >
-                    Load More Projects
-                    <FaRegArrowAltCircleRight />
+                    <span className="absolute inset-0 w-full h-full bg-accent translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                    <span className="relative z-10 flex items-center gap-2 group-hover:text-accent-foreground transition-colors duration-300">
+                      <CharShuffleText text="Load More Projects" />
+                      <FaRegArrowAltCircleRight className="group-hover:translate-x-1 transition-transform duration-300" />
+                    </span>
                   </motion.button>
                 </div>
               )}

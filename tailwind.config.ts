@@ -91,6 +91,10 @@ export default {
   		colors: {
   			accent: 'var(--accent)',
   			'accent-hover': 'var(--accent-hover)',
+  			'accent-foreground': 'var(--accent-foreground)',
+  			'signal-500': 'var(--signal-500)',
+  			destructive: 'var(--destructive)',
+  			'destructive-foreground': 'var(--destructive-foreground)',
   			background: 'var(--background)',
   			foreground: 'var(--foreground)',
   			card: 'var(--card)',
@@ -113,9 +117,15 @@ export default {
 			blog: 'var(--blog)',
   		},
   		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			// Sharp scale — every rounded-* class resolves to hairline radii.
+  			// `full` intentionally kept default so status dots stay circular.
+  			sm: '2px',
+  			DEFAULT: '4px',
+  			md: '4px',
+  			lg: '6px',
+  			xl: '6px',
+  			'2xl': '8px',
+  			'3xl': '8px'
   		}
   		}
   },

@@ -9,82 +9,140 @@ import {
 } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 
+const NAVIGATE = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Projects", href: "/projects" },
+  { label: "Blog", href: "/blog" },
+  { label: "Skills", href: "/skills" },
+  { label: "Contact", href: "/contact" },
+];
+
+const SERVICES = [
+  { label: "Digital FTEs (AI Employees)", href: "/services" },
+  { label: "AI Agent Systems", href: "/services" },
+  { label: "AI Chatbots", href: "/services" },
+  { label: "Workflow Automation", href: "/services" },
+  { label: "SaaS & Web Apps", href: "/services" },
+];
+
+const PRODUCTS = [
+  { label: "Octively — AI chatbot SaaS", href: "https://octively.com", external: true, live: true },
+  { label: "TeamFlow", href: "https://teamflow-sigma-opal.vercel.app/", external: true },
+  { label: "RentParlo", href: "https://rentparlo.vercel.app/", external: true },
+];
+
+const SOCIALS = [
+  { Icon: FaSquareXTwitter, href: "https://www.twitter.com/MrOwaisAbdullah", label: "Follow me on X (Twitter)" },
+  { Icon: FaLinkedin, href: "https://www.linkedin.com/in/mrowaisabdullah/", label: "Connect with me on LinkedIn" },
+  { Icon: FaGithubSquare, href: "https://github.com/MrOwaisAbdullah", label: "View my repositories on GitHub" },
+  { Icon: FaInstagramSquare, href: "https://www.instagram.com/mrowaisabdullah/", label: "Follow me on Instagram" },
+  { Icon: FaFacebookSquare, href: "https://www.facebook.com/mrowaisabdullah", label: "Follow me on Facebook" },
+];
+
 const Footer = () => {
   return (
-    <footer className="max-w-7xl mx-auto text-muted-foreground body-font relative">
-      {/* Natural gradient blob coming from below with larger size */}
-      <div className="absolute bottom-5 md:-bottom-20 left-10 md:-left-20 w-64 h-64 bg-gradient-to-tl from-accent to-black/50 rounded-full blur-2xl opacity-70 md:opacity-50 dark:opacity-30 -z-10"></div>
+    <footer className="border-t border-border bg-card/30 text-muted-foreground relative overflow-hidden">
+      {/* token-derived corner glow */}
+      <div
+        className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full blur-3xl opacity-30 dark:opacity-20 pointer-events-none"
+        style={{ background: "radial-gradient(circle, color-mix(in srgb, var(--accent) 40%, transparent) 0%, transparent 70%)" }}
+      ></div>
 
-      <div className="px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
-        <Link href={"/"} className="flex mb-4 md:mb-0 relative" aria-label="Owais Abdullah home">
-          <Image src="/assets/owais_logo.png" width={80} height={40} alt={"Owais Abdullah logo"} className="relative z-10" unoptimized />
-        </Link>
-        <p className="text-sm text-muted-foreground sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-border sm:py-2 sm:mt-0 mt-4">
-          © {new Date().getFullYear()} Owais Abdullah —
-          <Link
-            href="https://www.linkedin.com/in/mrowaisabdullah/"
-            className="ml-1 hover:text-accent"
-            target="_blank"
-          >
-            @MrOwaisAbdullah
-          </Link>
-        </p>
-        <span className="inline-flex gap-3 sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
-          <Link
-            href="/services"
-            className="text-muted-foreground text-base font-semibold hover:text-accent mr-2"
-            prefetch={false}
-          >
-            Services
-          </Link>
-          <Link
-            href="/blog"
-            className="text-muted-foreground text-base font-semibold hover:text-accent mr-2"
-            prefetch={false}
-          >
-            Blog
-          </Link>
-          <Link
-            href={"https://www.twitter.com/MrOwaisAbdullah"}
-            className="text-muted-foreground text-2xl hover:text-foreground"
-            target="_blank"
-            aria-label="Follow me on X (Twitter)"
-          >
-            <FaSquareXTwitter aria-hidden="true" />
-          </Link>
-          <Link
-            href={"https://www.linkedin.com/in/mrowaisabdullah/"}
-            className="text-muted-foreground text-2xl hover:text-[#0077B5]"
-            target="_blank"
-            aria-label="Connect with me on LinkedIn"
-          >
-            <FaLinkedin aria-hidden="true" />
-          </Link>
-          <Link
-            href={"https://www.instagram.com/mrowaisabdullah/"}
-            className="text-muted-foreground text-2xl hover:text-[#d62976]"
-            target="_blank"
-            aria-label="Follow me on Instagram"
-          >
-            <FaInstagramSquare aria-hidden="true" />
-          </Link>
-          <Link
-            href={"https://github.com/MrOwaisAbdullah"}
-            className="text-muted-foreground text-2xl hover:text-foreground"
-            target="_blank"
-            aria-label="View my repositories on GitHub"
-          >
-            <FaGithubSquare aria-hidden="true" />
-          </Link>
-          <Link
-            href={"https://www.facebook.com/mrowaisabdullah"}
-            className="text-muted-foreground text-2xl hover:text-[#5890FF]"
-            target="_blank"
-            aria-label="Follow me on Facebook"
-          >
-            <FaFacebookSquare aria-hidden="true" />
-          </Link>
-        </span>
+      <div className="max-w-7xl mx-auto px-5 pt-14 pb-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
+          {/* Brand */}
+          <div>
+            <Link href="/" aria-label="Owais Abdullah home" className="inline-flex">
+              <Image src="/assets/owais_logo.png" width={80} height={40} alt="Owais Abdullah logo" unoptimized />
+            </Link>
+            <p className="mt-4 text-sm max-w-[36ch] leading-relaxed">
+              Digital FTEs, AI agents, and SaaS products — spec first, then shipped. Karachi, working worldwide.
+            </p>
+            <a
+              href="mailto:mrowaisabdullah@gmail.com"
+              className="inline-block mt-4 text-sm text-accent hover:text-accent-hover transition-colors"
+            >
+              mrowaisabdullah@gmail.com
+            </a>
+            <div className="flex gap-3 mt-5">
+              {SOCIALS.map(({ Icon, href, label }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  aria-label={label}
+                  className="text-xl text-muted-foreground hover:text-accent transition-colors"
+                >
+                  <Icon aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Navigate */}
+          <nav aria-label="Footer navigation">
+            <span className="font-mono text-[0.65rem] tracking-widest uppercase text-foreground block mb-4">Navigate</span>
+            <ul className="space-y-2.5">
+              {NAVIGATE.map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} prefetch={false} className="text-sm hover:text-accent transition-colors">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Services */}
+          <nav aria-label="Services">
+            <span className="font-mono text-[0.65rem] tracking-widest uppercase text-foreground block mb-4">Services</span>
+            <ul className="space-y-2.5">
+              {SERVICES.map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} prefetch={false} className="text-sm hover:text-accent transition-colors">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Products */}
+          <nav aria-label="Products">
+            <span className="font-mono text-[0.65rem] tracking-widest uppercase text-foreground block mb-4">Products</span>
+            <ul className="space-y-2.5">
+              {PRODUCTS.map(({ label, href, live }) => (
+                <li key={label}>
+                  <Link
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm hover:text-accent transition-colors"
+                  >
+                    {live && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-signal-500 shadow-[0_0_6px_var(--signal-500)]" aria-hidden="true"></span>
+                    )}
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <span>
+            © {new Date().getFullYear()} Owais Abdullah —{" "}
+            <Link href="https://www.linkedin.com/in/mrowaisabdullah/" className="hover:text-accent" target="_blank">
+              @MrOwaisAbdullah
+            </Link>
+          </span>
+          <span className="font-mono tracking-wide text-muted-foreground/70">
+            Karachi, Pakistan — working worldwide
+          </span>
+        </div>
       </div>
     </footer>
   );

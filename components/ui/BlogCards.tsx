@@ -32,14 +32,14 @@ const BlogCards = ({ post }: { post: PostCard }) => {
         {/* Category badges overlaid on image bottom-left */}
         <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
           {!post.categories || post.categories.length === 0 ? (
-            <span className="bg-muted/80 backdrop-blur-sm text-muted-foreground text-xs font-medium px-2.5 py-1 rounded-full">
+            <span className="bg-muted/80 backdrop-blur-sm text-muted-foreground text-xs font-medium px-2.5 py-1 rounded-md">
               Uncategorized
             </span>
           ) : (
             post.categories.slice(0, 2).map((category, i) => (
               <span
                 key={i}
-                className="bg-accent/90 backdrop-blur-sm text-accent-foreground text-xs font-medium px-2.5 py-1 rounded-full"
+                className="bg-accent/90 backdrop-blur-sm text-accent-foreground text-xs font-medium px-2.5 py-1 rounded-md"
               >
                 {category.title}
               </span>

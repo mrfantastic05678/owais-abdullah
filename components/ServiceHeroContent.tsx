@@ -104,13 +104,13 @@ const ServiceHeroContent: React.FC<ServiceHeroContentProps> = ({
               className="flex flex-wrap gap-4"
             >
               <Link href="#contact">
-                <button className="group inline-flex items-center px-8 py-3 text-white bg-gradient-to-br from-blue-900 via-accent to-blue-700 hover:from-blue-950 rounded-full font-medium transition-all">
+                <button className="group inline-flex items-center px-8 py-3 text-white bg-gradient-to-br from-blue-900 via-accent to-blue-700 hover:from-blue-950 rounded-md font-medium transition-all">
                   Get Started
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
               <Link href="#pricing">
-                <button className="inline-flex items-center px-8 py-3 text-foreground bg-card hover:bg-accent hover:text-white border-2 border-border hover:border-accent rounded-full font-medium transition-all">
+                <button className="inline-flex items-center px-8 py-3 text-foreground bg-card hover:bg-accent hover:text-white border-2 border-border hover:border-accent rounded-md font-medium transition-all">
                   View Pricing
                 </button>
               </Link>

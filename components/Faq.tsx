@@ -1,4 +1,5 @@
 "use client";
+import CharRevealHeading from "@/components/CharRevealHeading";
 import {
   Accordion,
   AccordionContent,
@@ -19,10 +20,14 @@ export default function FaqSection({ faqs }: FaqProps) {
   return (
     <div className="my-8 sm:my-12">
       <div className="text-center mb-6 sm:mb-8">
-        <h3 className="text-accent font-semibold text-base sm:text-lg mb-1 sm:mb-2">FAQ</h3>
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
+        <h3 className="text-accent font-mono text-xs tracking-widest uppercase mb-2">Questions I get</h3>
+        <CharRevealHeading
+          as="h2"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground"
+          highlightWords={["Questions"]}
+        >
           Frequently Asked Questions
-        </h2>
+        </CharRevealHeading>
       </div>
       <Accordion type="single" collapsible className="w-full space-y-3 sm:space-y-4">
         {faqs.map((faq, index) => (

@@ -155,7 +155,7 @@ export default function BlogPageClient({
             </div>
             <div className="flex flex-wrap gap-2 mb-4 items-center justify-center">
               {!blog.categories || blog.categories.length === 0 ? (
-                <span className="bg-gray-500/70 text-white text-xs px-2 py-1 rounded-full">
+                <span className="bg-gray-500/70 text-white text-xs px-2 py-1 rounded-md">
                   Uncategorized
                 </span>
               ) : (
@@ -163,7 +163,7 @@ export default function BlogPageClient({
                   (category: { title: string }, i: React.Key) => (
                     <span
                       key={i}
-                      className="bg-[#db4a4a]/70 text-white text-xs px-2 py-1 rounded-full"
+                      className="bg-[#db4a4a]/70 text-white text-xs px-2 py-1 rounded-md"
                     >
                       {category.title}
                     </span>

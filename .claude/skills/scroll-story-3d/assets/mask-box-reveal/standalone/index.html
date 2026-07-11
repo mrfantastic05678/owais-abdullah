@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mask Box Reveal</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="hero h-screen w-full bg-black">
+    <video id="clip-video" src="video.mp4" muted autoplay loop class="hidden"></video>
+
+    <div class="mask-box" style="width: 60vw; height: 35vw; top: 10vh; left: 10vw;">
+      <canvas></canvas>
+    </div>
+    <div class="mask-box" style="width: 17vw; height: 9vw; top: 5vh; left: 5vw;">
+      <canvas></canvas>
+    </div>
+    <div class="mask-box" style="width: 35vw; height: 19vw; top: 5vh; right: 5vw;">
+      <canvas></canvas>
+    </div>
+    <div class="mask-box" style="width: 38vw; height: 22vw; top: 50vh; left: 5vw;">
+      <canvas></canvas>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

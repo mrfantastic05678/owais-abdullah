@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shader Loader — demo</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+      "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/+esm"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <div id="loader">
+    <canvas id="loader-canvas"></canvas>
+    <p class="click-prompt">CLICK TO REVEAL</p>
+  </div>
+
+  <div class="hero">
+    <h1>WEBGL LOADER</h1>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

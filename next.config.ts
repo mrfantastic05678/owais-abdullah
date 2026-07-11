@@ -8,6 +8,7 @@ const withPWA = withPWAInit({
   reloadOnOnline: true,
   disable: process.env.NODE_ENV === "development",
   workboxOptions: {
+    maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
     runtimeCaching: [
       {
         urlPattern: /\.(?:jpg|png|svg|webp|ico)$/i,

@@ -1,0 +1,277 @@
+<!--
+  Fella Nav — Shopify Online Store 2.0 section
+  Animated full-screen navigation menu inspired by goodfella.com.
+  Dependencies (loaded via CDN): GSAP.
+  ⚠️ SplitText is a GSAP Membership plugin — not available on CDN.
+  This section uses manual line-splitting for text animation instead.
+-->
+{{ 'fella-nav.css' | asset_url | stylesheet_tag }}
+
+<nav class="fn-nav" id="fn-nav-{{ section.id }}">
+  <p class="fn-nav__logo">{{ section.settings.logo_text | default: 'Wolf' }}</p>
+  <div class="fn-nav__toggle" data-toggle>
+    <p class="fn-nav__toggle-text" data-toggle-text>{{ section.settings.menu_label | default: 'Menu' }}</p>
+    <div class="fn-nav__hamburger">
+      <span class="fn-nav__line fn-nav__line--top" data-line-top></span>
+      <span class="fn-nav__line fn-nav__line--bottom" data-line-bottom></span>
+    </div>
+  </div>
+</nav>
+
+<div class="fn-menu" id="fn-menu-{{ section.id }}">
+  <div class="fn-menu__inner">
+    <div class="fn-menu__links" data-links-container>
+      <div class="fn-menu__indicator" data-indicator></div>
+      {% for block in section.blocks %}
+        {% if block.type == 'link' %}
+          <div class="fn-menu__link-row" data-link-row="{{ forloop.index0 }}">
+            <a href="{{ block.settings.url | default: '#' }}" class="fn-menu__link">{{ block.settings.label }}</a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="fn-menu__contact" data-contact>
+      {% for block in section.blocks %}
+        {% if block.type == 'contact_section' %}
+          <div>
+            <p class="fn-menu__label">{{ block.settings.heading }}</p>
+            {% assign lines = block.settings.lines | split: ',' %}
+            {% for line in lines %}
+              <p class="fn-menu__text" data-split>{{ line | strip }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="fn-menu__images">
+      <div class="fn-menu__image-col">
+        <p class="fn-menu__label">{{ section.settings.studio_label }}</p>
+        <div class="fn-menu__image-frame">
+          {% if section.settings.studio_image %}
+            <img src="{{ section.settings.studio_image | image_url: width: 400 }}" alt="{{ section.settings.studio_label }}" loading="lazy" />
+          {% else %}
+            <div class="fn-menu__image-placeholder"></div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="fn-menu__image-col">
+        <p class="fn-menu__label">{{ section.settings.project_label }}</p>
+        <div class="fn-menu__image-frame fn-menu__image-frame--accent">
+          {% if section.settings.project_image %}
+            <img src="{{ section.settings.project_image | image_url: width: 400 }}" alt="{{ section.settings.project_label }}" loading="lazy" />
+          {% else %}
+            <div class="fn-menu__image-placeholder"></div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+(function() {
+  const sectionId = '{{ section.id }}';
+  const nav = document.getElementById('fn-nav-' + sectionId);
+  const menu = document.getElementById('fn-menu-' + sectionId);
+  const toggle = nav.querySelector('[data-toggle]');
+  const toggleText = nav.querySelector('[data-toggle-text]');
+  const lineTop = nav.querySelector('[data-line-top]');
+  const lineBottom = nav.querySelector('[data-line-bottom]');
+  const linksContainer = menu.querySelector('[data-links-container]');
+  const indicator = menu.querySelector('[data-indicator]');
+  const contact = menu.querySelector('[data-contact]');
+  const linkRows = menu.querySelectorAll('[data-link-row]');
+
+  let isOpen = false;
+  let tl = null;
+  let indicatorRotation = 0;
+
+  /* Manual line-split for text animation (no SplitText CDN dependency) */
+  const allLines = [];
+  contact.querySelectorAll('[data-split]').forEach(function(el) {
+    var words = el.textContent.trim().split(' ');
+    var html = '';
+    words.forEach(function(word, i) {
+      html += '<span class="split-line" style="display:inline-block">' + word + (i < words.length - 1 ? '&nbsp;' : '') + '</span>';
+    });
+    el.innerHTML = html;
+    el.querySelectorAll('.split-line').forEach(function(s) {
+      gsap.set(s, { y: '100%' });
+      allLines.push(s);
+    });
+  });
+
+  function animateToLink(index) {
+    if (!indicator || !linksContainer) return;
+    var rows = Array.from(linkRows);
+
+    if (index >= 0 && rows[index]) {
+      var containerRect = linksContainer.getBoundingClientRect();
+      var rowRect = rows[index].getBoundingClientRect();
+      var targetY = rowRect.top - containerRect.top + (rowRect.height / 2) - (indicator.offsetHeight / 2);
+      indicatorRotation += 180;
+
+      gsap.to(indicator, {
+        x: 0, y: targetY, rotation: indicatorRotation, opacity: 1,
+        duration: 0.5, ease: 'back.out(1.4)', overwrite: true,
+      });
+    } else {
+      gsap.to(indicator, { x: '-2vw', opacity: 0, duration: 0.3, ease: 'power2.out', overwrite: true });
+    }
+
+    rows.forEach(function(row, i) {
+      var a = row.querySelector('a');
+      if (!a) return;
+      gsap.to(a, { x: i === index ? '2.5vw' : '0vw', duration: 0.4, ease: 'back.out(1.4)', overwrite: true });
+    });
+  }
+
+  toggle.addEventListener('click', function() {
+    isOpen = !isOpen;
+    if (tl) tl.kill();
+    tl = gsap.timeline();
+
+    if (isOpen) {
+      toggleText.textContent = '{{ section.settings.close_label | default: "Close" }}';
+      gsap.set(indicator, { x: '-2vw', opacity: 0 });
+      linkRows.forEach(function(r) { var a = r.querySelector('a'); if (a) gsap.set(a, { x: '0vw' }); });
+
+      tl.to(nav, { width: '90vw', duration: 0.5, ease: 'power3.inOut' })
+        .to(lineTop, { rotation: 45, y: 0, duration: 0.3, ease: 'power2.inOut' }, 0)
+        .to(lineBottom, { rotation: -45, y: 0, duration: 0.3, ease: 'power2.inOut' }, 0)
+        .to(menu, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.5, ease: 'power3.inOut' }, 0.3)
+        .to(allLines, { y: '0%', duration: 0.5, stagger: 0.03, ease: 'power3.out' }, 0.5)
+        .call(function() { animateToLink(0); });
+    } else {
+      toggleText.textContent = '{{ section.settings.menu_label | default: "Menu" }}';
+      tl.to(lineTop, { rotation: 0, y: '-0.3vw', duration: 0.3, ease: 'power2.inOut' }, 0)
+        .to(lineBottom, { rotation: 0, y: '0.3vw', duration: 0.3, ease: 'power2.inOut' }, 0)
+        .to(menu, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.5, ease: 'power3.inOut' }, 0)
+        .to(nav, { width: '95vw', duration: 0.5, ease: 'power3.inOut' }, 0.3)
+        .set(allLines, { y: '100%' }, 0.5);
+    }
+  });
+
+  linkRows.forEach(function(row) {
+    row.addEventListener('mouseenter', function() {
+      var index = parseInt(row.getAttribute('data-link-row'));
+      animateToLink(index);
+    });
+  });
+
+  if (linksContainer) {
+    linksContainer.addEventListener('mouseleave', function() { animateToLink(0); });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Fella Nav",
+  "tag": "section",
+  "class": "fella-nav-section",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "Wolf"
+    },
+    {
+      "type": "text",
+      "id": "menu_label",
+      "label": "Menu label",
+      "default": "Menu"
+    },
+    {
+      "type": "text",
+      "id": "close_label",
+      "label": "Close label",
+      "default": "Close"
+    },
+    {
+      "type": "text",
+      "id": "studio_label",
+      "label": "Studio section label",
+      "default": "About the studio"
+    },
+    {
+      "type": "image_picker",
+      "id": "studio_image",
+      "label": "Studio image"
+    },
+    {
+      "type": "text",
+      "id": "project_label",
+      "label": "Project section label",
+      "default": "Feature project"
+    },
+    {
+      "type": "image_picker",
+      "id": "project_image",
+      "label": "Project image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Navigation link",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Link label",
+          "default": "Home"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL",
+          "default": "/"
+        }
+      ]
+    },
+    {
+      "type": "contact_section",
+      "name": "Contact section",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Section heading",
+          "default": "Contact"
+        },
+        {
+          "type": "text",
+          "id": "lines",
+          "label": "Lines (comma-separated)",
+          "default": "test@example.com",
+          "info": "Separate lines with commas"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fella Nav",
+      "blocks": [
+        { "type": "link", "settings": { "label": "Home", "url": "/" } },
+        { "type": "link", "settings": { "label": "Work", "url": "/" } },
+        { "type": "link", "settings": { "label": "Pricing", "url": "/" } },
+        { "type": "link", "settings": { "label": "About", "url": "/" } },
+        { "type": "link", "settings": { "label": "Contact", "url": "/" } },
+        { "type": "contact_section", "settings": { "heading": "Contact", "lines": "test@example.com" } },
+        { "type": "contact_section", "settings": { "heading": "Team", "lines": "John: john@test.com, Jane: jane@test.com" } },
+        { "type": "contact_section", "settings": { "heading": "Social", "lines": "Instagram: @random_test_123, Linkedin: @test-company, Github: @TestUser42" } },
+        { "type": "contact_section", "settings": { "heading": "Status", "lines": "Lorem ipsum dolor sit amet, Random test data 12345" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

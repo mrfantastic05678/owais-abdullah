@@ -1,0 +1,84 @@
+.overlapping-slider {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  gap: 2vw;
+  overflow: hidden;
+}
+
+.overlapping-slider__left {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 4vw;
+}
+
+.overlapping-slider__title {
+  font-size: 14vw;
+  text-transform: uppercase;
+  line-height: 0.8;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.overlapping-slider__desc {
+  font-size: 1.5vw;
+  font-weight: 500;
+  opacity: 0.6;
+  margin-top: 2vw;
+  width: 60%;
+}
+
+.overlapping-slider__right {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.overlapping-slider__track {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  will-change: transform;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+.overlapping-slider__track:active {
+  cursor: grabbing;
+}
+
+.overlapping-slider__card {
+  flex-shrink: 0;
+  pointer-events: none;
+  width: 30vw;
+  height: 40vw;
+  border-radius: 2vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2vw;
+  border: 2px solid rgba(0, 0, 0, 0.6);
+}
+
+.overlapping-slider__card + .overlapping-slider__card {
+  margin-left: 2vw;
+}
+
+.overlapping-slider__card-text {
+  font-size: 2vw;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.overlapping-slider__card-username {
+  font-size: 1.5vw;
+  font-weight: 500;
+  opacity: 0.6;
+}

@@ -1,0 +1,235 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ section.id }} .test {
+    height: 100vh;
+    width: 100%;
+  }
+  #shopify-section-{{ section.id }} .wrapper {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .text {
+    font-size: {{ section.settings.font_size }};
+    width: {{ section.settings.text_width }};
+    text-align: center;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    padding-bottom: 6vw;
+  }
+  #shopify-section-{{ section.id }} .char {
+    position: relative;
+    display: inline-block;
+  }
+{%- endstyle -%}
+
+<div class="test"></div>
+<div class="wrapper" id="scatter-wrapper-{{ section.id }}">
+  <p class="text" id="scatter-text-{{ section.id }}">
+    {{ section.settings.text | escape }}
+  </p>
+</div>
+<div class="test"></div>
+
+<script src="https://unpkg.com/lenis@1.3.17/dist/lenis.min.js" defer></script>
+<script src="https://unpkg.com/gsap@3.14.2/dist/gsap.min.js" defer></script>
+<script src="https://unpkg.com/gsap@3.14.2/dist/ScrollTrigger.min.js" defer></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    function initScatterText(wrapperSelector, textSelector) {
+      var wrapper = document.querySelector(wrapperSelector)
+      var textEl = document.querySelector(textSelector)
+      if (!wrapper || !textEl) return
+
+      var text = textEl.textContent
+
+      textEl.innerHTML = ''
+      var chars = []
+      for (var i = 0; i < text.length; i++) {
+        var span = document.createElement('span')
+        span.className = 'char'
+        span.textContent = text[i] === ' ' ? '\u00A0' : text[i]
+        textEl.appendChild(span)
+        chars.push(span)
+      }
+
+      var positions = chars.map(function (char) {
+        return {
+          left: char.offsetLeft,
+          top: char.offsetTop,
+        }
+      })
+
+      var wrapperRect = wrapper.getBoundingClientRect()
+      var textRect = textEl.getBoundingClientRect()
+      var line1X = wrapperRect.width * 0.3
+      var line2X = wrapperRect.width * 0.7
+      var centerY = wrapperRect.height * 0.5
+
+      var totalChars = chars.length
+      var charsPerLine = Math.floor(totalChars * 0.3)
+
+      var indices = Array.from({ length: totalChars }, function (_, i) { return i })
+      for (var i = indices.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1))
+        var temp = indices[i]
+        indices[i] = indices[j]
+        indices[j] = temp
+      }
+
+      var leftLineIndices = indices.slice(0, charsPerLine)
+      var rightLineIndices = indices.slice(charsPerLine, charsPerLine * 2)
+      var randomIndices = indices.slice(charsPerLine * 2)
+
+      leftLineIndices.sort(function (a, b) { return positions[b].top - positions[a].top })
+      rightLineIndices.sort(function (a, b) { return positions[b].top - positions[a].top })
+      randomIndices.sort(function (a, b) { return positions[b].top - positions[a].top })
+
+      var charData = new Array(totalChars)
+      leftLineIndices.forEach(function (charIdx, lineIdx) {
+        charData[charIdx] = { group: 'left', lineIndex: lineIdx }
+      })
+      rightLineIndices.forEach(function (charIdx, lineIdx) {
+        charData[charIdx] = { group: 'right', lineIndex: lineIdx }
+      })
+      var halfRandom = Math.floor(randomIndices.length / 2)
+      randomIndices.forEach(function (charIdx, idx) {
+        charData[charIdx] = {
+          group: idx < halfRandom ? 'leftBox' : 'rightBox',
+          randomIndex: idx < halfRandom ? idx : idx - halfRandom,
+        }
+      })
+
+      var tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrapper,
+          start: 'top top',
+          end: '+=300%',
+          scrub: 1,
+          pin: true,
+        },
+      })
+
+      var totalWidth = line2X - line1X
+      var boxWidth = totalWidth / 3
+      var boxHeight = charsPerLine * 15
+      var boxTop = centerY - charsPerLine * 7.5
+
+      chars.forEach(function (char, i) {
+        var data = charData[i]
+        var startLeft, startTop, animationDelay
+
+        if (data.group === 'left') {
+          startLeft = line1X - (textRect.left - wrapperRect.left)
+          startTop = boxTop + data.lineIndex * 15 - (textRect.top - wrapperRect.top)
+          animationDelay = -data.lineIndex * 0.01
+        } else if (data.group === 'right') {
+          startLeft = line2X - (textRect.left - wrapperRect.left)
+          startTop = boxTop + data.lineIndex * 15 - (textRect.top - wrapperRect.top)
+          animationDelay = -data.lineIndex * 0.01
+        } else if (data.group === 'leftBox') {
+          startLeft = line1X + Math.random() * boxWidth - (textRect.left - wrapperRect.left)
+          startTop = boxTop + Math.random() * boxHeight - (textRect.top - wrapperRect.top)
+          animationDelay = -(charsPerLine * 0.01) + data.randomIndex * 0.01
+        } else {
+          startLeft = line2X - boxWidth + Math.random() * boxWidth - (textRect.left - wrapperRect.left)
+          startTop = boxTop + Math.random() * boxHeight - (textRect.top - wrapperRect.top)
+          animationDelay = -(charsPerLine * 0.01) + data.randomIndex * 0.01
+        }
+
+        gsap.set(char, {
+          position: 'absolute',
+          left: startLeft,
+          top: startTop,
+        })
+
+        tl.to(char, {
+          left: positions[i].left,
+          top: positions[i].top,
+          ease: 'power3.out',
+        }, animationDelay)
+      })
+    }
+
+    var lenis = new Lenis({
+      duration: 1.2,
+      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)) },
+      smooth: true,
+    })
+
+    function raf(time) {
+      lenis.raf(time)
+      requestAnimationFrame(raf)
+    }
+    requestAnimationFrame(raf)
+    lenis.on('scroll', ScrollTrigger.update)
+    gsap.ticker.add(function (time) { return lenis.raf(time * 1000) })
+    gsap.ticker.lagSmoothing(0)
+
+    ScrollTrigger.addEventListener('refresh', function () {
+      initScatterText('#scatter-wrapper-{{ section.id }}', '#scatter-text-{{ section.id }}')
+    })
+    initScatterText('#scatter-wrapper-{{ section.id }}', '#scatter-text-{{ section.id }}')
+  })
+</script>
+
+{% schema %}
+{
+  "name": "Scatter Text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text to animate",
+      "default": "I am a good boy i do coding all day i love to code i only want to code and nothing else and this is a long text to test the overflow of the text"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "font_size",
+      "label": "Font size",
+      "default": "1.3vw",
+      "info": "Use CSS units like 1.3vw, 16px, 1rem"
+    },
+    {
+      "type": "select",
+      "id": "text_width",
+      "label": "Text width",
+      "options": [
+        { "value": "35%", "label": "Narrow" },
+        { "value": "45%", "label": "Medium" },
+        { "value": "55%", "label": "Wide" },
+        { "value": "65%", "label": "Extra Wide" }
+      ],
+      "default": "45%"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scatter Text",
+      "settings": {
+        "text": "I am a good boy i do coding all day i love to code i only want to code and nothing else and this is a long text to test the overflow of the text"
+      }
+    }
+  ]
+}
+{% endschema %}

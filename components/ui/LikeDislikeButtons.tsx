@@ -24,7 +24,7 @@ export default function LikeDislikeButtons({
           onClick={() => handleVote('like')}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors ${
+          className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
             userVote === 'like'
               ? 'bg-green-500 text-white'
               : 'bg-gray-200 dark:bg-gray-700'
@@ -36,7 +36,7 @@ export default function LikeDislikeButtons({
           onClick={() => handleVote('dislike')}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors ${
+          className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
             userVote === 'dislike'
               ? 'bg-red-500 text-white'
               : 'bg-gray-200 dark:bg-gray-700'

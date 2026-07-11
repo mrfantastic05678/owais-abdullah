@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fluid Distortion Effect</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="hero">
+    <div id="canvas-container"></div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <h1 class="hero-title">smoke <br />fluid</h1>
+        <p class="hero-desc">
+          Explore the mesmerizing intersection of smoke and fluid simulation
+          with interactive 3D graphics. Manipulate the scene or just enjoy the
+          flow.
+        </p>
+      </div>
+      <h1 class="hero-title hero-right">beyond <br />reality</h1>
+    </div>
+  </header>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.184.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SVG Page Transition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-link active" data-page="home">Home</a>
+      <div class="nav-divider"></div>
+      <a href="#" class="nav-link" data-page="about">About</a>
+    </div>
+  </nav>
+
+  <main id="page-content">
+    <section class="page page-home active" id="page-home">
+      <p class="page-text">Animated SVG<br />Path Effect</p>
+    </section>
+    <section class="page page-about" id="page-about">
+      <p class="page-text page-text--light">Welcome to The<br />Second Page!</p>
+    </section>
+  </main>
+
+  <div class="transition-overlay" id="transition-overlay">
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 1316 664"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      class="transition-svg"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <path
+        id="svg-path"
+        d="M13.4746 291.27C13.4746 291.27 100.646 -18.6724 255.617 16.8418C410.588 52.356 61.0296 431.197 233.017 546.326C431.659 679.299 444.494 21.0125 652.73 100.784C860.967 180.556 468.663 430.709 617.216 546.326C765.769 661.944 819.097 48.2722 988.501 120.156C1174.21 198.957 809.424 543.841 988.501 636.726C1189.37 740.915 1301.67 149.213 1301.67 149.213"
+        stroke="#82A0FF"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+      />
+    </svg>
+  </div>
+
+  <script src="https://unpkg.com/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

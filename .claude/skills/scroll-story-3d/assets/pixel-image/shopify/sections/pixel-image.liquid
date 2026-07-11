@@ -1,0 +1,271 @@
+<!--
+  Pixel Image Reveal — Shopify Online Store 2.0 section
+  Animated pixelation effect on images triggered by scroll.
+  Dependencies (loaded via CDN): GSAP, ScrollTrigger, Lenis.
+-->
+{{ 'pixel-image.css' | asset_url | stylesheet_tag }}
+
+<header class="pi-hero">
+  <h1 class="pi-hero__title">{{ section.settings.hero_title | default: 'Scroll to Reveal\nPixel Magic' }}</h1>
+</header>
+
+<section class="pi-works">
+  <h2 class="pi-works__heading">{{ section.settings.section_heading | default: 'Selected Works' }}</h2>
+
+  {% for block in section.blocks %}
+    <div class="pi-row">
+      {% for i in (1..4) %}
+        {% assign item_key = 'item_' | append: i %}
+        {% if block.settings[item_key] != blank %}
+          {% assign image = block.settings[item_key] %}
+          {% assign label_key = 'label_' | append: i %}
+          {% assign offset_key = 'offset_' | append: i %}
+          {% assign height_key = 'height_' | append: i %}
+          <div class="pi-col pi-col--{{ block.settings[item_key | append: '_width'] | default: '5' }} {{ block.settings[offset_key] | default: '' }}">
+            <div class="pixel-image pixel-image--{{ block.settings[height_key] | default: 'h32' }}">
+              <img
+                src="{{ image | image_url: width: 800 }}"
+                alt="{{ block.settings[label_key] | escape }}"
+                width="{{ image.width }}"
+                height="{{ image.height }}"
+                loading="lazy"
+              />
+            </div>
+            <p class="pi-label">{{ block.settings[label_key] }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% if block.settings.col_spacer_before != blank %}
+        <div class="pi-col pi-col--{{ block.settings.col_spacer_before }}"></div>
+      {% endif %}
+    </div>
+  {% endfor %}
+</section>
+
+<script src="https://unpkg.com/lenis@1.3.19/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/gsap@3.14.2/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
+<script>
+(function() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  const lenis = new Lenis({ duration: 1.2, touchMultiplier: 2, smoothTouch: true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+
+  const DEFAULT_PX_STEPS = [2, 5, 6, 8, 100];
+
+  document.querySelectorAll('.pixel-image').forEach(function(container) {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.inset = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    container.appendChild(canvas);
+
+    const hiddenImg = container.querySelector('img');
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = hiddenImg.src;
+    hiddenImg.style.position = 'absolute';
+    hiddenImg.style.opacity = '0';
+    hiddenImg.style.pointerEvents = 'none';
+
+    const ctx = canvas.getContext('2d');
+    const state = { pxIndex: 0, imgRatio: 1, img: img, pxSteps: DEFAULT_PX_STEPS };
+
+    function render() {
+      const cw = container.offsetWidth;
+      const ch = container.offsetHeight;
+      canvas.width = cw;
+      canvas.height = ch;
+
+      const w = cw * 1.05;
+      const h = ch * 1.05;
+      let newWidth = w, newHeight = h, newX = 0, newY = 0;
+
+      if (w / h > state.imgRatio) {
+        newHeight = Math.round(w / state.imgRatio);
+      } else {
+        newWidth = Math.round(h * state.imgRatio);
+        newX = (w - newWidth) / 2;
+      }
+
+      const size = state.pxSteps[state.pxIndex] * 0.01;
+      ctx.imageSmoothingEnabled = size === 1;
+      ctx.clearRect(0, 0, cw, ch);
+      ctx.drawImage(img, 0, 0, w * size, h * size);
+      ctx.drawImage(canvas, 0, 0, w * size, h * size, newX, newY, newWidth, newHeight);
+    }
+
+    function animatePixels() {
+      if (state.pxIndex < state.pxSteps.length) {
+        setTimeout(function() {
+          render();
+          state.pxIndex++;
+          animatePixels();
+        }, state.pxIndex === 0 ? 300 : 80);
+      }
+    }
+
+    img.onload = function() {
+      state.imgRatio = img.width / img.height;
+      render();
+      window.addEventListener('resize', render);
+
+      ScrollTrigger.create({
+        trigger: container,
+        start: 'top+=20% bottom',
+        onEnter: animatePixels,
+        once: true,
+      });
+
+      ScrollTrigger.create({
+        trigger: container,
+        start: 'top bottom',
+        onEnter: function() { gsap.set(container, { opacity: 1 }); },
+        once: true,
+      });
+    };
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Pixel Image Reveal",
+  "tag": "section",
+  "class": "pixel-image-section",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "Scroll to Reveal\nPixel Magic",
+      "info": "Use \\n for line breaks"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section heading",
+      "default": "Selected Works"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "item_1",
+          "label": "Image 1"
+        },
+        {
+          "type": "text",
+          "id": "label_1",
+          "label": "Label 1",
+          "default": "Project — 2024"
+        },
+        {
+          "type": "select",
+          "id": "width_1",
+          "label": "Width 1",
+          "options": [
+            {"value": "3", "label": "3/12"},
+            {"value": "4", "label": "4/12"},
+            {"value": "5", "label": "5/12"}
+          ],
+          "default": "5"
+        },
+        {
+          "type": "select",
+          "id": "offset_1",
+          "label": "Offset 1",
+          "options": [
+            {"value": "", "label": "None"},
+            {"value": "pi-col--offset-top", "label": "Small top"},
+            {"value": "pi-col--offset-medium", "label": "Medium top"},
+            {"value": "pi-col--offset-large", "label": "Large top"}
+          ],
+          "default": ""
+        },
+        {
+          "type": "select",
+          "id": "height_1",
+          "label": "Image height 1",
+          "options": [
+            {"value": "h20", "label": "20vw"},
+            {"value": "h24", "label": "24vw"},
+            {"value": "h28", "label": "28vw"},
+            {"value": "h30", "label": "30vw"},
+            {"value": "h32", "label": "32vw"},
+            {"value": "h36", "label": "36vw"}
+          ],
+          "default": "h32"
+        },
+        {
+          "type": "image_picker",
+          "id": "item_2",
+          "label": "Image 2"
+        },
+        {
+          "type": "text",
+          "id": "label_2",
+          "label": "Label 2",
+          "default": "Project — 2024"
+        },
+        {
+          "type": "select",
+          "id": "width_2",
+          "label": "Width 2",
+          "options": [
+            {"value": "3", "label": "3/12"},
+            {"value": "4", "label": "4/12"},
+            {"value": "5", "label": "5/12"}
+          ],
+          "default": "5"
+        },
+        {
+          "type": "select",
+          "id": "offset_2",
+          "label": "Offset 2",
+          "options": [
+            {"value": "", "label": "None"},
+            {"value": "pi-col--offset-top", "label": "Small top"},
+            {"value": "pi-col--offset-medium", "label": "Medium top"},
+            {"value": "pi-col--offset-large", "label": "Large top"}
+          ],
+          "default": ""
+        },
+        {
+          "type": "select",
+          "id": "height_2",
+          "label": "Image height 2",
+          "options": [
+            {"value": "h20", "label": "20vw"},
+            {"value": "h24", "label": "24vw"},
+            {"value": "h28", "label": "28vw"},
+            {"value": "h30", "label": "30vw"},
+            {"value": "h32", "label": "32vw"},
+            {"value": "h36", "label": "36vw"}
+          ],
+          "default": "h32"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pixel Image Reveal",
+      "settings": {
+        "hero_title": "Scroll to Reveal\nPixel Magic",
+        "section_heading": "Selected Works"
+      }
+    }
+  ]
+}
+{% endschema %}

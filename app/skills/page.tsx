@@ -68,6 +68,7 @@ const skills = () => {
   return (
     <>
       <JsonLdSchema type="skills" pageUrl="https://owaisabdullah.dev/skills" />
+      <h1 className="sr-only">Skills of Owais Abdullah — AI Agents Developer &amp; Full Stack Developer</h1>
       <div className="my-10">
         <SkillSlider />
       </div>

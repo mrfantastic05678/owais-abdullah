@@ -60,6 +60,7 @@ const projects = () => {
         type="projects"
         pageUrl="https://owaisabdullah.dev/projects"
       />
+      <h1 className="sr-only">Projects by Owais Abdullah — Spec-Driven SaaS, AI Agents &amp; Digital FTEs</h1>
       <ProjectsTab projectsByCategory={projectsByCategory} allProjects={allProjects} />
     </>
   );

@@ -70,6 +70,13 @@ export function ChatBot() {
     }
   }, [messages, isLoading, isOpen]);
 
+  // Allow other components (e.g. hero CTA) to open the chat
+  useEffect(() => {
+    const open = () => setIsOpen(true);
+    window.addEventListener("open-chat", open);
+    return () => window.removeEventListener("open-chat", open);
+  }, []);
+
   const toggleChat = () => setIsOpen(!isOpen);
 
   return (
@@ -88,7 +95,7 @@ export function ChatBot() {
         <div className="relative">
           <motion.button
             onClick={toggleChat}
-            className="flex justify-center items-center h-12 w-12 rounded-full shadow-black/50 shadow-lg bg-accent hover:bg-accent/90 transition-all"
+            className="flex justify-center items-center h-12 w-12 rounded-lg shadow-black/50 shadow-lg bg-accent hover:bg-accent/90 transition-all"
             animate={
               !isOpen
                 ? {
@@ -113,7 +120,7 @@ export function ChatBot() {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X size={26} strokeWidth={2} className="text-white" />
+                  <X size={26} strokeWidth={2} className="text-accent-foreground" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -123,7 +130,7 @@ export function ChatBot() {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <BotMessageSquare size={26} strokeWidth={1.5} className="text-white" />
+                  <BotMessageSquare size={26} strokeWidth={1.5} className="text-accent-foreground" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -133,7 +140,7 @@ export function ChatBot() {
           <AnimatePresence>
             {showTooltip && !isOpen && (
               <motion.div
-                className="absolute right-16 bottom-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm px-3 py-1 rounded-md whitespace-nowrap shadow-lg"
+                className="absolute right-16 bottom-2 bg-gradient-to-r from-blue-600 to-blue-500 text-accent-foreground text-sm px-3 py-1 rounded-md whitespace-nowrap shadow-lg"
                 initial={{ opacity: 0, x: 10, y: 10 }}
                 animate={{
                   opacity: 1,
@@ -224,7 +231,7 @@ export function ChatBot() {
                       message.role === "user" ? (
                         <div
                           key={index}
-                          className="flex flex-col gap-2 rounded-l-[20px] rounded-tr-[20px] p-3 break-words w-fit max-w-[80%] ml-auto bg-accent text-white shadow-sm shadow-accent/20"
+                          className="flex flex-col gap-2 rounded-l-[20px] rounded-tr-[20px] p-3 break-words w-fit max-w-[80%] ml-auto bg-accent text-accent-foreground shadow-sm shadow-accent/20"
                         >
                           <p className="text-sm whitespace-pre-wrap break-words">
                             {message.content}
@@ -309,7 +316,7 @@ export function ChatBot() {
                     type="submit"
                     size="icon"
                     disabled={isLoading || !input.trim()}
-                    className="bg-accent text-white hover:bg-accent/90"
+                    className="bg-accent text-accent-foreground hover:bg-accent/90"
                   >
                     <Send className="h-4 w-4" />
                   </Button>

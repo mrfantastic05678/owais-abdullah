@@ -55,6 +55,7 @@ export const metadata: Metadata = {
 const page = () => {
   return (
     <div className="min-h-screen mt-2 mb-20 ">
+      <h1 className="sr-only">Blog — Owais Abdullah on Spec-Driven Development &amp; AI</h1>
       <BlogSection />
     </div>
   );

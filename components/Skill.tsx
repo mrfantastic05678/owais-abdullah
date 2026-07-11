@@ -3,111 +3,34 @@
 import type React from "react";
 import { motion } from "framer-motion";
 import SkillCard from "../components/ui/SkillCard";
+import CharRevealHeading from "@/components/CharRevealHeading";
 import { FaReact, FaWordpress, FaNodeJs } from "react-icons/fa";
 import { BiLogoTypescript, BiLogoPython } from "react-icons/bi";
 import { SiNextdotjs, SiOpenai, SiSanity, SiTailwindcss, SiSqlite, SiPrisma, SiPostgresql } from "react-icons/si";
 
 const skills = [
-  // Frontend & AI Skills
-  {
-    icon: <SiOpenai />,
-    title: "OpenAI Agents SDK",
-    description: "Developing Powerful AI Agents with Open AI Agents SDK.",
-    progress: 75,
-  },
-  {
-    icon: <SiNextdotjs />,
-    title: "Next.js",
-    description: "Building fast, dynamic, and SEO-friendly web applications.",
-    progress: 85,
-  },
-  {
-    icon: <FaReact />,
-    title: "React.js",
-    description: "Developing interactive UIs with component-based architecture.",
-    progress: 85,
-  },
-  {
-    icon: <BiLogoTypescript />,
-    title: "TypeScript",
-    description: "Ensuring type safety and scalability in web applications.",
-    progress: 80,
-  },
-  {
-    icon: <SiTailwindcss />,
-    title: "Tailwind CSS",
-    description: "Crafting modern and responsive UI with utility-first styling.",
-    progress: 90,
-  },
-
-  // Backend & Database
-  {
-    icon: <FaNodeJs />,
-    title: "Node.js",
-    description: "Creating backend logic and API services.",
-    progress: 75,
-  },
-  {
-    icon: <SiPostgresql />,
-    title: "PostgreSQL",
-    description: "Relational database management for robust data handling.",
-    progress: 80,
-  },
-  {
-    icon: <SiSqlite />,
-    title: "SQLite",
-    description: "Lightweight database management for structured data storage.",
-    progress: 75,
-  },
-  {
-    icon: <SiPrisma />,
-    title: "Prisma ORM",
-    description: "Handling database interactions efficiently with TypeScript.",
-    progress: 70,
-  },
-  {
-    icon: <SiSanity />,
-    title: "Sanity CMS",
-    description: "Managing content dynamically using a headless CMS.",
-    progress: 80,
-  },
-
-  // AI & Automation
-  {
-    icon: <BiLogoPython />,
-    title: "Python & AI Integration",
-    description: "Implementing AI features & automation in applications.",
-    progress: 75,
-  },
-
-  // CMS & No-Code
-  {
-    icon: <FaWordpress />,
-    title: "WordPress",
-    description: "Developing custom themes & optimizing WordPress websites.",
-    progress: 85,
-  },
+  { icon: <SiOpenai />, title: "OpenAI Agents SDK", description: "Developing autonomous AI agents with the OpenAI Agents SDK." },
+  { icon: <SiNextdotjs />, title: "Next.js", description: "Building fast, dynamic, and SEO-friendly web applications." },
+  { icon: <FaReact />, title: "React.js", description: "Developing interactive UIs with component-based architecture." },
+  { icon: <BiLogoTypescript />, title: "TypeScript", description: "Ensuring type safety and scalability in web applications." },
+  { icon: <SiTailwindcss />, title: "Tailwind CSS", description: "Crafting modern and responsive UI with utility-first styling." },
+  { icon: <FaNodeJs />, title: "Node.js", description: "Creating backend logic and API services." },
+  { icon: <SiPostgresql />, title: "PostgreSQL", description: "Relational database management for robust data handling." },
+  { icon: <SiSqlite />, title: "SQLite", description: "Lightweight database management for structured data storage." },
+  { icon: <SiPrisma />, title: "Prisma ORM", description: "Handling database interactions efficiently with TypeScript." },
+  { icon: <SiSanity />, title: "Sanity CMS", description: "Managing content dynamically using a headless CMS." },
+  { icon: <BiLogoPython />, title: "Python & AI Integration", description: "Implementing AI features and automation in applications." },
+  { icon: <FaWordpress />, title: "WordPress", description: "Developing custom themes and optimizing WordPress websites." },
 ];
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5
-    }
-  }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
 const Skill: React.FC = () => {
@@ -127,14 +50,16 @@ const Skill: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <p className="text-base text-accent font-medium sm:text-lg mb-2">
-            Expertise
-          </p>
-          <h2 className="text-4xl md:text-5xl font-semibold text-foreground mb-3">
+          <p className="text-base text-accent font-medium sm:text-lg mb-2">Expertise</p>
+          <CharRevealHeading
+            as="h2"
+            className="text-4xl md:text-5xl font-semibold text-foreground mb-3"
+            highlightWords={["Technologies"]}
+          >
             Skills & Technologies
-          </h2>
+          </CharRevealHeading>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
-            A comprehensive toolkit for building modern web applications, AI-powered solutions, and scalable digital products. From frontend frameworks to backend infrastructure and intelligent automation.
+            The toolkit behind the projects on this site — frontend, backend, AI agents, and content infrastructure.
           </p>
         </motion.div>
 
@@ -146,13 +71,8 @@ const Skill: React.FC = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {skills.map((skill, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <SkillCard
-                icon={skill.icon}
-                title={skill.title}
-                description={skill.description}
-                progress={skill.progress}
-              />
+            <motion.div key={index} variants={itemVariants} className="h-full">
+              <SkillCard icon={skill.icon} title={skill.title} description={skill.description} />
             </motion.div>
           ))}
         </motion.div>

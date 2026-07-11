@@ -55,7 +55,7 @@ const ServiceTechStack: React.FC<ServiceTechStackProps> = ({
               key={index}
               variants={itemVariants}
               whileHover={{ scale: 1.05, y: -2 }}
-              className="px-4 py-2 bg-muted text-foreground rounded-full text-sm font-medium border border-border hover:border-accent transition-colors cursor-default"
+              className="px-4 py-2 bg-muted text-foreground rounded-md text-sm font-medium border border-border hover:border-accent transition-colors cursor-default"
             >
               {tech}
             </motion.span>

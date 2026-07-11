@@ -163,7 +163,7 @@ const Projects = () => {
                     <motion.span
                       key={i}
                       whileHover={{ scale: 1.05 }}
-                      className="bg-muted text-muted-foreground text-xs px-2 py-1 rounded-full"
+                      className="bg-muted text-muted-foreground text-xs px-2 py-1 rounded-md"
                     >
                       {tag}
                     </motion.span>

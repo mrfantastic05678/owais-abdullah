@@ -1,0 +1,67 @@
+.ft-wrapper {
+  width: 100%;
+}
+
+.ft-section {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.ft-section--dark {
+  background: #171717;
+}
+
+.ft-section--light {
+  background: #ededed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ft-section__bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ft-section__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ft-heading {
+  text-align: center;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.ft-heading--hero {
+  font-size: clamp(2.5rem, 9vw, 7rem);
+  color: #fff;
+}
+
+.ft-heading--sub {
+  font-size: clamp(1rem, 4vw, 3rem);
+  width: 60%;
+  margin: 0 auto;
+  font-weight: 500;
+}
+
+.ft-word {
+  display: inline-block;
+  position: relative;
+}
+
+.ft-color-box {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+}

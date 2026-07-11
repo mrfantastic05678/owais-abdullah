@@ -1,0 +1,92 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Inter Tight', Arial, Helvetica, sans-serif;
+  background: #e5e5e5;
+}
+
+#canvas-container {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.experience {
+  position: relative;
+  width: 100%;
+  z-index: 20;
+}
+
+.grid-lines {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: space-evenly;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.grid-lines span {
+  width: 1px;
+  height: 100%;
+  background: rgba(120, 60, 30, 0.15);
+}
+
+.hero {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding: 3rem;
+}
+
+.hero-title {
+  font-size: 12vw;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #7c3a1e;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.content {
+  width: 100%;
+  padding: 6rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+}
+
+.content-block {
+  display: flex;
+  padding: 0 3rem;
+}
+
+.content-block.right {
+  justify-content: flex-end;
+}
+
+.content-inner {
+  max-width: 24rem;
+}
+
+.content-inner h2 {
+  font-size: 2.25rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: #7c3a1e;
+  margin-bottom: 1rem;
+}
+
+.content-inner p {
+  font-size: 1.125rem;
+  color: rgba(120, 60, 30, 0.7);
+  line-height: 1.6;
+}

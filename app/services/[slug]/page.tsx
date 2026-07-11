@@ -160,7 +160,7 @@ export default async function ServicePage({
                     }`}
                   >
                     {tier.highlighted && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-accent text-white text-xs font-bold rounded-full">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-accent text-white text-xs font-bold rounded-md">
                         MOST POPULAR
                       </div>
                     )}
@@ -218,14 +218,14 @@ export default async function ServicePage({
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/contact">
-                <button className="group inline-flex items-center px-8 py-3 text-white bg-gradient-to-br from-blue-900 via-accent to-blue-700 hover:from-blue-950 rounded-full font-medium transition-all">
+                <button className="group inline-flex items-center px-8 py-3 text-white bg-gradient-to-br from-blue-900 via-accent to-blue-700 hover:from-blue-950 rounded-md font-medium transition-all">
                   Contact Me
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
               <a
                 href="mailto:mrowaisabdullah@gmail.com"
-                className="inline-flex items-center px-8 py-3 text-foreground bg-card hover:bg-accent hover:text-white border-2 border-border hover:border-accent rounded-full font-medium transition-all"
+                className="inline-flex items-center px-8 py-3 text-foreground bg-card hover:bg-accent hover:text-white border-2 border-border hover:border-accent rounded-md font-medium transition-all"
               >
                 Email Me
               </a>

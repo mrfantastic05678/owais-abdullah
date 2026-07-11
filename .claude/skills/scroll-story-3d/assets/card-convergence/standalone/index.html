@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Card Convergence — demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <section class="section">
+    <div class="section__content">
+      <h2>Premium design meets scroll</h2>
+    </div>
+  </section>
+
+  <!--
+    Card Convergence section: scattered cards converge to center as you scroll.
+    Configure via cards array in app.js — each card needs src, x, y, bgColor.
+  -->
+  <section class="convergence" id="convergence">
+    <div class="convergence__inner">
+      <h2 class="convergence__heading">Crafted for impact</h2>
+      <p class="convergence__text">
+        Every detail thoughtfully composed to create an immersive experience
+        that feels both intentional and effortless.
+      </p>
+      <button class="convergence__btn">Learn more</button>
+
+      <div class="convergence__cards" id="cardsContainer">
+        <!-- Cards inserted by JS -->
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__content">
+      <h2>Scroll-driven storytelling</h2>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
