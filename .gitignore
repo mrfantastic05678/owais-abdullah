@@ -44,3 +44,6 @@ sw.js
 workbox-*.js
 sw.map
 workbox.map
+
+# Local scripts (may contain sensitive data)
+scripts/

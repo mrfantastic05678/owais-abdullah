@@ -453,3 +453,159 @@ twitter: {
 | **Mobile** | Responsive design, viewport meta tag |
 | **SSL** | HTTPS enabled |
 | **Core Web Vitals** | LCP, FID, CLS optimized |
+
+## 2025 SEO Best Practices Implementation
+
+### Stack Page/Directory SEO Pattern
+
+**Implementation:** Curated stack page with individual tool reviews
+
+**Key SEO Elements:**
+1. **JSON-LD Structured Data:**
+   - `Review` schema for individual tool reviews
+   - `SoftwareApplication` schema for tools
+   - `BreadcrumbList` for navigation context
+   - `ItemList` for main directory page
+
+2. **Content Depth & Quality:**
+   - Personal, first-person descriptions vs marketing copy
+   - Specific use cases and project examples
+   - Honest ratings (not everything 5/5)
+   - Client guidance showing when to recommend
+   - 300+ words per tool for content depth
+
+3. **Internal Linking Strategy:**
+   - Hub-and-spoke structure: `/stack` → `/stack/[slug]`
+   - Breadcrumb navigation on all pages
+   - Contextual links between related tools
+   - Project linkage back to portfolio
+
+4. **E-E-A-T Signals:**
+   - Author schema with verifiable profiles
+   - Date stamps for content freshness
+   - Real project usage examples
+   - Honest ratings and opinions
+   - Clear author/publisher identity
+
+5. **Technical SEO:**
+   - Static generation with `generateStaticParams`
+   - Custom meta tags per page
+   - Canonical URLs self-referencing
+   - Sitemap inclusion for all stack pages
+   - Mobile-first responsive design
+
+### Schema Markup Best Practices
+
+**JSON-LD Structure for Tool Reviews:**
+
+```typescript
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Review',
+  name: `${tool.name} Review`,
+  reviewBody: tool.useCase,
+  author: {
+    '@type': 'Person',
+    name: 'Owais Abdullah',
+    url: 'https://owaisabdullah.dev',
+  },
+  itemReviewed: {
+    '@type': 'SoftwareApplication',
+    name: tool.name,
+    applicationCategory: tool.stackLayer,
+    url: tool.websiteUrl,
+    ...(tool.githubUrl && { codeRepository: tool.githubUrl }),
+    ...(tool.docsUrl && { documentation: tool.docsUrl }),
+  },
+  reviewRating: {
+    '@type': 'Rating',
+    ratingValue: tool.myRating,
+    bestRating: 5,
+    worstRating: 1,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Owais Abdullah',
+    url: 'https://owaisabdullah.dev',
+  },
+}
+```
+
+**Breadcrumb Schema:**
+
+```typescript
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: 'https://owaisabdullah.dev',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'The Agent Stack',
+      item: 'https://owaisabdullah.dev/stack',
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: tool.name,
+      item: `https://owaisabdullah.dev/stack/${tool.slug}`,
+    },
+  ],
+}
+```
+
+### Content Strategy Learnings
+
+**Humanized Content Approach:**
+- Avoid AI-sounding phrases like "stands as", "serves as", "pivotal moment"
+- Use first-person perspective ("I use this for...")
+- Acknowledge complexity and mixed feelings
+- Be specific about feelings and experiences
+- Vary sentence rhythm and length
+- Include real project examples
+- Show when NOT to use a tool (honesty builds trust)
+
+**Title/Meta Formulas:**
+```typescript
+// Main stack page
+title: "The Agent Stack — Tools I Use to Build AI Employees | Owais Abdullah"
+description: "A curated, opinionated toolkit of AI frameworks, MCP servers, and infrastructure I run in production for Digital FTEs, ShopMate, and Octively."
+
+// Individual tool page
+title: `${tool.name} Review — Why I Use It in Production | Owais Abdullah`
+description: tool.useCase.slice(0, 160)
+```
+
+### Performance Optimization
+
+**Core Web Vitals:**
+- Image optimization with WebP format
+- Lazy loading for below-fold content
+- Font swap for better loading
+- LCP < 2.5s target
+- Proper image dimensions (48x48 for logos, 64x64 for headers)
+
+**Caching Strategy:**
+```typescript
+export const revalidate = 3600 // 1 hour for stack pages
+```
+
+### Sitemap Generation Pattern
+
+```typescript
+// Dynamic sitemap including stack pages
+const toolSlugs: string[] = await client.fetch(allToolSlugsQuery)
+
+const toolUrls: MetadataRoute.Sitemap = toolSlugs.map((slug) => ({
+  url: `${baseUrl}/stack/${slug}`,
+  lastModified: currentDate,
+  changeFrequency: 'weekly',
+  priority: 0.7,
+}))
+```

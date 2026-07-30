@@ -14,7 +14,6 @@ import {
 import { Avatar } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "@/hooks/useChat";
-import { ThemeToggle } from "./ThemeToggle";
 import ReactMarkdown from "react-markdown";
 import Image from "next/image";
 
@@ -206,7 +205,6 @@ export function ChatBot() {
                   <h3 className="font-semibold">Owais AI Assistant</h3>
                 </div>
                 <div className="flex items-center gap-1">
-                  <ThemeToggle />
                   <Button
                     variant="ghost"
                     size="icon"

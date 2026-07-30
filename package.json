@@ -391,6 +391,9 @@
     "yocto-queue": "^0.1.0",
     "zod": "^3.24.2"
   },
+  "overrides": {
+    "tar": "7.5.22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

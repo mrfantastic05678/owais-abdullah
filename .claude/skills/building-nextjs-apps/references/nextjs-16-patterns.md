@@ -437,3 +437,280 @@ export function SSRSafeComponent() {
 - Components using `window` / `document`
 - Components using browser APIs (`navigator`, `screen`, etc.)
 - Any component that causes hydration mismatches
+
+## Dynamic Routes & Static Generation (2025 Patterns)
+
+### Curated Stack Implementation Pattern
+
+**Implementation:** Tool directory with individual tool review pages
+
+#### Dynamic Route Structure
+```
+app/
+├── stack/
+│   ├── page.tsx              # Main directory page
+│   └── [slug]/page.tsx       # Individual tool pages
+```
+
+#### Static Generation with generateStaticParams
+
+```typescript
+// app/stack/[slug]/page.tsx
+export async function generateStaticParams() {
+  const slugs = await client.fetch(allToolSlugsQuery)
+  return slugs.map((slug: string) => ({ slug }))
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const tool = await client.fetch(toolReviewBySlugQuery, { slug })
+
+  return {
+    title: `${tool.name} Review — Why I Use It in Production | Owais Abdullah`,
+    description: tool.useCase.slice(0, 160),
+    openGraph: {
+      title: `${tool.name} — ${tool.stackLayer}`,
+      description: tool.tagline,
+      type: 'article',
+      url: `https://owaisabdullah.dev/stack/${tool.slug}`,
+    },
+    alternates: {
+      canonical: `https://owaisabdullah.dev/stack/${tool.slug}`,
+    },
+  }
+}
+
+export default async function ToolReviewPage({ params }: Props) {
+  const { slug } = await params
+  const tool = await client.fetch(toolReviewBySlugQuery, { slug })
+
+  if (!tool) return notFound()
+
+  return (
+    <>
+      {/* JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <main>...</main>
+    </>
+  )
+}
+```
+
+#### Key SEO Features
+
+**1. Individual Page Meta Tags:**
+```typescript
+// Custom title per tool
+title: `${tool.name} Review — Why I Use It in Production | Owais Abdullah`
+
+// Custom description from actual content
+description: tool.useCase.slice(0, 160)
+
+// Open Graph for social sharing
+openGraph: {
+  title: `${tool.name} — ${tool.stackLayer}`,
+  description: tool.tagline,
+  type: 'article',
+}
+```
+
+**2. JSON-LD Structured Data:**
+```typescript
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Review',
+  name: `${tool.name} Review`,
+  reviewBody: tool.useCase,
+  author: {
+    '@type': 'Person',
+    name: 'Owais Abdullah',
+    url: 'https://owaisabdullah.dev',
+  },
+  itemReviewed: {
+    '@type': 'SoftwareApplication',
+    name: tool.name,
+    applicationCategory: tool.stackLayer,
+    url: tool.websiteUrl,
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: tool.myRating,
+      bestRating: 5,
+    },
+  },
+}
+```
+
+**3. Breadcrumb Navigation:**
+```typescript
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: 'https://owaisabdullah.dev',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'The Agent Stack',
+      item: 'https://owaisabdullah.dev/stack',
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: tool.name,
+      item: `https://owaisabdullah.dev/stack/${tool.slug}`,
+    },
+  ],
+}
+```
+
+#### Sitemap Integration
+
+```typescript
+// app/sitemap.ts
+import { allToolSlugsQuery } from '@/lib/sanity/queries'
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const toolSlugs: string[] = await client.fetch(allToolSlugsQuery)
+
+  const toolUrls: MetadataRoute.Sitemap = toolSlugs.map((slug) => ({
+    url: `${baseUrl}/stack/${slug}`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }))
+
+  return [
+    {
+      url: `${baseUrl}/stack`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    ...toolUrls,
+  ]
+}
+```
+
+#### Content Strategy Pattern
+
+**Humanized Content Approach:**
+- Personal first-person descriptions
+- Specific project usage examples
+- Honest ratings (not everything 5/5)
+- Client guidance and recommendations
+- 300+ words per page for depth
+
+**Quality Signals:**
+- Author schema with verifiable profiles
+- Date stamps for freshness
+- Real project examples
+- Internal linking between related tools
+- External links to official documentation
+
+#### Client-Side Filtering Pattern
+
+```typescript
+'use client'
+
+export function StackFilter({ categories, tools }: Props) {
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState<string>('')
+
+  const filteredTools = useMemo(() => {
+    return tools.filter((tool) => {
+      const matchesCategory =
+        selectedCategory === 'all' || tool.category === selectedCategory
+      const matchesSearch =
+        searchQuery === '' ||
+        tool.name.toLowerCase().includes(searchQuery.toLowerCase())
+      return matchesCategory && matchesSearch
+    })
+  }, [tools, selectedCategory, searchQuery])
+
+  return (
+    <div>
+      {/* Search and filter controls */}
+      <input
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search tools by name, description, or layer..."
+      />
+      {/* Filter buttons and results grid */}
+    </div>
+  )
+}
+```
+
+#### Performance Optimization
+
+**Image Optimization:**
+```typescript
+import Image from 'next/image'
+
+<Image
+  src={tool.logo.asset.url}
+  alt={`${tool.name} logo`}
+  width={48}
+  height={48}
+  className="rounded-lg transition-transform duration-200 group-hover:scale-110"
+  // Next.js automatically optimizes with WebP
+/>
+```
+
+**Lazy Loading Strategy:**
+- Use priority=false for below-fold images
+- Set priority=true for above-fold critical images
+- Specify exact dimensions to prevent layout shift
+
+**Caching Strategy:**
+```typescript
+// Revalidate stack pages every hour
+export const revalidate = 3600
+```
+
+#### Component Architecture
+
+**StackCard Component:**
+```typescript
+export function StackCard({ tool, featured = false }: Props) {
+  return (
+    <Link
+      href={`/stack/${tool.slug.current}`}
+      className={`group block p-6 rounded-xl border transition-all duration-200 ${
+        featured
+          ? 'border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10'
+          : 'border-neutral-800 bg-neutral-900/30 hover:bg-neutral-800/50'
+      }`}
+    >
+      {/* Tool logo, name, tagline, rating */}
+      <div className="flex items-start gap-4">
+        <Image src={tool.logo.asset.url} width={48} height={48} />
+        <div>
+          <h3 className="group-hover:text-blue-400 transition-colors">
+            {tool.name}
+          </h3>
+          <p className="text-sm text-neutral-400 line-clamp-2">
+            {tool.tagline}
+          </p>
+        </div>
+      </div>
+    </Link>
+  )
+}
+```
+
+**Key Learnings:**
+- Static generation with `generateStaticParams` for optimal performance
+- Individual meta tags per page for SEO
+- JSON-LD structured data for rich results
+- Client-side filtering without affecting SEO
+- Proper image optimization for Core Web Vitals
+- Humanized content for E-E-A-T signals

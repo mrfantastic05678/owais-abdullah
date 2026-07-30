@@ -336,3 +336,271 @@ npm run lint
 ```
 
 **Remember**: If it compiles locally with strict mode, it will build successfully on Vercel/Netlify. TypeScript errors are your friend - they catch bugs before users do.
+
+---
+
+## 2025 Stack/Directory UI Patterns
+
+**Implementation:** Curated tool stack page with filtering and individual tool reviews
+
+### Component Architecture for Directories
+
+**StackCard Component Pattern:**
+```typescript
+export function StackCard({ tool, featured = false }: Props) {
+  return (
+    <Link
+      href={`/stack/${tool.slug.current}`}
+      className={`group block p-6 rounded-xl border transition-all duration-200 ${
+        featured
+          ? 'border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10'
+          : 'border-neutral-800 bg-neutral-900/30 hover:bg-neutral-800/50'
+      }`}
+    >
+      <div className="flex items-start gap-4">
+        <Image
+          src={tool.logo.asset.url}
+          width={48}
+          height={48}
+          className="rounded-lg transition-transform duration-200 group-hover:scale-110"
+        />
+        <div className="flex-1 min-w-0">
+          <h3 className="group-hover:text-blue-400 transition-colors">
+            {tool.name}
+          </h3>
+          <p className="text-sm text-neutral-400 line-clamp-2">
+            {tool.tagline}
+          </p>
+        </div>
+        <div className="shrink-0">
+          <span className={`text-lg font-bold ${
+            tool.myRating >= 4 ? 'text-green-400' : 
+            tool.myRating >= 3 ? 'text-yellow-400' : 'text-red-400'
+          }`}>
+            {tool.myRating}
+          </span>
+        </div>
+      </div>
+    </Link>
+  )
+}
+```
+
+**Key Design Patterns:**
+- **Hover States:** Scale transforms + color transitions for tactile feedback
+- **Rating Colors:** Conditional coloring based on rating value (green/yellow/red)
+- **Visual Hierarchy:** Tool name > tagline > metadata with sizing and color
+- **Link Wrapping:** Entire card clickable, not just individual elements
+- **Line Clamping:** Prevent text overflow with Tailwind `line-clamp-2`
+
+### Client-Side Filtering Component
+
+**StackFilter Pattern:**
+```typescript
+'use client'
+
+export function StackFilter({ categories, tools }: Props) {
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState<string>('')
+
+  const filteredTools = useMemo(() => {
+    return tools.filter((tool) => {
+      const matchesCategory =
+        selectedCategory === 'all' || tool.category === selectedCategory
+      const matchesSearch =
+        searchQuery === '' ||
+        tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tool.tagline.toLowerCase().includes(searchQuery.toLowerCase())
+      return matchesCategory && matchesSearch
+    })
+  }, [tools, selectedCategory, searchQuery])
+
+  return (
+    <div>
+      {/* Search input with icon */}
+      <div className="relative">
+        <input
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-3 pl-12 rounded-lg border border-neutral-800 bg-neutral-900/50"
+          placeholder="Search tools by name, description, or layer..."
+        />
+        <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+      </div>
+
+      {/* Category filter buttons */}
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={() => setSelectedCategory('all')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium ${
+            selectedCategory === 'all'
+              ? 'bg-blue-600 text-white'
+              : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800'
+          }`}
+        >
+          All Tools ({tools.length})
+        </button>
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium ${
+              selectedCategory === category
+                ? 'bg-blue-600 text-white'
+                : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800'
+            }`}
+          >
+            {categoryLabel} ({tools.filter(t => t.category === category).length})
+          </button>
+        ))}
+      </div>
+
+      {/* Results grid */}
+      <div className="grid md:grid-cols-2 gap-4">
+        {filteredTools.map((tool) => (
+          <StackCard key={tool._id} tool={tool} />
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+**Key UX Patterns:**
+- **Real-time Filtering:** Instant search without page reload
+- **Visual Counters:** Show tool counts per category in buttons
+- **Empty States:** Helpful message when no results found
+- **Clear Filters:** Easy way to reset all filters
+- **Responsive Grid:** Single column mobile, two columns desktop
+
+### Accessibility & Responsiveness
+
+**Mobile-First Design:**
+```typescript
+// Responsive grid with consistent breakpoints
+<div className="grid md:grid-cols-2 gap-4">
+  {/* Cards stack on mobile, grid on tablet+ */}
+</div>
+
+// Responsive navigation
+<div className="flex flex-wrap gap-2">
+  {/* Buttons wrap naturally on smaller screens */}
+</div>
+```
+
+**Accessibility Features:**
+- Semantic HTML (proper heading hierarchy)
+- ARIA labels for interactive elements
+- Keyboard navigation support
+- Focus indicators on interactive elements
+- Alt text for all images
+- Sufficient color contrast ratios
+
+### Performance Optimization
+
+**Image Optimization:**
+```typescript
+import Image from 'next/image'
+
+<Image
+  src={tool.logo.asset.url}
+  alt={`${tool.name} logo`}
+  width={48}
+  height={48}
+  className="rounded-lg"
+  // Next.js automatically:
+  // - Converts to WebP/AVIF
+  // - Lazy loads below-fold images
+  // - Serves responsive sizes
+  // - Prevents layout shift with explicit dimensions
+/>
+```
+
+**Client-Side Optimization:**
+```typescript
+// Use useMemo for expensive filtering
+const filteredTools = useMemo(() => {
+  return tools.filter(/* complex filtering logic */)
+}, [tools, selectedCategory, searchQuery])
+
+// Debounce search input if needed
+import { useDebouncedValue } from '@/hooks/useDebounce'
+const debouncedSearch = useDebouncedValue(searchQuery, 300)
+```
+
+### Animation & Micro-interactions
+
+**Hover Effects:**
+```typescript
+// Card hover
+className="group hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-200"
+
+// Image scale
+className="transition-transform duration-200 group-hover:scale-110"
+
+// Text color change
+className="group-hover:text-blue-400 transition-colors duration-200"
+```
+
+**Key Animation Principles:**
+- Fast transitions (200ms) for responsive feel
+- Subtle effects (scale 1.1, not 2.0)
+- Smooth easing functions
+- GPU-accelerated properties (transform, opacity)
+- Consistent timing across similar interactions
+
+### Design System Integration
+
+**Theme Token Usage:**
+```typescript
+// Instead of hardcoded colors
+className="bg-blue-500 text-white"
+
+// Use semantic theme tokens
+className="bg-primary text-primary-foreground"
+// Or custom CSS variables
+style={{ backgroundColor: 'var(--brand-primary)' }}
+```
+
+**Component Composition:**
+```typescript
+// Build complex UI from simple components
+<StackCard>
+  <ToolLogo />
+  <ToolInfo />
+  <ToolRating />
+  <ProjectBadges />
+</StackCard>
+
+// Each component is independently reusable
+```
+
+### Key Learnings
+
+**Visual Design:**
+- Use color and typography to create visual hierarchy
+- Implement subtle hover states for interactive feedback
+- Maintain consistent spacing and alignment
+- Use conditional styling for different states/ratings
+- Ensure proper focus indicators for accessibility
+
+**User Experience:**
+- Provide instant feedback for user actions
+- Show helpful empty states when no results
+- Include counts and labels for clarity
+- Make all interactive elements clearly clickable
+- Support both mouse and keyboard navigation
+
+**Performance:**
+- Optimize images with Next.js Image component
+- Use useMemo for expensive computations
+- Implement proper loading states
+- Lazy load below-fold content
+- Minimize client-side JavaScript
+
+**Accessibility:**
+- Maintain proper heading hierarchy
+- Include ARIA labels where needed
+- Ensure keyboard navigation works
+- Provide sufficient color contrast
+- Include alt text for all images

@@ -24,11 +24,11 @@ const Typewriter = dynamic(
 );
 
 const tileClass =
-  "shadow-sm hover:scale-110 shadow-slate-700/20 rounded-lg bg-card p-3 text-2xl text-foreground hover:bg-muted border border-border transition-transform";
+  "shadow-sm hover:scale-110 shadow-primary/20 rounded-lg bg-card p-3 text-2xl text-foreground hover:bg-muted border border-border transition-transform";
 
 const Hero = () => {
   return (
-    <section id="hero" className="relative flex items-center min-h-[100vh] -mt-24 pt-[150px] pb-[60px] bg-background overflow-hidden">
+    <section id="hero" className="relative flex items-center min-h-[100vh] -mt-24 pt-[150px] pb-[60px] bg-gradient-to-b from-background to-muted/20 dark:to-muted/10 overflow-hidden">
       {/* WebGL fluid trail — desktop, motion-allowed, post-idle only */}
       <HeroFluid />
 
@@ -141,8 +141,8 @@ const Hero = () => {
 
         <div className="relative flex justify-center w-full">
           <TiltCard className="relative w-[350px] h-[450px] md:w-[400px] md:h-[520px]">
-            <div data-tilt-layer className="hidden md:block absolute -left-4 -top-4 w-[90%] h-[90%] bg-ink-900/80 rounded-xl -rotate-6 z-0"></div>
-            <div data-tilt-layer className="hidden md:block absolute -right-2 top-2 w-[90%] h-[90%] bg-muted/30 rounded-xl rotate-3 z-0"></div>
+            <div data-tilt-layer className="hidden md:block absolute -left-4 -top-4 w-[90%] h-[90%] bg-primary/10 rounded-xl -rotate-6 z-0 dark:bg-ink-900/80"></div>
+            <div data-tilt-layer className="hidden md:block absolute -right-2 top-2 w-[90%] h-[90%] bg-accent/10 rounded-xl rotate-3 z-0 dark:bg-muted/30"></div>
             <div className="relative z-10 bg-card rounded-xl overflow-hidden shadow-2xl h-[450px] md:h-[520px]">
               <Image
                 src="/assets/owais-abdullah.webp"
