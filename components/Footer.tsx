@@ -53,8 +53,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
           {/* Brand */}
           <div>
-            <Link href="/" aria-label="Owais Abdullah home" className="inline-flex">
-              <Image src="/assets/owais_logo.png" width={80} height={40} alt="Owais Abdullah logo" unoptimized />
+            <Link href="/" aria-label="Owais Abdullah home" className="inline-flex relative">
+              <div className="absolute -inset-4 bg-gradient-to-r from-accent/15 via-accent/8 to-transparent rounded-full blur-xl pointer-events-none" />
+              <Image src="/assets/owais_logo.png" width={80} height={40} alt="Owais Abdullah logo" className="relative z-10" unoptimized />
             </Link>
             <p className="mt-4 text-sm max-w-[36ch] leading-relaxed">
               Digital FTEs, AI agents, and SaaS products — spec first, then shipped. Karachi, working worldwide.

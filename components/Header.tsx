@@ -5,15 +5,18 @@ import React, { useState } from "react";
 import Link from "next/link";
 
 import { CgClose, CgMenuRight } from "react-icons/cg";
+import { Moon, Sun } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 
 const Header = () => {
   const [isoOpen, setisoOpen] = useState(false);
   const pathname = usePathname();
-  
-  // Check if we're on a blog detail page
-  const isBlogDetailPage = pathname?.startsWith("/blog/") && pathname !== "/blog";
-  
+  const { theme, setTheme } = useTheme();
+
+  // Check if we're on any blog page (/blog or /blog/*)
+  const isBlogPage = pathname === "/blog" || pathname?.startsWith("/blog/");
+
   function handleLinkClick() {
     setisoOpen(false);
   }
@@ -27,14 +30,13 @@ const Header = () => {
         "absolute",
         "w-full",
         "mt-2",
-        "p-8",
-        "gap-4",
+        "p-6",
+        "gap-2",
         "flex-col",
         "left-0",
         "top-[70px]",
-        "rounded-3xl",
-        "bg-card/95", // Theme-aware background with blur
-        "backdrop-blur-xl",
+        "rounded-xl",
+        "bg-card",
         "border",
         "border-border",
         "shadow-2xl",
@@ -53,20 +55,16 @@ const Header = () => {
     }
     return menuClasses.join(" ");
   }
-  
-  // Determine text color classes based on page and theme
-  // Keep existing logic for desktop (isBlogDetailPage makes text white)
-  const textColorClass = isBlogDetailPage ? "text-foreground md:text-card-foreground" : "text-foreground";
-  const hoverColorClass = isBlogDetailPage ? "hover:text-card-foreground" : "hover:text-accent";
-  
+
+  const textColorClass = "text-foreground";
+  const hoverColorClass = "hover:text-accent";
+
   return (
     <header className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 rounded-lg border border-border bg-card/80 backdrop-blur-md shadow-xl transition-all duration-300">
-      <div className="absolute top-0 left-0 w-full h-full z-[-1] pointer-events-none rounded-lg overflow-hidden" />
-
       <div className="mx-auto flex items-center justify-between font-medium py-2 px-4 md:px-6 lg:px-8 z-10 gap-2">
-        {/* Natural gradient blob coming from above with larger size */}
-        <div className="absolute -top-20 -left-14 w-48 h-48 md:w-56 md:h-56 bg-gradient-to-br from-primary/30 to-transparent rounded-full blur-2xl opacity-60 dark:opacity-40 -z-10 pointer-events-none"></div>
         <Link href={"/"} className="flex items-center gap-2 z-10 relative shrink-0">
+          {/* Blue gradient blob behind logo */}
+          <div className="absolute -inset-3 bg-gradient-to-r from-accent/20 via-accent/10 to-transparent rounded-full blur-xl pointer-events-none" />
           <Image src="/assets/owais_logo.png" width={60} height={30} alt={"Owais Abdullah logo"} className="relative z-10 md:w-[100px] md:h-[50px]" unoptimized />
         </Link>
 
@@ -121,6 +119,19 @@ const Header = () => {
             SERVICES
           </Link>
 
+          {/* Blog-only theme toggle */}
+          {isBlogPage && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="text-foreground hover:text-accent hover:bg-accent/10 px-3 py-2 rounded-md transition-colors flex items-center gap-1.5 text-sm"
+              aria-label="Toggle theme"
+            >
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="hidden md:inline">{theme === "dark" ? "Light" : "Dark"}</span>
+            </button>
+          )}
+
           {/* hire button — scan-line sweep on hover */}
           <Link
             href={"/contact"}
@@ -130,18 +141,25 @@ const Header = () => {
             HIRE ME
           </Link>
         </nav>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          {/* Mobile blog-only theme toggle */}
+          {isBlogPage && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="md:hidden text-foreground hover:text-accent p-2 rounded-md transition-colors"
+              aria-label="Toggle theme"
+            >
+              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </button>
+          )}
           <button
-            className={`md:hidden flex items-center justify-end text-3xl text-foreground hover:text-accent z-20`}
+            className="md:hidden flex items-center justify-end text-3xl text-foreground hover:text-accent z-20 p-2"
             onClick={() => {
               setisoOpen(!isoOpen);
             }}
           >
-            {/* For mobile on blog detail pages, use theme-aware text colors */}
-            {isoOpen ? 
-              <CgClose className={isBlogDetailPage ? "text-foreground" : ""} /> : 
-              <CgMenuRight className={isBlogDetailPage ? "text-foreground" : ""} />
-            }
+            {isoOpen ? <CgClose /> : <CgMenuRight />}
           </button>
         </div>
       </div>

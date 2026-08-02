@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { clashDisplay, satoshi } from "@/lib/fonts";
+import { clashDisplay, satoshi, newsreader } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
-import { ConditionalUI } from "@/components/ConditionalUI";
 import LenisSmoothScroll from "@/components/LenisSmoothScroll";
 import SVGPageTransition from "@/components/SVGPageTransition";
 import CursorFollower from "@/components/CursorFollower";
+import { ThemeEnforcer } from "@/components/ThemeEnforcer";
+import { LayoutShell } from "@/components/LayoutShell";
 
 
 export const metadata: Metadata = {
@@ -129,7 +128,26 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `document.documentElement.classList.add('dark');`,
+            __html: `
+              try {
+                var path = window.location.pathname;
+                var isBlog = path === '/blog' || path.startsWith('/blog/');
+                if (isBlog) {
+                  var t = localStorage.getItem('theme');
+                  if (t === 'light') {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                  }
+                } else {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.classList.remove('light');
+                }
+              } catch (e) {
+                document.documentElement.classList.add('dark');
+              }
+            `,
           }}
         />
       </head>
@@ -137,6 +155,7 @@ export default function RootLayout({
         className={cn(
           clashDisplay.variable,
           satoshi.variable,
+          newsreader.variable,
           "font-sans antialiased"
         )}
       >
@@ -162,16 +181,14 @@ export default function RootLayout({
           defaultTheme="dark"
           disableTransitionOnChange
         >
+          <ThemeEnforcer />
           <LenisSmoothScroll>
               {/* Header/Footer must live INSIDE the transition provider —
                   auto mode only intercepts links within its subtree, so nav
                   clicks outside it would hard-navigate with no animation */}
               <SVGPageTransition>
-                <ConditionalUI />
                 <CursorFollower />
-                <Header />
-                <main className="pt-24">{children}</main>
-                <Footer />
+                <LayoutShell>{children}</LayoutShell>
               </SVGPageTransition>
           </LenisSmoothScroll>
         </ThemeProvider>

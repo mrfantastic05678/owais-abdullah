@@ -1,4 +1,5 @@
 import localFont from "next/font/local";
+import { Newsreader } from "next/font/google";
 
 // Clash Display — display/heading font (Fontshare, ITF Free Font License)
 export const clashDisplay = localFont({
@@ -24,4 +25,13 @@ export const satoshi = localFont({
   ],
   display: "swap",
   variable: "--font-satoshi",
+});
+
+// Newsreader — serif font for blog headings and body text
+export const newsreader = Newsreader({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-newsreader",
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });

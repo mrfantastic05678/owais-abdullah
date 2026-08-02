@@ -171,7 +171,7 @@ export default function BlogPageClient({
                 )
               )}
             </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center text-heading mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center text-heading mb-4" style={{ fontFamily: "var(--font-newsreader), Georgia, serif" }}>
               {blog.title}
             </h1>
             <div className="flex justify-center items-center space-x-6 text-sm text-muted-foreground">
