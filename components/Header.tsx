@@ -123,7 +123,7 @@ const Header = () => {
           {isBlogPage && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="text-foreground hover:text-accent hover:bg-accent/10 px-3 py-2 rounded-md transition-colors flex items-center gap-1.5 text-sm"
+              className="relative text-foreground hover:text-accent hover:bg-accent/10 px-3 py-2 rounded-md transition-colors flex items-center gap-1.5 text-sm"
               aria-label="Toggle theme"
             >
               <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -146,7 +146,7 @@ const Header = () => {
           {isBlogPage && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="md:hidden text-foreground hover:text-accent p-2 rounded-md transition-colors"
+              className="relative md:hidden text-foreground hover:text-accent p-2 rounded-md transition-colors"
               aria-label="Toggle theme"
             >
               <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
