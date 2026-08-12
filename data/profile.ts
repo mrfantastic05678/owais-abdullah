@@ -520,6 +520,32 @@ const githubRepositories: Project[] = [
     stars: 0,
     language: "Liquid",
   },
+  {
+    title: "SEO Blog Agent (ContentSpark AI)",
+    category: "AI Tool",
+    description:
+      "Digital FTE for content: a multi-agent SEO system that researches, writes, and publishes 15-17 optimized blog posts every day straight into Sanity CMS. Orchestrated with OpenAI Agents SDK, free-tier APIs, and automatic fallbacks.",
+    link: "https://github.com/MrOwaisAbdullah/SEO-Blog-Agent",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Python", "OpenAI Agents SDK", "Sanity CMS", "Discord", "Tavily API"],
+    tags: ["Python", "AI", "Agents", "SEO", "Content Automation"],
+    stars: 0,
+    language: "Python",
+  },
+  {
+    title: "SocialFTE",
+    category: "AI Tool",
+    description:
+      "Social media Digital FTE — runs a brand's social accounts end to end: drafts captions in brand voice, renders product visuals with Remotion, waits for human approval via Discord, then publishes to Facebook, Instagram, YouTube Shorts, and TikTok.",
+    link: "https://github.com/MrOwaisAbdullah/socialfte",
+    deployedUrl: null,
+    image: null,
+    techStack: ["Python", "Claude Code", "Remotion", "Cloudflare R2", "Discord", "Puppeteer"],
+    tags: ["Python", "AI Agents", "Social Media", "Automation", "Remotion"],
+    stars: 0,
+    language: "Python",
+  },
 ];
 
 // Merge projects, avoiding duplicates by title
