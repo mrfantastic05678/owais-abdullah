@@ -15,6 +15,14 @@ export interface PostCard {
   _createdAt: string;
   author: {
     name: string;
+    image?: {
+      _type: string;
+      asset: {
+        _ref: string;
+        _type: string;
+      };
+    };
+    bio?: string;
   };
   slug: {
     current: string | null;

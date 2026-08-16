@@ -20,28 +20,40 @@ interface RelatedPost {
 
 interface RelatedPostsProps {
   currentSlug: string;
+  categories: string[];
   limit?: number;
 }
 
 async function fetchRelatedPosts(
   currentSlug: string,
+  categories: string[],
   limit = 3
 ): Promise<RelatedPost[]> {
-  const query = `*[_type == "post" && slug.current != $slug] | order(_createdAt desc)[0...$limit]{
+  const relatedQuery = `*[_type == "post" && slug.current != $slug && count((categories[]->title)[@ in $categories]) > 0] | order(_createdAt desc)[0...$limit]{
     _id,
     title,
     slug,
     mainImage,
     summary
   }`;
-  return await client.fetch(query, { slug: currentSlug, limit });
+  const related = await client.fetch(relatedQuery, { slug: currentSlug, categories, limit });
+  if (related.length) return related;
+
+  const fallbackQuery = `*[_type == "post" && slug.current != $slug] | order(_createdAt desc)[0...$limit]{
+    _id,
+    title,
+    slug,
+    mainImage,
+    summary
+  }`;
+  return await client.fetch(fallbackQuery, { slug: currentSlug, limit });
 }
 
-const RelatedPosts = ({ currentSlug, limit = 3 }: RelatedPostsProps) => {
+const RelatedPosts = ({ currentSlug, categories, limit = 3 }: RelatedPostsProps) => {
   const [posts, setPosts] = useState<RelatedPost[]>([]);
   useEffect(() => {
-    fetchRelatedPosts(currentSlug, limit).then(setPosts);
-  }, [currentSlug, limit]);
+    fetchRelatedPosts(currentSlug, categories, limit).then(setPosts);
+  }, [currentSlug, categories, limit]);
   if (!posts.length) return null;
   return (
     <>

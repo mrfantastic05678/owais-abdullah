@@ -84,7 +84,7 @@ export default async function Page({
     content,
     faqs,
     _createdAt,
-    author->{name},
+    author->{name, image, "bio": pt::text(bio)},
     categories[]->{title},
     likes,
     dislikes
@@ -92,5 +92,15 @@ export default async function Page({
 
   const blog: Post = await client.fetch(query);
 
-  return <BlogPageClient blog={blog} slug={slug} />;
+  const recentQuery = `*[_type == "post" && slug.current != $slug] | order(_createdAt desc)[0...4]{
+    _id,
+    title,
+    slug,
+    mainImage,
+    _createdAt
+  }`;
+
+  const recentPosts = await client.fetch(recentQuery, { slug });
+
+  return <BlogPageClient blog={blog} slug={slug} recentPosts={recentPosts} />;
 }

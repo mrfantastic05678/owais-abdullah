@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,8 +13,12 @@ if (typeof window !== "undefined") {
 export default function LenisSmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
   const rafRef = useRef<number | null>(null);
+  const pathname = usePathname();
+  const isStudio = pathname?.startsWith("/studio");
 
   useEffect(() => {
+    // Native scrolling in the Sanity Studio (wheel hijacking breaks it)
+    if (isStudio) return;
     // Respect reduced motion: native scrolling, no Lenis at all
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -46,7 +51,7 @@ export default function LenisSmoothScroll({ children }: { children: React.ReactN
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, []);
+  }, [isStudio]);
 
   return <>{children}</>;
 }

@@ -1,20 +1,25 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Site-wide labeled cursor (Operator style): a small square follower that
- * lerps behind the pointer, grows into a labeled disc over elements with
+ * trails behind the pointer, grows into a labeled disc over elements with
  * `data-cursor` + `data-cursor-label` (OPEN / LIVE / SCROLL / DRAG), and
- * rings over links/buttons. Desktop fine-pointer only; disabled entirely
- * for touch and reduced-motion users (native cursor untouched).
+ * rings over links/buttons. The native cursor stays visible — this is a
+ * trailing accent, not a replacement. Disabled entirely on /studio, for
+ * touch, and for reduced-motion users.
  */
 export default function CursorFollower() {
   const rootRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
+  const pathname = usePathname();
+  const isStudio = pathname?.startsWith("/studio");
 
   useEffect(() => {
     if (
+      isStudio ||
       !window.matchMedia("(pointer: fine)").matches ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
@@ -25,7 +30,6 @@ export default function CursorFollower() {
     const label = labelRef.current;
     if (!root || !label) return;
 
-    document.body.classList.add("has-cursor");
     root.style.display = "block";
 
     let x = window.innerWidth / 2;
@@ -41,8 +45,8 @@ export default function CursorFollower() {
     window.addEventListener("mousemove", onMove, { passive: true });
 
     const loop = () => {
-      x += (tx - x) * 0.18;
-      y += (ty - y) * 0.18;
+      x += (tx - x) * 0.28;
+      y += (ty - y) * 0.28;
       root.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       rafId = requestAnimationFrame(loop);
     };
@@ -79,9 +83,11 @@ export default function CursorFollower() {
       document.removeEventListener("mouseover", onOver);
       document.documentElement.removeEventListener("mouseleave", onLeaveWindow);
       document.documentElement.removeEventListener("mouseenter", onEnterWindow);
-      document.body.classList.remove("has-cursor");
+      root.style.display = "none";
     };
-  }, []);
+  }, [isStudio]);
+
+  if (isStudio) return null;
 
   return (
     <div ref={rootRef} className="cursor-follower" aria-hidden="true" style={{ display: "none" }}>

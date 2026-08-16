@@ -11,6 +11,7 @@ import type { PostCard } from "@/types/blogtypes";
 import BlogCards from "@/components/ui/BlogCards";
 import CharRevealHeading from "@/components/CharRevealHeading";
 import CharShuffleText from "@/components/ui/CharShuffleText";
+import BlogAuthorCard from "@/components/BlogAuthorCard";
 
 const POSTS_PER_PAGE = 9;
 const ALL_TAB = "All";
@@ -81,62 +82,58 @@ export default function BlogArchiveContent({ posts }: { posts: PostCard[] }) {
         </CharRevealHeading>
       </motion.div>
 
-      {/* Featured / latest post */}
+      {/* Featured / latest post + author sidebar */}
       {featured && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-16"
-        >
-          <span className="text-accent font-mono text-xs tracking-widest uppercase mb-4 block">Latest</span>
-          <Link
-            href={`/blog/${featured.slug.current}`}
-            className="group grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center border border-border rounded-xl overflow-hidden bg-card hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5 transition-all duration-300"
+        <div className="grid grid-cols-1 lg:grid-cols-[4fr_1fr] gap-6 mb-16 items-stretch">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <div className="relative aspect-video md:aspect-auto md:h-full overflow-hidden">
-              <Image
-                src={urlFor(featured.mainImage).width(900).height(600).url()}
-                alt={featured.title}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-            <div className="p-6 md:pr-10 md:py-10">
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {(featured.categories?.length ? featured.categories : [{ title: "Uncategorized" }]).slice(0, 2).map((c, i) => (
-                  <span key={i} className="bg-accent/90 text-accent-foreground text-xs font-medium px-2.5 py-1 rounded-md">
-                    {c.title}
-                  </span>
-                ))}
+            <span className="text-accent font-mono text-xs tracking-widest uppercase mb-4 block">Latest</span>
+            <Link
+              href={`/blog/${featured.slug.current}`}
+              className="group grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 px-3 md:pl-4 md:pr-0 items-center border border-border rounded-xl overflow-hidden bg-card hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5 transition-all duration-300 h-full"
+            >
+              <div className="relative aspect-video overflow-hidden rounded-lg">
+                <Image
+                  src={urlFor(featured.mainImage).width(900).url()}
+                  alt={featured.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
               </div>
-              <h3 className="font-semibold text-2xl md:text-3xl leading-snug text-foreground group-hover:text-accent transition-colors duration-200 mb-3">
-                {featured.title}
-              </h3>
-              <p className="text-muted-foreground leading-relaxed line-clamp-3 mb-5">{featured.summary}</p>
-              <div className="flex items-center justify-between pt-4 border-t border-border">
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                  {featured.author?.name && (
-                    <span className="flex items-center gap-1">
-                      <User size={12} />
-                      {featured.author.name}
+              <div className="p-4 md:pr-10 md:pl-6 md:py-8">
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {(featured.categories?.length ? featured.categories : [{ title: "Uncategorized" }]).slice(0, 2).map((c, i) => (
+                    <span key={i} className="bg-accent/15 text-foreground text-[11px] font-semibold tracking-wide uppercase px-3 py-1 rounded-full border border-accent/20">
+                      {c.title}
                     </span>
-                  )}
-                  <span className="flex items-center gap-1">
-                    <Calendar size={12} />
-                    {new Date(featured._createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-                  </span>
+                  ))}
                 </div>
-                <span className="inline-flex items-center gap-1 text-xs font-medium text-accent group-hover:gap-2 transition-all duration-200">
-                  Read
+                <h3 className="font-semibold text-2xl md:text-3xl leading-snug text-foreground group-hover:text-accent transition-colors duration-200">
+                  {featured.title}
+                </h3>
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-accent mt-4 group-hover:gap-2 transition-all duration-200">
+                  Read article
                   <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                 </span>
               </div>
-            </div>
-          </Link>
-        </motion.div>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <span className="text-accent font-mono text-xs tracking-widest uppercase mb-4 block mt-6 lg:mt-0">Author</span>
+            <BlogAuthorCard author={featured.author} />
+          </motion.div>
+        </div>
       )}
 
       {/* Category filters + grid */}

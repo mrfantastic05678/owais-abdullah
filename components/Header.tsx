@@ -146,11 +146,11 @@ const Header = () => {
           {isBlogPage && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="relative md:hidden text-foreground hover:text-accent p-2 rounded-md transition-colors"
+              className="relative md:hidden text-foreground hover:text-accent p-2 rounded-md transition-colors flex items-center justify-center w-9 h-9"
               aria-label="Toggle theme"
             >
               <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <Moon className="absolute inset-0 m-auto h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             </button>
           )}
           <button

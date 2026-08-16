@@ -14,13 +14,17 @@ import FaqSection from "@/components/Faq";
 import { JsonLdFaq } from "@/components/JsonLdFaq";
 import JsonLdBlog from "@/components/JsonLdBlog";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import BlogAuthorCard from "@/components/BlogAuthorCard";
+import RecentPostsList, { RecentPost } from "@/components/RecentPostsList";
 
 export default function BlogPageClient({
   blog,
   slug,
+  recentPosts,
 }: {
   blog: Post;
   slug: string;
+  recentPosts: RecentPost[];
 }) {
   const [likes, setLikes] = useState(blog?.likes || 0);
   const [dislikes, setDislikes] = useState(blog?.dislikes || 0);
@@ -130,11 +134,11 @@ export default function BlogPageClient({
       >
         <div className="absolute top-0 left-0 right-0 h-[30%] bg-gradient-to-b from-black/90 to-transparent" />
         <Image
-          className="flex h-[450px] 2xl:h-[750px] w-screen object-cover items-center justify-center"
+          className="flex w-screen object-cover items-center justify-center aspect-video md:h-[450px] 2xl:h-[750px] md:aspect-auto"
           src={urlFor(blog.mainImage).url() as string}
           alt={blog.title}
-          width={1000}
-          height={800}
+          width={1672}
+          height={941}
           priority
         />
         <div className="absolute bottom-0 left-0 right-0 h-[15%] bg-gradient-to-t from-black/40 to-transparent" />
@@ -222,6 +226,12 @@ export default function BlogPageClient({
             </div>
           </div>
 
+          {/* Author + Recent Posts — full width below article */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10 pt-10 border-t border-border">
+            <BlogAuthorCard author={blog.author} />
+            <RecentPostsList posts={recentPosts} />
+          </div>
+
           <div className="flex justify-center mt-10 lg:mt-16">
           <LikeDislikeButtons
             handleVote={handleVote}
@@ -251,7 +261,11 @@ export default function BlogPageClient({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.8 }}
       >
-        <RelatedPosts currentSlug={slug} limit={3} />
+        <RelatedPosts
+          currentSlug={slug}
+          categories={blog.categories?.map((c) => c.title) || []}
+          limit={3}
+        />
       </motion.div>
     </motion.article>
   );

@@ -11,7 +11,7 @@ export async function getBlogPosts(): Promise<PostCard[]> {
       mainImage,
       summary,
       _createdAt,
-      author->{name},
+      author->{name, image, "bio": pt::text(bio)},
       categories[]->{title}
     }`;
 
