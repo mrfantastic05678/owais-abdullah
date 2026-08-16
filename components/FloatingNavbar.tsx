@@ -5,7 +5,7 @@ import { GrProjects } from "react-icons/gr";
 import { GiSkills } from "react-icons/gi";
 import { IoPerson } from "react-icons/io5";
 
-const defaultNavItems: { name: string; link: string; icon: JSX.Element }[] = [
+const defaultNavItems: { name: string; link: string; icon: React.JSX.Element }[] = [
   { name: "HOME", link: "/", icon: <FaHome /> },
   { name: "ABOUT", link: "/about", icon: <IoPerson /> },
   { name: "PROJECTS", link: "/projects", icon: <GrProjects /> },

@@ -31,7 +31,7 @@ export default function PixelTextButton({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const currentRef = useRef(label);
   const colorRef = useRef("#3D7BFF");
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const reduced = usePrefersReducedMotion();
   // Reserve width for whichever label is longer so the canvas never clips
   // the hover text and swapping never shifts surrounding layout

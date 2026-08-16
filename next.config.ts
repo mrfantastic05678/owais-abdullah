@@ -54,6 +54,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: [
+    "sanity",
+    "@sanity/ui",
+    "@sanity/vision",
+    "styled-components",
+  ],
 };
 
 export default withPWA(nextConfig);

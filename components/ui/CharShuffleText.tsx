@@ -19,7 +19,7 @@ interface CharShuffleTextProps {
 export default function CharShuffleText({ text, className = "" }: CharShuffleTextProps) {
   const [display, setDisplay] = useState(text);
   const frameRef = useRef(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined);
   const reduced = usePrefersReducedMotion();
 
   useEffect(() => () => clearInterval(intervalRef.current), []);
