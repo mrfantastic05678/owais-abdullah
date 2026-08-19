@@ -24,51 +24,6 @@ export interface WorkEntry {
   description: string;
 }
 
-  {
-    title: "BrainStack Server",
-    description: "A self-hosted memory server for your AI agents. Serves your brain repository over REST and MCP with visibility tiers enforced server-side.",
-    image: "/assets/placeholder.png",
-    link: "#",
-    category: "AI Tool",
-    tags: ["Markdown", "AI", "Memory Server", "MCP", "REST"],
-    techStack: ["Python", "Django", "Docker", "Markdown"],
-  },
-  {
-    title: "BrainStack-Brain",
-    description: "My personal 'brain' — a Git repository full of structured markdown notes that serve as the memory source for my AI agents.",
-    image: "/assets/placeholder.png",
-    link: "#",
-    category: "AI Tool",
-    tags: ["Markdown", "AI", "Knowledge Base"],
-    techStack: ["Markdown", "Git"],
-  },
-  {
-    title: "ShopMate",
-    description: "A Digital FTE (full-time-equivalent AI employee) for Shopify stores — an operations employee that answers shoppers, tracks orders, captures leads, and runs sales.",
-    image: "/assets/placeholder.png",
-    link: "https://shopmate.octively.com",
-    category: "AI Tool",
-    tags: ["Shopify", "AI Agents", "Automation", "SaaS"],
-    techStack: ["Python", "PostgreSQL", "MCP", "Shopify API"],
-  },
-  {
-    title: "Octively Chat Widget",
-    description: "A WordPress plugin that connects your site to the Octively AI chatbot SaaS with OAuth authentication.",
-    image: "/assets/placeholder.png",
-    link: "#",
-    category: "WordPress",
-    tags: ["WordPress", "Chatbot", "OAuth", "SaaS"],
-    techStack: ["WordPress", "PHP", "JavaScript"],
-  },
-  {
-    title: "Speedline Tracking",
-    description: "A WordPress plugin for tracking shipment speed and logistics.",
-    image: "/assets/placeholder.png",
-    link: "#",
-    category: "WordPress",
-    tags: ["WordPress", "Logistics", "Tracking"],
-    techStack: ["WordPress", "PHP"],
-  },
   // Existing projects - these have images and are already on the website
 const existingProjects: Project[] = [
   // Top 7 — ordered by impact
@@ -136,6 +91,34 @@ const existingProjects: Project[] = [
     techStack: ["Claude Code", "Obsidian", "MCPs", "Python"],
   },
   // Remaining projects
+
+  {
+    title: "ShopMate",
+    description: "A Digital FTE (full-time-equivalent AI employee) for Shopify stores — an operations employee that answers shoppers, tracks orders, captures leads, and runs sales.",
+    image: "/assets/placeholder.png",
+    link: "https://shopmate.octively.com",
+    category: "AI Tool",
+    tags: ["Shopify", "AI Agents", "Automation", "SaaS"],
+    techStack: ["Python", "PostgreSQL", "MCP", "Shopify API"],
+  },
+  {
+    title: "Octively Chat Widget",
+    description: "A WordPress plugin that connects your site to the Octively AI chatbot SaaS with OAuth authentication.",
+    image: "/assets/placeholder.png",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Chatbot", "OAuth", "SaaS"],
+    techStack: ["WordPress", "PHP", "JavaScript"],
+  },
+  {
+    title: "Speedline Tracking",
+    description: "A WordPress plugin for tracking shipment speed and logistics.",
+    image: "/assets/placeholder.png",
+    link: "#",
+    category: "WordPress",
+    tags: ["WordPress", "Logistics", "Tracking"],
+    techStack: ["WordPress", "PHP"],
+  },
   {
     title: "Personal Portfolio Website",
     description: "My personal portfolio showcasing my skills, projects, and experience, built with Next.js.",
@@ -154,6 +137,24 @@ const existingProjects: Project[] = [
     category: "AI Tool",
     tags: ["Python", "AI", "SEO", "Content Automation"],
     techStack: ["Python", "Sanity CMS", "Vercel"],
+  },
+      {
+    title: "BrainStack Server",
+    description: "A self-hosted memory server for your AI agents. Serves your brain repository over REST and MCP with visibility tiers enforced server-side.",
+    image: "/assets/placeholder.png",
+    link: "#",
+    category: "AI Tool",
+    tags: ["Markdown", "AI", "Memory Server", "MCP", "REST"],
+    techStack: ["Python", "Django", "Docker", "Markdown"],
+  },
+  {
+    title: "BrainStack-Brain",
+    description: "My personal 'brain' — a Git repository full of structured markdown notes that serve as the memory source for my AI agents.",
+    image: "/assets/placeholder.png",
+    link: "#",
+    category: "AI Tool",
+    tags: ["Markdown", "AI", "Knowledge Base"],
+    techStack: ["Markdown", "Git"],
   },
   {
     title: "AI Humanoid Robotics Book",
