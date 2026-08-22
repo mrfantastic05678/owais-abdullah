@@ -222,7 +222,7 @@ export default function OctivelyPromoToast() {
           exit={{ opacity: 0, y: 20, scale: 0.94, transition: { duration: 0.2 } }}
           transition={{ type: "spring", stiffness: 380, damping: 28 }}
           style={{ width: "340px", maxWidth: "calc(100vw - 32px)" }}
-          className={`fixed z-50 font-sans pointer-events-auto ${activePositionClass}`}
+          className={`fixed z-[6000] font-sans pointer-events-auto ${activePositionClass}`}
           role="complementary"
           aria-label="Octively AI Promo"
         >
