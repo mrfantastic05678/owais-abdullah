@@ -16,6 +16,7 @@ import JsonLdBlog from "@/components/JsonLdBlog";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import BlogAuthorCard from "@/components/BlogAuthorCard";
 import RecentPostsList, { RecentPost } from "@/components/RecentPostsList";
+import OctivelyPromoToast from "@/components/OctivelyPromoToast";
 
 export default function BlogPageClient({
   blog,
@@ -34,9 +35,23 @@ export default function BlogPageClient({
   );
 
   useEffect(() => {
+    // 1. Restore local user vote
     const vote = localStorage.getItem(`vote_${slug}`);
     if (vote) {
       setUserVote(vote as "like" | "dislike");
+    }
+
+    // 2. Track post view (session deduplicated to prevent refresh spam)
+    const viewedKey = `viewed_post_${slug}`;
+    if (!sessionStorage.getItem(viewedKey)) {
+      sessionStorage.setItem(viewedKey, "true");
+      try {
+        fetch("/api/views", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug }),
+        }).catch(() => {});
+      } catch {}
     }
   }, [slug]);
 

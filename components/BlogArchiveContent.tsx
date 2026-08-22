@@ -131,7 +131,7 @@ export default function BlogArchiveContent({ posts }: { posts: PostCard[] }) {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <span className="text-accent font-mono text-xs tracking-widest uppercase mb-4 block mt-6 lg:mt-0">Author</span>
-            <BlogAuthorCard author={featured.author} />
+            <BlogAuthorCard author={featured.author} variant="compact" />
           </motion.div>
         </div>
       )}

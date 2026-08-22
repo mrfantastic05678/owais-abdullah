@@ -60,6 +60,7 @@ const nextConfig: NextConfig = {
     "@sanity/vision",
     "styled-components",
   ],
+  turbopack: {},
 };
 
 export default withPWA(nextConfig);

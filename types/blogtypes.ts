@@ -26,7 +26,10 @@ export interface PostCard {
   };
   slug: {
     current: string | null;
-  }
+  };
+  views?: number;
+  likes?: number;
+  dislikes?: number;
 };
 
 export interface BlogSectionProps {

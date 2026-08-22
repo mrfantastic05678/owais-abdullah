@@ -94,6 +94,13 @@ export const postType = defineType({
       initialValue: 0,
       readOnly: true,
     }),
+    defineField({
+      name: 'views',
+      title: 'Views',
+      type: 'number',
+      initialValue: 0,
+      readOnly: true,
+    }),
   ],
   preview: {
     select: {
