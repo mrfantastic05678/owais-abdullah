@@ -5,7 +5,6 @@ import { clashDisplay, satoshi, newsreader } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
 import LenisSmoothScroll from "@/components/LenisSmoothScroll";
-import SVGPageTransition from "@/components/SVGPageTransition";
 import CursorFollower from "@/components/CursorFollower";
 import { ThemeEnforcer } from "@/components/ThemeEnforcer";
 import { LayoutShell } from "@/components/LayoutShell";
@@ -183,13 +182,8 @@ export default function RootLayout({
         >
           <ThemeEnforcer />
           <LenisSmoothScroll>
-              {/* Header/Footer must live INSIDE the transition provider —
-                  auto mode only intercepts links within its subtree, so nav
-                  clicks outside it would hard-navigate with no animation */}
-              <SVGPageTransition>
-                <CursorFollower />
-                <LayoutShell>{children}</LayoutShell>
-              </SVGPageTransition>
+            <CursorFollower />
+            <LayoutShell>{children}</LayoutShell>
           </LenisSmoothScroll>
         </ThemeProvider>
       </body>

@@ -2,8 +2,8 @@ import React from "react";
 import BlogArchive from "@/components/BlogArchive";
 import { Metadata } from "next";
 
-// ISR: prerendered HTML with posts, refreshed every 30 min
-export const revalidate = 1800;
+// ISR: prerendered HTML with posts, refreshed every 60s for daily posts
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Blog | Owais Abdullah - Spec-Driven Development & AI Insights",
