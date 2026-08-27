@@ -3,9 +3,10 @@ import React from 'react';
 interface JsonLdSchemaProps {
   type: 'home' | 'about' | 'projects' | 'skills' | 'contact' | 'services' | 'service';
   pageUrl: string;
+  faqs?: { question: string; answer: string }[];
 }
 
-const JsonLdSchema: React.FC<JsonLdSchemaProps> = ({ type, pageUrl }) => {
+const JsonLdSchema: React.FC<JsonLdSchemaProps> = ({ type, pageUrl, faqs }) => {
   const baseUrl = 'https://owaisabdullah.dev';
   
   // Person Schema
@@ -172,13 +173,67 @@ const JsonLdSchema: React.FC<JsonLdSchemaProps> = ({ type, pageUrl }) => {
     }
   } : null;
 
+  // FAQPage Schema for service pages
+  const faqSchema = (type === 'service' && faqs && faqs.length > 0) ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${pageUrl}#faq`,
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  } : null;
+
+  // SoftwareSourceCode Schema for projects page
+  const softwareSchema = type === 'projects' ? {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${pageUrl}#projects`,
+    "name": "Portfolio Projects by Owais Abdullah",
+    "description": "Web development, AI integration, and SaaS projects",
+    "numberOfItems": 40,
+    "itemListElement": [
+      {
+        "@type": "SoftwareSourceCode",
+        "name": "Octively",
+        "description": "AI chatbot SaaS for agencies",
+        "codeRepository": "https://github.com/MrOwaisAbdullah",
+        "programmingLanguage": ["TypeScript", "Python"],
+        "runtimePlatform": "Next.js",
+        "url": "https://octively.com"
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "name": "Digital FTE",
+        "description": "Autonomous AI employees powered by Claude Code",
+        "codeRepository": "https://github.com/MrOwaisAbdullah",
+        "programmingLanguage": ["Python"],
+        "url": "https://owaisabdullah.dev/projects"
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "name": "TeamFlow",
+        "description": "AI-powered team management platform for agencies",
+        "programmingLanguage": ["TypeScript"],
+        "runtimePlatform": "Next.js",
+        "url": "https://teamflow-sigma-opal.vercel.app/"
+      }
+    ]
+  } : null;
+
   const schemas = [
     personSchema,
     organizationSchema,
     websiteSchema,
     webPageSchema,
     ...(creativeWorkSchema ? [creativeWorkSchema] : []),
-    ...(serviceSchema ? [serviceSchema] : [])
+    ...(serviceSchema ? [serviceSchema] : []),
+    ...(faqSchema ? [faqSchema] : []),
+    ...(softwareSchema ? [softwareSchema] : [])
   ];
 
   return (

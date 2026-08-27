@@ -71,6 +71,7 @@ export default async function ServicePage({
       <JsonLdSchema
         type="service"
         pageUrl={`https://owaisabdullah.dev/services/${service.slug}`}
+        faqs={service.faqs}
       />
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
