@@ -12,10 +12,16 @@ export function ThemeEnforcer() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const isBlogPage = pathname === "/blog" || pathname?.startsWith("/blog/");
+    const isToggleAllowed =
+      pathname === "/blog" ||
+      pathname?.startsWith("/blog/") ||
+      pathname === "/stack" ||
+      pathname?.startsWith("/stack/") ||
+      pathname === "/stores" ||
+      pathname?.startsWith("/stores/");
 
-    if (!isBlogPage) {
-      // Force dark on non-blog pages
+    if (!isToggleAllowed) {
+      // Force dark on non-toggle pages (home, about, services, contact)
       document.documentElement.classList.add("dark");
       document.documentElement.classList.remove("light");
     }

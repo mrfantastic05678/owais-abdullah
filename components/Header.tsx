@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 import { CgClose, CgMenuRight } from "react-icons/cg";
@@ -11,11 +11,22 @@ import { useTheme } from "next-themes";
 
 const Header = () => {
   const [isoOpen, setisoOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
 
-  // Check if we're on any blog page (/blog or /blog/*)
-  const isBlogPage = pathname === "/blog" || pathname?.startsWith("/blog/");
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Check if we're on blog, stack, or stores pages
+  const isThemeToggleAllowed =
+    pathname === "/blog" ||
+    pathname?.startsWith("/blog/") ||
+    pathname === "/stack" ||
+    pathname?.startsWith("/stack/") ||
+    pathname === "/stores" ||
+    pathname?.startsWith("/stores/");
 
   function handleLinkClick() {
     setisoOpen(false);
@@ -118,9 +129,16 @@ const Header = () => {
           >
             SERVICES
           </Link>
+          <Link
+            href={"/stores"}
+            onClick={handleLinkClick}
+            className={`${textColorClass} text-sm md:text-base ${hoverColorClass} hover:bg-accent/10 px-3 py-2 rounded-md transition-colors`}
+          >
+            STORES
+          </Link>
 
-          {/* Blog-only theme toggle */}
-          {isBlogPage && (
+          {/* Blog, Stack & Store theme toggle */}
+          {isThemeToggleAllowed && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="relative text-foreground hover:text-accent hover:bg-accent/10 px-3 py-2 rounded-md transition-colors flex items-center gap-1.5 text-sm"
@@ -128,7 +146,9 @@ const Header = () => {
             >
               <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="hidden md:inline">{theme === "dark" ? "Light" : "Dark"}</span>
+              <span className="hidden md:inline">
+                {mounted ? (theme === "dark" ? "Light" : "Dark") : "Theme"}
+              </span>
             </button>
           )}
 
@@ -142,8 +162,8 @@ const Header = () => {
           </Link>
         </nav>
         <div className="flex items-center gap-2">
-          {/* Mobile blog-only theme toggle */}
-          {isBlogPage && (
+          {/* Mobile theme toggle */}
+          {isThemeToggleAllowed && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="relative md:hidden text-foreground hover:text-accent p-2 rounded-md transition-colors flex items-center justify-center w-9 h-9"

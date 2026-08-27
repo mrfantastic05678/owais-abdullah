@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { client } from "@/sanity/lib/client";
 import { services } from "@/data/services";
+import { getCategories, getCities, getAllStoreSlugs } from "@/lib/directory/queries";
 
 // Dynamically revalidate sitemap every 60 seconds
 export const revalidate = 60;
@@ -38,6 +39,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
   } catch (error) {
     console.error("Error fetching stack tools for sitemap:", error);
+  }
+
+  // 3. Fetch directory categories, cities, and store slugs
+  let directoryCategoryUrls: MetadataRoute.Sitemap = [];
+  let directoryCityUrls: MetadataRoute.Sitemap = [];
+  let directoryStoreUrls: MetadataRoute.Sitemap = [];
+
+  try {
+    const [categories, cities, storeSlugs] = await Promise.all([
+      getCategories(),
+      getCities(),
+      getAllStoreSlugs(),
+    ]);
+
+    directoryCategoryUrls = categories.map((cat) => ({
+      url: `${baseUrl}/stores/category/${cat.slug}`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    }));
+
+    directoryCityUrls = cities.map((city) => ({
+      url: `${baseUrl}/stores/city/${city.slug}`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    }));
+
+    directoryStoreUrls = storeSlugs.map((slug) => ({
+      url: `${baseUrl}/stores/${slug}`,
+      lastModified: currentDate,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    }));
+  } catch (error) {
+    console.error("Error generating directory sitemap urls:", error);
   }
 
   // Dynamic Blog URLs (Updated Daily)
@@ -113,8 +150,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    {
+      url: `${baseUrl}/stores`,
+      lastModified: currentDate,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/stores/submit`,
+      lastModified: currentDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/stores/claim`,
+      lastModified: currentDate,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
     ...postUrls,
     ...toolUrls,
     ...serviceUrls,
+    ...directoryCategoryUrls,
+    ...directoryCityUrls,
+    ...directoryStoreUrls,
   ];
 }

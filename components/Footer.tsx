@@ -14,6 +14,9 @@ const NAVIGATE = [
   { label: "About", href: "/about" },
   { label: "Projects", href: "/projects" },
   { label: "Blog", href: "/blog" },
+  { label: "Stores", href: "/stores" },
+  { label: "Submit Store", href: "/stores/submit" },
+  { label: "Claim Listing", href: "/stores/claim" },
   { label: "Skills", href: "/skills" },
   { label: "Contact", href: "/contact" },
 ];

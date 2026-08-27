@@ -168,13 +168,15 @@ export default function RootLayout({
             }).replace(/</g, "\u003c"),
           }}
         />
-        <script
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               try {
                 var path = window.location.pathname;
-                var isBlog = path === '/blog' || path.startsWith('/blog/');
-                if (isBlog) {
+                var isToggleAllowed = path === '/blog' || path.startsWith('/blog/') || path === '/stack' || path.startsWith('/stack/') || path === '/stores' || path.startsWith('/stores/');
+                if (isToggleAllowed) {
                   var t = localStorage.getItem('theme');
                   if (t === 'light') {
                     document.documentElement.classList.remove('dark');
