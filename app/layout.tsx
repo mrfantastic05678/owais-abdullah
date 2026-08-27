@@ -13,11 +13,11 @@ import { LayoutShell } from "@/components/LayoutShell";
 export const metadata: Metadata = {
   metadataBase: new URL("https://owaisabdullah.dev"),
   title: {
-    default: "Owais Abdullah | Spec-Driven Developer & AI Engineer",
-    template: "%s | Spec-Driven Developer & AI Engineer",
+    default: "Owais Abdullah | AI Engineer & SaaS Developer",
+    template: "%s | Owais Abdullah",
   },
   description:
-    "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures with AI-driven engineering.",
+    "AI engineer building Digital FTEs, custom agents, and Next.js SaaS. OpenAI Agents SDK, TypeScript, Python. View projects.",
   keywords: [
     "Owais Abdullah",
     "Owais",
@@ -71,9 +71,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://owaisabdullah.dev",
-    title: "Owais Abdullah | Spec-Driven Developer & AI Engineer",
+    title: "Owais Abdullah | AI Engineer & SaaS Developer",
     description:
-      "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures.",
+      "AI engineer building Digital FTEs, custom agents, and Next.js SaaS. OpenAI Agents SDK, TypeScript, Python.",
     siteName: "Owais Abdullah Portfolio",
     images: [
       {
@@ -86,9 +86,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Owais Abdullah | Spec-Driven Developer & AI Engineer",
+    title: "Owais Abdullah | AI Engineer & SaaS Developer",
     description:
-      "Owais Abdullah is a spec-driven developer and AI engineer specializing in Next.js SaaS products, AI agents, and Digital FTEs (AI employees). Expert in TypeScript, OpenAI Agents SDK, and building production-ready architectures.",
+      "AI engineer building Digital FTEs, custom agents, and Next.js SaaS. OpenAI Agents SDK, TypeScript, Python.",
     images: ["/assets/owais-abdullah-og.png"],
     creator: "@mrowaisabdullah",
   },
@@ -125,6 +125,49 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "@id": "https://owaisabdullah.dev/#person",
+              name: "Owais Abdullah",
+              url: "https://owaisabdullah.dev",
+              image: "https://owaisabdullah.dev/assets/owais-abdullah-og.png",
+              jobTitle: "Spec-Driven Developer & AI Engineer",
+              description:
+                "AI engineer specializing in Next.js SaaS products, AI agents, and Digital FTEs. Founder of Octively. 3+ years, 40+ projects delivered.",
+              sameAs: [
+                "https://github.com/MrOwaisAbdullah",
+                "https://www.linkedin.com/in/mrowaisabdullah/",
+                "https://x.com/mrowaisabdullah",
+                "https://octively.com",
+              ],
+              knowsAbout: [
+                "Next.js",
+                "TypeScript",
+                "Python",
+                "AI Agents",
+                "OpenAI Agents SDK",
+                "Claude Code",
+                "SaaS Architecture",
+                "Digital FTE",
+                "AI Automation",
+              ],
+              worksFor: [
+                { "@type": "Organization", name: "LionUp Digital" },
+                { "@type": "Organization", name: "AA Marketing" },
+              ],
+              founder: {
+                "@type": "Organization",
+                name: "Octively",
+                url: "https://octively.com",
+              },
+              address: { "@type": "PostalAddress", addressCountry: "PK" },
+            }).replace(/</g, "\u003c"),
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `

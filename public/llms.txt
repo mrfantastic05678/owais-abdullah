@@ -1,34 +1,71 @@
 # Owais Abdullah — Spec-Driven Developer & AI Agent Engineer
 
-> Personal portfolio of Owais Abdullah, a spec-driven developer and AI engineer
-> based in Karachi, Pakistan. Specializes in Next.js SaaS products, AI agents
-> built with the OpenAI Agents SDK, Digital FTEs (AI employees that handle
-> business operations 24/7), and WordPress/CMS development.
+> Owais Abdullah is a spec-driven developer and AI engineer based in Pakistan.
+> He builds AI-native companies through Digital FTEs (autonomous AI employees),
+> Next.js SaaS products, and agent orchestration systems.
+> Founder of Octively (https://octively.com).
+> 3+ years experience, 40+ projects delivered.
 
-Currently Senior Developer (Web & AI) at LionUp Digital and Senior Developer &
-Manager at AA Marketing (concurrent roles). Founder of Octively
-(https://octively.com), an AI chatbot SaaS that lets agencies add branded AI
-chatbots to client sites. 3+ years in the industry, 40+ projects delivered
-across SaaS, e-commerce, AI tools, and automation.
+## What I Do
 
-Notable projects: Octively (AI chatbot SaaS, founder), Digital FTE (autonomous
-AI employees on the OpenAI Agents SDK), Visati (visa services SaaS), GigBillow
-(freelance business toolkit), Yousuf Living (furniture ecommerce), ContentSpark AI
-(automated SEO blog agent), TeamFlow (AI team management), FurnitureMart.pk
-(e-commerce marketplace).
+- **Digital FTE Development**: Build autonomous AI employees using Claude Code, OpenAI Agents SDK, and MCP that handle email, reporting, customer support, and operations 24/7
+- **Custom AI Agents & Automations**: OpenAI Agents SDK + n8n workflows for intelligent automation at scale
+- **Next.js SaaS Development**: Spec-driven, production-ready SaaS products with TypeScript, Tailwind, Prisma, PostgreSQL
+- **CMS & E-commerce**: WordPress, Shopify, Sanity CMS, headless architectures
+- **Technical Consulting**: AI strategy, MVP prototyping, architecture reviews
 
-Core stack: TypeScript, Next.js, React, Tailwind CSS, Python, OpenAI Agents
-SDK, PostgreSQL, Prisma, Sanity CMS, WordPress, Shopify.
+## Core Stack
+
+TypeScript, Next.js, React, Tailwind CSS, Python, Claude Code, OpenAI Agents SDK,
+Claude Agent SDK, MCP (Model Context Protocol), PostgreSQL, pgvector, Prisma ORM,
+Sanity CMS, WordPress, Shopify, Docker, n8n, FastAPI
+
+## Notable Projects
+
+- **Octively** (https://octively.com) — AI chatbot SaaS. Agencies add branded AI chatbots to client sites with one embed script. Founder.
+- **Digital FTE** — Autonomous AI employees powered by Claude Code. Obsidian vault for memory, MCPs for tools, Python scripts for execution.
+- **TeamFlow** (https://teamflow-sigma-opal.vercel.app/) — AI-powered team management and task assignment platform for agencies.
+- **Visati** (https://visati-dubai.vercel.app/) — Visa services SaaS with document uploads, payments, PDF generation.
+- **ContentSpark AI** — SEO blog agent that researches, writes, and publishes 15+ optimized posts daily into Sanity CMS.
+- **GigBillow** (https://gigbillow.vercel.app/) — Freelance business toolkit with AI task categorization and invoice generation.
+- **FurnitureMart.pk** (https://furniture-mart-pk.vercel.app/) — Online furniture marketplace.
+- **AI Humanoid Robotics Book** (https://mrowaisabdullah.github.io/ai-humanoid-robotics/) — RAG chatbot for an educational book.
+
+## Services
+
+- [Digital FTE Development](https://owaisabdullah.dev/services/digital-fte) — $800-$1,500+
+- [Custom AI Agents & Automations](https://owaisabdullah.dev/services/ai-agents) — $500-$1,200+
+- [Next.js SaaS Development](https://owaisabdullah.dev/services/saas-development) — $1,500-$4,000+
+- [CMS & E-commerce](https://owaisabdullah.dev/services/cms-ecommerce) — $600-$1,500+
+- [Technical Consulting & MVP](https://owaisabdullah.dev/services/consulting-mvp) — $200-$1,000+
+- [API Development & Integration](https://owaisabdullah.dev/services/api-development) — $200-$800+
+
+## FAQ
+
+**What is a Digital FTE?**
+A Digital FTE (Full-Time Equivalent) is an AI agent that acts like a real employee—working 24/7, handling tasks autonomously, and proactively managing operations. Unlike chatbots that wait for input, Digital FTEs actively monitor and execute tasks.
+
+**How long does it take to build a SaaS MVP?**
+A typical SaaS MVP takes 4-8 weeks. Spec-driven development speeds this up by reducing rework.
+
+**What AI frameworks do you use?**
+Claude Code, OpenAI Agents SDK, Claude Agent SDK, MCP (Model Context Protocol), n8n workflow automation, and General Agents Framework.
+
+**Can you automate my existing workflow?**
+Yes. Most repetitive, rule-based processes are candidates for AI automation. I analyze current processes and identify opportunities.
+
+**Where are you based?**
+Karachi, Pakistan. Working remotely worldwide.
 
 ## Pages
 
-- [Home](https://owaisabdullah.dev/): Overview, services, projects, experience
-- [About](https://owaisabdullah.dev/about): Background and approach
-- [Projects](https://owaisabdullah.dev/projects): Full portfolio — Next.js SaaS, WordPress, AI tools and automation
-- [Services](https://owaisabdullah.dev/services): Digital FTE (AI employee) development, custom AI agents & automations, Next.js SaaS development, CMS & e-commerce, technical consulting & MVPs, API development
-- [Blog](https://owaisabdullah.dev/blog): Articles on AI, agents, and modern web development
-- [Skills](https://owaisabdullah.dev/skills): Detailed tech stack and proficiencies
-- [Contact](https://owaisabdullah.dev/contact): Project inquiries and collaboration
+- [Home](https://owaisabdullah.dev/) — Overview, services, projects, experience
+- [About](https://owaisabdullah.dev/about) — Background and approach
+- [Projects](https://owaisabdullah.dev/projects) — Full portfolio: Next.js SaaS, WordPress, AI tools
+- [Services](https://owaisabdullah.dev/services) — All service offerings with pricing
+- [Blog](https://owaisabdullah.dev/blog) — Articles on AI, agents, and web development
+- [Skills](https://owaisabdullah.dev/skills) — Detailed tech stack and proficiencies
+- [Contact](https://owaisabdullah.dev/contact) — Project inquiries and collaboration
 
 ## Contact
 

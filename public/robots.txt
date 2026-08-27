@@ -43,6 +43,21 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 # Disallow API routes and admin areas
 Disallow: /api/
 Disallow: /_next/
