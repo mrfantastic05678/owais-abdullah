@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, Code2, Sparkles } from "lucide-react";
 import Image from "next/image";
@@ -17,6 +18,9 @@ interface SanityImageRef {
 }
 
 interface PromoConfig {
+  _id?: string;
+  title?: string;
+  campaignName?: string;
   isActive?: boolean;
   mode?: "ab_test" | "variant_a" | "variant_b";
   scrollTriggerPercent?: number;
@@ -27,6 +31,7 @@ interface PromoConfig {
     badgeText?: string;
     headline?: string;
     description?: string;
+    featureTags?: string[];
     bannerImage?: SanityImageRef;
     ctaText?: string;
     ctaUrl?: string;
@@ -36,13 +41,48 @@ interface PromoConfig {
     founderName?: string;
     founderTitle?: string;
     founderAvatar?: SanityImageRef;
+    headline?: string;
     note?: string;
     ctaText?: string;
     ctaUrl?: string;
   };
 }
 
+function buildTrackedUrl(
+  rawUrl?: string,
+  variantKey: VariantType = "A",
+  campaignName?: string,
+  pathname: string = "/"
+): string {
+  const fallbackUrl = "https://octively.com";
+  const target = rawUrl?.trim() || fallbackUrl;
+
+  try {
+    const url = new URL(target.startsWith("http") ? target : `https://${target}`);
+    const campaign = campaignName?.trim() || "promo_toast";
+
+    // Inject dynamic UTM tracking parameters
+    if (!url.searchParams.has("utm_source")) {
+      url.searchParams.set("utm_source", "owaisabdullah.dev");
+    }
+    if (!url.searchParams.has("utm_medium")) {
+      url.searchParams.set("utm_medium", `toast_variant_${variantKey.toLowerCase()}`);
+    }
+    if (!url.searchParams.has("utm_campaign")) {
+      url.searchParams.set("utm_campaign", campaign);
+    }
+    // utm_content captures the exact page where user clicked (e.g. /blog/..., /services/..., /stack/..., /)
+    url.searchParams.set("utm_content", pathname.replace(/^\//, "") || "homepage");
+    url.searchParams.set("utm_term", `variant_${variantKey.toLowerCase()}`);
+
+    return url.toString();
+  } catch {
+    return target;
+  }
+}
+
 export default function OctivelyPromoToast() {
+  const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
   const [variant, setVariant] = useState<VariantType>("A");
   const [config, setConfig] = useState<PromoConfig | null>(null);
@@ -184,11 +224,18 @@ export default function OctivelyPromoToast() {
 
   const handleCtaClick = () => {
     try {
-      fetch("/api/promo-tracking", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ event: "click", variant }),
-      }).catch(() => {});
+      const payload = JSON.stringify({ event: "click", variant });
+      if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+        const blob = new Blob([payload], { type: "application/json" });
+        navigator.sendBeacon("/api/promo-tracking", blob);
+      } else {
+        fetch("/api/promo-tracking", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: payload,
+          keepalive: true,
+        }).catch(() => {});
+      }
     } catch {}
   };
 
@@ -213,6 +260,10 @@ export default function OctivelyPromoToast() {
   };
   const activePositionClass = positionClasses[position] || "bottom-5 right-5";
 
+  // Dynamic tracked target URLs with utm_content set to current pathname
+  const trackedUrlA = buildTrackedUrl(dataA?.ctaUrl, "A", config?.campaignName, pathname);
+  const trackedUrlB = buildTrackedUrl(dataB?.ctaUrl, "B", config?.campaignName, pathname);
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -224,10 +275,10 @@ export default function OctivelyPromoToast() {
           style={{ width: "340px", maxWidth: "calc(100vw - 32px)" }}
           className={`fixed z-[6000] font-sans pointer-events-auto ${activePositionClass}`}
           role="complementary"
-          aria-label="Octively AI Promo"
+          aria-label={config?.title || "Promotional Announcement"}
         >
           {/* Deep Blue Gradient Card with Glowing Border */}
-          <div className="relative overflow-hidden rounded-2xl border border-blue-400/35 bg-gradient-to-br from-[#0F224A] via-[#0A1838] to-[#071128] text-white shadow-[0_20px_50px_rgba(10,24,56,0.7)] p-4.5 p-4 sm:p-5 backdrop-blur-xl">
+          <div className="relative overflow-hidden rounded-2xl border border-blue-400/35 bg-gradient-to-br from-[#0F224A] via-[#0A1838] to-[#071128] text-white shadow-[0_20px_50px_rgba(10,24,56,0.7)] p-4 sm:p-5 backdrop-blur-xl">
             {/* Ambient Corner Glow */}
             <div className="absolute -top-10 -right-10 w-28 h-28 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none" />
             <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-blue-600/25 rounded-full blur-2xl pointer-events-none" />
@@ -242,7 +293,7 @@ export default function OctivelyPromoToast() {
             </button>
 
             {variant === "A" ? (
-              /* ================= VARIANT A: AGENCY & FREELANCER BLUE GRADIENT TOAST ================= */
+              /* ================= VARIANT A: VISUAL / LEAD MAGNET BLUE GRADIENT TOAST ================= */
               <div className="flex flex-col gap-2.5">
                 {/* Header Tag */}
                 <div className="flex items-center gap-1.5 pr-6">
@@ -266,9 +317,9 @@ export default function OctivelyPromoToast() {
                     "1-line embed, white-label client portals, zero maintenance. Monetize AI chatbots for your clients today."}
                 </p>
 
-                {/* Highlighted Glowing CTA */}
+                {/* Highlighted Glowing CTA with Dynamic UTM tracking */}
                 <a
-                  href={`${dataA?.ctaUrl || "https://octively.com"}?utm_source=portfolio_blog&utm_medium=toast_a&utm_campaign=agencies_free`}
+                  href={trackedUrlA}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
@@ -279,7 +330,7 @@ export default function OctivelyPromoToast() {
                 </a>
               </div>
             ) : (
-              /* ================= VARIANT B: FOUNDER DIRECT PITCH ================= */
+              /* ================= VARIANT B: PERSONAL NOTE / EDITORIAL PITCH ================= */
               <div className="flex flex-col gap-2.5">
                 {/* Founder Header */}
                 <div className="flex items-center gap-2 pr-6">
@@ -295,14 +346,19 @@ export default function OctivelyPromoToast() {
                   </div>
                   <div>
                     <span className="text-[9.5px] font-mono uppercase text-cyan-300 font-semibold block leading-none">
-                      Founder Note · Free for Agencies
+                      {dataB?.badgeText || "Founder Note · Free for Agencies"}
                     </span>
+                    {dataB?.founderName && (
+                      <span className="text-[10px] text-white/80 font-sans block leading-none mt-0.5">
+                        {dataB.founderName} {dataB.founderTitle ? `· ${dataB.founderTitle}` : ""}
+                      </span>
+                    )}
                   </div>
                 </div>
 
                 {/* Hooking Headline */}
                 <h4 className="text-[13.5px] font-bold text-white leading-snug font-sans">
-                  Monetize Custom AI Chatbots for Your Web Clients
+                  {dataB?.headline || "Monetize Custom AI Chatbots for Your Web Clients"}
                 </h4>
 
                 {/* Minimal Subtext */}
@@ -311,9 +367,9 @@ export default function OctivelyPromoToast() {
                     "I built Octively so developers and agency owners can deploy custom trained AI chatbots to clients with zero backend code."}&rdquo;
                 </p>
 
-                {/* Highlighted Glowing CTA */}
+                {/* Highlighted Glowing CTA with Dynamic UTM tracking */}
                 <a
-                  href={`${dataB?.ctaUrl || "https://octively.com"}?utm_source=portfolio_blog&utm_medium=toast_b&utm_campaign=agencies_free`}
+                  href={trackedUrlB}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}

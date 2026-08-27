@@ -7,6 +7,8 @@ export async function GET() {
   try {
     const query = `*[_type == "promoBanner" && isActive == true][0]{
       _id,
+      title,
+      campaignName,
       isActive,
       mode,
       scrollTriggerPercent,

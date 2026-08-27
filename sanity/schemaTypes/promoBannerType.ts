@@ -3,33 +3,42 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const promoBannerType = defineType({
   name: "promoBanner",
-  title: "Blog Toast Banner (Octively)",
+  title: "Promotional Toast Banner (Global / Multi-purpose)",
   type: "document",
   icon: SparklesIcon,
   fields: [
     defineField({
       name: "title",
-      title: "Internal Title",
+      title: "Internal Campaign Name",
+      description: "Internal reference name for this promo banner in Sanity Studio",
       type: "string",
-      initialValue: "Octively AI Promotional Toast",
+      initialValue: "Global Promotional Toast Banner",
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "campaignName",
+      title: "Campaign Tag / Identifier (for UTM Tracking)",
+      description: "Identifier used as utm_campaign in analytics (e.g. octively_free, newsletter_growth, digital_fte_promo)",
+      type: "string",
+      initialValue: "octively_free",
     }),
     defineField({
       name: "isActive",
       title: "Enable Toast Banner",
-      description: "Toggle on to show the promotional toast on blog articles.",
+      description: "Toggle on to show the promotional toast on the website.",
       type: "boolean",
       initialValue: true,
     }),
     defineField({
       name: "mode",
       title: "Display Mode / A-B Testing",
+      description: "A/B test alternates between Variant A & B on page navigations. Force mode locks to one variant.",
       type: "string",
       options: {
         list: [
-          { title: "A/B Test (50/50 Split between Variant A & B)", value: "ab_test" },
-          { title: "Force Variant A (Visual Banner)", value: "variant_a" },
-          { title: "Force Variant B (Founder Note / Text Card)", value: "variant_b" },
+          { title: "A/B Test (Smart Alternating Rotation between Variant A & B)", value: "ab_test" },
+          { title: "Force Variant A (Visual / Lead Magnet Banner)", value: "variant_a" },
+          { title: "Force Variant B (Personal Note / Editorial Card)", value: "variant_b" },
         ],
         layout: "radio",
       },
@@ -38,7 +47,7 @@ export const promoBannerType = defineType({
     defineField({
       name: "scrollTriggerPercent",
       title: "Scroll Trigger Percentage (%)",
-      description: "Show toast after user scrolls this percentage of the article (e.g. 30%)",
+      description: "Show toast after user scrolls this percentage of the page (e.g. 30%)",
       type: "number",
       initialValue: 30,
     }),
@@ -91,31 +100,31 @@ export const promoBannerType = defineType({
     // Variant A Group
     defineField({
       name: "variantA",
-      title: "Variant A (Visual / Graphic Banner)",
+      title: "Variant A (Visual / Lead Magnet Banner)",
       type: "object",
       fields: [
         defineField({
           name: "badgeText",
           title: "Badge Text",
           type: "string",
-          initialValue: "Octively AI · SaaS",
+          initialValue: "For Agencies & Devs · Free",
         }),
         defineField({
           name: "headline",
           title: "Headline",
           type: "string",
-          initialValue: "Get a Free Custom AI Chatbot for Your Website",
+          initialValue: "Ship Branded AI Chatbots to Clients in 2 Minutes",
         }),
         defineField({
           name: "description",
-          title: "Description",
+          title: "Description / Pitch",
           type: "text",
           rows: 3,
-          initialValue: "Capture leads and support visitors 24/7 with branded AI chatbots. 1-line embed, zero coding required.",
+          initialValue: "1-line embed, white-label client portals, zero maintenance. Monetize AI chatbots for your clients today.",
         }),
         defineField({
           name: "featureTags",
-          title: "Feature Tags",
+          title: "Feature Tags (Optional)",
           type: "array",
           of: [defineArrayMember({ type: "string" })],
           initialValue: ["100% Free Plan", "Agency Portals", "1-Line Embed"],
@@ -130,11 +139,12 @@ export const promoBannerType = defineType({
           name: "ctaText",
           title: "CTA Button Text",
           type: "string",
-          initialValue: "Claim Free AI Chatbot →",
+          initialValue: "Claim Free AI Chatbot",
         }),
         defineField({
           name: "ctaUrl",
-          title: "Target URL",
+          title: "Target Destination URL",
+          description: "UTM tracking parameters (utm_source, utm_medium, utm_campaign, utm_content, utm_term) are automatically appended dynamically.",
           type: "url",
           initialValue: "https://octively.com",
         }),
@@ -144,46 +154,45 @@ export const promoBannerType = defineType({
     // Variant B Group
     defineField({
       name: "variantB",
-      title: "Variant B (Founder Editorial / Text Card)",
+      title: "Variant B (Personal Note / Editorial Card)",
       type: "object",
       fields: [
         defineField({
           name: "badgeText",
           title: "Badge Text",
           type: "string",
-          initialValue: "Founder Recommendation",
+          initialValue: "Founder Note · Free for Agencies",
         }),
         defineField({
           name: "founderName",
-          title: "Founder Name",
+          title: "Author / Sender Name",
           type: "string",
           initialValue: "Owais Abdullah",
         }),
         defineField({
           name: "founderTitle",
-          title: "Founder Subtitle",
+          title: "Author Title / Subtitle",
           type: "string",
-          initialValue: "Creator of Octively",
+          initialValue: "Founder @ Octively",
         }),
         defineField({
           name: "founderAvatar",
-          title: "Founder Avatar Image (Optional)",
+          title: "Author Avatar Image (Optional)",
           type: "image",
           options: { hotspot: true },
         }),
         defineField({
-          name: "note",
-          title: "Personal Message / Note",
-          type: "text",
-          rows: 3,
-          initialValue: "I built Octively so agencies can add high-converting, branded AI chatbots to their client sites in minutes with dedicated client portals.",
+          name: "headline",
+          title: "Headline",
+          type: "string",
+          initialValue: "Monetize Custom AI Chatbots for Your Web Clients",
         }),
         defineField({
-          name: "bulletPoints",
-          title: "Key Highlights / Bullet Points",
-          type: "array",
-          of: [defineArrayMember({ type: "string" })],
-          initialValue: ["Free trial available", "Zero coding required", "Instant 1-line embed"],
+          name: "note",
+          title: "Message / Pitch Note",
+          type: "text",
+          rows: 3,
+          initialValue: "I built Octively so developers and agency owners can deploy custom trained AI chatbots to clients with zero backend code.",
         }),
         defineField({
           name: "ctaText",
@@ -193,7 +202,8 @@ export const promoBannerType = defineType({
         }),
         defineField({
           name: "ctaUrl",
-          title: "Target URL",
+          title: "Target Destination URL",
+          description: "UTM tracking parameters (utm_source, utm_medium, utm_campaign, utm_content, utm_term) are automatically appended dynamically.",
           type: "url",
           initialValue: "https://octively.com",
         }),
@@ -208,7 +218,7 @@ export const promoBannerType = defineType({
     },
     prepare({ title, isActive, mode }) {
       return {
-        title: title || "Blog Toast Banner",
+        title: title || "Promotional Toast Banner",
         subtitle: `${isActive ? "Active (Live)" : "Disabled"} · Mode: ${mode || "A/B Test"}`,
       };
     },
