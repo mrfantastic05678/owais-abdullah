@@ -9,30 +9,29 @@ import {
 } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 
-const NAVIGATE = [
+const EXPLORE = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
   { label: "Projects", href: "/projects" },
-  { label: "Blog", href: "/blog" },
-  { label: "Stores", href: "/stores" },
-  { label: "Submit Store", href: "/stores/submit" },
-  { label: "Claim Listing", href: "/stores/claim" },
+  { label: "Tech Stack", href: "/stack" },
   { label: "Skills", href: "/skills" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
 
-const SERVICES = [
-  { label: "Digital FTEs (AI Employees)", href: "/services" },
-  { label: "AI Agent Systems", href: "/services" },
-  { label: "AI Chatbots", href: "/services" },
-  { label: "Workflow Automation", href: "/services" },
-  { label: "SaaS & Web Apps", href: "/services" },
+const DIRECTORY = [
+  { label: "Browse Stores", href: "/stores" },
+  { label: "Submit a Store", href: "/stores/submit" },
+  { label: "Claim Store Listing", href: "/stores/claim" },
 ];
 
-const PRODUCTS = [
-  { label: "Octively — AI chatbot SaaS", href: "https://octively.com", external: true, live: true },
-  { label: "TeamFlow", href: "https://teamflow-sigma-opal.vercel.app/", external: true },
-  { label: "RentParlo", href: "https://rentparlo.vercel.app/", external: true },
+const SERVICES = [
+  { label: "Digital FTEs (AI Employees)", href: "/services/digital-fte" },
+  { label: "AI Agent Systems", href: "/services/ai-agents" },
+  { label: "SaaS Development", href: "/services/saas-development" },
+  { label: "Workflow Automation", href: "/services" },
+  { label: "AI Chatbots", href: "/services" },
 ];
 
 const SOCIALS = [
@@ -101,11 +100,25 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Navigate */}
-          <nav aria-label="Footer navigation">
-            <span className="font-mono text-[0.65rem] tracking-widest uppercase text-foreground block mb-4">Navigate</span>
+          {/* Explore / Main Navigation */}
+          <nav aria-label="Explore navigation">
+            <span className="font-mono text-[0.65rem] tracking-widest uppercase text-foreground block mb-4">Explore</span>
             <ul className="space-y-2.5">
-              {NAVIGATE.map(({ label, href }) => (
+              {EXPLORE.map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} prefetch={false} className="text-sm hover:text-accent transition-colors">
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Store Directory */}
+          <nav aria-label="Store Directory">
+            <span className="font-mono text-[0.65rem] tracking-widest uppercase text-foreground block mb-4">Directory</span>
+            <ul className="space-y-2.5">
+              {DIRECTORY.map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href} prefetch={false} className="text-sm hover:text-accent transition-colors">
                     {label}
@@ -122,28 +135,6 @@ const Footer = () => {
               {SERVICES.map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href} prefetch={false} className="text-sm hover:text-accent transition-colors">
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Products */}
-          <nav aria-label="Products">
-            <span className="font-mono text-[0.65rem] tracking-widest uppercase text-foreground block mb-4">Products</span>
-            <ul className="space-y-2.5">
-              {PRODUCTS.map(({ label, href, live }) => (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm hover:text-accent transition-colors"
-                  >
-                    {live && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-signal-500 shadow-[0_0_6px_var(--signal-500)]" aria-hidden="true"></span>
-                    )}
                     {label}
                   </Link>
                 </li>

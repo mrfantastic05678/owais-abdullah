@@ -79,19 +79,19 @@ const Header = () => {
           {/* Dark logo for Light Theme */}
           <Image
             src="/assets/Owais_logo_dark.png"
-            width={60}
-            height={30}
+            width={52}
+            height={26}
             alt="Owais Abdullah logo"
-            className="relative z-10 md:w-[100px] md:h-[50px] dark:hidden block"
+            className="relative z-10 w-[52px] h-[26px] md:w-[78px] md:h-[39px] dark:hidden block"
             unoptimized
           />
           {/* Light logo for Dark Theme */}
           <Image
             src="/assets/owais_logo.png"
-            width={60}
-            height={30}
+            width={52}
+            height={26}
             alt="Owais Abdullah logo"
-            className="relative z-10 md:w-[100px] md:h-[50px] hidden dark:block"
+            className="relative z-10 w-[52px] h-[26px] md:w-[78px] md:h-[39px] hidden dark:block"
             unoptimized
           />
         </Link>
@@ -110,6 +110,13 @@ const Header = () => {
             className={`${textColorClass} text-sm md:text-base ${hoverColorClass} hover:bg-accent/10 px-3 py-2 rounded-md transition-colors`}
           >
             ABOUT
+          </Link>
+          <Link
+            href={"/services"}
+            onClick={handleLinkClick}
+            className={`${textColorClass} text-sm md:text-base ${hoverColorClass} hover:bg-accent/10 px-3 py-2 rounded-md transition-colors`}
+          >
+            SERVICES
           </Link>
           <Link
             href={"/projects"}
@@ -131,20 +138,6 @@ const Header = () => {
             className={`${textColorClass} text-sm md:text-base ${hoverColorClass} hover:bg-accent/10 px-3 py-2 rounded-md transition-colors`}
           >
             BLOG
-          </Link>
-          <Link
-            href={"/skills"}
-            onClick={handleLinkClick}
-            className={`${textColorClass} text-sm md:text-base ${hoverColorClass} hover:bg-accent/10 px-3 py-2 rounded-md transition-colors`}
-          >
-            SKILLS
-          </Link>
-          <Link
-            href={"/services"}
-            onClick={handleLinkClick}
-            className={`${textColorClass} text-sm md:text-base ${hoverColorClass} hover:bg-accent/10 px-3 py-2 rounded-md transition-colors`}
-          >
-            SERVICES
           </Link>
           <Link
             href={"/stores"}
