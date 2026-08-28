@@ -344,6 +344,28 @@ gsap.from(".reveal", {
 });
 ```
 
+### Text Word Reveal with Gradient Highlights (SSR-Safe)
+```tsx
+// Keep text naturally visible in JSX (no opacity-0 or translate classes) to prevent hydration flash
+// Apply background-clip: text directly to the animated leaf element, not the overflow wrapper
+useGSAP(() => {
+  const words = containerRef.current.querySelectorAll(".heading-word-inner");
+  gsap.from(words, {
+    yPercent: 100,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.05,
+    ease: "power3.out",
+    scrollTrigger: {
+      trigger: containerRef.current,
+      start: "top 90%",
+      toggleActions: "play none none none",
+      once: true,
+    },
+  });
+}, { scope: containerRef });
+```
+
 ### Parallax Effect
 ```typescript
 gsap.to(".parallax-bg", {
@@ -412,13 +434,16 @@ gsap.to(".target", { color: "var(--my-color)" });
 ## Common Issues & Solutions
 
 | Issue | Cause | Solution |
-|-------|-------|----------|
+|---|---|---|
 | Animations not triggering | DOM not ready | Use `useLayoutEffect` or `useGSAP` hook |
 | Nested ScrollTriggers fail | Logic conflict | Apply to parent timeline only |
 | Mobile address bar issues | Viewport height changes | Use `normalizeScroll()` |
 | Too many triggers | Performance bottleneck | Use `ScrollTrigger.batch()` |
 | React Router navigation | Triggers persist | Kill triggers on unmount with `gsap.context()` |
 | Horizontal scroll breaks | Static end values | Use function-based `end: () => ...` |
+| Text reveal disappears on refresh | Hardcoded hiding classes (`opacity-0`, `translate-y`) in JSX | Avoid hiding text via initial HTML classes; keep DOM naturally visible and let `gsap.from()` animate from offset |
+| Gradient text clip vanishes on animated words | `-webkit-background-clip: text` on ancestor with nested overflow masks | **Leaf-node clipping rule**: Apply background-clip and gradient directly to the text-containing leaf element (`heading-word-inner`), not to parent overflow-hidden wrappers |
+| Multi-word gradient repeats on each character | Splitting characters individually with separate gradient classes | Group contiguous highlighted words into a single continuous phrase wrapper so the gradient sweeps across the entire phrase |
 
 ---
 

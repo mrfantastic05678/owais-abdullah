@@ -18,156 +18,119 @@ interface CharRevealHeadingProps {
   start?: string;
 }
 
-/**
- * Paints one continuous blue→green gradient across a run of chars, sized
- * and positioned relative to `originLeft` so multiple elements (chars, or
- * whole words in a multi-word highlight) read as a single unbroken sweep
- * instead of each restarting its own gradient.
- */
-function paintGradientRun(chars: HTMLSpanElement[], headingRect: DOMRect) {
-  if (chars.length === 0) return;
-  const first = chars[0].getBoundingClientRect();
-  const last = chars[chars.length - 1].getBoundingClientRect();
-  const runLeft = first.left - headingRect.left;
-  const runWidth = last.right - first.left;
-
-  chars.forEach((charSpan) => {
-    const offsetInRun = charSpan.getBoundingClientRect().left - headingRect.left - runLeft;
-    charSpan.dataset.hl = "1";
-    charSpan.style.backgroundImage =
-      "linear-gradient(to right, var(--accent) 0%, var(--accent) 60%, var(--signal-500) 100%)";
-    charSpan.style.backgroundSize = `${runWidth}px 100%`;
-    charSpan.style.backgroundPosition = `-${offsetInRun}px 0`;
-    charSpan.style.setProperty("-webkit-background-clip", "text");
-    charSpan.style.backgroundClip = "text";
-    charSpan.style.setProperty("-webkit-text-fill-color", "transparent");
-  });
-}
-
 export default function CharRevealHeading({
   children,
   as: Tag = "h2",
   className = "",
   highlightWords = [],
-  stagger = 0.02,
-  duration = 0.8,
-  start = "top 80%",
+  stagger = 0.04,
+  duration = 0.7,
+  start = "top 85%",
 }: CharRevealHeadingProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const reduced = usePrefersReducedMotion();
+
+  // Extract raw text
+  const text = typeof children === "string" ? children : "";
+  const rawWords = text ? text.split(/\s+/).filter(Boolean) : [];
+  const highlightSet = new Set(highlightWords);
+
+  // Group into runs (highlighted runs vs normal runs)
+  type Run = {
+    isHighlight: boolean;
+    words: string[];
+  };
+
+  const runs: Run[] = [];
+  rawWords.forEach((word) => {
+    const isHl = highlightSet.has(word);
+    const lastRun = runs[runs.length - 1];
+    if (lastRun && lastRun.isHighlight === isHl) {
+      lastRun.words.push(word);
+    } else {
+      runs.push({ isHighlight: isHl, words: [word] });
+    }
+  });
 
   useGSAP(
     () => {
       if (reduced || !headingRef.current) return;
 
-      const heading = headingRef.current;
-      const text = heading.textContent || heading.innerText;
-      heading.innerHTML = "";
+      const animatedWords = headingRef.current.querySelectorAll(".heading-word-inner");
+      if (!animatedWords.length) return;
 
-      const highlightSet = new Set(highlightWords);
-      const words = text.split(" ");
-
-      // Build DOM first, tracking each word's chars + highlight flag —
-      // gradient painting happens in a second pass once everything has a
-      // real layout position to measure.
-      const wordMeta: { chars: HTMLSpanElement[]; isHighlight: boolean }[] = [];
-
-      words.forEach((word, wordIdx) => {
-        const wordSpan = document.createElement("span");
-        wordSpan.className = "inline-block whitespace-nowrap overflow-hidden";
-        if (wordIdx < words.length - 1) wordSpan.style.marginRight = "0.25em";
-
-        const isHighlight = highlightSet.has(word);
-        const wordChars: HTMLSpanElement[] = [];
-        word.split("").forEach((char) => {
-          const charSpan = document.createElement("span");
-          charSpan.innerText = char;
-          charSpan.className = "inline-block translate-y-[120%] text-transparent";
-          wordSpan.appendChild(charSpan);
-          wordChars.push(charSpan);
-        });
-        heading.appendChild(wordSpan);
-        wordMeta.push({ chars: wordChars, isHighlight });
-      });
-
-      // Merge consecutive highlighted words into single gradient runs so
-      // "AI employees" reads as one sweep, not two independent ones.
-      const headingRect = heading.getBoundingClientRect();
-      let i = 0;
-      while (i < wordMeta.length) {
-        if (wordMeta[i].isHighlight) {
-          const run: HTMLSpanElement[] = [];
-          while (i < wordMeta.length && wordMeta[i].isHighlight) {
-            run.push(...wordMeta[i].chars);
-            i++;
-          }
-          paintGradientRun(run, headingRect);
-        } else {
-          i++;
-        }
-      }
-
-      const chars = heading.querySelectorAll("span > span");
-
-      ScrollTrigger.create({
-        trigger: heading,
-        start,
-        onEnter: () =>
-          gsap.to(chars, {
-            y: "0%",
-            // Highlighted chars stay transparent — their inline gradient
-            // background-clip paints the visible color, not this property
-            color: (i: number, el: Element) =>
-              (el as HTMLElement).dataset.hl ? "transparent" : "var(--foreground)",
-            duration,
-            stagger,
-            ease: "power4.out",
-            overwrite: "auto",
-          }),
-        onLeaveBack: () =>
-          gsap.set(chars, { y: "120%", color: "transparent", overwrite: "auto" }),
+      gsap.from(animatedWords, {
+        yPercent: 100,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.05,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 90%",
+          toggleActions: "play none none none",
+          once: true,
+        },
       });
     },
-    { scope: headingRef, dependencies: [reduced, highlightWords, stagger, duration, start] }
+    { scope: headingRef, dependencies: [reduced, text, stagger, duration, start] }
   );
 
-  // Reduced motion / pre-hydration: render plain text with contiguous
-  // highlight-word runs wrapped as one span, so the gradient still shows
-  // as a single sweep without JS
-  const staticContent =
-    typeof children === "string" && highlightWords.length > 0 ? (
-      (() => {
-        const words = children.split(" ");
-        const highlightSet = new Set(highlightWords);
-        const nodes: React.ReactNode[] = [];
-        let i = 0;
-        while (i < words.length) {
-          if (highlightSet.has(words[i])) {
-            const run: string[] = [];
-            while (i < words.length && highlightSet.has(words[i])) {
-              run.push(words[i]);
-              i++;
-            }
-            nodes.push(
-              <span key={i} className="text-highlight">
-                {run.join(" ")}
-              </span>
-            );
-          } else {
-            nodes.push(words[i]);
-            i++;
-          }
-          if (i < words.length) nodes.push(" ");
-        }
-        return nodes;
-      })()
-    ) : (
-      children
+  if (!text || reduced) {
+    return (
+      <Tag ref={headingRef} className={className}>
+        {runs.length > 0 ? (
+          runs.map((run, rIdx) => (
+            <React.Fragment key={rIdx}>
+              {run.isHighlight ? (
+                <span className="text-highlight">{run.words.join(" ")}</span>
+              ) : (
+                <span>{run.words.join(" ")}</span>
+              )}
+              {rIdx < runs.length - 1 && " "}
+            </React.Fragment>
+          ))
+        ) : (
+          children
+        )}
+      </Tag>
     );
+  }
 
   return (
     <Tag ref={headingRef} className={className}>
-      {reduced ? staticContent : children}
+      {runs.map((run, rIdx) => {
+        if (run.isHighlight) {
+          // Whole highlighted multi-word phrase with ONE continuous unbroken gradient sweep
+          return (
+            <React.Fragment key={rIdx}>
+              <span className="inline-block overflow-hidden align-top">
+                <span className="heading-word-inner text-highlight inline-block">
+                  {run.words.join(" ")}
+                </span>
+              </span>
+              {rIdx < runs.length - 1 && " "}
+            </React.Fragment>
+          );
+        }
+
+        // Normal words
+        return (
+          <React.Fragment key={rIdx}>
+            {run.words.map((w, wIdx) => (
+              <React.Fragment key={wIdx}>
+                <span className="inline-block overflow-hidden align-top text-foreground">
+                  <span className="heading-word-inner inline-block">
+                    {w}
+                  </span>
+                </span>
+                {wIdx < run.words.length - 1 && " "}
+              </React.Fragment>
+            ))}
+            {rIdx < runs.length - 1 && " "}
+          </React.Fragment>
+        );
+      })}
     </Tag>
   );
 }
