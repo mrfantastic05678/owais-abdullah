@@ -47,7 +47,7 @@ const Header = () => {
         "left-0",
         "top-[70px]",
         "rounded-xl",
-        "bg-card",
+        "bg-white dark:bg-[#11151C]",
         "border",
         "border-border",
         "shadow-2xl",
@@ -71,7 +71,7 @@ const Header = () => {
   const hoverColorClass = "hover:text-accent";
 
   return (
-    <header className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 rounded-lg border border-border bg-card/80 backdrop-blur-md shadow-xl transition-all duration-300">
+    <header className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 rounded-lg border border-border bg-white/90 dark:bg-[#11151C]/90 backdrop-blur-md shadow-xl transition-all duration-300">
       <div className="mx-auto flex items-center justify-between font-medium py-2 px-4 md:px-6 lg:px-8 z-10 gap-2">
         <Link href={"/"} className="flex items-center gap-2 z-10 relative shrink-0">
           {/* Blue gradient blob behind logo */}

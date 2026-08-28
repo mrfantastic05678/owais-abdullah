@@ -51,7 +51,7 @@
     --text: var(--fg);
     --text2: var(--fg-muted);
     --toc-background: var(--ink-100);
-    --blog: var(--ink-25);
+    --blog: #FFFFFF;
   }
 
   .dark {

@@ -65,21 +65,21 @@ const RelatedPosts = ({ currentSlug, categories, limit = 3 }: RelatedPostsProps)
           <Link
             key={post._id}
             href={`/blog/${post.slug.current}`}
-            className="block border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-background"
+            className="group flex flex-col h-full bg-card border border-border rounded-xl overflow-hidden transition-all duration-300 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5 hover:-translate-y-1"
           >
-            <div className="relative aspect-[16/9] w-full h-40 overflow-hidden">
+            <div className="relative overflow-hidden aspect-video">
               <Image
-                src={urlFor(post.mainImage).url()}
+                src={urlFor(post.mainImage).width(640).height(360).url()}
                 alt={post.mainImage.alt || post.title}
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
-            <div className="p-4">
-              <h3 className="font-bold text-base mb-2 text-foreground line-clamp-2">
+            <div className="flex flex-col flex-1 p-5 gap-2">
+              <h3 className="font-semibold text-base leading-snug text-foreground line-clamp-2 group-hover:text-accent transition-colors duration-200">
                 {post.title}
               </h3>
-              <p className="text-sm text-muted-foreground line-clamp-3">
+              <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2 flex-1">
                 {post.summary}
               </p>
             </div>
