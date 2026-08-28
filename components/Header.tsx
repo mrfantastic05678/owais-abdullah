@@ -43,11 +43,15 @@ const Header = () => {
   const textColorClass = "text-foreground";
   const hoverColorClass = "hover:text-accent";
 
+  const isBlogDetail = pathname?.startsWith("/blog/") && pathname !== "/blog";
+
   return (
     <header
       className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-out ${
         scrolled
           ? "top-3 w-[92%] max-w-5xl rounded-xl border border-border bg-white/85 dark:bg-[#11151C]/85 backdrop-blur-md shadow-2xl py-1.5 px-2 sm:px-3"
+          : isBlogDetail
+          ? "top-3 w-[92%] max-w-5xl rounded-xl border border-border/80 bg-white/90 dark:bg-[#11151C]/90 backdrop-blur-md shadow-lg py-1.5 px-2 sm:px-3"
           : "top-0 w-full max-w-7xl border-b border-transparent bg-transparent py-4 px-4 sm:px-6 md:px-8"
       }`}
     >
