@@ -45,7 +45,7 @@ const SOCIALS = [
 
 const Footer = () => {
   return (
-    <footer className="border-t border-border bg-card/30 text-muted-foreground relative overflow-hidden">
+    <footer className="border-t border-border bg-slate-100/70 dark:bg-card/30 text-muted-foreground relative overflow-hidden">
       {/* token-derived corner glow */}
       <div
         className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full blur-3xl opacity-30 dark:opacity-20 pointer-events-none"
