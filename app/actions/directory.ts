@@ -330,10 +330,10 @@ export async function updateStoreAction(
       }
 
       // Check token match
-      if (store.editToken && store.editToken !== token) {
+      if (!store.editToken || store.editToken.trim() !== token?.trim()) {
         return {
           success: false,
-          error: "Invalid owner verification token. Please check the token provided during claim verification.",
+          error: "Unauthorized: Invalid or missing owner verification token.",
         };
       }
 

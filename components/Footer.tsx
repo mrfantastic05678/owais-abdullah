@@ -58,7 +58,24 @@ const Footer = () => {
           <div>
             <Link href="/" aria-label="Owais Abdullah home" className="inline-flex relative">
               <div className="absolute -inset-5 bg-gradient-to-br from-[#3D7BFF]/30 via-[#6B9AFF]/20 to-[#3D7BFF]/10 rounded-full blur-lg pointer-events-none" />
-              <Image src="/assets/owais_logo.png" width={80} height={40} alt="Owais Abdullah logo" className="relative z-10" unoptimized />
+              {/* Dark logo for Light Theme */}
+              <Image
+                src="/assets/Owais_logo_dark.png"
+                width={80}
+                height={40}
+                alt="Owais Abdullah logo"
+                className="relative z-10 dark:hidden block"
+                unoptimized
+              />
+              {/* Light logo for Dark Theme */}
+              <Image
+                src="/assets/owais_logo.png"
+                width={80}
+                height={40}
+                alt="Owais Abdullah logo"
+                className="relative z-10 hidden dark:block"
+                unoptimized
+              />
             </Link>
             <p className="mt-4 text-sm max-w-[36ch] leading-relaxed">
               Digital FTEs, AI agents, and SaaS products — spec first, then shipped. Karachi, working worldwide.

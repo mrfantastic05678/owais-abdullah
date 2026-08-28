@@ -76,7 +76,24 @@ const Header = () => {
         <Link href={"/"} className="flex items-center gap-2 z-10 relative shrink-0">
           {/* Blue gradient blob behind logo */}
           <div className="absolute -inset-4 bg-gradient-to-br from-[#3D7BFF]/30 via-[#6B9AFF]/20 to-[#3D7BFF]/10 rounded-full blur-lg pointer-events-none" />
-          <Image src="/assets/owais_logo.png" width={60} height={30} alt={"Owais Abdullah logo"} className="relative z-10 md:w-[100px] md:h-[50px]" unoptimized />
+          {/* Dark logo for Light Theme */}
+          <Image
+            src="/assets/Owais_logo_dark.png"
+            width={60}
+            height={30}
+            alt="Owais Abdullah logo"
+            className="relative z-10 md:w-[100px] md:h-[50px] dark:hidden block"
+            unoptimized
+          />
+          {/* Light logo for Dark Theme */}
+          <Image
+            src="/assets/owais_logo.png"
+            width={60}
+            height={30}
+            alt="Owais Abdullah logo"
+            className="relative z-10 md:w-[100px] md:h-[50px] hidden dark:block"
+            unoptimized
+          />
         </Link>
 
         <nav className={getMenuClassNames()}>
