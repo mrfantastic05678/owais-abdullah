@@ -77,18 +77,46 @@ export default function GooglePreferredSourceButton({
       }
     } catch {}
 
-    // 2. Trigger Google Flow (SDK or Smooth Centered Popup Fallback)
-    if (typeof window !== "undefined" && window.preferredSource?.addPreferredSource) {
-      window.preferredSource.addPreferredSource();
-    } else {
-      const targetUrl = "https://www.google.com/preferences/source?q=owaisabdullah.dev";
-      const width = 640;
-      const height = 720;
-      const left = window.screen.width ? (window.screen.width - width) / 2 : 100;
-      const top = window.screen.height ? (window.screen.height - height) / 2 : 100;
+    // 2. Trigger Google Flow (SDK or Direct-Add Modal Popup matching Image 2)
+    let triggeredViaSdk = false;
+    if (typeof window !== "undefined") {
+      if (window.preferredSource && typeof window.preferredSource.addPreferredSource === "function") {
+        try {
+          window.preferredSource.addPreferredSource();
+          triggeredViaSdk = true;
+        } catch {
+          triggeredViaSdk = false;
+        }
+      }
+      if (!triggeredViaSdk && window.PREFERRED_SOURCE && typeof window.PREFERRED_SOURCE.push === "function") {
+        try {
+          window.PREFERRED_SOURCE.push((api: any) => {
+            if (api && typeof api.addPreferredSource === "function") {
+              api.addPreferredSource();
+            }
+          });
+          triggeredViaSdk = true;
+        } catch {
+          triggeredViaSdk = false;
+        }
+      }
+    }
+
+    // Direct-Add Modal Fallback:
+    // Uses Google's official SwG direct add endpoint (news.google.com/swg/ui/v1/addpreferredsource)
+    // which displays the publisher logo, description, and the direct blue [+ Add] button in a centered modal.
+    if (!triggeredViaSdk) {
+      const origin = typeof window !== "undefined" && window.location.origin
+        ? window.location.origin
+        : "https://owaisabdullah.dev";
+      const directAddUrl = `https://news.google.com/swg/ui/v1/addpreferredsource?_=${Date.now()}&hl=en&source=${encodeURIComponent(origin)}`;
+      const width = 500;
+      const height = 630;
+      const left = typeof window !== "undefined" && window.screen.width ? Math.max(0, Math.round((window.screen.width - width) / 2)) : 100;
+      const top = typeof window !== "undefined" && window.screen.height ? Math.max(0, Math.round((window.screen.height - height) / 2)) : 100;
 
       window.open(
-        targetUrl,
+        directAddUrl,
         "GoogleSourcePreferences",
         `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
       );

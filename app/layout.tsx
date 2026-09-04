@@ -221,10 +221,12 @@ export default function RootLayout({
           </>
         )}
         {/* Google Preferred Sources SDK */}
+        <Script id="google-preferred-sources-init" strategy="beforeInteractive">
+          {`window.PREFERRED_SOURCE = window.PREFERRED_SOURCE || [];`}
+        </Script>
         <Script
           src="https://news.google.com/swg/js/v1/publisher.js"
-          strategy="lazyOnload"
-          data-preferred-sources-control="manual"
+          strategy="afterInteractive"
         />
         <ThemeProvider
           attribute="class"
