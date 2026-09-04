@@ -1,5 +1,6 @@
 import { client } from "@/sanity/lib/client";
 import { NextRequest, NextResponse } from "next/server";
+import { COUNTRY_NAMES } from "@/lib/analytics-parser";
 
 export const dynamic = "force-dynamic";
 
@@ -41,10 +42,14 @@ export async function POST(req: NextRequest) {
       mode
     }`;
 
-    const [rawPosts, rawPromo, bannerConfig] = await Promise.all([
+    // 4. Fetch site audience & geo telemetry
+    const siteAnalyticsQuery = `*[_type == "siteAnalytics" && _id == "siteAnalytics_global"][0]`;
+
+    const [rawPosts, rawPromo, bannerConfig, rawSiteAnalytics] = await Promise.all([
       client.fetch(postsQuery),
       client.fetch(promoQuery),
       client.fetch(bannerQuery),
+      client.fetch(siteAnalyticsQuery),
     ]);
 
     const now = Date.now();
@@ -109,7 +114,6 @@ export async function POST(req: NextRequest) {
       .sort((a, b) => b.velocity - a.velocity);
 
     // Segment 3: Decreasing / Needs Attention
-    // Criteria: High views but low sentiment ratio (<70%), or negative likes, or older with decaying ratio
     const decreasingNeedsAttention = posts.filter(
       (p: { dislikes: number; sentimentRatio: number; views: number; likes: number; ageInDays: number }) =>
         p.dislikes > 0 ||
@@ -157,6 +161,112 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Process Audience & Geo Telemetry
+    const safeParse = (str?: string) => {
+      try {
+        return str ? JSON.parse(str) : {};
+      } catch {
+        return {};
+      }
+    };
+
+    const rawCountries = safeParse(rawSiteAnalytics?.topCountriesJson);
+    const rawCities = safeParse(rawSiteAnalytics?.topCitiesJson);
+    const rawDevices = safeParse(rawSiteAnalytics?.devicesJson);
+    const rawBrowsers = safeParse(rawSiteAnalytics?.browsersJson);
+    const rawOS = safeParse(rawSiteAnalytics?.operatingSystemsJson);
+    const rawReferrers = safeParse(rawSiteAnalytics?.referrersJson);
+
+    // Calculate totals for percentages
+    const totalCountryHits = Object.values(rawCountries).reduce((a: number, b: any) => a + (Number(b) || 0), 0) || 1;
+    const totalCityHits = Object.values(rawCities).reduce((a: number, b: any) => a + (Number(b) || 0), 0) || 1;
+    const totalDeviceHits = Object.values(rawDevices).reduce((a: number, b: any) => a + (Number(b) || 0), 0) || 1;
+    const totalBrowserHits = Object.values(rawBrowsers).reduce((a: number, b: any) => a + (Number(b) || 0), 0) || 1;
+    const totalOSHits = Object.values(rawOS).reduce((a: number, b: any) => a + (Number(b) || 0), 0) || 1;
+    const totalReferrerHits = Object.values(rawReferrers).reduce((a: number, b: any) => a + (Number(b) || 0), 0) || 1;
+
+    const countries = Object.entries(rawCountries)
+      .map(([code, count]) => {
+        const c = Number(count) || 0;
+        const info = COUNTRY_NAMES[code.toUpperCase()] || { name: code, flag: "🌐" };
+        return {
+          code: code.toUpperCase(),
+          name: info.name,
+          flag: info.flag,
+          count: c,
+          percentage: Number(((c / totalCountryHits) * 100).toFixed(1)),
+        };
+      })
+      .sort((a, b) => b.count - a.count);
+
+    const cities = Object.entries(rawCities)
+      .map(([name, count]) => {
+        const c = Number(count) || 0;
+        return {
+          name,
+          count: c,
+          percentage: Number(((c / totalCityHits) * 100).toFixed(1)),
+        };
+      })
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 15);
+
+    const desktopCount = Number(rawDevices["Desktop"]) || 0;
+    const mobileCount = Number(rawDevices["Mobile"]) || 0;
+    const tabletCount = Number(rawDevices["Tablet"]) || 0;
+
+    const devices = {
+      desktop: {
+        count: desktopCount,
+        percentage: Number(((desktopCount / totalDeviceHits) * 100).toFixed(1)),
+      },
+      mobile: {
+        count: mobileCount,
+        percentage: Number(((mobileCount / totalDeviceHits) * 100).toFixed(1)),
+      },
+      tablet: {
+        count: tabletCount,
+        percentage: Number(((tabletCount / totalDeviceHits) * 100).toFixed(1)),
+      },
+    };
+
+    const browsers = Object.entries(rawBrowsers)
+      .map(([name, count]) => {
+        const c = Number(count) || 0;
+        return {
+          name,
+          count: c,
+          percentage: Number(((c / totalBrowserHits) * 100).toFixed(1)),
+        };
+      })
+      .sort((a, b) => b.count - a.count);
+
+    const operatingSystems = Object.entries(rawOS)
+      .map(([name, count]) => {
+        const c = Number(count) || 0;
+        return {
+          name,
+          count: c,
+          percentage: Number(((c / totalOSHits) * 100).toFixed(1)),
+        };
+      })
+      .sort((a, b) => b.count - a.count);
+
+    const referrers = Object.entries(rawReferrers)
+      .map(([name, count]) => {
+        const c = Number(count) || 0;
+        return {
+          name,
+          count: c,
+          percentage: Number(((c / totalReferrerHits) * 100).toFixed(1)),
+        };
+      })
+      .sort((a, b) => b.count - a.count);
+
+    const recentActivity = Array.isArray(rawSiteAnalytics?.recentEvents)
+      ? rawSiteAnalytics.recentEvents
+      : [];
+
     return NextResponse.json({
       summary: {
         totalPosts,
@@ -196,6 +306,21 @@ export async function POST(req: NextRequest) {
           dismissRate: dismRateB,
         },
         lastUpdated: promo.lastUpdated || new Date().toISOString(),
+      },
+      audienceTelemetry: {
+        totalEvents: rawSiteAnalytics?.totalEvents || 0,
+        googlePreferredSources: {
+          totalClicks: rawSiteAnalytics?.preferredSourceClicks || 0,
+          placements: safeParse(rawSiteAnalytics?.preferredSourcePlacementsJson),
+        },
+        countries,
+        cities,
+        devices,
+        browsers,
+        operatingSystems,
+        referrers,
+        recentActivity,
+        lastUpdated: rawSiteAnalytics?.lastUpdated || new Date().toISOString(),
       },
     });
   } catch (error) {

@@ -12,6 +12,7 @@ import BlogCards from "@/components/ui/BlogCards";
 import CharRevealHeading from "@/components/CharRevealHeading";
 import CharShuffleText from "@/components/ui/CharShuffleText";
 import BlogAuthorCard from "@/components/BlogAuthorCard";
+import GooglePreferredSourceButton from "@/components/GooglePreferredSourceButton";
 
 const POSTS_PER_PAGE = 9;
 const ALL_TAB = "All";
@@ -80,6 +81,9 @@ export default function BlogArchiveContent({ posts }: { posts: PostCard[] }) {
         >
           The Full Archive
         </CharRevealHeading>
+        <div className="flex justify-center mt-4">
+          <GooglePreferredSourceButton variant="pill" placement="blog_archive_hero" />
+        </div>
       </motion.div>
 
       {/* Featured / latest post + author sidebar */}

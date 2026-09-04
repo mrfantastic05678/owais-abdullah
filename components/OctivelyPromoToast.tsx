@@ -186,11 +186,11 @@ export default function OctivelyPromoToast() {
         fetch("/api/promo-tracking", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ event: "impression", variant }),
+          body: JSON.stringify({ event: "impression", variant, path: pathname }),
         }).catch(() => {});
       } catch {}
     }
-  }, [isVisible, variant]);
+  }, [isVisible, variant, pathname]);
 
   const handleDismiss = () => {
     setIsVisible(false);
@@ -217,14 +217,14 @@ export default function OctivelyPromoToast() {
       fetch("/api/promo-tracking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ event: "dismiss", variant }),
+        body: JSON.stringify({ event: "dismiss", variant, path: pathname }),
       }).catch(() => {});
     } catch {}
   };
 
   const handleCtaClick = () => {
     try {
-      const payload = JSON.stringify({ event: "click", variant });
+      const payload = JSON.stringify({ event: "click", variant, path: pathname });
       if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
         const blob = new Blob([payload], { type: "application/json" });
         navigator.sendBeacon("/api/promo-tracking", blob);

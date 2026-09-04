@@ -8,6 +8,7 @@ import {
   FaGithubSquare,
 } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
+import GooglePreferredSourceButton from "./GooglePreferredSourceButton";
 
 const EXPLORE = [
   { label: "Home", href: "/" },
@@ -97,6 +98,9 @@ const Footer = () => {
                   <Icon aria-hidden="true" />
                 </Link>
               ))}
+            </div>
+            <div className="mt-4">
+              <GooglePreferredSourceButton variant="pill" placement="footer" />
             </div>
           </div>
 

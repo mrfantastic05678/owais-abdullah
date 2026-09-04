@@ -7,7 +7,8 @@ import {authorType} from './authorType'
 import toolReviewType from './toolReviewType'
 import {promoAnalyticsType} from './promoAnalyticsType'
 import {promoBannerType} from './promoBannerType'
+import {siteAnalyticsType} from './siteAnalyticsType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, categoryType, postType, authorType, toolReviewType, promoAnalyticsType, promoBannerType],
+  types: [blockContentType, categoryType, postType, authorType, toolReviewType, promoAnalyticsType, promoBannerType, siteAnalyticsType],
 }

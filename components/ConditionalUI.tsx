@@ -12,7 +12,7 @@ export function ConditionalUI() {
 
   return (
     <>
-      {!isBlogPost && !isStudio && <ChatBot />}
+      {!isBlogPost && !isStudio && !isInsights && <ChatBot />}
       {!isStudio && !isInsights && <OctivelyPromoToast />}
     </>
   );

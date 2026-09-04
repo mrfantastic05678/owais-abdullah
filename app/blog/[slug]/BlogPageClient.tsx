@@ -17,6 +17,7 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import BlogAuthorCard from "@/components/BlogAuthorCard";
 import RecentPostsList, { RecentPost } from "@/components/RecentPostsList";
 import OctivelyPromoToast from "@/components/OctivelyPromoToast";
+import GooglePreferredSourceButton from "@/components/GooglePreferredSourceButton";
 
 export default function BlogPageClient({
   blog,
@@ -239,6 +240,11 @@ export default function BlogPageClient({
                 />
               </div>
             </div>
+          </div>
+
+          {/* Google Preferred Sources Callout Card */}
+          <div className="mt-10">
+            <GooglePreferredSourceButton variant="card" placement="blog_post_end" />
           </div>
 
           {/* Author + Recent Posts — full width below article */}

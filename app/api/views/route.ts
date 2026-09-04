@@ -1,6 +1,8 @@
 import { createClient } from "next-sanity";
 import { apiVersion, dataset, projectId } from "@/sanity/env";
 import { NextRequest, NextResponse } from "next/server";
+import { parseTelemetry } from "@/lib/analytics-parser";
+import { recordAnalyticsEvent } from "@/lib/analytics-recorder";
 
 const writeClient = createClient({
   projectId,
@@ -28,16 +30,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    const updatedPost = await writeClient
-      .patch(post.id)
-      .setIfMissing({ views: 0 })
-      .inc({ views: 1 })
-      .commit();
+    const telemetry = parseTelemetry(req, body);
+
+    // Update post view count & record telemetry in parallel
+    const [updatedPost] = await Promise.all([
+      writeClient
+        .patch(post.id)
+        .setIfMissing({ views: 0 })
+        .inc({ views: 1 })
+        .commit(),
+      recordAnalyticsEvent("page_view", `/blog/${slug}`, telemetry),
+    ]);
 
     return NextResponse.json({
       success: true,
       slug,
       views: updatedPost.views,
+      telemetry: {
+        country: telemetry.country,
+        city: telemetry.city,
+        device: telemetry.device,
+        browser: telemetry.browser,
+      },
     });
   } catch (error) {
     console.error("Error incrementing post views:", error);

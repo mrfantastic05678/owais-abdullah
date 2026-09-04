@@ -220,6 +220,12 @@ export default function RootLayout({
             </Script>
           </>
         )}
+        {/* Google Preferred Sources SDK */}
+        <Script
+          src="https://news.google.com/swg/js/v1/publisher.js"
+          strategy="lazyOnload"
+          data-preferred-sources-control="manual"
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
