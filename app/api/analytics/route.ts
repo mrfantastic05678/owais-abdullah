@@ -200,6 +200,7 @@ export async function POST(req: NextRequest) {
       .sort((a, b) => b.count - a.count);
 
     const cities = Object.entries(rawCities)
+      .filter(([name]) => name && !/direct|unknown|unspecified|^$/i.test(name.trim()))
       .map(([name, count]) => {
         const c = Number(count) || 0;
         return {
@@ -255,8 +256,15 @@ export async function POST(req: NextRequest) {
     const referrers = Object.entries(rawReferrers)
       .map(([name, count]) => {
         const c = Number(count) || 0;
+        let displayName = name;
+        if (name === "direct" || name === "/" || !name) displayName = "Direct / Bookmark";
+        else if (name.includes("localhost") || name.includes("127.0.0.1")) displayName = "Internal Navigation";
+        else if (name.includes("google")) displayName = "Google Search";
+        else if (name.includes("linkedin")) displayName = "LinkedIn";
+        else if (name.includes("twitter") || name.includes("t.co") || name.includes("x.com")) displayName = "X (Twitter)";
+        else if (name.includes("github")) displayName = "GitHub";
         return {
-          name,
+          name: displayName,
           count: c,
           percentage: Number(((c / totalReferrerHits) * 100).toFixed(1)),
         };

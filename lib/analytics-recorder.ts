@@ -87,8 +87,10 @@ export async function recordAnalyticsEvent(
     const cCode = telemetry.countryCode || "US";
     countries[cCode] = (countries[cCode] || 0) + 1;
 
-    const cityKey = telemetry.city && telemetry.city !== "UNKNOWN" ? telemetry.city : "Direct Visitor";
-    cities[cityKey] = (cities[cityKey] || 0) + 1;
+    const cityKey = telemetry.city && telemetry.city !== "UNKNOWN" && telemetry.city !== "Direct Visitor" ? telemetry.city.trim() : "";
+    if (cityKey) {
+      cities[cityKey] = (cities[cityKey] || 0) + 1;
+    }
 
     devices[telemetry.device] = (devices[telemetry.device] || 0) + 1;
     browsers[telemetry.browser] = (browsers[telemetry.browser] || 0) + 1;

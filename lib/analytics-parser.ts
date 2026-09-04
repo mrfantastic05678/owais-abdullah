@@ -73,13 +73,13 @@ export function parseTelemetry(req: NextRequest, clientPayload?: Record<string, 
     headers.get("x-vercel-ip-city") ||
     headers.get("x-city") ||
     clientPayload?.city ||
-    "Direct Visitor";
+    "";
 
   try {
     rawCity = decodeURIComponent(rawCity);
   } catch {}
 
-  const city = rawCity === "UNKNOWN" || !rawCity ? "Direct Visitor" : rawCity;
+  const city = rawCity === "UNKNOWN" || !rawCity || rawCity === "Direct Visitor" ? "" : rawCity;
   const region = headers.get("x-vercel-ip-country-region") || clientPayload?.region || "";
 
   const countryInfo = COUNTRY_NAMES[countryCode] || {

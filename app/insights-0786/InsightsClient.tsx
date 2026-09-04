@@ -169,6 +169,7 @@ export default function InsightsClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"views" | "likes" | "dislikes" | "score" | "date">("score");
+  const [geoSourceTab, setGeoSourceTab] = useState<"cities" | "sources">("cities");
 
   // Check saved session auth
   useEffect(() => {
@@ -434,13 +435,15 @@ export default function InsightsClient() {
               <span>TOP COUNTRY</span>
               <Globe size={14} className="text-signal-500" />
             </div>
-            <div className="flex items-center gap-2 my-1">
-              <span className="text-2xl">{audience?.countries?.[0]?.flag || "🌐"}</span>
-              <div>
-                <div className="text-lg font-bold font-sans text-foreground leading-tight">
+            <div className="flex items-center gap-3 my-1">
+              <div className="w-10 h-10 rounded-xl bg-signal-500/10 border border-signal-500/25 flex items-center justify-center font-mono font-black text-xs text-signal-500 tracking-wider shrink-0 shadow-inner">
+                {audience?.countries?.[0]?.code || "GL"}
+              </div>
+              <div className="min-w-0">
+                <div className="text-base sm:text-lg font-bold font-sans text-foreground leading-tight truncate">
                   {audience?.countries?.[0]?.name || "Tracking..."}
                 </div>
-                <span className="text-[11px] font-mono text-muted-foreground">
+                <span className="text-[11px] font-mono text-muted-foreground block truncate">
                   {audience?.countries?.[0]?.count ?? 0} views ({audience?.countries?.[0]?.percentage ?? 0}%)
                 </span>
               </div>
@@ -451,15 +454,17 @@ export default function InsightsClient() {
           {/* Top City */}
           <div className="p-4 rounded-xl bg-card border border-border shadow-sm flex flex-col justify-between">
             <div className="flex items-center justify-between text-muted-foreground text-xs font-mono mb-1">
-              <span>TOP CITY</span>
+              <span>TOP METRO</span>
               <MapPin size={14} className="text-accent" />
             </div>
-            <div>
-              <div className="text-lg font-bold font-sans text-foreground truncate my-1">
-                {audience?.cities?.[0]?.name || "Direct Visitor"}
+            <div className="my-1">
+              <div className="text-base sm:text-lg font-bold font-sans text-foreground truncate leading-tight">
+                {audience?.cities?.[0]?.name || "National Level"}
               </div>
-              <span className="text-[11px] font-mono text-muted-foreground">
-                {audience?.cities?.[0]?.count ?? 0} visits ({audience?.cities?.[0]?.percentage ?? 0}%)
+              <span className="text-[11px] font-mono text-muted-foreground block truncate">
+                {audience?.cities?.[0]?.count
+                  ? `${audience.cities[0].count} visits (${audience.cities[0].percentage}%)`
+                  : "Metro masked by edge"}
               </span>
             </div>
             <p className="text-[10px] text-muted-foreground">Highest traffic metro</p>
@@ -497,11 +502,11 @@ export default function InsightsClient() {
               <span>PRIMARY SOURCE</span>
               <Compass size={14} className="text-amber-400" />
             </div>
-            <div>
-              <div className="text-lg font-bold font-sans text-foreground truncate my-1">
+            <div className="my-1">
+              <div className="text-base sm:text-lg font-bold font-sans text-foreground truncate leading-tight">
                 {audience?.referrers?.[0]?.name || "Direct / Bookmark"}
               </div>
-              <span className="text-[11px] font-mono text-muted-foreground">
+              <span className="text-[11px] font-mono text-muted-foreground block truncate">
                 {audience?.referrers?.[0]?.count ?? 0} hits ({audience?.referrers?.[0]?.percentage ?? 0}%)
               </span>
             </div>
@@ -515,8 +520,8 @@ export default function InsightsClient() {
               <span className="font-bold">GOOGLE PREFERRED</span>
               <GoogleGIcon className="w-3.5 h-3.5" />
             </div>
-            <div>
-              <div className="text-2xl font-bold font-sans text-foreground my-1 flex items-baseline gap-1.5">
+            <div className="my-1">
+              <div className="text-2xl font-bold font-sans text-foreground flex items-baseline gap-1.5">
                 <span>{audience?.googlePreferredSources?.totalClicks ?? 0}</span>
                 <span className="text-xs text-muted-foreground font-normal">clicks</span>
               </div>
@@ -528,10 +533,10 @@ export default function InsightsClient() {
           </div>
         </div>
 
-        {/* Detailed Breakdown Grid: Countries List, Cities List, and Live Stream */}
+        {/* Detailed Breakdown Grid: Countries List, Cities/Sources Tabs, and Live Stream */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 1. Countries Breakdown */}
-          <div className="p-4.5 rounded-2xl bg-card border border-border shadow-sm flex flex-col justify-between">
+          <div className="p-5 rounded-2xl bg-card border border-border shadow-sm flex flex-col justify-start min-h-[310px]">
             <div className="flex items-center justify-between pb-3 border-b border-border mb-3">
               <div className="flex items-center gap-2">
                 <Globe size={15} className="text-signal-500" />
@@ -540,68 +545,113 @@ export default function InsightsClient() {
               <span className="text-[10px] font-mono text-muted-foreground">Hits (%)</span>
             </div>
 
-            <div className="flex flex-col gap-2.5 max-h-60 overflow-y-auto pr-1">
+            <div className="flex flex-col gap-3 overflow-y-auto pr-1 max-h-72">
               {audience?.countries && audience.countries.length > 0 ? (
                 audience.countries.slice(0, 8).map((c) => (
-                  <div key={c.code} className="flex flex-col gap-1">
+                  <div key={c.code} className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="flex items-center gap-1.5 font-medium truncate">
-                        <span>{c.flag}</span>
-                        <span className="truncate">{c.name}</span>
+                      <span className="flex items-center gap-2 font-medium truncate">
+                        <span className="w-6 h-4.5 rounded text-[10px] font-mono font-bold bg-muted/80 text-foreground border border-border/80 flex items-center justify-center shrink-0 uppercase tracking-wider">
+                          {c.code}
+                        </span>
+                        <span className="truncate text-foreground font-medium">{c.name}</span>
                       </span>
                       <span className="font-mono text-muted-foreground shrink-0 text-[11px]">
-                        <strong>{c.count}</strong> ({c.percentage}%)
+                        <strong className="text-foreground">{c.count}</strong> ({c.percentage}%)
                       </span>
                     </div>
-                    <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+                    <div className="w-full bg-muted/70 rounded-full h-1.5 overflow-hidden">
                       <div
-                        className="bg-signal-500 h-full rounded-full transition-all duration-500"
+                        className="bg-gradient-to-r from-signal-500/80 to-signal-500 h-full rounded-full transition-all duration-500"
                         style={{ width: `${Math.min(100, Math.max(4, c.percentage))}%` }}
                       />
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-xs text-muted-foreground text-center py-6">
+                <div className="text-xs text-muted-foreground text-center py-10">
                   Collecting geographic telemetry...
                 </div>
               )}
             </div>
           </div>
 
-          {/* 2. Top Metros & Referrers */}
-          <div className="p-4.5 rounded-2xl bg-card border border-border shadow-sm flex flex-col justify-between">
+          {/* 2. Top Metros & Referrers with Tab Switcher */}
+          <div className="p-5 rounded-2xl bg-card border border-border shadow-sm flex flex-col justify-start min-h-[310px]">
             <div className="flex items-center justify-between pb-3 border-b border-border mb-3">
               <div className="flex items-center gap-2">
                 <MapPin size={15} className="text-accent" />
-                <h3 className="text-xs font-bold font-mono uppercase text-foreground">Top Cities & Sources</h3>
+                <div className="flex items-center rounded-lg bg-muted/70 p-0.5 border border-border text-[10px] font-mono font-medium">
+                  <button
+                    onClick={() => setGeoSourceTab("cities")}
+                    className={`px-2 py-0.5 rounded-md transition-all ${
+                      geoSourceTab === "cities" ? "bg-background text-foreground font-bold shadow-xs" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    CITIES
+                  </button>
+                  <button
+                    onClick={() => setGeoSourceTab("sources")}
+                    className={`px-2 py-0.5 rounded-md transition-all ${
+                      geoSourceTab === "sources" ? "bg-background text-foreground font-bold shadow-xs" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    TRAFFIC CHANNELS
+                  </button>
+                </div>
               </div>
               <span className="text-[10px] font-mono text-muted-foreground">Volume</span>
             </div>
 
-            <div className="flex flex-col gap-2.5 max-h-60 overflow-y-auto pr-1">
-              {audience?.cities && audience.cities.length > 0 ? (
-                audience.cities.slice(0, 7).map((city, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-xs py-0.5">
-                    <span className="flex items-center gap-1.5 text-foreground truncate">
-                      <span className="text-[10px] font-mono text-muted-foreground">#{idx + 1}</span>
-                      <span className="truncate">{city.name}</span>
-                    </span>
-                    <span className="font-mono text-xs px-2 py-0.5 rounded bg-muted text-accent font-semibold shrink-0">
-                      {city.count}
-                    </span>
+            <div className="flex flex-col gap-2 overflow-y-auto pr-1 max-h-72">
+              {geoSourceTab === "cities" ? (
+                audience?.cities && audience.cities.length > 0 ? (
+                  audience.cities.slice(0, 7).map((city, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-xs py-1 px-2 rounded-lg hover:bg-muted/40 transition-colors">
+                      <span className="flex items-center gap-2 text-foreground truncate">
+                        <span className="text-[10px] font-mono font-bold text-muted-foreground w-4 shrink-0">#{idx + 1}</span>
+                        <span className="truncate font-medium">{city.name}</span>
+                      </span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="font-mono text-xs px-2 py-0.5 rounded bg-muted text-accent font-semibold">
+                          {city.count}
+                        </span>
+                        <span className="text-[10px] font-mono text-muted-foreground">({city.percentage}%)</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-xs text-muted-foreground text-center py-10 leading-relaxed px-4">
+                    Metro coordinates are currently masked by edge network proxies. Country-level telemetry is active.
                   </div>
-                ))
+                )
               ) : (
-                <div className="text-xs text-muted-foreground text-center py-6">
-                  Collecting city telemetry...
-                </div>
+                audience?.referrers && audience.referrers.length > 0 ? (
+                  audience.referrers.slice(0, 7).map((ref, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-xs py-1 px-2 rounded-lg hover:bg-muted/40 transition-colors">
+                      <span className="flex items-center gap-2 text-foreground truncate">
+                        <Compass size={13} className="text-amber-400 shrink-0" />
+                        <span className="truncate font-medium">{ref.name}</span>
+                      </span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="font-mono text-xs px-2 py-0.5 rounded bg-muted text-foreground font-semibold">
+                          {ref.count}
+                        </span>
+                        <span className="text-[10px] font-mono text-muted-foreground">({ref.percentage}%)</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-xs text-muted-foreground text-center py-10">
+                    No external traffic channels recorded yet.
+                  </div>
+                )
               )}
             </div>
           </div>
 
           {/* 3. Live Activity Stream Feed */}
-          <div className="p-4.5 rounded-2xl bg-card border border-border shadow-sm flex flex-col justify-between">
+          <div className="p-5 rounded-2xl bg-card border border-border shadow-sm flex flex-col justify-start min-h-[310px]">
             <div className="flex items-center justify-between pb-3 border-b border-border mb-3">
               <div className="flex items-center gap-2">
                 <Radio size={15} className="text-amber-400 animate-pulse" />
@@ -610,46 +660,59 @@ export default function InsightsClient() {
               <span className="text-[10px] font-mono text-signal-500">Real-time</span>
             </div>
 
-            <div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">
+            <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
               {audience?.recentActivity && audience.recentActivity.length > 0 ? (
                 audience.recentActivity.slice(0, 10).map((evt, idx) => {
-                  const isClick = evt.eventType.includes("click");
+                  const isPreferred = evt.eventType === "google_preferred_click";
+                  const isClick = evt.eventType.includes("click") && !isPreferred;
                   const isDismiss = evt.eventType.includes("dismiss");
-                  const isView = evt.eventType.includes("view");
+                  const isImpression = evt.eventType.includes("impression");
+
+                  let badgeStyle = "bg-accent/15 text-accent border border-accent/30";
+                  let label = evt.eventType.replace(/_/g, " ");
+                  if (isPreferred) {
+                    badgeStyle = "bg-blue-500/15 text-blue-400 border border-blue-500/30";
+                    label = "GOOGLE PREFERRED";
+                  } else if (isClick) {
+                    badgeStyle = "bg-signal-500/15 text-signal-500 border border-signal-500/30";
+                    label = "PROMO CTA CLICK";
+                  } else if (isDismiss) {
+                    badgeStyle = "bg-amber-500/15 text-amber-500 border border-amber-500/30";
+                    label = "TOAST DISMISSED";
+                  } else if (isImpression) {
+                    badgeStyle = "bg-purple-500/15 text-purple-400 border border-purple-500/30";
+                    label = "TOAST SHOWN";
+                  }
+
+                  const validCity = evt.city && !/direct|unknown|unspecified/i.test(evt.city) ? `${evt.city}, ` : "";
+                  const countryLabel = evt.country || evt.countryCode || "Global";
 
                   return (
                     <div
                       key={evt._key || idx}
-                      className="p-2 rounded-lg bg-background border border-border/70 text-[11px] flex flex-col gap-1"
+                      className="p-2.5 rounded-xl bg-background/80 border border-border/80 text-[11px] flex flex-col gap-1.5 hover:border-border transition-colors"
                     >
                       <div className="flex items-center justify-between">
-                        <span
-                          className={`font-mono text-[9px] font-bold px-1.5 py-0.2 rounded uppercase ${
-                            isClick
-                              ? "bg-signal-500/15 text-signal-500"
-                              : isDismiss
-                              ? "bg-destructive/15 text-destructive"
-                              : "bg-accent/15 text-accent"
-                          }`}
-                        >
-                          {evt.eventType.replace("_", " ")}
+                        <span className={`font-mono text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${badgeStyle}`}>
+                          {label}
                         </span>
                         <span className="font-mono text-[9px] text-muted-foreground">
                           {new Date(evt.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between text-muted-foreground text-[10px]">
-                        <span className="truncate text-foreground font-medium max-w-[140px]">{evt.path}</span>
-                        <span className="shrink-0">
-                          {evt.city !== "UNKNOWN" && evt.city !== "Direct Visitor" ? `${evt.city}, ` : ""}
-                          {evt.country}
+                      <div className="flex items-center justify-between text-muted-foreground text-[10px] gap-2">
+                        <span className="truncate text-foreground font-medium max-w-[170px]" title={evt.path}>
+                          {evt.path || "/"}
+                        </span>
+                        <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+                          {validCity}{countryLabel}
                         </span>
                       </div>
                     </div>
                   );
                 })
               ) : (
-                <div className="text-xs text-muted-foreground text-center py-6">
+                <div className="text-xs text-muted-foreground text-center py-10">
                   Awaiting first live visitor stream...
                 </div>
               )}
