@@ -23,6 +23,7 @@ Sanity CMS, WordPress, Shopify, Docker, n8n, FastAPI
 ## Notable Projects
 
 - **Octively** (https://octively.com) — AI chatbot SaaS. Agencies add branded AI chatbots to client sites with one embed script. Founder.
+- **Local Business Factory** (https://studio.octively.com/) — SaaS platform that generates free production websites for local trade businesses from real business data, with AI-powered prospecting and a client studio dashboard.
 - **Digital FTE** — Autonomous AI employees powered by Claude Code. Obsidian vault for memory, MCPs for tools, Python scripts for execution.
 - **TeamFlow** (https://teamflow-sigma-opal.vercel.app/) — AI-powered team management and task assignment platform for agencies.
 - **Visati** (https://visati-dubai.vercel.app/) — Visa services SaaS with document uploads, payments, PDF generation.

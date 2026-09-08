@@ -277,6 +277,15 @@ const existingProjects: Project[] = [
     tags: ["Next.js", "Restaurant", "Food Ordering", "Menu", "Delivery"],
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Payment Integration"],
   },
+  {
+    title: "Local Business Factory",
+    description: "SaaS platform that discovers high-opportunity local trade businesses, generates free production websites from real business data, and converts prospects into paying customers — all in 60 seconds with 95+ PageSpeed.",
+    image: "/assets/projects/local-business-factory.png",
+    link: "https://studio.octively.com/",
+    category: "Platform",
+    tags: ["Next.js", "SaaS", "AI", "Local Business", "B2B", "Cloudflare"],
+    techStack: ["Next.js 15", "React 19", "Tailwind CSS", "Radix UI", "shadcn/ui", "PostgreSQL", "Drizzle ORM", "Upstash Redis", "OpenRouter", "Docker", "Cloudflare"],
+  },
   // WordPress Projects
   {
     title: "Landscape & Gardening Website",
