@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { client } from "@/sanity/lib/client";
 import { services } from "@/data/services";
 import { getCategories, getCities, getAllStoreSlugs } from "@/lib/directory/queries";
+import { getAllShowcaseSlugs } from "@/data/showcaseProjects";
 
 // Dynamically revalidate sitemap every 60 seconds
 export const revalidate = 60;
@@ -101,6 +102,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  // Dynamic Project Showcase URLs
+  const showcaseUrls: MetadataRoute.Sitemap = getAllShowcaseSlugs().map((slug) => ({
+    url: `${baseUrl}/projects/${slug}`,
+    lastModified: currentDate,
+    changeFrequency: "weekly",
+    priority: 0.85,
+  }));
+
   return [
     {
       url: baseUrl,
@@ -168,6 +177,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    ...showcaseUrls,
     ...postUrls,
     ...toolUrls,
     ...serviceUrls,

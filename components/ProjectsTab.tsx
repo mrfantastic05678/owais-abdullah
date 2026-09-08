@@ -27,7 +27,12 @@ const hasValidLink = (link: string) => link && link !== "#";
 
 const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
   const [visibleCount, setVisibleCount] = useState<Record<string, number>>({});
-  const categories = [ALL_TAB, ...Object.keys(projectsByCategory)];
+  const rawCategories = Object.keys(projectsByCategory);
+  const FTE_TAB = "Digital FTE";
+  const otherCats = rawCategories.filter(c => c !== FTE_TAB);
+  const categories = rawCategories.includes(FTE_TAB)
+    ? [ALL_TAB, FTE_TAB, ...otherCats]
+    : [ALL_TAB, ...rawCategories];
   const [activeTab, setActiveTab] = useState(ALL_TAB);
 
   // Deep-link support (?tab=WordPress) without useSearchParams, which would
@@ -187,28 +192,35 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
                         </div>
 
                         <p className="text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
-                        <div className="flex items-center gap-4">
-                          {hasValidLink(project.link) ? (
+                        <div className="flex flex-wrap items-center gap-3 pt-1">
+                          {project.slug && (
+                            <Link
+                              href={`/projects/${project.slug}`}
+                              className="text-xs font-semibold text-accent hover:text-accent/80 border border-accent/40 bg-accent/10 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1.5"
+                            >
+                              <span>Case Study &amp; Setup</span>
+                              <span>→</span>
+                            </Link>
+                          )}
+                          {hasValidLink(project.link) && project.link !== `/projects/${project.slug}` ? (
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                               <Link
                                 href={project.link}
-                                className="text-accent inline-flex items-center hover:text-accent/80"
+                                className="text-muted-foreground hover:text-foreground text-xs font-medium inline-flex items-center"
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                <PixelTextButton label="View Project" hoverLabel="Open live →" fontSize={16} />
-                                <span className="ml-2">
-                                  <FaRegArrowAltCircleRight />
-                                </span>
+                                <span>Live Demo</span>
+                                <span className="ml-1">↗</span>
                               </Link>
                             </motion.div>
-                          ) : (
-                            <span className="text-muted-foreground text-sm">
+                          ) : !project.slug ? (
+                            <span className="text-muted-foreground text-xs">
                               Private client work
                             </span>
-                          )}
+                          ) : null}
                           {project.repoUrl && project.repoUrl !== "#" && (
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="ml-auto">
                               <Link
                                 href={project.repoUrl}
                                 className="text-muted-foreground hover:text-foreground text-sm inline-flex items-center"

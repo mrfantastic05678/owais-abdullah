@@ -23,14 +23,16 @@ Sanity CMS, WordPress, Shopify, Docker, n8n, FastAPI
 ## Notable Projects
 
 - **Octively** (https://octively.com) — AI chatbot SaaS. Agencies add branded AI chatbots to client sites with one embed script. Founder.
-- **Local Business Factory** (https://studio.octively.com/) — SaaS platform that generates free production websites for local trade businesses from real business data, with AI-powered prospecting and a client studio dashboard.
-- **Digital FTE** — Autonomous AI employees powered by Claude Code. Obsidian vault for memory, MCPs for tools, Python scripts for execution.
-- **TeamFlow** (https://teamflow-sigma-opal.vercel.app/) — AI-powered team management and task assignment platform for agencies.
-- **Visati** (https://visati-dubai.vercel.app/) — Visa services SaaS with document uploads, payments, PDF generation.
-- **ContentSpark AI** — SEO blog agent that researches, writes, and publishes 15+ optimized posts daily into Sanity CMS.
-- **GigBillow** (https://gigbillow.vercel.app/) — Freelance business toolkit with AI task categorization and invoice generation.
-- **FurnitureMart.pk** (https://furniture-mart-pk.vercel.app/) — Online furniture marketplace.
-- **AI Humanoid Robotics Book** (https://mrowaisabdullah.github.io/ai-humanoid-robotics/) — RAG chatbot for an educational book.
+- **ContentFTE** (https://owaisabdullah.dev/projects/contentfte) — Autonomous multi-agent Digital FTE researching, writing, and publishing 15+ SEO posts daily to Sanity, WordPress, and Shopify.
+- **SocialFTE** (https://owaisabdullah.dev/projects/socialfte) — Autonomous social media Digital FTE drafting captions, rendering Remotion videos, and publishing across 4 platforms with Discord approval gating.
+- **Digital FTE Architecture** (https://owaisabdullah.dev/projects/digital-fte) — Tiered blueprints (Bronze to Platinum) for building proactive autonomous AI employees with Obsidian memory vaults and MCP tools.
+- **ShopMate** (https://owaisabdullah.dev/projects/shopmate-fte) — Autonomous Shopify operations employee resolving orders and answering product queries 24/7.
+- **OwFlex** (https://owaisabdullah.dev/projects/owflex-chatbot-saas) — Full-stack multi-tenant AI chatbot SaaS with embeddable 1-line script widget and Drizzle ORM RAG.
+- **TeamFlow** (https://owaisabdullah.dev/projects/teamflow) — AI-powered agency CRM and workload distribution platform.
+- **Visati** (https://owaisabdullah.dev/projects/visati) — Visa services SaaS with document uploads, payments, and automated PDF generation.
+- **Voice of Holy Quran** (https://owaisabdullah.dev/projects/voice-of-holy-quran) — Online Quran education platform connecting students with certified tutors for 1-on-1 live classes.
+- **RentParlo** (https://owaisabdullah.dev/projects/rentparlo) — Peer-to-peer equipment and vehicle rental marketplace.
+- **Local Business Factory** (https://studio.octively.com/) — SaaS platform that generates free production websites for local trade businesses from real business data.
 
 ## Services
 
