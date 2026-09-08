@@ -8,8 +8,8 @@ import {
   getShowcaseProject,
   getAllShowcaseSlugs
 } from "@/data/showcaseProjects";
-import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaCheckCircle, FaExclamationTriangle, FaCode, FaRocket, FaShieldAlt } from "react-icons/fa";
-import PixelTextButton from "@/components/ui/PixelTextButton";
+import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaCheckCircle, FaExclamationTriangle, FaCode, FaRocket, FaShieldAlt, FaLock, FaUsers } from "react-icons/fa";
+import CodeBlock from "@/components/CodeBlock";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -68,14 +68,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       images: [project.image || "/assets/owais-abdullah-og.png"]
-    },
-    alternates: {
-      canonical: `https://owaisabdullah.dev/projects/${project.slug}`
     }
   };
 }
 
-export default async function ProjectDetailPage({ params }: PageProps) {
+export default async function ProjectShowcasePage({ params }: PageProps) {
   const { slug } = await params;
   const project = getShowcaseProject(slug);
 
@@ -87,10 +84,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: project.title,
-    headline: project.tagline,
-    description: project.description,
     applicationCategory: "BusinessApplication",
-    operatingSystem: "Cross-platform",
+    operatingSystem: "Cloud, Docker, Node.js, Python",
+    description: project.description,
     offers: {
       "@type": "Offer",
       price: "0",
@@ -101,12 +97,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
       name: "Owais Abdullah",
       url: "https://owaisabdullah.dev"
     },
-    codeRepository: project.githubUrl,
-    keywords: project.keywords.join(", ")
+    url: `https://owaisabdullah.dev/projects/${project.slug}`
   };
 
   return (
-    <article className="max-w-5xl mx-auto px-5 py-24 sm:py-28">
+    <article className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      {/* JSON-LD Rich Snippet */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -135,9 +131,16 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <span className="bg-accent/10 border border-accent/30 text-accent text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
             {project.category}
           </span>
-          <span className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold px-3 py-1 rounded-full">
-            Free for Personal Use
-          </span>
+          {project.isPrivateRepo ? (
+            <span className="bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-semibold px-3 py-1 rounded-full inline-flex items-center gap-1.5">
+              <FaLock className="w-3 h-3" />
+              Private Core / Client Architecture
+            </span>
+          ) : (
+            <span className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold px-3 py-1 rounded-full">
+              Free for Personal Use
+            </span>
+          )}
           <span className="bg-muted text-muted-foreground text-xs px-3 py-1 rounded-full">
             Attribution Required
           </span>
@@ -149,6 +152,29 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-6">
           {project.tagline}
         </p>
+
+        {/* Target Audience Notice if applicable */}
+        {project.targetAudience && (
+          <div className="mb-6 p-3 bg-card border border-border/80 rounded-xl flex items-center gap-3 text-xs sm:text-sm text-muted-foreground">
+            <FaUsers className="w-4 h-4 text-accent shrink-0" />
+            <span>
+              <strong className="text-foreground">Primary User Role:</strong> {project.targetAudience}
+            </span>
+          </div>
+        )}
+
+        {/* Private Repo Notice Banner */}
+        {project.isPrivateRepo && project.privateNotice && (
+          <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-start gap-3 text-xs sm:text-sm text-amber-700 dark:text-amber-300">
+            <FaLock className="w-4 h-4 mt-0.5 shrink-0 text-amber-500" />
+            <div>
+              <p className="font-semibold mb-0.5">Private Repository Notice</p>
+              <p className="text-amber-700/90 dark:text-amber-300/90 leading-relaxed">
+                {project.privateNotice}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Alternative To Pill Strip */}
         {project.alternativeTo && project.alternativeTo.length > 0 && (
@@ -171,7 +197,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-4 pt-2">
-          {project.githubUrl && (
+          {project.githubUrl ? (
             <a
               href={project.githubUrl}
               target="_blank"
@@ -181,7 +207,15 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               <FaGithub className="w-4 h-4" />
               View Source on GitHub
             </a>
-          )}
+          ) : project.isPrivateRepo ? (
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 bg-card border border-border text-foreground font-medium px-5 py-2.5 rounded-lg hover:bg-muted transition-all shadow-sm text-sm"
+            >
+              <FaLock className="w-3.5 h-3.5 text-amber-500" />
+              Request Architecture Access
+            </Link>
+          ) : null}
           {project.liveUrl && (
             <a
               href={project.liveUrl}
@@ -234,7 +268,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {project.painPoints.map((item, idx) => (
             <div
               key={idx}
@@ -319,13 +353,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           {/* Environment Variables Table if present */}
           {project.setupGuide.envVars && project.setupGuide.envVars.length > 0 && (
             <div className="mb-6 overflow-x-auto">
-              <h3 className="text-base font-semibold text-foreground mb-3">Key Environment Variables</h3>
+              <h3 className="text-base font-semibold text-foreground mb-3">Key Environment Variables (.env)</h3>
               <table className="w-full text-left text-xs border border-border rounded-lg overflow-hidden">
                 <thead className="bg-muted text-muted-foreground uppercase font-semibold">
                   <tr>
                     <th className="p-2.5">Variable</th>
                     <th className="p-2.5">Description</th>
-                    <th className="p-2.5">Example</th>
+                    <th className="p-2.5">Example / Format</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
@@ -351,9 +385,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                   {s.step}
                 </p>
                 {s.command && (
-                  <pre className="bg-muted/60 border border-border/40 p-3 rounded-lg overflow-x-auto text-xs font-mono text-foreground mb-2">
-                    <code>{s.command}</code>
-                  </pre>
+                  <CodeBlock code={s.command} className="mb-2" />
                 )}
                 {s.note && <p className="text-xs text-muted-foreground italic pl-1">{s.note}</p>}
               </div>
@@ -373,10 +405,10 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           </p>
         </div>
 
-        <div className="space-y-3.5">
+        <div className="space-y-3">
           {project.roadmap.map((item, idx) => {
             const statusConfig = {
-              completed: { badge: "Completed", class: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30" },
+              completed: { badge: "Completed", class: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30" },
               "in-progress": { badge: "In Progress", class: "bg-amber-500/10 text-amber-500 border-amber-500/30" },
               planned: { badge: "Planned", class: "bg-muted text-muted-foreground border-border/60" }
             }[item.status];

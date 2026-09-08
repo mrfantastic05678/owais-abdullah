@@ -1,6 +1,6 @@
 import { client } from "@/sanity/lib/client";
 import { NextRequest, NextResponse } from "next/server";
-import { COUNTRY_NAMES } from "@/lib/analytics-parser";
+import { COUNTRY_NAMES, resolveCountry } from "@/lib/analytics-parser";
 
 export const dynamic = "force-dynamic";
 
@@ -185,10 +185,74 @@ export async function POST(req: NextRequest) {
     const totalOSHits = Object.values(rawOS).reduce((a: number, b: any) => a + (Number(b) || 0), 0) || 1;
     const totalReferrerHits = Object.values(rawReferrers).reduce((a: number, b: any) => a + (Number(b) || 0), 0) || 1;
 
+    const WELL_KNOWN_CITIES: Record<string, { country: string; countryCode: string; region?: string }> = {
+      // United States
+      "dallas": { country: "United States", countryCode: "US", region: "Texas" },
+      "the dalles": { country: "United States", countryCode: "US", region: "Oregon" },
+      "new york": { country: "United States", countryCode: "US", region: "New York" },
+      "los angeles": { country: "United States", countryCode: "US", region: "California" },
+      "chicago": { country: "United States", countryCode: "US", region: "Illinois" },
+      "san francisco": { country: "United States", countryCode: "US", region: "California" },
+      "seattle": { country: "United States", countryCode: "US", region: "Washington" },
+      "austin": { country: "United States", countryCode: "US", region: "Texas" },
+      "ashburn": { country: "United States", countryCode: "US", region: "Virginia" },
+      "boardman": { country: "United States", countryCode: "US", region: "Oregon" },
+      "atlanta": { country: "United States", countryCode: "US", region: "Georgia" },
+      "phoenix": { country: "United States", countryCode: "US", region: "Arizona" },
+      "denver": { country: "United States", countryCode: "US", region: "Colorado" },
+      "san jose": { country: "United States", countryCode: "US", region: "California" },
+      "columbus": { country: "United States", countryCode: "US", region: "Ohio" },
+      "houston": { country: "United States", countryCode: "US", region: "Texas" },
+      "boston": { country: "United States", countryCode: "US", region: "Massachusetts" },
+      "miami": { country: "United States", countryCode: "US", region: "Florida" },
+      "reston": { country: "United States", countryCode: "US", region: "Virginia" },
+      "council bluffs": { country: "United States", countryCode: "US", region: "Iowa" },
+
+      // Pakistan
+      "hyderabad": { country: "Pakistan", countryCode: "PK", region: "Sindh" },
+      "karachi": { country: "Pakistan", countryCode: "PK", region: "Sindh" },
+      "lahore": { country: "Pakistan", countryCode: "PK", region: "Punjab" },
+      "islamabad": { country: "Pakistan", countryCode: "PK", region: "Islamabad" },
+      "rawalpindi": { country: "Pakistan", countryCode: "PK", region: "Punjab" },
+      "faisalabad": { country: "Pakistan", countryCode: "PK", region: "Punjab" },
+      "multan": { country: "Pakistan", countryCode: "PK", region: "Punjab" },
+      "peshawar": { country: "Pakistan", countryCode: "PK", region: "KPK" },
+      "quetta": { country: "Pakistan", countryCode: "PK", region: "Balochistan" },
+
+      // International
+      "singapore": { country: "Singapore", countryCode: "SG" },
+      "london": { country: "United Kingdom", countryCode: "GB" },
+      "dubai": { country: "United Arab Emirates", countryCode: "AE" },
+      "riyadh": { country: "Saudi Arabia", countryCode: "SA" },
+      "mumbai": { country: "India", countryCode: "IN" },
+      "delhi": { country: "India", countryCode: "IN" },
+      "bengaluru": { country: "India", countryCode: "IN" },
+      "bangalore": { country: "India", countryCode: "IN" },
+      "san salvador": { country: "El Salvador", countryCode: "SV" },
+      "tokyo": { country: "Japan", countryCode: "JP" },
+      "beijing": { country: "China", countryCode: "CN" },
+      "shanghai": { country: "China", countryCode: "CN" },
+      "hong kong": { country: "Hong Kong", countryCode: "HK" },
+      "toronto": { country: "Canada", countryCode: "CA" },
+      "vancouver": { country: "Canada", countryCode: "CA" },
+      "sydney": { country: "Australia", countryCode: "AU" },
+      "melbourne": { country: "Australia", countryCode: "AU" },
+      "frankfurt": { country: "Germany", countryCode: "DE" },
+      "berlin": { country: "Germany", countryCode: "DE" },
+      "paris": { country: "France", countryCode: "FR" },
+      "amsterdam": { country: "Netherlands", countryCode: "NL" },
+      "tel aviv": { country: "Israel", countryCode: "IL" },
+      "jerusalem": { country: "Israel", countryCode: "IL" },
+      "moscow": { country: "Russia", countryCode: "RU" },
+      "saint petersburg": { country: "Russia", countryCode: "RU" },
+      "seoul": { country: "South Korea", countryCode: "KR" },
+      "kyiv": { country: "Ukraine", countryCode: "UA" },
+    };
+
     const countries = Object.entries(rawCountries)
       .map(([code, count]) => {
         const c = Number(count) || 0;
-        const info = COUNTRY_NAMES[code.toUpperCase()] || { name: code, flag: "🌐" };
+        const info = resolveCountry(code);
         return {
           code: code.toUpperCase(),
           name: info.name,
@@ -199,14 +263,40 @@ export async function POST(req: NextRequest) {
       })
       .sort((a, b) => b.count - a.count);
 
+    const cityGeoMap: Record<string, { country: string; countryCode: string; flag: string }> = {};
+    if (Array.isArray(rawSiteAnalytics?.recentEvents)) {
+      for (const evt of rawSiteAnalytics.recentEvents) {
+        if (evt.city && (evt.countryCode || evt.country)) {
+          const cCode = (evt.countryCode || "").toUpperCase();
+          const cInfo = resolveCountry(cCode);
+          cityGeoMap[evt.city.trim().toLowerCase()] = {
+            country: evt.country && evt.country !== cCode ? evt.country : cInfo.name,
+            countryCode: cCode,
+            flag: cInfo.flag,
+          };
+        }
+      }
+    }
+
     const cities = Object.entries(rawCities)
       .filter(([name]) => name && !/direct|unknown|unspecified|^$/i.test(name.trim()))
       .map(([name, count]) => {
         const c = Number(count) || 0;
+        const lower = name.trim().toLowerCase();
+        const known = WELL_KNOWN_CITIES[lower] || cityGeoMap[lower];
+        const countryCode = known?.countryCode || "";
+        const countryInfo = resolveCountry(countryCode);
+        const countryName = known?.country || (countryCode ? countryInfo.name : "");
+        const flag = countryInfo.flag !== "🌐" ? countryInfo.flag : (cityGeoMap[lower]?.flag || "📍");
+
         return {
           name,
           count: c,
           percentage: Number(((c / totalCityHits) * 100).toFixed(1)),
+          country: countryName,
+          countryCode,
+          flag,
+          region: (known as any)?.region || "",
         };
       })
       .sort((a, b) => b.count - a.count)
@@ -272,7 +362,15 @@ export async function POST(req: NextRequest) {
       .sort((a, b) => b.count - a.count);
 
     const recentActivity = Array.isArray(rawSiteAnalytics?.recentEvents)
-      ? rawSiteAnalytics.recentEvents
+      ? rawSiteAnalytics.recentEvents.map((evt: any) => {
+          const cCode = (evt.countryCode || "").toUpperCase();
+          const cInfo = resolveCountry(cCode);
+          return {
+            ...evt,
+            country: evt.country && evt.country !== cCode ? evt.country : cInfo.name,
+            flag: cInfo.flag,
+          };
+        })
       : [];
 
     return NextResponse.json({

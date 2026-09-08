@@ -72,6 +72,10 @@ interface AudienceTelemetry {
     name: string;
     count: number;
     percentage: number;
+    country?: string;
+    countryCode?: string;
+    flag?: string;
+    region?: string;
   }>;
   devices: {
     desktop: { count: number; percentage: number };
@@ -458,8 +462,16 @@ export default function InsightsClient() {
               <MapPin size={14} className="text-accent" />
             </div>
             <div className="my-1">
-              <div className="text-base sm:text-lg font-bold font-sans text-foreground truncate leading-tight">
-                {audience?.cities?.[0]?.name || "National Level"}
+              <div className="text-base sm:text-lg font-bold font-sans text-foreground truncate leading-tight flex items-center gap-1.5">
+                {audience?.cities?.[0]?.flag && (
+                  <span className="text-sm shrink-0">{audience.cities[0].flag}</span>
+                )}
+                <span className="truncate">{audience?.cities?.[0]?.name || "National Level"}</span>
+                {audience?.cities?.[0]?.countryCode && (
+                  <span className="text-[11px] font-mono text-muted-foreground font-normal shrink-0">
+                    ({audience.cities[0].countryCode})
+                  </span>
+                )}
               </div>
               <span className="text-[11px] font-mono text-muted-foreground block truncate">
                 {audience?.cities?.[0]?.count
@@ -606,20 +618,33 @@ export default function InsightsClient() {
             <div className="flex flex-col gap-2 overflow-y-auto pr-1 max-h-72">
               {geoSourceTab === "cities" ? (
                 audience?.cities && audience.cities.length > 0 ? (
-                  audience.cities.slice(0, 7).map((city, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-xs py-1 px-2 rounded-lg hover:bg-muted/40 transition-colors">
-                      <span className="flex items-center gap-2 text-foreground truncate">
-                        <span className="text-[10px] font-mono font-bold text-muted-foreground w-4 shrink-0">#{idx + 1}</span>
-                        <span className="truncate font-medium">{city.name}</span>
-                      </span>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="font-mono text-xs px-2 py-0.5 rounded bg-muted text-accent font-semibold">
-                          {city.count}
+                  <>
+                    {audience.cities.slice(0, 10).map((city, idx) => (
+                      <div key={idx} className="flex items-center justify-between text-xs py-1 px-2 rounded-lg hover:bg-muted/40 transition-colors">
+                        <span className="flex items-center gap-2 text-foreground truncate min-w-0">
+                          <span className="text-[10px] font-mono font-bold text-muted-foreground w-4 shrink-0">#{idx + 1}</span>
+                          <span className="text-sm shrink-0" title={city.country || city.countryCode || ""}>
+                            {city.flag || "📍"}
+                          </span>
+                          <span className="truncate font-medium">{city.name}</span>
+                          {(city.region || city.countryCode || city.country) && (
+                            <span className="text-[10px] font-mono text-muted-foreground shrink-0">
+                              · {city.region ? `${city.region}, ${city.countryCode || city.country}` : (city.country || city.countryCode)}
+                            </span>
+                          )}
                         </span>
-                        <span className="text-[10px] font-mono text-muted-foreground">({city.percentage}%)</span>
+                        <div className="flex items-center gap-2 shrink-0 ml-2">
+                          <span className="font-mono text-xs px-2 py-0.5 rounded bg-muted text-accent font-semibold">
+                            {city.count}
+                          </span>
+                          <span className="text-[10px] font-mono text-muted-foreground">({city.percentage}%)</span>
+                        </div>
                       </div>
+                    ))}
+                    <div className="mt-2 pt-2 border-t border-border/50 text-[10px] font-mono text-muted-foreground/80 px-2 leading-relaxed">
+                      💡 US metros (e.g. Dallas TX, The Dalles OR, New York NY) are tracked via ISP headers. Datacenter & edge traffic without metro precision roll up under United States.
                     </div>
-                  ))
+                  </>
                 ) : (
                   <div className="text-xs text-muted-foreground text-center py-10 leading-relaxed px-4">
                     Metro coordinates are currently masked by edge network proxies. Country-level telemetry is active.

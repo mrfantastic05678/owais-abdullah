@@ -28,6 +28,9 @@ export const COUNTRY_NAMES: Record<string, { name: string; flag: string }> = {
   SA: { name: "Saudi Arabia", flag: "🇸🇦" },
   SG: { name: "Singapore", flag: "🇸🇬" },
   JP: { name: "Japan", flag: "🇯🇵" },
+  CN: { name: "China", flag: "🇨🇳" },
+  IL: { name: "Israel", flag: "🇮🇱" },
+  RU: { name: "Russia", flag: "🇷🇺" },
   BR: { name: "Brazil", flag: "🇧🇷" },
   SE: { name: "Sweden", flag: "🇸🇪" },
   CH: { name: "Switzerland", flag: "🇨🇭" },
@@ -50,7 +53,71 @@ export const COUNTRY_NAMES: Record<string, { name: string; flag: string }> = {
   PH: { name: "Philippines", flag: "🇵🇭" },
   VN: { name: "Vietnam", flag: "🇻🇳" },
   EG: { name: "Egypt", flag: "🇪🇬" },
+  KR: { name: "South Korea", flag: "🇰🇷" },
+  UA: { name: "Ukraine", flag: "🇺🇦" },
+  TW: { name: "Taiwan", flag: "🇹🇼" },
+  HK: { name: "Hong Kong", flag: "🇭🇰" },
+  TH: { name: "Thailand", flag: "🇹🇭" },
+  IR: { name: "Iran", flag: "🇮🇷" },
+  IQ: { name: "Iraq", flag: "🇮🇶" },
+  CO: { name: "Colombia", flag: "🇨🇴" },
+  AR: { name: "Argentina", flag: "🇦🇷" },
+  CL: { name: "Chile", flag: "🇨🇱" },
+  PE: { name: "Peru", flag: "🇵🇪" },
+  SV: { name: "El Salvador", flag: "🇸🇻" },
+  QA: { name: "Qatar", flag: "🇶🇦" },
+  KW: { name: "Kuwait", flag: "🇰🇼" },
+  OM: { name: "Oman", flag: "🇴🇲" },
+  BH: { name: "Bahrain", flag: "🇧🇭" },
+  MX: { name: "Mexico", flag: "🇲🇽" },
+  PT: { name: "Portugal", flag: "🇵🇹" },
+  GR: { name: "Greece", flag: "🇬🇷" },
+  RO: { name: "Romania", flag: "🇷🇴" },
+  CZ: { name: "Czech Republic", flag: "🇨🇿" },
+  HU: { name: "Hungary", flag: "🇭🇺" },
+  KE: { name: "Kenya", flag: "🇰🇪" },
+  GH: { name: "Ghana", flag: "🇬🇭" },
+  MA: { name: "Morocco", flag: "🇲🇦" },
+  DZ: { name: "Algeria", flag: "🇩🇿" },
+  TN: { name: "Tunisia", flag: "🇹🇳" },
+  LK: { name: "Sri Lanka", flag: "🇱🇰" },
+  NP: { name: "Nepal", flag: "🇳🇵" },
+  JO: { name: "Jordan", flag: "🇯🇴" },
+  LB: { name: "Lebanon", flag: "🇱🇧" },
+  PS: { name: "Palestine", flag: "🇵🇸" },
 };
+
+export function resolveCountry(code: string): { name: string; flag: string } {
+  if (!code) return { name: "Unknown", flag: "🌐" };
+  const upper = code.toUpperCase().trim();
+
+  if (COUNTRY_NAMES[upper]) {
+    return COUNTRY_NAMES[upper];
+  }
+
+  let name = upper;
+  try {
+    if (typeof Intl !== "undefined" && (Intl as any).DisplayNames) {
+      const dn = new Intl.DisplayNames(["en"], { type: "region" });
+      const resolved = dn.of(upper);
+      if (resolved && resolved !== upper) {
+        name = resolved;
+      }
+    }
+  } catch {}
+
+  let flag = "🌐";
+  if (upper.length === 2 && /^[A-Z]{2}$/.test(upper)) {
+    try {
+      const codePoints = upper
+        .split("")
+        .map((c) => 127397 + c.charCodeAt(0));
+      flag = String.fromCodePoint(...codePoints);
+    } catch {}
+  }
+
+  return { name, flag };
+}
 
 export function parseTelemetry(req: NextRequest, clientPayload?: Record<string, any>): TelemetryData {
   const headers = req.headers;
@@ -82,10 +149,7 @@ export function parseTelemetry(req: NextRequest, clientPayload?: Record<string, 
   const city = rawCity === "UNKNOWN" || !rawCity || rawCity === "Direct Visitor" ? "" : rawCity;
   const region = headers.get("x-vercel-ip-country-region") || clientPayload?.region || "";
 
-  const countryInfo = COUNTRY_NAMES[countryCode] || {
-    name: countryCode,
-    flag: "🌐",
-  };
+  const countryInfo = resolveCountry(countryCode);
   const country = countryInfo.name;
 
   // 2. User Agent Parsing

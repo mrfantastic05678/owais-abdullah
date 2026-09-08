@@ -105,10 +105,9 @@ const existingProjects: Project[] = [
 
   {
     title: "ShopMate",
-    description: "A Digital FTE (full-time-equivalent AI employee) for Shopify stores — an operations employee that answers shoppers, tracks orders, captures leads, and runs sales.",
+    description: "A Digital FTE (full-time-equivalent AI employee) for Shopify store owners — internal operations employee that answers shoppers in English/Urdu, tracks orders, captures leads, and compiles daily digests.",
     image: "/assets/placeholder.png",
     link: "https://shopmate.octively.com",
-    repoUrl: "https://github.com/MrOwaisAbdullah/Shopmate-fte",
     slug: "shopmate-fte",
     category: "Digital FTE",
     tags: ["Shopify", "AI Agents", "Automation", "SaaS"],
@@ -623,8 +622,7 @@ const githubRepositories: Project[] = [
     category: "Platform",
     description:
       "Full-stack multi-tenant AI Chatbot SaaS with embeddable 1-line script widget, RAG document knowledge base, Drizzle ORM, and Stripe subscriptions.",
-    link: "https://github.com/MrOwaisAbdullah/Owflex-Chatbot-Saas",
-    repoUrl: "https://github.com/MrOwaisAbdullah/Owflex-Chatbot-Saas",
+    link: "/projects/owflex-chatbot-saas",
     slug: "owflex-chatbot-saas",
     deployedUrl: null,
     image: "/assets/placeholder.png",
