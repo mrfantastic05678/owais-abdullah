@@ -19,10 +19,17 @@ const Header = () => {
 
   useEffect(() => {
     setMounted(true);
+    let lastScrolled = window.scrollY > 40;
+    setScrolled(lastScrolled);
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      const nowScrolled = window.scrollY > 40;
+      if (nowScrolled !== lastScrolled) {
+        lastScrolled = nowScrolled;
+        setScrolled(nowScrolled);
+      }
     };
-    handleScroll();
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -67,6 +74,7 @@ const Header = () => {
             height={26}
             alt="Owais Abdullah logo"
             className="relative z-10 w-[52px] h-[26px] md:w-[78px] md:h-[39px] dark:hidden block"
+            style={{ height: "auto" }}
             unoptimized
           />
           {/* Light logo for Dark Theme */}
@@ -76,6 +84,7 @@ const Header = () => {
             height={26}
             alt="Owais Abdullah logo"
             className="relative z-10 w-[52px] h-[26px] md:w-[78px] md:h-[39px] hidden dark:block"
+            style={{ height: "auto" }}
             unoptimized
           />
         </Link>

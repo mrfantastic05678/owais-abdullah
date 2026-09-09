@@ -10,6 +10,15 @@ import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
 
 const BlogSectionContent = ({ blogs, showViewAll = false }: { blogs: PostCard[]; showViewAll?: boolean }) => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   return (
     <section className="max-w-[1600px] mx-auto py-20 px-4 sm:px-6 lg:px-8">
       {blogs.length === 0 ? (
@@ -21,20 +30,12 @@ const BlogSectionContent = ({ blogs, showViewAll = false }: { blogs: PostCard[];
         </div>
       ) : (
         <>
-          <div className="hidden md:block w-full relative px-10 md:px-16 overflow-hidden">
+          <div className="w-full relative px-4 sm:px-10 md:px-16 overflow-hidden">
             <OverlappingSlider 
               posts={blogs} 
-              cardWidth="25vw"
-              cardHeight="32vw"
-            />
-          </div>
-          
-          <div className="block md:hidden">
-             <OverlappingSlider 
-              posts={blogs} 
-              cardWidth="80vw"
-              cardHeight="110vw"
-              gap={0.05}
+              cardWidth={isMobile ? "80vw" : "25vw"}
+              cardHeight={isMobile ? "110vw" : "32vw"}
+              gap={isMobile ? 0.05 : 0.02}
             />
           </div>
 

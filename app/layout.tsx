@@ -196,6 +196,7 @@ export default function RootLayout({
         />
       </head>
       <body
+        suppressHydrationWarning
         className={cn(
           clashDisplay.variable,
           satoshi.variable,

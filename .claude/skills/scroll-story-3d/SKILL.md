@@ -967,7 +967,24 @@ standalone version implements a lightweight custom slider from scratch.
   ScrollTrigger for the pixelation reveal and Lenis for smooth
   scrolling.
 
-## Reference files
+## Production Performance & 60FPS Engineering Standards
+
+When deploying scroll-driven 3D or canvas techniques to production Next.js/React applications:
+
+1. **Lenis & Mobile Touch Isolation**:
+   - **Never hijack touch scroll on mobile**: Mobile platforms (iOS Safari, Android) feature native hardware-accelerated 60/120Hz momentum scrolling. Set `if (!window.matchMedia("(pointer: fine)").matches || window.innerWidth < 768) return;` to leave native touch scrolling intact.
+   - **rAF Timestamp**: Pass `lenis.raf(time)` directly. Never multiply by 1000 (`time * 1000`), as `requestAnimationFrame` already passes timestamps in milliseconds.
+2. **Backdrop-Blur on Moving Elements**:
+   - Never place CSS `backdrop-filter: blur(...)` inside infinite marquee tracks, sliders, or continuous animations. It forces the GPU compositor to sample and blur background pixels on every single frame across all moving elements. Use opaque solid card backgrounds (`bg-card border border-border/80`).
+3. **WebGL / Canvas Lifecycle & Off-Screen Unmounting**:
+   - Continuous WebGL simulation loops (Three.js, R3F fluid shaders) must be observed via `IntersectionObserver`. When scrolled out of the viewport (e.g. past Hero), unmount or pause the render loop to release GPU memory for subsequent page sections.
+   - Restrict heavy WebGL shaders to desktop fine-pointer viewports (`>= 1024px`).
+4. **Scroll Scrubbing Decoupling from React State**:
+   - Never call `setState(progress * 100)` on every scroll tick (`rAF`). Doing so triggers 60 React component re-renders per second while scrolling.
+   - Update `<canvas>` or DOM styles directly via refs. Only trigger React state updates when discrete step milestones or active act indices change (e.g. `activeAct: 0 -> 1 -> 2`).
+5. **Mobile Canvas Fallbacks & Component De-duplication**:
+   - Avoid canvas-based pixelation filters on mobile touch screens in favor of standard optimized `<Image>` components.
+   - Never render duplicate hidden slider instances (e.g. `hidden md:block` and `block md:hidden`) that mount multiple separate JS physics controllers. Use a single responsive instance.
 
 | File | Read when |
 |---|---|

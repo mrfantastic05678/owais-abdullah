@@ -5,6 +5,8 @@ import {
   cloneElement,
   isValidElement,
   useRef,
+  useState,
+  useEffect,
 } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -36,12 +38,24 @@ export default function PixelImage({
 }: PixelImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
   const reduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (
+      !reduced &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(pointer: fine)").matches &&
+      window.innerWidth >= 768
+    ) {
+      setShouldAnimate(true);
+    }
+  }, [reduced]);
 
   useGSAP(
     () => {
-      if (reduced) {
-        // Static fallback: show the child image directly
+      if (!shouldAnimate) {
+        // Direct static render: show child image directly without canvas overhead
         const container = containerRef.current;
         if (!container) return;
         gsap.set(container, { opacity: 1 });
@@ -149,32 +163,34 @@ export default function PixelImage({
     { scope: containerRef, dependencies: [reduced, pxSteps, triggerStart, speed, initialDelay] }
   );
 
-  const wrappedChildren = Children.map(children, (child) => {
-    if (!isValidElement(child)) return null;
-    type ImageChildProps = { src?: string; style?: React.CSSProperties; [key: string]: unknown };
-    const el = child as React.ReactElement<ImageChildProps>;
-    if (el.props.src) {
-      return cloneElement(el, {
-        "data-pixel-src": el.props.src,
-        style: {
-          ...el.props.style,
-          position: "absolute",
-          opacity: 0,
-          pointerEvents: "none",
-        },
-      } as Partial<ImageChildProps>);
-    }
-    return child;
-  });
+  const wrappedChildren = shouldAnimate
+    ? Children.map(children, (child) => {
+        if (!isValidElement(child)) return null;
+        type ImageChildProps = { src?: string; style?: React.CSSProperties; [key: string]: unknown };
+        const el = child as React.ReactElement<ImageChildProps>;
+        if (el.props.src) {
+          return cloneElement(el, {
+            "data-pixel-src": el.props.src,
+            style: {
+              ...el.props.style,
+              position: "absolute",
+              opacity: 0,
+              pointerEvents: "none",
+            },
+          } as Partial<ImageChildProps>);
+        }
+        return child;
+      })
+    : children;
 
   return (
     <div
       ref={containerRef}
-      className={`relative overflow-hidden opacity-0 ${className}`}
+      className={`relative overflow-hidden ${shouldAnimate ? "opacity-0" : "opacity-100"} ${className}`}
       style={style}
     >
       {wrappedChildren}
-      {!reduced && (
+      {shouldAnimate && (
         <canvas ref={canvasRef} className="absolute inset-0 size-full pointer-events-none" />
       )}
     </div>

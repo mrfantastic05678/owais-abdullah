@@ -65,6 +65,7 @@ const Footer = () => {
                 height={40}
                 alt="Owais Abdullah logo"
                 className="relative z-10 dark:hidden block"
+                style={{ width: "auto", height: "auto" }}
                 unoptimized
               />
               {/* Light logo for Dark Theme */}
@@ -74,6 +75,7 @@ const Footer = () => {
                 height={40}
                 alt="Owais Abdullah logo"
                 className="relative z-10 hidden dark:block"
+                style={{ width: "auto", height: "auto" }}
                 unoptimized
               />
             </Link>

@@ -10,12 +10,14 @@ interface FluidCursorProps {
   colorToken?: string;
   curl?: number;
   className?: string;
+  inView?: boolean;
 }
 
 export default function FluidCursor({
   colorToken = "--signal-500",
   curl = 30,
   className = "",
+  inView = true,
 }: FluidCursorProps) {
   // WebGL can't resolve CSS var() strings — read the computed value once mounted
   const [fluidColor, setFluidColor] = useState<string | null>(null);
@@ -30,8 +32,16 @@ export default function FluidCursor({
   if (!fluidColor) return null;
 
   return (
-    <div className={`absolute inset-0 z-0 ${className}`}>
-      <Canvas camera={{ position: [0, 0, 10], fov: 50 }} dpr={[1, 1.5]}>
+    <div
+      className={`absolute inset-0 z-0 transition-opacity duration-300 ${inView ? "opacity-100" : "opacity-0 pointer-events-none"} ${className}`}
+      style={{ visibility: inView ? "visible" : "hidden" }}
+      aria-hidden="true"
+    >
+      <Canvas
+        camera={{ position: [0, 0, 10], fov: 50 }}
+        dpr={[1, 1.5]}
+        frameloop={inView ? "always" : "never"}
+      >
         <EffectComposer>
           <Fluid fluidColor={fluidColor} curl={curl} />
         </EffectComposer>

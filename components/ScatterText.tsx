@@ -24,11 +24,19 @@ const ScatterText = ({
   scatterRotation = 180,
 }: ScatterTextProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = React.useState(false);
   const reduced = usePrefersReducedMotion();
+
+  React.useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useGSAP(
     () => {
-      if (reduced || !wrapperRef.current) return;
+      if (reduced || isMobile || !wrapperRef.current) return;
 
       const chars = wrapperRef.current.querySelectorAll<HTMLElement>(".scatter-char");
       if (!chars.length) return;
@@ -61,11 +69,10 @@ const ScatterText = ({
         ease: "power2.out",
       });
     },
-    { scope: wrapperRef, dependencies: [reduced, scatterXY, scatterZ, scatterRotation] }
+    { scope: wrapperRef, dependencies: [reduced, isMobile, scatterXY, scatterZ, scatterRotation] }
   );
 
-  // Words are wrapped in non-breaking spans at render time, so lines can
-  // only break between words — never mid-word — in every mode.
+  // Words are wrapped in non-breaking spans on desktop; on mobile/reduced render clean text
   const words = children.split(/\s+/);
 
   return (
@@ -73,21 +80,25 @@ const ScatterText = ({
       ref={wrapperRef}
       data-cursor="scroll"
       data-cursor-label="SCROLL"
-      className="min-h-[70vh] flex items-center justify-center px-6 overflow-hidden relative"
+      className="min-h-[50vh] md:min-h-[70vh] flex items-center justify-center px-6 overflow-hidden relative"
     >
       <p className="text-[clamp(1.5rem,4vw,3.5rem)] font-semibold leading-[1.2] text-center max-w-[24ch] text-foreground relative z-10">
-        {words.map((word, wi) => (
-          <React.Fragment key={wi}>
-            <span className="inline-block whitespace-nowrap">
-              {[...word].map((ch, ci) => (
-                <span key={ci} className="scatter-char inline-block will-change-transform">
-                  {ch}
-                </span>
-              ))}
-            </span>
-            {wi < words.length - 1 ? " " : null}
-          </React.Fragment>
-        ))}
+        {reduced || isMobile ? (
+          children
+        ) : (
+          words.map((word, wi) => (
+            <React.Fragment key={wi}>
+              <span className="inline-block whitespace-nowrap">
+                {[...word].map((ch, ci) => (
+                  <span key={ci} className="scatter-char inline-block will-change-transform">
+                    {ch}
+                  </span>
+                ))}
+              </span>
+              {wi < words.length - 1 ? " " : null}
+            </React.Fragment>
+          ))
+        )}
       </p>
     </div>
   );

@@ -23,23 +23,20 @@ const SkillCards = ({ name, icon: Icon, color }: SkillCardProps) => {
           }}
         ></div>
         
-        {/* Main card with enhanced styling */}
-        <div className="relative bg-card/80 backdrop-blur-sm border border-border rounded-2xl p-4 w-32 h-24 flex flex-col items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:bg-card/90 group-hover:border-accent/30 group-hover:shadow-2xl">
-          {/* Icon container with enhanced glow */}
+        {/* Main card with high-performance styling (no heavy backdrop-blur) */}
+        <div className="relative bg-card border border-border/80 rounded-2xl p-4 w-32 h-24 flex flex-col items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:border-accent/40 group-hover:shadow-xl">
+          {/* Icon container */}
           <div 
             className="relative p-2 rounded-xl mb-2 transition-all duration-300 group-hover:scale-110"
             style={{ 
-              background: `linear-gradient(135deg, ${color}30, ${color}10)`,
-              boxShadow: `0 4px 20px ${color}25, inset 0 1px 0 ${color}40`
+              background: `linear-gradient(135deg, ${color}20, ${color}08)`,
+              boxShadow: `0 2px 10px ${color}15`
             }}
           >
             <Icon 
               size={20} 
               className="text-foreground transition-all duration-300"
-              style={{ 
-                filter: `drop-shadow(0 0 8px ${color}80)`,
-                color: color
-              }}
+              style={{ color }}
             />
           </div>
           
@@ -48,12 +45,11 @@ const SkillCards = ({ name, icon: Icon, color }: SkillCardProps) => {
             {name}
           </h3>
           
-          {/* Enhanced animated underline */}
+          {/* Animated underline */}
           <div 
             className="w-4 h-0.5 rounded-full mt-1.5 opacity-50 group-hover:opacity-90 group-hover:w-8 transition-all duration-300"
             style={{ 
-              background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
-              boxShadow: `0 0 10px ${color}60`
+              background: `linear-gradient(90deg, transparent, ${color}, transparent)`
             }}
           ></div>
         </div>

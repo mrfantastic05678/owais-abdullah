@@ -7,10 +7,12 @@ import CharRevealHeading from "@/components/CharRevealHeading";
 import { FaReact, FaWordpress, FaNodeJs } from "react-icons/fa";
 import { BiLogoTypescript, BiLogoPython } from "react-icons/bi";
 import { SiNextdotjs, SiOpenai, SiSanity, SiTailwindcss, SiSqlite, SiPrisma, SiPostgresql } from "react-icons/si";
+import { Zap } from "lucide-react";
 
 const skills = [
   { icon: <SiOpenai />, title: "OpenAI Agents SDK", description: "Developing autonomous AI agents with the OpenAI Agents SDK." },
   { icon: <SiNextdotjs />, title: "Next.js", description: "Building fast, dynamic, and SEO-friendly web applications." },
+  { icon: <Zap className="text-amber-400" />, title: "Performance & Web Vitals", description: "60FPS smooth UI engineering, GPU layer optimization, mobile touch responsiveness, and sub-second load times." },
   { icon: <FaReact />, title: "React.js", description: "Developing interactive UIs with component-based architecture." },
   { icon: <BiLogoTypescript />, title: "TypeScript", description: "Ensuring type safety and scalability in web applications." },
   { icon: <SiTailwindcss />, title: "Tailwind CSS", description: "Crafting modern and responsive UI with utility-first styling." },

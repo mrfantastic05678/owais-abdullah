@@ -87,7 +87,7 @@ const SkillSlider = () => {
 
       {/* Top row - sliding right */}
       <div className="mb-8 relative">
-        <div className="w-max flex flex-nowrap animate-infinite-scroll-right">
+        <div className="w-max flex flex-nowrap animate-infinite-scroll-right will-change-transform">
           {[...skills, ...skills].map((skill, index) => (
             <SkillCards
               key={`top-${skill.name}-${index}`}
@@ -101,7 +101,7 @@ const SkillSlider = () => {
 
       {/* Bottom row - sliding left */}
       <div className="relative">
-        <div className="w-max -ml-[5000px] lg:-ml-[500%] flex flex-nowrap animate-infinite-scroll-left flex-row-reverse">
+        <div className="w-max -ml-[5000px] lg:-ml-[500%] flex flex-nowrap animate-infinite-scroll-left flex-row-reverse will-change-transform">
           {[...skills, ...skills].reverse().map((skill, index) => (
             <SkillCards
               key={`bottom-${skill.name}-${index}`}

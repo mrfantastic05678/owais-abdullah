@@ -21,14 +21,16 @@ export default function LenisSmoothScroll({ children }: { children: React.ReactN
     if (isStudio) return;
     // Respect reduced motion: native scrolling, no Lenis at all
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Native scrolling on mobile/touch screens: touch scroll hijacking causes jank and stutter
+    const isTouch = !window.matchMedia("(pointer: fine)").matches || window.innerWidth < 768;
+    if (isTouch) return;
 
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      touchMultiplier: 2,
     });
 
     lenisRef.current = lenis;
@@ -36,7 +38,7 @@ export default function LenisSmoothScroll({ children }: { children: React.ReactN
     lenis.on("scroll", ScrollTrigger.update);
 
     function raf(time: number) {
-      lenis.raf(time * 1000);
+      lenis.raf(time);
       rafRef.current = requestAnimationFrame(raf);
     }
     rafRef.current = requestAnimationFrame(raf);

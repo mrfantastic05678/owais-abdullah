@@ -92,11 +92,22 @@ export default function FTEStory() {
   const framesRef = useRef<ImageBitmap[]>([]);
   const currentFrameRef = useRef(-1);
   const tickingRef = useRef(false);
-  const [progressPct, setProgressPct] = useState(0);
+  const [activeAct, setActiveAct] = useState(0);
+  const activeActRef = useRef(0);
+  const [isMobile, setIsMobile] = useState(false);
   const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
-    if (reduced) return;
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (reduced || isMobile) return;
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
@@ -149,7 +160,18 @@ export default function FTEStory() {
       const progress = scrollableDistance > 0 ? scrolled / scrollableDistance : 0;
 
       renderFrame(progress);
-      setProgressPct(progress * 100);
+
+      // Decouple scroll progress from continuous React state updates:
+      // Only re-render when active act transitions (0 -> 1 -> 2)
+      const pct = progress * 100;
+      let nextAct = 0;
+      if (pct >= 67) nextAct = 2;
+      else if (pct >= 33) nextAct = 1;
+
+      if (nextAct !== activeActRef.current) {
+        activeActRef.current = nextAct;
+        setActiveAct(nextAct);
+      }
     }
 
     function onScroll() {
@@ -168,11 +190,18 @@ export default function FTEStory() {
         }
       }
 
-      // Preload remaining frames
-      for (let i = 2; i <= TOTAL_FRAMES; i++) {
-        loadFrame(i).then((bmp) => {
-          if (bmp) framesRef.current[i - 1] = bmp;
-        });
+      // Preload remaining frames in batches of 6 to prevent network socket starvation
+      const batchSize = 6;
+      for (let i = 2; i <= TOTAL_FRAMES; i += batchSize) {
+        const batch: Promise<any>[] = [];
+        for (let j = i; j < i + batchSize && j <= TOTAL_FRAMES; j++) {
+          batch.push(
+            loadFrame(j).then((bmp) => {
+              if (bmp) framesRef.current[j - 1] = bmp;
+            })
+          );
+        }
+        await Promise.all(batch);
       }
     }
 
@@ -195,39 +224,41 @@ export default function FTEStory() {
       observer.disconnect();
       window.removeEventListener("scroll", onScroll);
     };
-  }, [reduced]);
+  }, [reduced, isMobile]);
 
   return (
     <section id="story" className="relative border-b border-border bg-background">
-      {reduced ? (
-        /* Reduced motion static fallback */
+      {reduced || isMobile ? (
+        /* Static fallback for reduced motion & mobile screens (ultra fast, no 260vh canvas scrub lag) */
         <div className="py-20 max-w-4xl mx-auto px-5 text-center">
           <span className="text-accent font-mono text-xs tracking-widest uppercase mb-2 block">
             In action
           </span>
-          <h2 className="text-3xl md:text-5xl font-semibold mb-4 text-foreground">
+          <h2 className="text-3xl md:text-5xl font-semibold mb-8 text-foreground">
             Watch a <span className="bg-gradient-to-r from-accent via-accent to-signal-500 bg-clip-text text-transparent">Digital FTE</span> take a job
           </h2>
+          <div className="flex flex-col gap-4">
             {ACTS.map(({ act, title, body, Icon, accentColor }) => {
               const IconComp = Icon as React.ComponentType<{ className?: string }>;
               return (
                 <div
                   key={title}
-                  className="border border-border/80 rounded-2xl bg-card/90 backdrop-blur-md p-5 flex items-start gap-4 text-left shadow-lg"
+                  className="border border-border/80 rounded-2xl bg-card p-5 flex items-start gap-4 text-left shadow-md"
                 >
                   <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 bg-gradient-to-br ${accentColor}`}>
                     <IconComp className="w-5 h-5" />
                   </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-mono text-accent uppercase font-bold">{act}</span>
-                    <span className="text-foreground font-semibold text-base">{title}</span>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[10px] font-mono text-accent uppercase font-bold">{act}</span>
+                      <span className="text-foreground font-semibold text-base">{title}</span>
+                    </div>
+                    <p className="text-muted-foreground text-xs leading-relaxed">{body}</p>
                   </div>
-                  <p className="text-muted-foreground text-xs leading-relaxed">{body}</p>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       ) : (
         /* ScrollStory 3D Frame Sequence Container (260vh scroll path) */
@@ -264,8 +295,8 @@ export default function FTEStory() {
 
               {/* Non-intrusive Act HUD Cards (Bottom-Right) */}
               <div className="absolute bottom-4 right-4 left-4 sm:left-auto sm:max-w-[340px] z-30 pointer-events-none">
-                {ACTS.map((act) => {
-                  const visible = progressPct >= act.start && progressPct <= act.end;
+                {ACTS.map((act, actIdx) => {
+                  const visible = activeAct === actIdx;
                   return (
                     <div
                       key={act.act}
@@ -305,8 +336,8 @@ export default function FTEStory() {
               </span>
 
               <div className="flex gap-2 items-center" aria-hidden="true">
-                {ACTS.map((act) => {
-                  const active = progressPct >= act.start && progressPct <= act.end;
+                {ACTS.map((act, actIdx) => {
+                  const active = activeAct === actIdx;
                   return (
                     <div
                       key={act.act}
