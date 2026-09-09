@@ -7,7 +7,7 @@ import { StoreFilterBar } from "@/components/stores/StoreFilterBar";
 import { ChevronRight, Home, Plus, Sparkles } from "lucide-react";
 import { Metadata } from "next";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // 24 hours ISR
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;

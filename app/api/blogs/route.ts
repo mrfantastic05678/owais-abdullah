@@ -19,7 +19,7 @@ export async function GET() {
 
     return NextResponse.json(blogs, {
       headers: {
-        'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
       },
     });
   } catch (error) {

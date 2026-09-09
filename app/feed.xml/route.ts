@@ -1,6 +1,6 @@
 import { client } from "@/sanity/lib/client";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // 24 hours ISR
 
 interface SanityPost {
   title: string;

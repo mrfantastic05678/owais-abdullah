@@ -6,7 +6,7 @@ import { CityCard } from "@/components/stores/CityCard";
 import { StoreCard } from "@/components/stores/StoreCard";
 import { Sparkles, ArrowRight, ShieldCheck, Plus, ShoppingBag, MapPin } from "lucide-react";
 
-export const revalidate = 3600; // 1 hour ISR
+export const revalidate = 86400; // 24 hours ISR (on-demand revalidated on mutations)
 
 export const metadata = {
   title: "Pakistani E-commerce Store Directory | Discover Online Shops",

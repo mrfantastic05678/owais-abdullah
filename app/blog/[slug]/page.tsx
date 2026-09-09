@@ -4,7 +4,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { Metadata } from "next";
 import { Post } from "@/types/post";
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours ISR (on-demand revalidated on publish)
 
 export const dynamicParams = true;
 

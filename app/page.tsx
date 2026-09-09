@@ -17,8 +17,8 @@ import DotRail from "@/components/DotRail";
 import CharRevealHeading from "@/components/CharRevealHeading";
 import { projectsByCategory, allProjects } from "@/data/profile";
 
-// ISR: prerendered HTML (projects + blog posts crawlable), refreshed every 30 min
-export const revalidate = 1800;
+// ISR: prerendered HTML (projects + blog posts crawlable), refreshed every 24h
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Owais Abdullah | Spec-Driven Developer & AI Agent Engineer",

@@ -6,7 +6,7 @@ import { StoreProfile } from "@/components/stores/StoreProfile";
 import { ChevronRight, Home } from "lucide-react";
 import { Metadata } from "next";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // 24 hours ISR
 
 interface StorePageProps {
   params: Promise<{ slug: string }>;

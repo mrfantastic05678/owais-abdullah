@@ -4,8 +4,8 @@ import { services } from "@/data/services";
 import { getCategories, getCities, getAllStoreSlugs } from "@/lib/directory/queries";
 import { getAllShowcaseSlugs } from "@/data/showcaseProjects";
 
-// Dynamically revalidate sitemap every 60 seconds
-export const revalidate = 60;
+// Dynamically revalidate sitemap every 24 hours
+export const revalidate = 86400;
 
 type SanityItem = {
   slug: string;
