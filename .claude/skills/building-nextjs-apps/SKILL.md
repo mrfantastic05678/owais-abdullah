@@ -413,3 +413,4 @@ Expected: `✓ building-nextjs-apps skill ready`
 - **styling-with-shadcn** - UI components for Next.js apps
 - **fetching-library-docs** - Latest Next.js docs: `--library-id /vercel/next.js --topic routing`
 - **configuring-better-auth** - OAuth/SSO for Next.js apps
+- **smooth-ui-performance** - 60FPS UI standards, conservative ISR intervals, and direct CDN media delivery patterns

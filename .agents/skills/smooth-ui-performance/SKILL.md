@@ -1,4 +1,4 @@
-﻿---
+---
 name: smooth-ui-performance
 description: Production-grade standards for 60FPS/120FPS smooth UI performance, mobile touch responsiveness, GPU layer compositing, and animation lifecycle management in Next.js and React applications.
 ---
@@ -32,11 +32,25 @@ This skill documents critical engineering rules to keep web applications, market
 ## 4. Scroll Scrubbing Decoupling from React State
 - **Decouple Continuous Progress from React State:**
   When rendering frame sequences, progress bars, or canvas scrubbers:
-  - **Anti-Pattern:** Calling setProgress(progress * 100) inside equestAnimationFrame on scroll. This forces React to trigger virtual DOM reconciliation, diffing, and re-rendering 60 times a second.
-  - **Pattern:** Update the <canvas> or DOM elements directly via refs (drawBitmap, element.style.transform). Only trigger a React setState when discrete milestones or step indices change (e.g. ctiveAct: 0 -> 1 -> 2).
+  - **Anti-Pattern:** Calling setProgress(progress * 100) inside equestAnimationFrame on scroll. This forces React to trigger virtual DOM reconciliation, diffing, and re-rendering 60 times a second.
+  - **Pattern:** Update the <canvas> or DOM elements directly via refs (drawBitmap, element.style.transform). Only trigger a React setState when discrete milestones or step indices change (e.g.  ctiveAct: 0 -> 1 -> 2).
 
 ## 5. Responsive Component Mounting & Mobile Canvas Fallbacks
 - **Avoid Duplicate Hidden Mounts:**
-  Never render duplicate heavy components simultaneously with Tailwind classes like hidden md:block and lock md:hidden if they instantiate JS controllers, event listeners, or rAF loops. Instead, render a single responsive component that adapts dynamically.
+  Never render duplicate heavy components simultaneously with Tailwind classes like `hidden md:block` and `block md:hidden` if they instantiate JS controllers, event listeners, or rAF loops. Instead, render a single responsive component that adapts dynamically.
 - **Bypass Pixelation / Canvas Effects on Touch Screens:**
-  Complex pixelation filters, particle effects, or canvas image decoders that re-fetch image buffers should be bypassed on mobile devices in favor of native Next.js <Image> tags.
+  Complex pixelation filters, particle effects, or canvas image decoders that re-fetch image buffers should be bypassed on mobile devices in favor of native Next.js `<Image>` tags.
+
+## 6. Production Resource Efficiency & Direct CDN Delivery Standards
+- **Conservative ISR Intervals (Eliminate Runaway Write Units):**
+  - **Anti-Pattern:** Setting `export const revalidate = 60` (or `< 3600`) on blog posts, directories, or sitemaps.
+  - **Impact:** Web crawlers (Googlebot, Bingbot, SEO bots, scrapers) hitting 50+ posts older than 60 seconds trigger constant background rebuilds, easily generating 5,000–8,000 ISR cache writes per day and quickly exhausting platform quotas.
+  - **Rule:** Set `revalidate = 86400` (24 hours) on blog posts, sitemaps, homepage, and directory pages. Published content rarely changes minute-by-minute.
+  - **Rule:** Implement on-demand revalidation (`revalidatePath` / `revalidateTag`) via secure webhooks (`/api/revalidate?secret=...&path=...`) so content updates take effect instantly on publish without scheduled polling.
+- **Direct CDN Media Delivery (`unoptimized: true`):**
+  - **Anti-Pattern:** Re-optimizing remote CDN images (e.g. Sanity `cdn.sanity.io`, Cloudinary, Imgix) through edge image transformation endpoints (`/_next/image`).
+  - **Impact:** Edge image optimization quotas (typically 5,000/month on standard tiers) get quickly exhausted as every responsive viewport width triggers a unique transformation pass.
+  - **Rule:** Enable `images: { unoptimized: true }` in `next.config.ts` when using modern headless CMS media (e.g. Sanity) that already provides global CDN edge resizing, WebP/AVIF formatting, and compression via URL parameters (`urlFor(img).auto('format').width(w)`).
+  - Next.js `<Image>` components will continue providing layout shift protection (`width`, `height`, `fill`), lazy loading, and priority decoding without edge transformation overhead.
+- **Edge API Cache Headers:**
+  - **Rule:** For public read-only JSON endpoints (blog lists, site config), set `Cache-Control: public, s-maxage=86400, stale-while-revalidate=604800`. Responses serve directly from edge POP caches in <10ms without waking serverless functions.
