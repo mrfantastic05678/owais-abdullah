@@ -9,11 +9,13 @@ export function ConditionalUI() {
   const isBlogPost = pathname.startsWith("/blog/") && pathname.length > 6;
   const isStudio = pathname.startsWith("/studio");
   const isInsights = pathname.startsWith("/insights-0786");
+  const isAdmin = pathname.startsWith("/admin");
+  const isPrivateArea = isStudio || isInsights || isAdmin;
 
   return (
     <>
-      {!isBlogPost && !isStudio && !isInsights && <ChatBot />}
-      {!isStudio && !isInsights && <OctivelyPromoToast />}
+      {!isBlogPost && !isPrivateArea && <ChatBot />}
+      {!isPrivateArea && <OctivelyPromoToast />}
     </>
   );
 }

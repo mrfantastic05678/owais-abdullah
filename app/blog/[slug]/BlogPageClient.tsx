@@ -18,6 +18,7 @@ import BlogAuthorCard from "@/components/BlogAuthorCard";
 import RecentPostsList, { RecentPost } from "@/components/RecentPostsList";
 import OctivelyPromoToast from "@/components/OctivelyPromoToast";
 import GooglePreferredSourceButton from "@/components/GooglePreferredSourceButton";
+import BlogCommentsSection from "@/components/comments/BlogCommentsSection";
 
 export default function BlogPageClient({
   blog,
@@ -28,8 +29,8 @@ export default function BlogPageClient({
   slug: string;
   recentPosts: RecentPost[];
 }) {
-  const [likes, setLikes] = useState(blog?.likes || 0);
-  const [dislikes, setDislikes] = useState(blog?.dislikes || 0);
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
   const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
   const [showAnimation, setShowAnimation] = useState<"like" | "dislike" | null>(
     null
@@ -42,7 +43,16 @@ export default function BlogPageClient({
       setUserVote(vote as "like" | "dislike");
     }
 
-    // 2. Track post view (session deduplicated to prevent refresh spam)
+    // 2. Fetch fresh likes/dislikes from Neon DB
+    fetch(`/api/like?slug=${encodeURIComponent(slug)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.likes !== undefined) setLikes(data.likes);
+        if (data.dislikes !== undefined) setDislikes(data.dislikes);
+      })
+      .catch(() => {});
+
+    // 3. Track post view (session deduplicated to prevent refresh spam)
     const viewedKey = `viewed_post_${slug}`;
     if (!sessionStorage.getItem(viewedKey)) {
       sessionStorage.setItem(viewedKey, "true");
@@ -254,12 +264,12 @@ export default function BlogPageClient({
           </div>
 
           <div className="flex justify-center mt-10 lg:mt-16">
-          <LikeDislikeButtons
-            handleVote={handleVote}
-            userVote={userVote}
-            showAnimation={showAnimation}
-            ctaText="Did you find this article helpful?"
-          />
+            <LikeDislikeButtons
+              handleVote={handleVote}
+              userVote={userVote}
+              showAnimation={showAnimation}
+              ctaText="Did you find this article helpful?"
+            />
           </div>
 
           {/* FAQ Section */}
@@ -273,6 +283,9 @@ export default function BlogPageClient({
               <FaqSection faqs={blog.faqs} />
             </motion.div>
           )}
+
+          {/* Interactive Comments & Discussions (Powered by Neon) — Below FAQs */}
+          <BlogCommentsSection postSlug={slug} />
         </motion.div>
       </div>
       {/* Related Posts Section */}

@@ -391,15 +391,20 @@ export default function InsightsClient() {
             <RefreshCw size={13} className={loading ? "animate-spin text-accent" : ""} />
             <span>Refresh</span>
           </button>
-          <a
-            href="https://owaisabdullah.sanity.studio"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/admin/stores"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-card border border-border hover:bg-muted text-foreground text-xs font-medium transition-colors"
+          >
+            <span>Stores Manager</span>
+            <ArrowUpRight size={13} />
+          </Link>
+          <Link
+            href="/studio"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-muted/60 border border-border hover:border-accent text-foreground text-xs font-medium transition-colors"
           >
             <span>Sanity Studio</span>
             <ArrowUpRight size={13} />
-          </a>
+          </Link>
           <button
             onClick={handleLogout}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-destructive/10 border border-destructive/30 hover:bg-destructive/20 text-destructive text-xs font-medium transition-colors"
@@ -1155,14 +1160,12 @@ export default function InsightsClient() {
                         {post.engagementScore}
                       </td>
                       <td className="py-3.5 px-4 text-right">
-                        <a
-                          href={`https://owaisabdullah.sanity.studio/desk/post;${post._id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          href={`/studio/structure/post;${post._id}`}
                           className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-muted hover:bg-accent hover:text-accent-foreground text-[11px] transition-colors"
                         >
                           Edit <ArrowUpRight size={10} />
-                        </a>
+                        </Link>
                       </td>
                     </tr>
                   ))}

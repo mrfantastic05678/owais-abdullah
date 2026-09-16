@@ -12,13 +12,15 @@ import { ConditionalUI } from "@/components/ConditionalUI";
 export function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isStudio = pathname.startsWith("/studio");
+  const isAdmin = pathname.startsWith("/admin");
+  const isIsolated = isStudio || isAdmin;
 
   return (
     <>
-      {!isStudio && <Header />}
+      {!isIsolated && <Header />}
       <ConditionalUI />
-      <main className={isStudio ? "" : "pt-24"}>{children}</main>
-      {!isStudio && <Footer />}
+      <main className={isIsolated ? "" : "pt-24"}>{children}</main>
+      {!isIsolated && <Footer />}
     </>
   );
 }

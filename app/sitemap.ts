@@ -4,7 +4,6 @@ import { services } from "@/data/services";
 import { getCategories, getCities, getAllStoreSlugs } from "@/lib/directory/queries";
 import { getAllShowcaseSlugs } from "@/data/showcaseProjects";
 
-// Dynamically revalidate sitemap every 24 hours
 export const revalidate = 86400;
 
 type SanityItem = {
@@ -12,7 +11,18 @@ type SanityItem = {
   _updatedAt: string;
 };
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+// Next.js Multi-Sitemap Partitioner: /sitemap/0.xml, /sitemap/1.xml, /sitemap/2.xml, /sitemap/3.xml
+export async function generateSitemaps() {
+  return [
+    { id: "pages" },
+    { id: "blogs" },
+    { id: "stores" },
+    { id: "stack" },
+  ];
+}
+
+export default async function sitemap(props: { id: Promise<string> | string }): Promise<MetadataRoute.Sitemap> {
+  const resolvedId = typeof props?.id === "object" && "then" in props.id ? await props.id : props?.id;
   const baseUrl = "https://owaisabdullah.dev";
   const currentDate = new Date().toISOString();
 
@@ -110,6 +120,60 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
+  // Partition: BLOGS
+  if (resolvedId === "blogs") {
+    return [
+      {
+        url: `${baseUrl}/blog`,
+        lastModified: currentDate,
+        changeFrequency: "daily",
+        priority: 0.9,
+      },
+      ...postUrls,
+    ];
+  }
+
+  // Partition: STORES
+  if (resolvedId === "stores") {
+    return [
+      {
+        url: `${baseUrl}/stores`,
+        lastModified: currentDate,
+        changeFrequency: "daily",
+        priority: 0.9,
+      },
+      {
+        url: `${baseUrl}/stores/submit`,
+        lastModified: currentDate,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      },
+      {
+        url: `${baseUrl}/stores/claim`,
+        lastModified: currentDate,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      },
+      ...directoryCategoryUrls,
+      ...directoryCityUrls,
+      ...directoryStoreUrls,
+    ];
+  }
+
+  // Partition: STACK
+  if (resolvedId === "stack") {
+    return [
+      {
+        url: `${baseUrl}/stack`,
+        lastModified: currentDate,
+        changeFrequency: "weekly",
+        priority: 0.8,
+      },
+      ...toolUrls,
+    ];
+  }
+
+  // Partition: PAGES (Core static pages, services, projects showcase)
   return [
     {
       url: baseUrl,
@@ -118,21 +182,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${baseUrl}/about`,
       lastModified: currentDate,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/projects`,
-      lastModified: currentDate,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/stack`,
-      lastModified: currentDate,
-      changeFrequency: "weekly",
+      changeFrequency: "monthly",
       priority: 0.8,
     },
     {
@@ -142,10 +194,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/about`,
+      url: `${baseUrl}/projects`,
       lastModified: currentDate,
-      changeFrequency: "monthly",
-      priority: 0.8,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/skills`,
@@ -159,30 +211,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.6,
     },
-    {
-      url: `${baseUrl}/stores`,
-      lastModified: currentDate,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/stores/submit`,
-      lastModified: currentDate,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/stores/claim`,
-      lastModified: currentDate,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
     ...showcaseUrls,
-    ...postUrls,
-    ...toolUrls,
     ...serviceUrls,
-    ...directoryCategoryUrls,
-    ...directoryCityUrls,
-    ...directoryStoreUrls,
   ];
 }

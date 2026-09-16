@@ -1,55 +1,97 @@
-
-import { createClient } from "next-sanity";
-import { apiVersion, dataset, projectId } from "@/sanity/env";
+import { db } from "@/lib/db";
+import * as schema from "@/schema/directory";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
-const writeClient = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: false,
-  token: process.env.SANITY_API_TOKEN,
-});
+export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
-  const { slug, action } = await req.json();
-
-  if (!slug || !action) {
-    return NextResponse.json({ error: "Missing slug or action" }, { status: 400 });
-  }
-
   try {
-    const post = await writeClient.fetch(
-      `*[_type == "post" && slug.current == $slug][0]{"id":_id, "likes":likes, "dislikes":dislikes}`,
-      { slug }
-    );
+    const { slug, action } = await req.json();
 
-    if (!post) {
-      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    if (!slug || !action) {
+      return NextResponse.json({ error: "Missing slug or action" }, { status: 400 });
     }
 
-    const incValue = action.startsWith("un") ? -1 : 1;
-    let field;
-    if (action === 'like' || action === 'unlike') {
-      field = 'likes';
+    if (!db) {
+      return NextResponse.json({ likes: 0, dislikes: 0, error: "Database not connected" });
+    }
+
+    // 1. Fetch or initialize post metrics
+    const [existing] = await db
+      .select()
+      .from(schema.blogPostMetrics)
+      .where(eq(schema.blogPostMetrics.slug, slug))
+      .limit(1);
+
+    let likes = existing ? existing.likes : 0;
+    let dislikes = existing ? existing.dislikes : 0;
+
+    if (action === "like") {
+      likes += 1;
+    } else if (action === "unlike") {
+      likes = Math.max(0, likes - 1);
+    } else if (action === "dislike") {
+      dislikes += 1;
+    } else if (action === "undislike") {
+      dislikes = Math.max(0, dislikes - 1);
+    }
+
+    if (existing) {
+      await db
+        .update(schema.blogPostMetrics)
+        .set({
+          likes,
+          dislikes,
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.blogPostMetrics.slug, slug));
     } else {
-      field = 'dislikes';
+      await db.insert(schema.blogPostMetrics).values({
+        slug,
+        views: 1,
+        likes,
+        dislikes,
+      });
     }
-
-    const updatedPost = await writeClient
-      .patch(post.id)
-      .setIfMissing({ likes: 0, dislikes: 0 })
-      .inc({ [field]: incValue })
-      .commit();
 
     return NextResponse.json({
-      likes: updatedPost.likes,
-      dislikes: updatedPost.dislikes,
+      success: true,
+      likes,
+      dislikes,
       action,
-      field,
+      source: "neon",
     });
   } catch (error) {
-    console.error("Error updating likes/dislikes:", error);
+    console.error("Error updating likes/dislikes in Neon:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+// GET: Fetch current counts from Neon
+export async function GET(req: NextRequest) {
+  try {
+    const slug = req.nextUrl.searchParams.get("slug");
+    if (!slug) {
+      return NextResponse.json({ error: "Missing slug" }, { status: 400 });
+    }
+
+    if (!db) {
+      return NextResponse.json({ likes: 0, dislikes: 0, views: 0 });
+    }
+
+    const [existing] = await db
+      .select()
+      .from(schema.blogPostMetrics)
+      .where(eq(schema.blogPostMetrics.slug, slug))
+      .limit(1);
+
+    return NextResponse.json({
+      likes: existing ? existing.likes : 0,
+      dislikes: existing ? existing.dislikes : 0,
+      views: existing ? existing.views : 0,
+    });
+  } catch (error) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

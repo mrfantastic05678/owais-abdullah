@@ -102,9 +102,72 @@ export const directoryCities = pgTable("directory_cities", {
   metaDescription: varchar("meta_description", { length: 500 }),
 });
 
+// Blog Post Metrics (likes, dislikes, views stored in Neon, not Sanity)
+export const blogPostMetrics = pgTable(
+  "blog_post_metrics",
+  {
+    slug: varchar("slug", { length: 255 }).primaryKey(),
+    views: integer("views").default(0).notNull(),
+    likes: integer("likes").default(0).notNull(),
+    dislikes: integer("dislikes").default(0).notNull(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  }
+);
+
+// Blog Comments (user comments with admin replies and moderation)
+export const blogComments = pgTable(
+  "blog_comments",
+  {
+    id: serial("id").primaryKey(),
+    postSlug: varchar("post_slug", { length: 255 }).notNull(),
+    parentId: integer("parent_id"), // for threaded replies
+    authorName: varchar("author_name", { length: 255 }).notNull(),
+    authorEmail: varchar("author_email", { length: 255 }).notNull(),
+    authorWebsite: varchar("author_website", { length: 500 }),
+    content: text("content").notNull(),
+    isAdmin: boolean("is_admin").default(false),
+    status: varchar("status", { length: 50 }).default("approved"), // approved, pending, hidden, rejected
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => [
+    index("comments_post_slug_idx").on(table.postSlug),
+    index("comments_status_idx").on(table.status),
+    index("comments_parent_id_idx").on(table.parentId),
+  ]
+);
+
+// High-speed telemetry events stored in Neon
+export const siteAnalyticsEvents = pgTable(
+  "site_analytics_events",
+  {
+    id: serial("id").primaryKey(),
+    eventType: varchar("event_type", { length: 100 }).notNull(), // page_view, promo_click, etc.
+    path: varchar("path", { length: 500 }).notNull(),
+    country: varchar("country", { length: 100 }),
+    countryCode: varchar("country_code", { length: 10 }),
+    city: varchar("city", { length: 100 }),
+    device: varchar("device", { length: 50 }),
+    browser: varchar("browser", { length: 100 }),
+    os: varchar("os", { length: 100 }),
+    referrerDomain: varchar("referrer_domain", { length: 255 }),
+    placement: varchar("placement", { length: 100 }),
+    timestamp: timestamp("timestamp").defaultNow(),
+  },
+  (table) => [
+    index("analytics_event_type_idx").on(table.eventType),
+    index("analytics_path_idx").on(table.path),
+    index("analytics_timestamp_idx").on(table.timestamp),
+  ]
+);
+
 export type DirectoryStore = typeof directoryStores.$inferSelect;
 export type NewDirectoryStore = typeof directoryStores.$inferInsert;
 export type DirectoryClaim = typeof directoryClaims.$inferSelect;
 export type NewDirectoryClaim = typeof directoryClaims.$inferInsert;
 export type DirectoryCategory = typeof directoryCategories.$inferSelect;
 export type DirectoryCity = typeof directoryCities.$inferSelect;
+export type BlogPostMetric = typeof blogPostMetrics.$inferSelect;
+export type BlogComment = typeof blogComments.$inferSelect;
+export type NewBlogComment = typeof blogComments.$inferInsert;
+export type SiteAnalyticsEvent = typeof siteAnalyticsEvents.$inferSelect;
