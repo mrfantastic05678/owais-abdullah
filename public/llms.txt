@@ -27,6 +27,9 @@ Sanity CMS, WordPress, Shopify, Docker, n8n, FastAPI
 - **SocialFTE** (https://owaisabdullah.dev/projects/socialfte) — Autonomous social media Digital FTE drafting captions, rendering Remotion videos, and publishing across 4 platforms with Discord approval gating.
 - **Digital FTE Architecture** (https://owaisabdullah.dev/projects/digital-fte) — Tiered blueprints (Bronze to Platinum) for building proactive autonomous AI employees with Obsidian memory vaults and MCP tools.
 - **ShopMate** (https://owaisabdullah.dev/projects/shopmate-fte) — Autonomous Shopify operations employee resolving orders and answering product queries 24/7.
+- **Owais Content Factory** (https://github.com/MrOwaisAbdullah/owais-content-factory) — AI video production pipeline transforming raw footage into polished YouTube videos with programmatic Remotion TSX overlays and synthetic screen recordings.
+- **Claude Faceless Shorts Creator** (https://github.com/MrOwaisAbdullah/claude-faceless-shorts-creator) — Faceless YouTube Shorts automation factory driven via Claude Code, Remotion, and Fal AI.
+- **Shopify MCP Connector** (https://github.com/MrOwaisAbdullah/shopify-multistore-mcp) — Multi-store Model Context Protocol (MCP) server for AI agents with 79+ tools across inventory, orders, and operations.
 - **OwFlex** (https://owaisabdullah.dev/projects/owflex-chatbot-saas) — Full-stack multi-tenant AI chatbot SaaS with embeddable 1-line script widget and Drizzle ORM RAG.
 - **TeamFlow** (https://owaisabdullah.dev/projects/teamflow) — AI-powered agency CRM and workload distribution platform.
 - **Visati** (https://owaisabdullah.dev/projects/visati) — Visa services SaaS with document uploads, payments, and automated PDF generation.
