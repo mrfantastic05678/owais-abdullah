@@ -1,8 +1,12 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
+# Sitemap locations
 Sitemap: https://owaisabdullah.dev/sitemap.xml
+Sitemap: https://owaisabdullah.dev/sitemap/pages.xml
+Sitemap: https://owaisabdullah.dev/sitemap/blogs.xml
+Sitemap: https://owaisabdullah.dev/sitemap/stores.xml
+Sitemap: https://owaisabdullah.dev/sitemap/stack.xml
 
 # Allow all major search engines
 User-agent: Googlebot
