@@ -22,7 +22,7 @@ const FRAME_EXT = "webp";
 
 const ACTS: ScrollStoryAct[] = [
   {
-    act: "ACT I",
+    act: "STAGE 01",
     badge: "01 / INGESTION",
     title: "Inbox Fills",
     body: "Client webhooks trigger. Form submissions, Slack events, and API payloads stream in overnight.",
@@ -32,7 +32,7 @@ const ACTS: ScrollStoryAct[] = [
     accentColor: "from-blue-500/20 to-cyan-500/10 border-cyan-500/30 text-cyan-400",
   },
   {
-    act: "ACT II",
+    act: "STAGE 02",
     badge: "02 / EXECUTION",
     title: "Agent Fans Out",
     body: "Neural node parses each payload, checks SOPs, and dispatches parallel worker chains autonomously.",
@@ -42,7 +42,7 @@ const ACTS: ScrollStoryAct[] = [
     accentColor: "from-indigo-500/20 to-blue-500/10 border-blue-500/30 text-blue-400",
   },
   {
-    act: "ACT III",
+    act: "STAGE 03",
     badge: "03 / DISPATCH",
     title: "Reports Stack",
     body: "Completed actions are logged. External databases sync. Morning summary lands before your shift starts.",
@@ -268,13 +268,13 @@ export default function FTEStory() {
             <div className="text-center mb-4 sm:mb-6 max-w-3xl mx-auto z-20">
               <span className="text-accent font-mono text-xs tracking-widest uppercase mb-2 inline-flex items-center gap-1.5 bg-accent/10 px-3 py-1 rounded-full border border-accent/20">
                 <Sparkles className="w-3.5 h-3.5" />
-                Interactive Demo
+                Autonomous Workflow
               </span>
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold mb-1 text-foreground tracking-tight">
                 Watch a <span className="bg-gradient-to-r from-accent via-accent to-signal-500 bg-clip-text text-transparent">Digital FTE</span> take a job
               </h2>
               <p className="text-muted-foreground text-xs sm:text-sm max-w-lg mx-auto leading-relaxed">
-                Scroll smoothly to watch the autonomous workflow execute in real time across the 3 acts.
+                Watch the autonomous workflow execute in real time across 3 automated stages.
               </p>
             </div>
 
@@ -289,7 +289,7 @@ export default function FTEStory() {
               <div className="absolute top-3.5 left-4 z-20 flex items-center gap-2 bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full pointer-events-none">
                 <span className="w-2 h-2 rounded-full bg-signal-500 animate-pulse shadow-[0_0_8px_var(--signal-500)]" />
                 <span className="text-[11px] font-mono font-medium text-slate-200 tracking-wider">
-                  OWAIS.OS / 3D SCROLL STORY
+                  OWAIS.OS / WORKFLOW ENGINE
                 </span>
               </div>
 
@@ -331,7 +331,7 @@ export default function FTEStory() {
             {/* Bottom Progress Bar */}
             <div className="flex items-center justify-between w-full max-w-sm mx-auto mt-3 px-2 z-20">
               <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
-                Scroll to scrub
+                Scroll to explore
                 <ArrowRight className="w-3 h-3 text-accent animate-pulse" />
               </span>
 
