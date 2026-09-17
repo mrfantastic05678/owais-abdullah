@@ -6,9 +6,7 @@ import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Project } from "@/data/profile";
-import PixelImage from "@/components/PixelImage";
 import CharRevealHeading from "@/components/CharRevealHeading";
-import PixelTextButton from "@/components/ui/PixelTextButton";
 import CharShuffleText from "@/components/ui/CharShuffleText";
 
 interface ProjectsByCategory {
@@ -161,18 +159,16 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
                           transition={{ duration: 0.3 }}
                           className="lg:h-48 md:h-36 w-full relative bg-muted"
                         >
-                          <PixelImage className="w-full h-full">
-                            <Image
-                              className="w-full h-full object-cover"
-                              src={project.image || "/assets/placeholder.png"}
-                              alt={project.title}
-                              width={500}
-                              height={300}
-                              loading="lazy"
-                            />
-                          </PixelImage>
+                          <Image
+                            className="w-full h-full object-cover"
+                            src={project.image || "/assets/placeholder.png"}
+                            alt={project.title}
+                            width={500}
+                            height={300}
+                            loading="lazy"
+                          />
                         </motion.div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                       </div>
                       <div className="p-6">
                         <h3 className="text-xl font-medium text-foreground mb-2">

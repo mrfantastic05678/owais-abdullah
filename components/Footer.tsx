@@ -56,26 +56,24 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
           {/* Brand */}
           <div>
-            <Link href="/" aria-label="Owais Abdullah home" className="inline-flex relative">
-              <div className="absolute -inset-5 bg-gradient-to-br from-[#3D7BFF]/30 via-[#6B9AFF]/20 to-[#3D7BFF]/10 rounded-full blur-lg pointer-events-none" />
+            <Link href="/" aria-label="Owais Abdullah home" className="inline-flex relative items-center">
+              <div className="absolute -inset-2 bg-gradient-to-br from-[#3D7BFF]/30 via-[#6B9AFF]/20 to-[#3D7BFF]/10 rounded-full blur-md pointer-events-none" />
               {/* Dark logo for Light Theme */}
               <Image
                 src="/assets/Owais_logo_dark.png"
-                width={80}
-                height={40}
+                width={84}
+                height={52}
                 alt="Owais Abdullah logo"
-                className="relative z-10 dark:hidden block"
-                style={{ width: "auto", height: "auto" }}
+                className="relative z-10 w-[84px] md:w-[96px] h-auto dark:hidden block object-contain"
                 unoptimized
               />
               {/* Light logo for Dark Theme */}
               <Image
                 src="/assets/owais_logo.png"
-                width={80}
-                height={40}
+                width={84}
+                height={52}
                 alt="Owais Abdullah logo"
-                className="relative z-10 hidden dark:block"
-                style={{ width: "auto", height: "auto" }}
+                className="relative z-10 w-[84px] md:w-[96px] h-auto hidden dark:block object-contain"
                 unoptimized
               />
             </Link>
