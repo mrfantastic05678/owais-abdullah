@@ -93,8 +93,11 @@ function handleRevalidation(body: any) {
       }
     } else if (type === "toolReview") {
       revalidatePath("/stack");
+      revalidatePath("/api/profile");
+      revalidateTag("profile-stack", "default");
+      revalidateTag("toolReview", "default");
       revalidatePath("/sitemap.xml");
-      revalidated.push("/stack", "/sitemap.xml");
+      revalidated.push("/stack", "/api/profile", "profile-stack", "toolReview", "/sitemap.xml");
 
       if (slug) {
         revalidatePath(`/stack/${slug}`);
@@ -112,8 +115,10 @@ function handleRevalidation(body: any) {
     revalidatePath("/blog");
     revalidatePath("/stores");
     revalidatePath("/stack");
+    revalidatePath("/api/profile");
+    revalidateTag("profile-stack", "default");
     revalidatePath("/sitemap.xml");
-    revalidated.push("/", "/blog", "/stores", "/stack", "/sitemap.xml");
+    revalidated.push("/", "/blog", "/stores", "/stack", "/api/profile", "profile-stack", "/sitemap.xml");
   }
 
   return NextResponse.json({
