@@ -30,6 +30,7 @@ import {
   Filter,
 } from "lucide-react";
 import Link from "next/link";
+import { getAdminAuthToken, setAdminAuthToken, clearAdminAuthToken } from "@/lib/admin-auth";
 
 interface PendingStore {
   id: number;
@@ -119,10 +120,20 @@ export default function StoresAdminClient() {
 
   // Restore saved auth token
   useEffect(() => {
-    const savedPassword = sessionStorage.getItem("analytics_auth_token");
+    const savedPassword = getAdminAuthToken();
     if (savedPassword) {
       fetchDirectoryData(savedPassword);
     }
+    const handleAuthChange = () => {
+      const p = getAdminAuthToken();
+      if (p) {
+        fetchDirectoryData(p);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+    window.addEventListener("admin_auth_change", handleAuthChange);
+    return () => window.removeEventListener("admin_auth_change", handleAuthChange);
   }, []);
 
   const showToast = (text: string, type: "success" | "error" = "success") => {
@@ -145,11 +156,12 @@ export default function StoresAdminClient() {
         setAllStores(data.allStores || []);
         setStats(data.stats || { totalStores: 0, pendingStores: 0, pendingClaims: 0, claimedStores: 0 });
         setIsAuthenticated(true);
-        sessionStorage.setItem("analytics_auth_token", pass);
+        setAdminAuthToken(pass);
       } else {
         const err = await res.json();
         setAuthError(err.error || "Incorrect password. Access denied.");
-        sessionStorage.removeItem("analytics_auth_token");
+        clearAdminAuthToken();
+        setIsAuthenticated(false);
       }
     } catch {
       setAuthError("Failed to connect to directory server. Please try again.");

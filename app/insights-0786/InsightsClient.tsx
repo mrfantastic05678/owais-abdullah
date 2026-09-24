@@ -38,6 +38,7 @@ import {
   Users,
   Monitor,
 } from "lucide-react";
+import { getAdminAuthToken, setAdminAuthToken, clearAdminAuthToken } from "@/lib/admin-auth";
 import Link from "next/link";
 import { GoogleGIcon } from "@/components/GooglePreferredSourceButton";
 
@@ -177,10 +178,21 @@ export default function InsightsClient() {
 
   // Check saved session auth
   useEffect(() => {
-    const savedPassword = sessionStorage.getItem("analytics_auth_token");
+    const savedPassword = getAdminAuthToken();
     if (savedPassword) {
       fetchAnalytics(savedPassword);
     }
+    const handleAuthChange = () => {
+      const p = getAdminAuthToken();
+      if (p) {
+        fetchAnalytics(p);
+      } else {
+        setIsAuthenticated(false);
+        setData(null);
+      }
+    };
+    window.addEventListener("admin_auth_change", handleAuthChange);
+    return () => window.removeEventListener("admin_auth_change", handleAuthChange);
   }, []);
 
   const fetchAnalytics = async (pass: string) => {
@@ -197,11 +209,12 @@ export default function InsightsClient() {
         const payload = await res.json();
         setData(payload);
         setIsAuthenticated(true);
-        sessionStorage.setItem("analytics_auth_token", pass);
+        setAdminAuthToken(pass);
       } else {
         const err = await res.json();
         setAuthError(err.error || "Incorrect password. Access denied.");
-        sessionStorage.removeItem("analytics_auth_token");
+        clearAdminAuthToken();
+        setIsAuthenticated(false);
       }
     } catch {
       setAuthError("Failed to connect to analytics server. Please try again.");
@@ -217,14 +230,14 @@ export default function InsightsClient() {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("analytics_auth_token");
+    clearAdminAuthToken();
     setIsAuthenticated(false);
     setPasswordInput("");
     setData(null);
   };
 
   const handleRefresh = () => {
-    const pass = sessionStorage.getItem("analytics_auth_token");
+    const pass = getAdminAuthToken();
     if (pass) fetchAnalytics(pass);
   };
 

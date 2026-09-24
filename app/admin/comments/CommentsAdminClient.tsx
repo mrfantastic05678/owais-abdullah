@@ -23,6 +23,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import Link from "next/link";
+import { getAdminAuthToken, setAdminAuthToken, clearAdminAuthToken } from "@/lib/admin-auth";
 
 interface Comment {
   id: number;
@@ -56,10 +57,20 @@ export default function CommentsAdminClient() {
   const [toast, setToast] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   useEffect(() => {
-    const savedPassword = sessionStorage.getItem("analytics_auth_token");
+    const savedPassword = getAdminAuthToken();
     if (savedPassword) {
       fetchComments(savedPassword);
     }
+    const handleAuthChange = () => {
+      const p = getAdminAuthToken();
+      if (p) {
+        fetchComments(p);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+    window.addEventListener("admin_auth_change", handleAuthChange);
+    return () => window.removeEventListener("admin_auth_change", handleAuthChange);
   }, []);
 
   const showToast = (text: string, type: "success" | "error" = "success") => {
@@ -80,11 +91,12 @@ export default function CommentsAdminClient() {
         setComments(data.comments || []);
         setStats(data.stats || { total: 0, pending: 0, approved: 0, hidden: 0 });
         setIsAuthenticated(true);
-        sessionStorage.setItem("analytics_auth_token", pass);
+        setAdminAuthToken(pass);
       } else {
         const err = await res.json();
         setAuthError(err.error || "Incorrect password. Access denied.");
-        sessionStorage.removeItem("analytics_auth_token");
+        clearAdminAuthToken();
+        setIsAuthenticated(false);
       }
     } catch {
       setAuthError("Failed to connect to comments server.");

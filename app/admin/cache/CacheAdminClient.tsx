@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { RefreshCw, CheckCircle2, AlertCircle, Zap, Globe, FileText, ShoppingBag, Layers } from "lucide-react";
 
+import { getAdminAuthToken } from "@/lib/admin-auth";
+
 export default function CacheAdminClient() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string; paths?: string[] } | null>(null);
@@ -11,7 +13,7 @@ export default function CacheAdminClient() {
     setLoading(true);
     setResult(null);
 
-    const pass = sessionStorage.getItem("analytics_auth_token") || "owais-revalidate-2026";
+    const pass = getAdminAuthToken() || "owais-revalidate-2026";
 
     try {
       const res = await fetch("/api/revalidate", {

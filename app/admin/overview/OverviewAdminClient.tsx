@@ -21,16 +21,21 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { getAdminAuthToken } from "@/lib/admin-auth";
+
 export default function OverviewAdminClient() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchOverview();
+    const handleAuthChange = () => fetchOverview();
+    window.addEventListener("admin_auth_change", handleAuthChange);
+    return () => window.removeEventListener("admin_auth_change", handleAuthChange);
   }, []);
 
   const fetchOverview = async () => {
-    const pass = sessionStorage.getItem("analytics_auth_token");
+    const pass = getAdminAuthToken();
     if (!pass) return;
 
     setLoading(true);

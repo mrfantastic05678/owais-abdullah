@@ -6,10 +6,14 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const { password } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const cookieToken = req.cookies.get("admin_auth_session")?.value;
+    const authHeader = req.headers.get("authorization")?.replace("Bearer ", "");
+    const password = body.password || cookieToken || authHeader;
+
     const serverPassword =
-      process.env.ANALYTICS_PASSWORD ||
       process.env.ADMIN_PASSWORD ||
+      process.env.ANALYTICS_PASSWORD ||
       "owais-vault-2026";
 
     if (!password || password !== serverPassword) {

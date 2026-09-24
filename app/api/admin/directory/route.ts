@@ -8,22 +8,22 @@ export const dynamic = "force-dynamic";
 
 function checkAuth(req: NextRequest, bodyPassword?: string): boolean {
   const serverPassword =
-    process.env.ANALYTICS_PASSWORD ||
     process.env.ADMIN_PASSWORD ||
+    process.env.ANALYTICS_PASSWORD ||
     "owais-vault-2026";
 
+  const cookieToken = req.cookies.get("admin_auth_session")?.value;
   const authHeader = req.headers.get("authorization")?.replace("Bearer ", "");
-  const password = bodyPassword || authHeader;
+  const urlPassword = req.nextUrl.searchParams.get("token") || "";
+
+  const password = bodyPassword || authHeader || cookieToken || urlPassword;
   return Boolean(password && password === serverPassword);
 }
 
 // GET: Return pending submissions, pending claims, and all directory stores
 export async function GET(req: NextRequest) {
   try {
-    const authHeader = req.headers.get("authorization")?.replace("Bearer ", "");
-    const urlPassword = req.nextUrl.searchParams.get("token") || "";
-
-    if (!checkAuth(req, urlPassword || authHeader)) {
+    if (!checkAuth(req)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
