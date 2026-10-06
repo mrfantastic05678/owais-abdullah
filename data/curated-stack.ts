@@ -55,7 +55,7 @@ export const curatedStackLayers: StackLayerSummary[] = [
   {
     layer: "Model Context Protocol (MCP)",
     category: "mcp",
-    primaryTools: ["Custom Python MCPs", "SQLite MCP", "Git MCP", "Playwright MCP"],
+    primaryTools: ["Model Context Protocol", "FastMCP", "Shopify-mcp", "Custom Python MCPs"],
     role: "Standardized tool calling, external API connectors, and execution environments.",
   },
   {
@@ -79,8 +79,8 @@ export const curatedStackLayers: StackLayerSummary[] = [
   {
     layer: "Infrastructure & Compute",
     category: "infra",
-    primaryTools: ["FastAPI", "Upstash Redis", "Dokploy", "Cloudflare R2", "Docker"],
-    role: "Low-latency APIs, distributed queuing, caching, asset storage, and container deployment.",
+    primaryTools: ["FastAPI", "Upstash Redis", "Resend", "Stripe", "Dokploy", "Cloudflare R2"],
+    role: "Low-latency APIs, transactional email, payment processing, distributed queuing, caching, and container deployment.",
   },
   {
     layer: "Auth & Identity",
@@ -91,14 +91,14 @@ export const curatedStackLayers: StackLayerSummary[] = [
   {
     layer: "Dev Tools & Automation",
     category: "dev-tool",
-    primaryTools: ["Claude Code", "Playwright", "Inngest", "Sanity CMS", "Tavily API"],
-    role: "Agent development loops, web scraping/testing, background cron jobs, and CMS operations.",
+    primaryTools: ["Claude Code", "Playwright", "Zod", "Inngest", "Sanity CMS", "Tavily API"],
+    role: "Agent development loops, web scraping/testing, runtime schema validation, and CMS operations.",
   },
   {
     layer: "Frontend & Web Architecture",
     category: "frontend",
-    primaryTools: ["Next.js", "Astro", "React", "Tailwind CSS"],
-    role: "Full-stack apps with Next.js App Router, and ultra-fast, zero-JS content-driven websites with Astro for maximum SEO and performance.",
+    primaryTools: ["Next.js", "Astro", "React", "Tailwind CSS", "Framer Motion"],
+    role: "Full-stack apps with Next.js App Router, spring physics animations, and ultra-fast, zero-JS content-driven websites with Astro for maximum SEO and performance.",
   },
 ];
 
@@ -532,6 +532,163 @@ export const initialCuratedTools: CuratedToolItem[] = [
     "useCase": "R2 handles images and file uploads for projects that need global distribution. No egress fees means I can serve files worldwide without surprise costs. The S3 API compatibility makes migrating from existing storage simple. I've used it for video hosting and asset delivery where Cloudflare's edge makes a noticeable difference in load times.",
     "websiteUrl": "https://www.cloudflare.com/products/zero-trust/zero-trust-network-access/r2",
     "reviewUrl": "https://owaisabdullah.dev/stack/cloudflare-r2"
+  },
+  {
+    "_id": "ast_astro_frontend_tool",
+    "category": "dev-tool",
+    "clientFit": "When clients need extreme SEO, marketing sites, or directory/documentation platforms where speed and Core Web Vitals directly drive conversions without React SPA bloat.",
+    "dateAdded": "2025-02-01",
+    "docsUrl": "https://docs.astro.build/",
+    "featured": true,
+    "githubUrl": "https://github.com/withastro/astro",
+    "logoUrl": null,
+    "myRating": 5,
+    "name": "Astro",
+    "projectsUsingIt": [
+      "Local Business Factory",
+      "Content Sites"
+    ],
+    "slug": "astro",
+    "stackLayer": "Frontend / Content Layer",
+    "tagline": "Content-driven web framework with Islands architecture and zero JavaScript by default.",
+    "useCase": "I use Astro in Local Business Factory (@lbf/site-renderer) to generate ultra-fast, multi-tenant websites for local businesses. The islands architecture means 100/100 Core Web Vitals with near-zero runtime client JS, keeping server compute minimal while maximizing SEO.",
+    "websiteUrl": "https://astro.build/",
+    "reviewUrl": "https://owaisabdullah.dev/stack/astro"
+  },
+  {
+    "_id": "mcp_protocol_sdk_tool",
+    "category": "mcp",
+    "clientFit": "When clients want to integrate autonomous agents into existing Shopify, CRM, or database systems using an open, vendor-neutral standard instead of fragile ad-hoc webhook scripts.",
+    "dateAdded": "2025-02-01",
+    "docsUrl": "https://modelcontextprotocol.io/introduction",
+    "featured": true,
+    "githubUrl": "https://github.com/modelcontextprotocol",
+    "logoUrl": null,
+    "myRating": 5,
+    "name": "Model Context Protocol",
+    "projectsUsingIt": [
+      "Shopify-mcp",
+      "ShopMate",
+      "SEO Blog Agent"
+    ],
+    "slug": "model-context-protocol",
+    "stackLayer": "Agent Connectivity / MCP",
+    "tagline": "Open standard for connecting AI agents to real-world tools, databases, and third-party APIs.",
+    "useCase": "I build native MCP servers like my open-source Shopify Multi-Store MCP connector and internal WordPress connectors. MCP provides a structured contract (stdio or SSE/HTTP) so Claude and custom agents can securely query inventory, manage store drafts, and run operations without proprietary API glue.",
+    "websiteUrl": "https://modelcontextprotocol.io/",
+    "reviewUrl": "https://owaisabdullah.dev/stack/model-context-protocol"
+  },
+  {
+    "_id": "fastmcp_python_server_tool",
+    "category": "mcp",
+    "clientFit": "When engineering teams need to rapidly build and deploy custom internal Python MCP tools for Claude Code or custom agent pipelines.",
+    "dateAdded": "2025-02-01",
+    "docsUrl": "https://github.com/jlowin/fastmcp",
+    "featured": false,
+    "githubUrl": "https://github.com/jlowin/fastmcp",
+    "logoUrl": null,
+    "myRating": 5,
+    "name": "FastMCP",
+    "projectsUsingIt": [
+      "ShopMate",
+      "SEO Blog Agent"
+    ],
+    "slug": "fastmcp",
+    "stackLayer": "MCP Server Framework",
+    "tagline": "High-level Python framework for building Model Context Protocol servers with minimal boilerplate.",
+    "useCase": "FastMCP makes building production MCP servers in Python effortless. I use it in ShopMate to expose e-commerce agent actions using simple @mcp.tool() decorators with automatic Pydantic schema generation and error handling.",
+    "websiteUrl": "https://github.com/jlowin/fastmcp",
+    "reviewUrl": "https://owaisabdullah.dev/stack/fastmcp"
+  },
+  {
+    "_id": "resend_email_infra_tool",
+    "category": "infra",
+    "clientFit": "When clients need rock-solid transactional email delivery with high domain deliverability, clean analytics, and zero SMTP server maintenance.",
+    "dateAdded": "2025-02-01",
+    "docsUrl": "https://resend.com/docs",
+    "featured": true,
+    "githubUrl": "https://github.com/resend/resend-node",
+    "logoUrl": null,
+    "myRating": 5,
+    "name": "Resend",
+    "projectsUsingIt": [
+      "Visati",
+      "Owflex Chatbot Saas",
+      "Furniture Site"
+    ],
+    "slug": "resend",
+    "stackLayer": "Email & Communication",
+    "tagline": "Developer-first email API built for modern React and Next.js applications.",
+    "useCase": "I use Resend across Visati, Owflex, and client e-commerce sites for transactional emails, appointment confirmations, and auth notifications. Pairing Resend with React Email means emails are type-safe components rather than brittle HTML strings.",
+    "websiteUrl": "https://resend.com/",
+    "reviewUrl": "https://owaisabdullah.dev/stack/resend"
+  },
+  {
+    "_id": "framer_motion_animation_tool",
+    "category": "dev-tool",
+    "clientFit": "When clients want an elevated, premium brand feel with smooth transitions, interactive menus, and spring physics without degrading performance.",
+    "dateAdded": "2025-02-01",
+    "docsUrl": "https://motion.dev/docs",
+    "featured": false,
+    "githubUrl": "https://github.com/motiondivision/motion",
+    "logoUrl": null,
+    "myRating": 5,
+    "name": "Framer Motion",
+    "projectsUsingIt": [
+      "Furniture Site",
+      "Personal Portfolio"
+    ],
+    "slug": "framer-motion",
+    "stackLayer": "UI Animation Layer",
+    "tagline": "Production-ready motion library for React delivering smooth, hardware-accelerated animations.",
+    "useCase": "I use Framer Motion for layout transitions, interactive modals, and micro-interactions in high-end client experiences like Yousuf Living. The declarative API and spring physics make interfaces feel organic and responsive rather than stiff.",
+    "websiteUrl": "https://motion.dev/",
+    "reviewUrl": "https://owaisabdullah.dev/stack/framer-motion"
+  },
+  {
+    "_id": "stripe_payment_infra_tool",
+    "category": "infra",
+    "clientFit": "When clients need bulletproof payment collection, global currencies, subscription billing, and automated tax handling.",
+    "dateAdded": "2025-02-01",
+    "docsUrl": "https://stripe.com/docs",
+    "featured": false,
+    "githubUrl": "https://github.com/stripe/stripe-node",
+    "logoUrl": null,
+    "myRating": 5,
+    "name": "Stripe",
+    "projectsUsingIt": [
+      "Visati"
+    ],
+    "slug": "stripe",
+    "stackLayer": "Payment Layer",
+    "tagline": "Financial infrastructure and payments platform for global internet commerce.",
+    "useCase": "I integrate Stripe for checkout sessions, subscription management, and webhook reconciliation in Visati and SaaS client apps. The developer tooling, webhook signatures, and customer portal make monetization seamless.",
+    "websiteUrl": "https://stripe.com/",
+    "reviewUrl": "https://owaisabdullah.dev/stack/stripe"
+  },
+  {
+    "_id": "zod_schema_validation_tool",
+    "category": "dev-tool",
+    "clientFit": "Standard requirement for every client codebase to catch invalid data at system boundaries before it hits databases or business logic.",
+    "dateAdded": "2025-02-01",
+    "docsUrl": "https://zod.dev/",
+    "featured": false,
+    "githubUrl": "https://github.com/colinhacks/zod",
+    "logoUrl": null,
+    "myRating": 5,
+    "name": "Zod",
+    "projectsUsingIt": [
+      "Visati",
+      "Shopify-mcp",
+      "Owflex Chatbot Saas",
+      "Furniture Site"
+    ],
+    "slug": "zod",
+    "stackLayer": "Validation Layer",
+    "tagline": "TypeScript-first schema declaration and runtime data validation with static type inference.",
+    "useCase": "Zod is the backbone of type safety across almost all my TypeScript projects. I use it to parse and validate API request bodies, environment variables, Sanity payloads, and MCP tool input schemas, eliminating runtime surprises.",
+    "websiteUrl": "https://zod.dev/",
+    "reviewUrl": "https://owaisabdullah.dev/stack/zod"
   }
 ];
 
