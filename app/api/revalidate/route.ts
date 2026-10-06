@@ -9,7 +9,10 @@ export async function GET(request: NextRequest) {
   const path = searchParams.get("path");
   const tag = searchParams.get("tag");
 
-  const validSecret = process.env.REVALIDATE_SECRET || "owais-revalidate-2026";
+  const validSecret =
+    process.env.SANITY_REVALIDATE_SECRET ||
+    process.env.REVALIDATE_SECRET ||
+    "owais-revalidate-2026";
   if (secret !== validSecret) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
@@ -48,27 +51,40 @@ export async function POST(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const urlSecret = searchParams.get("secret");
     const headerSecret = request.headers.get("x-webhook-secret");
-    const validSecret = process.env.REVALIDATE_SECRET || "owais-revalidate-2026";
+    const signature = request.headers.get("sanity-webhook-signature");
+    const validSecret =
+      process.env.SANITY_REVALIDATE_SECRET ||
+      process.env.REVALIDATE_SECRET ||
+      "owais-revalidate-2026";
 
-    // Allow validation via URL ?secret= or Header x-webhook-secret
-    if (urlSecret !== validSecret && headerSecret !== validSecret) {
-      // Check if body contains secret
-      let body: any = null;
-      try {
-        body = await request.json();
-      } catch {}
-
-      if (!body || body.secret !== validSecret) {
-        return NextResponse.json({ message: "Invalid token or secret" }, { status: 401 });
-      }
-
-      return handleRevalidation(body);
-    }
-
+    const rawBody = await request.text();
     let body: any = null;
     try {
-      body = await request.json();
+      if (rawBody.trim()) {
+        body = JSON.parse(rawBody);
+      }
     } catch {}
+
+    // 1. Sanity native HMAC signature verification
+    let isSignatureValid = false;
+    if (signature && validSecret) {
+      try {
+        const { isValidSignature } = await import("@sanity/webhook");
+        isSignatureValid = await isValidSignature(rawBody, signature, validSecret.trim());
+      } catch (sigErr) {
+        console.error("Signature verification failed:", sigErr);
+      }
+    }
+
+    // 2. Direct secret verification (URL param, custom header, or body property)
+    const isDirectSecretValid =
+      urlSecret === validSecret ||
+      headerSecret === validSecret ||
+      (body && body.secret === validSecret);
+
+    if (!isSignatureValid && !isDirectSecretValid) {
+      return NextResponse.json({ message: "Invalid token or signature" }, { status: 401 });
+    }
 
     return handleRevalidation(body);
   } catch (err) {
