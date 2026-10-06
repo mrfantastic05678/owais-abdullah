@@ -26,9 +26,9 @@ import {
   SiShadcnui,
   SiClerk,
   SiFigma,
-  SiTrello,
   SiNotion,
   SiHuggingface,
+  SiAstro,
 } from "react-icons/si";
 import { CircleDot, Layers3, Users2 } from "lucide-react";
 import SkillCards from "./ui/SkillCards";
@@ -36,6 +36,7 @@ import SkillCards from "./ui/SkillCards";
 const SkillSlider = () => {
   const skills = [
     { name: "Next.js", icon: SiNextdotjs, color: "#00D9FF" },
+    { name: "Astro", icon: SiAstro, color: "#FF5D01" },
     { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
     { name: "Python", icon: SiPython, color: "#FFD43B" },
     { name: "Sanity CMS", icon: SiSanity, color: "#F03E2F" },
@@ -72,7 +73,6 @@ const SkillSlider = () => {
 
     // Project Management / Misc
     { name: "Figma", icon: SiFigma, color: "#F24E1E" },
-    { name: "Trello", icon: SiTrello, color: "#0079BF" },
     { name: "Notion", icon: SiNotion, color: "#9CA3AF" },
 
     // Bonus AI Tools
@@ -80,13 +80,13 @@ const SkillSlider = () => {
   ];
 
   return (
-    <div className="relative w-full overflow-hidden py-6">
+    <div className="relative w-full overflow-hidden py-6 sm:py-8">
       {/* Fade overlays */}
       <div className="absolute left-0 top-0 w-14 lg:w-32 h-full bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
       <div className="absolute right-0 top-0 w-14 lg:w-32 h-full bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none"></div>
 
-      {/* Top row - sliding right */}
-      <div className="mb-8 relative">
+      {/* Top row - sliding right with tighter gap */}
+      <div className="mb-2.5 sm:mb-3 relative py-1">
         <div className="w-max flex flex-nowrap animate-infinite-scroll-right will-change-transform">
           {[...skills, ...skills].map((skill, index) => (
             <SkillCards
@@ -99,8 +99,8 @@ const SkillSlider = () => {
         </div>
       </div>
 
-      {/* Bottom row - sliding left */}
-      <div className="relative">
+      {/* Bottom row - sliding left with tighter gap */}
+      <div className="relative py-1 pb-2">
         <div className="w-max -ml-[5000px] lg:-ml-[500%] flex flex-nowrap animate-infinite-scroll-left flex-row-reverse will-change-transform">
           {[...skills, ...skills].reverse().map((skill, index) => (
             <SkillCards

@@ -40,7 +40,7 @@ I'm a Forward Deployed Engineer (FDE) who builds AI Workers — Digital FTEs tha
 
 | Technology | Use |
 |------------|-----|
-| Next.js 15 (App Router) | Web framework, SSR, ISR |
+| Next.js (App Router) | Web framework, SSR, ISR |
 | TypeScript | Type safety, strict mode |
 | Tailwind CSS | Utility-first styling |
 | shadcn/ui | UI component library (Radix UI primitives) |
@@ -286,4 +286,4 @@ npx sanity deploy
 
 ---
 
-Built with Next.js 15, TypeScript, Tailwind CSS, and AI.
+Built with Next.js, TypeScript, Tailwind CSS, and AI.

@@ -18,7 +18,7 @@ interface ServiceFAQProps {
 
 const ServiceFAQ: React.FC<ServiceFAQProps> = ({ faqs }) => {
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-20 border-t border-border/40">
       <div className="max-w-3xl mx-auto px-5">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -34,7 +34,7 @@ const ServiceFAQ: React.FC<ServiceFAQProps> = ({ faqs }) => {
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className="bg-card rounded-lg border border-border px-6"
+              className="bg-white dark:bg-[#081B1E] rounded-2xl border border-slate-200/90 dark:border-[#10343A] px-6 shadow-xs hover:border-teal-500/50 hover:shadow-md transition-all"
             >
               <AccordionTrigger className="text-left hover:no-underline">
                 {faq.question}

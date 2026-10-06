@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
 import { GoogleGenAI } from "@google/genai";
+import { getResend, FROM_ADDRESS, TO_ADDRESS } from "@/lib/email/clients";
+import { contactEmailHtml, contactEmailText } from "@/lib/email/contact-template";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -33,11 +35,11 @@ You are an **AI assistant** for **Owais Abdullah's portfolio website**. Your rol
 
 ### **Greeting Handling**
 
-* If the user greets you (e.g., *Hi, Hello, Assalamualaikum*), respond with a friendly reply, **add a relevant emoji**, and ask how you can help.
+* If the user greets you (e.g., *Hi, Hello, Assalamualaikum*), respond with a courteous, direct reply. **Strictly avoid emojis anywhere in your response.** Ask how you can help with Owais Abdullah's technical knowledge, AI agents, or SaaS systems.
 
   * Example:
 
-    > "Hello! 👋 How can I help you today regarding Owais Abdullah's services or projects?"
+    > "Hello. How can I assist you today regarding Owais Abdullah's services, AI agents, or SaaS architectures?"
 
 ---
 
@@ -68,18 +70,23 @@ You are an **AI assistant** for **Owais Abdullah's portfolio website**. Your rol
 
 ---
 
-### **Hiring & Contact Inquiries**
+### **Hiring, Project Inquiries & Lead Intake**
 
-* If someone asks about hiring, pricing, or direct contact:
-
-  > "Please reach out directly via email at **[mrowaisabdullah@gmail.com](mailto:mrowaisabdullah@gmail.com)** or message on **[WhatsApp](https://wa.me/923262283140)** for hiring, pricing, or further details."
+* If someone asks about hiring, pricing, starting a project, building a Digital FTE/SaaS, or booking a call:
+  1. Ask for their **Name**, **Email address**, and a brief overview of what they want to build or automate.
+  2. If the user has already provided their email and requirements (e.g. *"My name is Alex, email alex@example.com, I need a customer support AI agent"*):
+     - Warmly confirm that their spec has been submitted to Owais's inbox:
+       "Thank you, Alex. I have transmitted your project brief directly to Owais Abdullah's inbox. He will review your specifications and email you at alex@example.com shortly."
+     - Also mention they can directly connect on **[WhatsApp](https://wa.me/923262283140)** or email **[mrowaisabdullah@gmail.com](mailto:mrowaisabdullah@gmail.com)** if urgent.
+     - Include this exact JSON marker at the very end of your response:
+       <!--LEAD:{"name":"<User Name>","email":"<User Email>","subject":"Project Inquiry from Chat","message":"<Full user requirements>"}:LEAD-->
 
 ---
 
 ### **About Owais Abdullah's Expertise**
 
 * **AI & Agents:** Claude Code, OpenAI Agents SDK, Claude Agent SDK, MCP (Model Context Protocol), Gemini AI, OpenRouter, DeepSeek, Paperclip, OpenClaw, Hermes
-* **Frontend:** Next.js 15 (App Router), React, TypeScript, Tailwind CSS, shadcn/ui, Framer Motion, GSAP
+* **Frontend:** Next.js (App Router), Astro (for ultra-fast, content-driven websites), React, TypeScript, Tailwind CSS, shadcn/ui, Framer Motion, GSAP
 * **Backend & Databases:** Python (FastAPI), PostgreSQL, Neon Postgres, pgvector, SQLite, Prisma ORM, Sanity CMS
 * **Cloud & Infrastructure:** Vercel, Cloudflare R2, AWS S3, Docker, Dokploy, Coolify, Inngest
 * **Tools & Automation:** Playwright, Obsidian, Brevo, Resend, Git, GitHub
@@ -139,8 +146,59 @@ You are an **AI assistant** for **Owais Abdullah's portfolio website**. Your rol
       contents: adjustedMessages,
     });
 
-    const responseText =
+    const rawResponseText =
       response.text || "*I'm sorry, I didn't understand that.*";
+
+    let responseText = rawResponseText;
+
+    // Check for lead transmission marker
+    const leadMatch = rawResponseText.match(/<!--LEAD:([\s\S]*?):LEAD-->/);
+    if (leadMatch && leadMatch[1]) {
+      try {
+        const lead = JSON.parse(leadMatch[1].trim());
+        if (lead.email && lead.name) {
+          const receivedAt = new Date().toLocaleString("en-US", {
+            timeZone: "Asia/Karachi",
+            dateStyle: "medium",
+            timeStyle: "short",
+          });
+          const ip =
+            request.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+            request.headers.get("x-real-ip") ??
+            "chatbot";
+
+          // Forward to verified contact pipeline via Resend
+          await getResend().emails.send({
+            from: FROM_ADDRESS,
+            to: TO_ADDRESS,
+            replyTo: lead.email,
+            subject: `[Chatbot Lead] ${lead.subject || "Project Spec Inquiry"}`,
+            html: contactEmailHtml({
+              name: lead.name,
+              email: lead.email,
+              subject: lead.subject || "AI Chatbot Spec Intake",
+              message: lead.message || "Lead submitted via chatbot conversation.",
+              ip,
+              receivedAt,
+            }),
+            text: contactEmailText({
+              name: lead.name,
+              email: lead.email,
+              subject: lead.subject || "AI Chatbot Spec Intake",
+              message: lead.message || "Lead submitted via chatbot conversation.",
+              ip,
+              receivedAt,
+            }),
+          });
+        }
+      } catch (err) {
+        console.error("[chat] Failed to parse and forward lead:", err);
+      }
+
+      // Strip internal marker from client response
+      responseText = rawResponseText.replace(/<!--LEAD:[\s\S]*?:LEAD-->/g, "").trim();
+    }
+
     return new Response(JSON.stringify({ response: responseText }), {
       status: 200,
     });

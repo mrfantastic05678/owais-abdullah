@@ -1,13 +1,13 @@
-"use client"
+"use client";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
+import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 import type { Project } from "@/data/profile";
-import CharRevealHeading from "@/components/CharRevealHeading";
-import CharShuffleText from "@/components/ui/CharShuffleText";
 
 interface ProjectsByCategory {
   [category: string]: Project[];
@@ -23,18 +23,19 @@ const ALL_TAB = "All";
 
 const hasValidLink = (link: string) => link && link !== "#";
 
-const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
+export default function ProjectTabs({
+  projectsByCategory,
+  allProjects,
+}: ProjectsTabProps) {
   const [visibleCount, setVisibleCount] = useState<Record<string, number>>({});
   const rawCategories = Object.keys(projectsByCategory);
   const FTE_TAB = "Digital FTE";
-  const otherCats = rawCategories.filter(c => c !== FTE_TAB);
+  const otherCats = rawCategories.filter((c) => c !== FTE_TAB);
   const categories = rawCategories.includes(FTE_TAB)
     ? [ALL_TAB, FTE_TAB, ...otherCats]
     : [ALL_TAB, ...rawCategories];
   const [activeTab, setActiveTab] = useState(ALL_TAB);
 
-  // Deep-link support (?tab=WordPress) without useSearchParams, which would
-  // force a client-side rendering bailout on this statically rendered page
   useEffect(() => {
     const tabParam = new URLSearchParams(window.location.search).get("tab");
     if (tabParam && categories.includes(tabParam)) {
@@ -55,207 +56,177 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
       category === ALL_TAB
         ? allProjects.length
         : (projectsByCategory[category] || []).length;
-    setVisibleCount(prev => ({
+    setVisibleCount((prev) => ({
       ...prev,
       [category]: Math.min(
         (prev[category] || PROJECTS_PER_PAGE) + PROJECTS_PER_PAGE,
         total
-      )
+      ),
     }));
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
-
   return (
-    <section id="projects" className="max-w-7xl mx-auto mt-20 px-5">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center"
-      >
-        <p className="text-base text-accent font-medium sm:text-lg">
-          See My Work
-        </p>
-        <CharRevealHeading
-          as="h2"
-          className="text-4xl text-foreground font-semibold sm:text-5xl"
-          highlightWords={["Projects"]}
-        >
-          Selected Projects
-        </CharRevealHeading>
-      </motion.div>
+    <section id="projects" className="max-w-7xl mx-auto px-5 py-16 sm:py-20 space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <span className="text-xs font-mono uppercase tracking-wider font-bold text-teal-700 dark:text-teal-400">
+            PROVEN BUILDS
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground mt-1">
+            Selected Projects
+          </h2>
+          <p className="text-sm text-muted-foreground max-w-xl mt-1">
+            Shipped AI employees, Next.js SaaS platforms, and enterprise e-commerce systems built with written specs.
+          </p>
+        </div>
+        <div className="text-xs font-mono font-bold px-3 py-1.5 rounded-xl border border-border bg-card/80 text-muted-foreground w-fit">
+          {allProjects.length} REPOSITORIES &amp; APPS
+        </div>
+      </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full mt-10">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <TabsList className="flex flex-wrap justify-center gap-3 p-2 bg-transparent">
-            {categories.map((category) => (
-              <TabsTrigger
-                key={category}
-                value={category}
-                className="px-4 py-2 rounded-lg bg-card text-foreground hover:bg-accent hover:text-accent-foreground transition data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
-              >
-                {category}
-                <span className="ml-2 text-xs opacity-70">
-                  ({category === ALL_TAB ? allProjects.length : (projectsByCategory[category]?.length || 0)})
-                </span>
-              </TabsTrigger>
-            ))}
+      {/* Tabs Filter Bar */}
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full space-y-8">
+        <div className="flex justify-start overflow-x-auto pb-2.5 pt-1 theme-scrollbar">
+          <TabsList className="inline-flex items-center gap-1.5 p-1.5 rounded-2xl border border-slate-300 dark:border-teal-900/60 bg-white dark:bg-[#05181b] shadow-sm flex-nowrap shrink-0">
+            {categories.map((category) => {
+              const count =
+                category === ALL_TAB
+                  ? allProjects.length
+                  : projectsByCategory[category]?.length || 0;
+
+              return (
+                <TabsTrigger
+                  key={category}
+                  value={category}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 border border-slate-200/70 dark:border-teal-900/40 bg-slate-100/80 dark:bg-[#081e22] text-slate-700 dark:text-teal-200 hover:bg-slate-200 dark:hover:bg-teal-900/60 data-[state=active]:border-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-700 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md"
+                >
+                  <span>{category}</span>
+                  <span className="ml-1.5 text-[10px] font-mono opacity-80">
+                    ({count})
+                  </span>
+                </TabsTrigger>
+              );
+            })}
           </TabsList>
-        </motion.div>
+        </div>
 
-        {/* Tab Content */}
+        {/* Tab Content Cards Grid */}
         {categories.map((category) => {
-          const projects = category === ALL_TAB ? allProjects : (projectsByCategory[category] || []);
-          const visibleProjects = projects.slice(0, visibleCount[category] || PROJECTS_PER_PAGE);
-          const hasMore = projects.length > (visibleCount[category] || PROJECTS_PER_PAGE);
+          const projects =
+            category === ALL_TAB
+              ? allProjects
+              : projectsByCategory[category] || [];
+          const currentVisible = visibleCount[category] || PROJECTS_PER_PAGE;
+          const visibleProjects = projects.slice(0, currentVisible);
+          const hasMore = projects.length > currentVisible;
 
           return (
-            <TabsContent key={category} value={category} className="mt-6">
-              <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-              >
-                <AnimatePresence mode="popLayout">
-                  {visibleProjects.map((project, index) => (
-                    <motion.div
-                      key={`${category}-${index}`}
-                      variants={itemVariants}
-                      whileHover={{ y: -8 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      className="scroll-smooth border border-border rounded-xl overflow-hidden shadow-lg bg-card group"
-                    >
-                      <div className="relative overflow-hidden">
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.3 }}
-                          className="lg:h-48 md:h-36 w-full relative bg-muted"
-                        >
-                          <Image
-                            className="w-full h-full object-cover"
-                            src={project.image || "/assets/placeholder.png"}
-                            alt={project.title}
-                            width={500}
-                            height={300}
-                            loading="lazy"
-                          />
-                        </motion.div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+            <TabsContent key={category} value={category} className="mt-0 space-y-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {visibleProjects.map((project, index) => (
+                  <div
+                    key={`${category}-${project.title}-${index}`}
+                    className="clean-glass-card rounded-xl group overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5"
+                  >
+                    <div>
+                      {/* Image Preview with Category Badge */}
+                      <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-100 dark:bg-slate-900 border-b border-border/60">
+                        <Image
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          src={project.image || "/assets/placeholder.png"}
+                          alt={project.title}
+                          width={600}
+                          height={350}
+                          loading="lazy"
+                          unoptimized
+                        />
+                        <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-white/95 text-teal-900 border border-teal-300/80 shadow-md backdrop-blur-md dark:bg-[#031518]/95 dark:text-teal-200 dark:border-teal-500/50">
+                          {project.category.toUpperCase()}
+                        </span>
                       </div>
-                      <div className="p-6">
-                        <h3 className="text-xl font-medium text-foreground mb-2">
+
+                      {/* Card Body */}
+                      <div className="p-5 space-y-3">
+                        <h3 className="text-lg font-bold text-foreground group-hover:text-teal-700 dark:group-hover:text-teal-400 transition-colors">
                           {project.title}
                         </h3>
 
-                        <div className="flex flex-wrap gap-2 mb-3">
+                        {/* Tech Tag Badges */}
+                        <div className="flex flex-wrap gap-1.5">
                           {project.tags.slice(0, 3).map((tag, i) => (
-                            <motion.span
+                            <span
                               key={i}
-                              whileHover={{ scale: 1.05 }}
-                              className="bg-muted text-muted-foreground text-xs px-2 py-1 rounded-md"
+                              className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#072428] text-slate-700 dark:text-teal-200 border border-slate-200/60 dark:border-teal-800/40 font-semibold"
                             >
                               {tag}
-                            </motion.span>
+                            </span>
                           ))}
                         </div>
 
-                        <p className="text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
-                        <div className="flex flex-wrap items-center gap-3 pt-1">
-                          {project.slug && (
-                            <Link
-                              href={`/projects/${project.slug}`}
-                              className="text-xs font-semibold text-accent hover:text-accent/80 border border-accent/40 bg-accent/10 px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1.5"
-                            >
-                              <span>Case Study &amp; Setup</span>
-                              <span>→</span>
-                            </Link>
-                          )}
-                          {hasValidLink(project.link) && project.link !== `/projects/${project.slug}` ? (
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                              <Link
-                                href={project.link}
-                                className="text-muted-foreground hover:text-foreground text-xs font-medium inline-flex items-center"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <span>Live Demo</span>
-                                <span className="ml-1">↗</span>
-                              </Link>
-                            </motion.div>
-                          ) : !project.slug ? (
-                            <span className="text-muted-foreground text-xs">
-                              Private client work
-                            </span>
-                          ) : null}
-                          {project.repoUrl && project.repoUrl !== "#" && (
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="ml-auto">
-                              <Link
-                                href={project.repoUrl}
-                                className="text-muted-foreground hover:text-foreground text-sm inline-flex items-center"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`${project.title} GitHub repository`}
-                              >
-                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                                </svg>
-                              </Link>
-                            </motion.div>
-                          )}
-                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                          {project.description}
+                        </p>
                       </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </motion.div>
+                    </div>
+
+                    {/* Card Actions Footer */}
+                    <div className="p-5 pt-3 border-t border-border/70 flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-3">
+                        {project.slug && (
+                          <Link
+                            href={`/projects/${project.slug}`}
+                            className="font-bold text-teal-700 dark:text-teal-400 inline-flex items-center gap-1 group/link"
+                          >
+                            <SplitFlapLabel primary="Case Study & Setup" secondary="Read System Spec" />
+                            <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
+                          </Link>
+                        )}
+                        {hasValidLink(project.link) && project.link !== `/projects/${project.slug}` && (
+                          <Link
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-foreground font-semibold inline-flex items-center gap-1 group/demo"
+                          >
+                            <SplitFlapLabel primary="Live Demo" secondary="Launch App" />
+                            <ExternalLink className="w-3 h-3 group-hover/demo:translate-x-0.5 transition-transform" />
+                          </Link>
+                        )}
+                        {!project.slug && !hasValidLink(project.link) && (
+                          <span className="text-[11px] font-mono text-muted-foreground">
+                            Private build
+                          </span>
+                        )}
+                      </div>
+
+                      {project.repoUrl && project.repoUrl !== "#" && (
+                        <Link
+                          href={project.repoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                          aria-label={`${project.title} GitHub repository`}
+                        >
+                          <FaGithub className="w-4 h-4" />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
 
               {/* Load More Button */}
               {hasMore && (
-                <div className="flex justify-center mt-10">
-                  <motion.button
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.3 }}
+                <div className="flex justify-center pt-4">
+                  <button
+                    type="button"
                     onClick={() => handleLoadMore(category)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative inline-flex items-center gap-2 px-8 py-3 text-foreground bg-card border-2 border-border rounded-md font-medium shadow-lg overflow-hidden"
+                    className="group px-6 py-2.5 rounded-xl border border-border bg-card hover:bg-muted text-foreground text-xs font-mono font-bold inline-flex items-center gap-2 cursor-pointer transition-all shadow-xs"
                   >
-                    <span className="absolute inset-0 w-full h-full bg-accent translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                    <span className="relative z-10 flex items-center gap-2 group-hover:text-accent-foreground transition-colors duration-300">
-                      <CharShuffleText text="Load More Projects" />
-                      <FaRegArrowAltCircleRight className="group-hover:translate-x-1 transition-transform duration-300" />
-                    </span>
-                  </motion.button>
+                    <SplitFlapLabel primary="Load More Projects" secondary="Fetch Next Batch" />
+                    <ArrowRight className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 group-hover:translate-x-0.5 transition-transform" />
+                  </button>
                 </div>
               )}
             </TabsContent>
@@ -264,6 +235,4 @@ const ProjectTabs = ({ projectsByCategory, allProjects }: ProjectsTabProps) => {
       </Tabs>
     </section>
   );
-};
-
-export default ProjectTabs;
+}

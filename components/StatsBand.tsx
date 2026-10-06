@@ -8,12 +8,11 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-// Real, checkable numbers only
 const STATS = [
-  { value: 3, suffix: "+", label: "Years in tech" },
-  { value: 50, suffix: "+", label: "Projects shipped" },
-  { value: 1, suffix: "", label: "SaaS founded — Octively, live" },
-  { value: 2, suffix: "", label: "Concurrent senior roles" },
+  { value: 3, suffix: "+ Years", label: "Production Engineering" },
+  { value: 50, suffix: "+", label: "Projects Shipped Worldwide" },
+  { value: 1, suffix: " Live SaaS", label: "Founded & Deployed (Octively)" },
+  { value: 100, suffix: "% Spec", label: "Zero AI Vibe Coding" },
 ];
 
 export default function StatsBand() {
@@ -46,7 +45,6 @@ export default function StatsBand() {
         });
       };
 
-      // Replays every time the band scrolls back into view
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top 85%",
@@ -58,19 +56,30 @@ export default function StatsBand() {
   );
 
   return (
-    <div ref={containerRef} className="border-y border-border bg-card/40">
-      <div className="max-w-7xl mx-auto px-5 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
-        {STATS.map(({ value, suffix, label }) => (
-          <div key={label} className="text-center">
+    <div 
+      ref={containerRef} 
+      className="my-12 max-w-6xl mx-auto px-5 sm:px-6"
+    >
+      <div className="clean-glass-card p-7 sm:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
+        {STATS.map(({ value, suffix, label }, idx) => (
+          <div key={label} className="space-y-1">
             <span
               data-count={value}
               data-suffix={suffix}
-              className="block font-heading font-semibold text-3xl md:text-4xl text-accent"
+              className={`block font-extrabold text-3xl sm:text-4xl tracking-tight ${
+                idx === 1 
+                  ? "bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 dark:from-teal-400 dark:to-emerald-400 bg-clip-text text-transparent"
+                  : idx === 3
+                  ? "text-emerald-700 dark:text-emerald-400"
+                  : "text-foreground"
+              }`}
             >
               {value}
               {suffix}
             </span>
-            <span className="block mt-1 text-xs md:text-sm text-muted-foreground">{label}</span>
+            <span className="block text-xs font-semibold text-muted-foreground">
+              {label}
+            </span>
           </div>
         ))}
       </div>

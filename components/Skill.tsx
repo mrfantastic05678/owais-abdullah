@@ -6,12 +6,13 @@ import SkillCard from "../components/ui/SkillCard";
 import CharRevealHeading from "@/components/CharRevealHeading";
 import { FaReact, FaWordpress, FaNodeJs } from "react-icons/fa";
 import { BiLogoTypescript, BiLogoPython } from "react-icons/bi";
-import { SiNextdotjs, SiOpenai, SiSanity, SiTailwindcss, SiSqlite, SiPrisma, SiPostgresql } from "react-icons/si";
+import { SiNextdotjs, SiOpenai, SiSanity, SiTailwindcss, SiSqlite, SiPrisma, SiPostgresql, SiAstro } from "react-icons/si";
 import { Zap } from "lucide-react";
 
 const skills = [
   { icon: <SiOpenai />, title: "OpenAI Agents SDK", description: "Developing autonomous AI agents with the OpenAI Agents SDK." },
   { icon: <SiNextdotjs />, title: "Next.js", description: "Building fast, dynamic, and SEO-friendly web applications." },
+  { icon: <SiAstro />, title: "Astro", description: "Building ultra-fast, content-driven websites with zero JS by default and Island architecture." },
   { icon: <Zap className="text-amber-400" />, title: "Performance & Web Vitals", description: "60FPS smooth UI engineering, GPU layer optimization, mobile touch responsiveness, and sub-second load times." },
   { icon: <FaReact />, title: "React.js", description: "Developing interactive UIs with component-based architecture." },
   { icon: <BiLogoTypescript />, title: "TypeScript", description: "Ensuring type safety and scalability in web applications." },
@@ -42,7 +43,7 @@ const Skill: React.FC = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className="min-h-screen bg-background py-16 px-4 sm:px-6 lg:px-8"
+      className="py-16 px-4 sm:px-6 lg:px-8"
     >
       <div className="max-w-7xl mx-auto">
         <motion.div

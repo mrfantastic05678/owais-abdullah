@@ -7,6 +7,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import SplitFlapLabel from '@/components/ui/SplitFlapLabel'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -130,12 +131,12 @@ export default async function ToolReviewPage({ params }: Props) {
 
       <main className="max-w-3xl mx-auto px-6 py-20">
         {/* Breadcrumb */}
-        <nav className="text-sm text-neutral-500 mb-8" aria-label="Breadcrumb">
-          <Link href="/stack" className="hover:text-white transition">
+        <nav className="text-sm text-muted-foreground mb-8" aria-label="Breadcrumb">
+          <Link href="/stack" className="hover:text-foreground transition">
             The Agent Stack
           </Link>
           <span className="mx-2">/</span>
-          <span className="text-white">{tool.name}</span>
+          <span className="text-foreground font-medium">{tool.name}</span>
         </nav>
 
         {/* Header */}
@@ -147,26 +148,26 @@ export default async function ToolReviewPage({ params }: Props) {
                 alt={`${tool.name} logo`}
                 width={64}
                 height={64}
-                className="rounded-xl"
+                className="rounded-xl border border-border bg-card p-1 shadow-xs"
               />
             )}
             <div>
-              <h1 className="text-3xl font-bold mb-2">{tool.name}</h1>
-              <p className="text-neutral-400">{tool.tagline}</p>
+              <h1 className="text-3xl font-bold mb-2 text-foreground">{tool.name}</h1>
+              <p className="text-muted-foreground">{tool.tagline}</p>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-3 text-sm">
-            <span className="px-3 py-1 rounded-full bg-neutral-800 text-neutral-300">
+            <span className="px-3 py-1 rounded-full bg-muted text-muted-foreground border border-border text-xs font-mono font-medium">
               {tool.stackLayer}
             </span>
-            <span className="px-3 py-1 rounded-full bg-neutral-800 text-neutral-300">
+            <span className="px-3 py-1 rounded-full bg-muted text-muted-foreground border border-border text-xs font-mono font-medium">
               Rating: {tool.myRating}/5
             </span>
             {tool.projectsUsingIt?.map((project) => (
               <span
                 key={project}
-                className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400"
+                className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/20 text-xs font-mono font-medium"
               >
                 {project}
               </span>
@@ -177,53 +178,53 @@ export default async function ToolReviewPage({ params }: Props) {
         {/* Review Body */}
         <article className="space-y-10">
           {/* Why I Use It */}
-          <section>
-            <h2 className="text-lg font-semibold mb-3 text-neutral-200">
+          <section className="p-6 rounded-2xl border border-slate-200/90 dark:border-[#10343A] bg-white dark:bg-[#081B1E] shadow-sm">
+            <h2 className="text-lg font-semibold mb-3 text-foreground">
               Why I Use It
             </h2>
-            <p className="text-neutral-400 leading-relaxed">{tool.useCase}</p>
+            <p className="text-muted-foreground leading-relaxed">{tool.useCase}</p>
           </section>
 
           {/* Client Fit */}
           {tool.clientFit && (
-            <section className="p-6 rounded-xl border border-blue-500/20 bg-blue-500/5">
-              <h2 className="text-lg font-semibold mb-3 text-blue-400">
+            <section className="p-6 rounded-2xl border border-teal-500/30 bg-teal-500/5 dark:bg-[#071F22] shadow-sm">
+              <h2 className="text-lg font-semibold mb-3 text-teal-700 dark:text-teal-400">
                 When I Recommend It to a Client
               </h2>
-              <p className="text-neutral-400 leading-relaxed">{tool.clientFit}</p>
+              <p className="text-muted-foreground leading-relaxed">{tool.clientFit}</p>
             </section>
           )}
 
           {/* Full Review */}
           {tool.body && tool.body.length > 0 && (
-            <section>
-              <h2 className="text-lg font-semibold mb-3 text-neutral-200">
+            <section className="p-6 rounded-2xl border border-slate-200/90 dark:border-[#10343A] bg-white dark:bg-[#081B1E] shadow-sm">
+              <h2 className="text-lg font-semibold mb-3 text-foreground">
                 Full Review
               </h2>
-              <div className="prose prose-invert prose-neutral max-w-none">
+              <div className="prose dark:prose-invert max-w-none">
                 <PortableText value={tool.body} />
               </div>
             </section>
           )}
 
           {/* Links */}
-          <section className="flex flex-wrap gap-4">
+          <section className="flex flex-wrap gap-4 pt-2">
             <a
               href={tool.websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-lg bg-white text-black font-medium hover:bg-neutral-200 transition"
+              className="group px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 hover:opacity-95 text-white font-medium transition shadow-sm"
             >
-              Visit Website
+              <SplitFlapLabel primary="Visit Website" secondary="Open Official Site" />
             </a>
             {tool.githubUrl && (
               <a
                 href={tool.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-lg border border-neutral-700 hover:border-neutral-500 transition"
+                className="group px-5 py-2.5 rounded-xl border border-slate-200 dark:border-[#10343A] bg-white dark:bg-[#081B1E] hover:bg-slate-100 dark:hover:bg-muted text-foreground transition"
               >
-                GitHub
+                <SplitFlapLabel primary="GitHub" secondary="View Source" />
               </a>
             )}
             {tool.docsUrl && (
@@ -231,60 +232,62 @@ export default async function ToolReviewPage({ params }: Props) {
                 href={tool.docsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-lg border border-neutral-700 hover:border-neutral-500 transition"
+                className="group px-5 py-2.5 rounded-xl border border-slate-200 dark:border-[#10343A] bg-white dark:bg-[#081B1E] hover:bg-slate-100 dark:hover:bg-muted text-foreground transition"
               >
-                Documentation
+                <SplitFlapLabel primary="Documentation" secondary="Read Docs" />
               </a>
             )}
           </section>
         </article>
 
         {/* Bottom CTA */}
-        <section className="mt-16 pt-10 border-t border-neutral-800">
-          <p className="text-neutral-500 mb-4">
+        <section className="mt-16 pt-10 border-t border-border/60">
+          <p className="text-muted-foreground mb-4">
             Need help integrating {tool.name} into your agent system?
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg font-medium transition"
+            className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 hover:opacity-95 text-white rounded-xl font-medium transition shadow-md"
           >
-            Let&apos;s Talk
+            <SplitFlapLabel primary="Let's Talk" secondary="Build With This" />
           </Link>
         </section>
 
-        {/* Additional SEO Content */}
-        <section className="mt-16 pt-10 border-t border-neutral-800">
-          <h2 className="text-lg font-semibold mb-4 text-neutral-200">
+        {/* Additional Technical Details Card */}
+        <section className="mt-16 pt-10 border-t border-border/60">
+          <h2 className="text-lg font-semibold mb-4 text-foreground">
             Technical Details
           </h2>
-          <dl className="grid md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <dt className="text-neutral-500">Category</dt>
-              <dd className="text-neutral-300">{tool.stackLayer}</dd>
-            </div>
-            <div>
-              <dt className="text-neutral-500">Rating</dt>
-              <dd className="text-neutral-300">{tool.myRating}/5</dd>
-            </div>
-            <div>
-              <dt className="text-neutral-500">Last Updated</dt>
-              <dd className="text-neutral-300">
-                {new Date(tool.dateAdded).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </dd>
-            </div>
-            {tool.projectsUsingIt && tool.projectsUsingIt.length > 0 && (
+          <div className="p-6 rounded-2xl border border-slate-200/90 dark:border-[#10343A] bg-white dark:bg-[#081B1E] shadow-sm">
+            <dl className="grid md:grid-cols-2 gap-4 text-sm">
               <div>
-                <dt className="text-neutral-500">Used In</dt>
-                <dd className="text-neutral-300">
-                  {tool.projectsUsingIt.join(', ')}
+                <dt className="text-muted-foreground text-xs uppercase font-mono">Category</dt>
+                <dd className="text-foreground font-medium mt-0.5">{tool.stackLayer}</dd>
+              </div>
+              <div>
+                <dt className="text-muted-foreground text-xs uppercase font-mono">Rating</dt>
+                <dd className="text-foreground font-medium mt-0.5">{tool.myRating}/5</dd>
+              </div>
+              <div>
+                <dt className="text-muted-foreground text-xs uppercase font-mono">Last Updated</dt>
+                <dd className="text-foreground font-medium mt-0.5">
+                  {new Date(tool.dateAdded).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
                 </dd>
               </div>
-            )}
-          </dl>
+              {tool.projectsUsingIt && tool.projectsUsingIt.length > 0 && (
+                <div>
+                  <dt className="text-muted-foreground text-xs uppercase font-mono">Used In</dt>
+                  <dd className="text-foreground font-medium mt-0.5">
+                    {tool.projectsUsingIt.join(', ')}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
         </section>
       </main>
     </>

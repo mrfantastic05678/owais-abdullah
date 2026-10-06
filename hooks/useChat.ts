@@ -77,7 +77,7 @@ export function useChat() {
           setMessages([
             {
               role: "assistant",
-              content: "**Hello!** I'm here to help You. Ask anything about Owais Abdullah's services or tech!",
+              content: "I am Owais's AI assistant. Ask me anything about his spec-driven development process, Digital FTEs, Next.js SaaS architecture, or ultra-fast Astro builds.",
             },
           ]);
         }
@@ -121,7 +121,7 @@ export function useChat() {
       setMessages([
         {
           role: "assistant",
-          content: "**Hello!** I'm here to help You. Ask anything about Owais Abdullah's services or tech!",
+          content: "I am Owais's AI assistant. Ask me anything about his spec-driven development process, Digital FTEs, Next.js SaaS architecture, or ultra-fast Astro builds.",
         },
       ]);
     }
@@ -183,5 +183,5 @@ export function useChat() {
     }
   };
 
-  return { messages, input, setInput, handleSubmit, isLoading, validationError };
+  return { messages, input, setInput, handleSubmit, isLoading, validationError, clearChat: clearLocalStorage };
 }

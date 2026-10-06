@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar } from "lucide-react";
+import { Calendar, Activity } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 
 export interface RecentPost {
@@ -14,8 +14,44 @@ export interface RecentPost {
   _createdAt: string;
 }
 
-export default function RecentPostsList({ posts }: { posts: RecentPost[] }) {
-  if (!posts.length) return null;
+export default function RecentPostsList({
+  posts,
+  variant = "standard",
+}: {
+  posts: RecentPost[];
+  variant?: "standard" | "sidebar";
+}) {
+  if (!posts || !posts.length) return null;
+
+  if (variant === "sidebar") {
+    return (
+      <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-xs">
+        <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground font-bold mb-3 flex items-center gap-2 pb-2 border-b border-border/80">
+          <Activity className="w-3.5 h-3.5 text-accent" />
+          <span>Recent Posts</span>
+        </div>
+        <div className="flex flex-col divide-y divide-border/60">
+          {posts.slice(0, 3).map((post) => (
+            <Link
+              key={post._id}
+              href={`/blog/${post.slug.current}`}
+              className="group py-2.5 first:pt-1 last:pb-1 transition-transform duration-200"
+            >
+              <div className="font-mono text-[10px] text-accent font-semibold tracking-wider uppercase mb-1">
+                {new Date(post._createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  year: "numeric",
+                })}
+              </div>
+              <h4 className="text-xs font-medium text-foreground group-hover:text-accent transition-colors line-clamp-2 leading-snug group-hover:translate-x-0.5">
+                {post.title}
+              </h4>
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">

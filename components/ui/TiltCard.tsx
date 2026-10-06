@@ -34,6 +34,31 @@ export default function TiltCard({ children, className = "", maxTilt = 10, layer
 
     const layers = wrap.querySelectorAll<HTMLElement>("[data-tilt-layer]");
 
+    // Pre-record each layer's permanent base rotation (e.g. -4deg, 3deg)
+    layers.forEach((layer) => {
+      let baseRot = layer.getAttribute("data-rotate");
+      if (!baseRot) {
+        const styleTransform = layer.style.transform;
+        const matchStyle = styleTransform.match(/rotate\(([^)]+)\)/);
+        if (matchStyle) {
+          baseRot = matchStyle[1];
+        } else {
+          for (const cls of layer.className.split(/\s+/)) {
+            const m = cls.match(/^(-)?rotate-(\d+)/);
+            if (m) {
+              baseRot = `${m[1] || ""}${m[2]}deg`;
+              break;
+            }
+          }
+        }
+      }
+      if (baseRot) {
+        const normalized = baseRot.endsWith("deg") ? baseRot : `${baseRot}deg`;
+        layer.dataset.baseRotate = normalized;
+        layer.style.transform = `rotate(${normalized})`;
+      }
+    });
+
     const onMove = (e: PointerEvent) => {
       const r = card.getBoundingClientRect();
       const px = (e.clientX - r.left) / r.width; // 0..1
@@ -50,7 +75,9 @@ export default function TiltCard({ children, className = "", maxTilt = 10, layer
 
       layers.forEach((layer, i) => {
         const depth = (i + 1) * layerDrift;
-        layer.style.transform = `translate(${(px - 0.5) * -depth}px, ${(py - 0.5) * -depth}px)`;
+        const baseRot = layer.dataset.baseRotate;
+        const rotStr = baseRot ? ` rotate(${baseRot})` : "";
+        layer.style.transform = `translate(${(px - 0.5) * -depth}px, ${(py - 0.5) * -depth}px)${rotStr}`;
       });
     };
 
@@ -59,8 +86,10 @@ export default function TiltCard({ children, className = "", maxTilt = 10, layer
       card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
       if (glow) glow.style.opacity = "0";
       layers.forEach((layer) => {
+        const baseRot = layer.dataset.baseRotate;
+        const rotStr = baseRot ? ` rotate(${baseRot})` : "";
         layer.style.transition = "transform .5s cubic-bezier(.2,.8,.2,1)";
-        layer.style.transform = "translate(0, 0)";
+        layer.style.transform = `translate(0, 0)${rotStr}`;
       });
     };
 
@@ -80,8 +109,8 @@ export default function TiltCard({ children, className = "", maxTilt = 10, layer
   }, [reduced, maxTilt, layerDrift]);
 
   return (
-    <div ref={wrapRef} className={className} style={{ transformStyle: "preserve-3d" }}>
-      <div ref={cardRef} className="relative will-change-transform" style={{ transformStyle: "preserve-3d" }}>
+    <div ref={wrapRef} className={className}>
+      <div ref={cardRef} className="relative will-change-transform">
         {children}
         <div
           ref={glowRef}

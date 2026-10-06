@@ -31,6 +31,16 @@ export default function LenisSmoothScroll({ children }: { children: React.ReactN
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
+      allowNestedScroll: true,
+      prevent: (node) => {
+        if (!node || typeof node.closest !== "function") return false;
+        return (
+          node.hasAttribute?.("data-lenis-prevent") ||
+          Boolean(node.closest("[data-lenis-prevent]")) ||
+          Boolean(node.closest("#chatbot-window")) ||
+          Boolean(node.closest("[data-radix-scroll-area-viewport]"))
+        );
+      },
     });
 
     lenisRef.current = lenis;

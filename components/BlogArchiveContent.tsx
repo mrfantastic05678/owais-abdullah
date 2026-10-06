@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import BlogImageWithSkeleton from "@/components/BlogImageWithSkeleton";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Calendar, User } from "lucide-react";
@@ -101,7 +102,7 @@ export default function BlogArchiveContent({ posts }: { posts: PostCard[] }) {
               className="group grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 px-3 md:pl-4 md:pr-0 items-center border border-border rounded-xl overflow-hidden bg-card hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5 transition-all duration-300 h-full"
             >
               <div className="relative aspect-video overflow-hidden rounded-lg">
-                <Image
+                <BlogImageWithSkeleton
                   src={urlFor(featured.mainImage).width(900).url()}
                   alt={featured.title}
                   fill

@@ -20,7 +20,7 @@ const BlogSectionContent = ({ blogs, showViewAll = false }: { blogs: PostCard[];
   }, []);
 
   return (
-    <section className="max-w-[1600px] mx-auto py-20 px-4 sm:px-6 lg:px-8">
+    <section id="blog" className="scroll-mt-24 max-w-[1600px] mx-auto py-12 sm:py-20 px-2.5 sm:px-6 lg:px-8">
       {blogs.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16">
           <h3 className="text-2xl font-bold text-foreground mb-2">No Posts Yet</h3>
@@ -30,12 +30,12 @@ const BlogSectionContent = ({ blogs, showViewAll = false }: { blogs: PostCard[];
         </div>
       ) : (
         <>
-          <div className="w-full relative px-4 sm:px-10 md:px-16 overflow-hidden">
+          <div className="w-full relative px-0 sm:px-6 md:px-10 overflow-hidden py-4 sm:py-8">
             <OverlappingSlider 
               posts={blogs} 
-              cardWidth={isMobile ? "80vw" : "25vw"}
-              cardHeight={isMobile ? "110vw" : "32vw"}
-              gap={isMobile ? 0.05 : 0.02}
+              cardWidth={isMobile ? "82vw" : "26vw"}
+              cardHeight={isMobile ? "112vw" : "34vw"}
+              gap={isMobile ? 0.04 : 0.02}
             />
           </div>
 

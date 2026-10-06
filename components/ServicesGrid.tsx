@@ -2,114 +2,101 @@
 
 import React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { services } from "@/data/services";
-import { ArrowRight } from "lucide-react";
-import {
-  Bot,
-  Zap,
-  Rocket,
-  ShoppingCart,
-  Lightbulb,
-  Cpu,
-} from "lucide-react";
+import { ArrowRight, Bot, Zap, Rocket, ShoppingCart, Lightbulb, Cpu } from "lucide-react";
+import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
-// Icon mapping with explicit string keys to match service data
+// Icon mapping
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  "Bot": Bot,
-  "Zap": Zap,
-  "Rocket": Rocket,
-  "ShoppingCart": ShoppingCart,
-  "Lightbulb": Lightbulb,
-  "Cpu": Cpu,
+  Bot: Bot,
+  Zap: Zap,
+  Rocket: Rocket,
+  ShoppingCart: ShoppingCart,
+  Lightbulb: Lightbulb,
+  Cpu: Cpu,
 };
 
-
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
+const badgeMap: Record<string, string> = {
+  "digital-fte": "CORE INNOVATION",
+  "custom-ai-agents": "SWARMS",
+  "saas-development": "PRODUCTION",
+  "ecommerce-cms": "E-COMMERCE",
+  "ai-consulting": "SPEC-FIRST",
+  "api-integrations": "PIPELINES",
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-    },
-  },
-};
-
-const ServicesGrid = () => {
+export default function ServicesGrid() {
   const servicesList = Object.values(services);
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-    >
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {servicesList.map((service) => {
         const Icon = iconMap[service.icon] || Lightbulb;
+        const badge = badgeMap[service.slug] || "PRODUCTION";
+
         return (
-          <motion.div
+          <div
             key={service.slug}
-            variants={itemVariants}
-            whileHover={{ y: -8 }}
-            className="group relative"
+            className="clean-glass-card rounded-xl group p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5"
           >
-            <Link href={`/services/${service.slug}`}>
-              <div className="scroll-smooth bg-card border border-border rounded-xl overflow-hidden p-6 h-full transition-all duration-300 group-hover:border-accent group-hover:shadow-[0_12px_30px_rgba(73,160,169,0.15)] group-hover:-translate-y-1">
-
-                {/* Icon section */}
-                <div className="relative mb-6">
-                  <div className="w-12 h-12 rounded-lg bg-muted border border-border flex items-center justify-center group-hover:border-accent transition-colors duration-300">
-                    <Icon className="w-6 h-6 text-accent" />
-                  </div>
+            {/* Top row: Icon + Pill Badge */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-teal-50 dark:bg-[#072428] border border-teal-200/80 dark:border-teal-700/50 flex items-center justify-center text-teal-700 dark:text-teal-300 group-hover:scale-105 transition-transform shadow-xs">
+                  <Icon className="w-5 h-5" />
                 </div>
+                <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border border-teal-200 dark:border-teal-700/60 bg-teal-50 text-teal-800 dark:bg-[#042024] dark:text-teal-300 shadow-xs">
+                  {badge}
+                </span>
+              </div>
 
-                <h3 className="text-xl font-medium text-foreground mb-3">
+              {/* Title & Description */}
+              <div>
+                <h3 className="text-base font-bold text-foreground group-hover:text-teal-700 dark:group-hover:text-teal-400 transition-colors">
                   {service.title}
                 </h3>
-
-                  <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
-                    {service.description}
-                  </p>
-
-                  {/* Features list */}
-                  <ul className="space-y-3 mb-6">
-                    {service.features.slice(0, 3).map((feature, i) => (
-                      <li
-                        key={i}
-                        className="flex items-center text-xs text-muted-foreground"
-                      >
-                        <div className="w-1.5 h-1.5 rounded-full bg-accent mr-3" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Learn more link */}
-                  <div className="flex items-center text-accent text-sm font-medium mt-auto pt-4 border-t border-border group-hover:border-accent/50 transition-colors">
-                    Learn More
-                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                  </div>
+                <p className="text-xs text-muted-foreground leading-relaxed mt-2 line-clamp-2">
+                  {service.description}
+                </p>
               </div>
-            </Link>
-          </motion.div>
+
+              {/* Feature Bullets */}
+              <ul className="space-y-1.5 pt-1 text-xs text-muted-foreground">
+                {service.features.slice(0, 3).map((feat, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-600 dark:bg-teal-400 shrink-0" />
+                    <span className="line-clamp-1">{feat}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Bottom: Tech Stack Pills & Learn More Link */}
+            <div className="pt-4 mt-4 border-t border-border/70 space-y-3">
+              <div className="flex flex-wrap gap-1.5">
+                {service.techStack.slice(0, 3).map((tech, idx) => (
+                  <span
+                    key={idx}
+                    className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#072428] text-slate-700 dark:text-teal-200 border border-slate-200/60 dark:border-teal-800/40 font-semibold"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between pt-1">
+                <Link
+                  href={`/services/${service.slug}`}
+                  className="text-xs font-bold text-teal-700 dark:text-teal-400 inline-flex items-center gap-1.5 group/link cursor-pointer"
+                >
+                  <SplitFlapLabel primary="Learn More" secondary="View Specs" />
+                  <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
+                </Link>
+              </div>
+            </div>
+          </div>
         );
       })}
-    </motion.div>
+    </div>
   );
-};
-
-export default ServicesGrid;
+}

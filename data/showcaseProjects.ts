@@ -565,7 +565,7 @@ export const showcaseProjects: ShowcaseProject[] = [
       savings: "Custom branded deployment with complete data ownership"
     },
     techStack: [
-      "Next.js 15 (App Router)",
+      "Next.js (App Router)",
       "TypeScript",
       "Tailwind CSS",
       "Drizzle ORM",
@@ -579,7 +579,7 @@ export const showcaseProjects: ShowcaseProject[] = [
       "Free Chatbase alternative",
       "Open source SiteGPT alternative",
       "AI Chatbot SaaS",
-      "Next.js 15 SaaS Starter",
+      "Next.js SaaS Starter",
       "Embeddable Chat Widget",
       "Drizzle ORM RAG",
       "Multi-Tenant Chatbot Platform"
@@ -607,7 +607,7 @@ export const showcaseProjects: ShowcaseProject[] = [
       "Sanity Headless CMS: Effortlessly manage marketing copy, help articles, and onboarding documentation"
     ],
     architectureOverview:
-      "Architected with Next.js 15 App Router. The application dashboard handles authentication, tenant configuration, and document indexing. Embeddable widget assets are served via a high-speed CDN proxy. Chat queries trigger vector similarity searches in Neon PostgreSQL (pgvector) using Drizzle ORM, feeding grounded context to LLM models for streaming responses.",
+      "Architected with Next.js App Router. The application dashboard handles authentication, tenant configuration, and document indexing. Embeddable widget assets are served via a high-speed CDN proxy. Chat queries trigger vector similarity searches in Neon PostgreSQL (pgvector) using Drizzle ORM, feeding grounded context to LLM models for streaming responses.",
     setupGuide: {
       prerequisites: [
         "Node.js 20+ and npm",

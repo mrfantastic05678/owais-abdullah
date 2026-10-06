@@ -1,4 +1,5 @@
 import Image from "next/image";
+import BlogImageWithSkeleton from "@/components/BlogImageWithSkeleton";
 import React from "react";
 import Link from "next/link";
 import { ArrowUpRight, Calendar, User } from "lucide-react";
@@ -19,12 +20,12 @@ const BlogCards = ({ post }: { post: PostCard }) => {
     >
       {/* Thumbnail */}
       <div className="relative overflow-hidden aspect-video">
-        <Image
+        <BlogImageWithSkeleton
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           src={urlFor(post.mainImage).width(640).height(360).url()}
           alt={post.title}
-          width={640}
-          height={360}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

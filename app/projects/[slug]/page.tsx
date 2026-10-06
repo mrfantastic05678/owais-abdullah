@@ -8,8 +8,19 @@ import {
   getShowcaseProject,
   getAllShowcaseSlugs
 } from "@/data/showcaseProjects";
-import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaCheckCircle, FaExclamationTriangle, FaCode, FaRocket, FaShieldAlt, FaLock, FaUsers } from "react-icons/fa";
 import CodeBlock from "@/components/CodeBlock";
+import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
+import {
+  FaArrowLeft,
+  FaLock,
+  FaUsers,
+  FaGithub,
+  FaExternalLinkAlt,
+  FaExclamationTriangle,
+  FaCheckCircle,
+  FaCode,
+  FaShieldAlt,
+} from "react-icons/fa";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -202,18 +213,18 @@ export default async function ProjectShowcasePage({ params }: PageProps) {
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-foreground text-background font-medium px-5 py-2.5 rounded-lg hover:bg-foreground/90 transition-all shadow-md text-sm"
+              className="group inline-flex items-center gap-2 bg-foreground text-background font-medium px-5 py-2.5 rounded-lg hover:bg-foreground/90 transition-all shadow-md text-sm"
             >
-              <FaGithub className="w-4 h-4" />
-              View Source on GitHub
+              <FaGithub className="w-4 h-4 shrink-0" />
+              <SplitFlapLabel primary="View Source on GitHub" secondary="Browse Repository" className="min-w-[11.5rem]" />
             </a>
           ) : project.isPrivateRepo ? (
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 bg-card border border-border text-foreground font-medium px-5 py-2.5 rounded-lg hover:bg-muted transition-all shadow-sm text-sm"
+              className="group inline-flex items-center gap-2 bg-card border border-border text-foreground font-medium px-5 py-2.5 rounded-lg hover:bg-muted transition-all shadow-sm text-sm"
             >
-              <FaLock className="w-3.5 h-3.5 text-amber-500" />
-              Request Architecture Access
+              <FaLock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <SplitFlapLabel primary="Request Architecture Access" secondary="Book Spec Review" className="min-w-[13.5rem]" />
             </Link>
           ) : null}
           {project.liveUrl && (
@@ -221,10 +232,10 @@ export default async function ProjectShowcasePage({ params }: PageProps) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border border-accent text-accent font-medium px-5 py-2.5 rounded-lg hover:bg-accent/10 transition-all text-sm"
+              className="group inline-flex items-center gap-2 border border-accent text-accent font-medium px-5 py-2.5 rounded-lg hover:bg-accent/10 transition-all text-sm"
             >
-              <FaExternalLinkAlt className="w-3.5 h-3.5" />
-              Launch Live App
+              <FaExternalLinkAlt className="w-3.5 h-3.5 shrink-0" />
+              <SplitFlapLabel primary="Launch Live App" secondary="Open Production URL" className="min-w-[9rem]" />
             </a>
           )}
           <a
@@ -456,15 +467,15 @@ export default async function ProjectShowcasePage({ params }: PageProps) {
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href="/contact"
-            className="bg-accent text-accent-foreground font-semibold px-6 py-3 rounded-lg hover:bg-accent/90 transition-colors text-sm shadow-md"
+            className="group inline-flex items-center justify-center bg-accent text-accent-foreground font-semibold px-6 py-3 rounded-lg hover:bg-accent/90 transition-colors text-sm shadow-md min-w-[14rem]"
           >
-            Hire Owais for Your Project →
+            <SplitFlapLabel primary="Hire Owais for Your Project" secondary="Book Architecture Call" className="min-w-[13.5rem]" />
           </Link>
           <Link
             href="/services/digital-fte"
-            className="border border-border bg-card text-foreground font-medium px-6 py-3 rounded-lg hover:bg-muted transition-colors text-sm"
+            className="group inline-flex items-center justify-center border border-border bg-card text-foreground font-medium px-6 py-3 rounded-lg hover:bg-muted transition-colors text-sm min-w-[14rem]"
           >
-            Explore Digital FTE Services
+            <SplitFlapLabel primary="Explore Digital FTE Services" secondary="See Agent Capabilities" className="min-w-[13.5rem]" />
           </Link>
         </div>
       </footer>

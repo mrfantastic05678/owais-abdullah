@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Template 3: Command Deck — Owais Abdullah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #031215;
+      --bg-card: #081B1E;
+      --bg-card-sub: #051619;
+      --border-neutral: #10343A;
+      --border-hover: #184D56;
+      --text-ink: #E6F7F3;
+      --text-muted: #8FB7AF;
+      --text-faint: #5C877E;
+      --brand-accent: #14B8A6;
+      --brand-teal-deep: #0D9488;
+      --brand-emerald: #10B981;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-display: 'Newsreader', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-card: 12px;
+      --radius-pill: 9999px;
+      --shadow-ambient: 0 1px 3px rgba(0, 0, 0, 0.4), 0 20px 38px -6px rgba(13, 148, 136, 0.12);
+    }
+
+    html:not(.dark) {
+      --bg-canvas: #F8FAFB;
+      --bg-card: #FFFFFF;
+      --bg-card-sub: #F0F5F4;
+      --border-neutral: #E2E8F0;
+      --border-hover: #CBD5E1;
+      --text-ink: #071916;
+      --text-muted: #24423C;
+      --text-faint: #5E7A75;
+      --brand-accent: #0D9488;
+      --brand-teal-deep: #0F766E;
+      --brand-emerald: #059669;
+      --shadow-ambient: 0 1px 3px rgba(7, 25, 22, 0.04), 0 20px 38px -6px rgba(13, 148, 136, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-ink);
+      font-family: var(--font-body);
+      line-height: 1.65;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      background-image: radial-gradient(rgba(20, 184, 166, 0.08) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+    }
+
+    /* Template Switcher Bar */
+    .template-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-neutral);
+      backdrop-filter: blur(12px);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .template-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tmpl-link {
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      color: var(--text-muted);
+      border: 1px solid var(--border-neutral);
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .tmpl-link:hover { color: var(--text-ink); border-color: var(--brand-accent); }
+    .tmpl-link.active {
+      background: var(--brand-accent);
+      color: #031215;
+      border-color: var(--brand-accent);
+      font-weight: 700;
+    }
+    .theme-toggle-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-neutral);
+      background: var(--bg-card-sub);
+      color: var(--text-ink);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Split-Screen Workspace Container */
+    .deck-container {
+      max-width: 1400px;
+      margin: 24px auto 80px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* Left Control Deck (Sticky) */
+    .deck-sidebar {
+      position: sticky;
+      top: 70px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: var(--shadow-ambient);
+    }
+
+    /* Path / Terminal Breadcrumb */
+    .deck-path {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--brand-accent);
+      background: var(--bg-card-sub);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-neutral);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Spec Telemetry HUD */
+    .spec-hud {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+    .hud-box {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-neutral);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .hud-label { color: var(--text-faint); display: block; margin-bottom: 2px; }
+    .hud-val { color: var(--text-ink); font-weight: 700; }
+
+    /* Interactive TOC with Indicator */
+    .deck-toc-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .deck-toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .deck-toc-item a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 7px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .deck-toc-item a:hover {
+      background: var(--bg-card-sub);
+      color: var(--brand-accent);
+    }
+    .deck-toc-item.active a {
+      background: rgba(20, 184, 166, 0.12);
+      color: var(--brand-accent);
+      font-weight: 600;
+    }
+    .deck-toc-item.active a::before {
+      content: "▶";
+      font-size: 9px;
+      color: var(--brand-accent);
+    }
+
+    /* Author Snippet in Deck */
+    .deck-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-neutral);
+    }
+    .deck-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--brand-accent);
+      object-fit: cover;
+    }
+
+    /* Quick Action Toolbar */
+    .deck-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .btn-deck-action {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-neutral);
+      color: var(--text-ink);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-deck-action:hover {
+      border-color: var(--brand-accent);
+      color: var(--brand-accent);
+    }
+
+    /* Main Right Content Canvas */
+    .deck-canvas {
+      background: var(--bg-card);
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      padding: 44px 52px;
+      box-shadow: var(--shadow-ambient);
+    }
+
+    /* Terminal Command Header */
+    .canvas-prompt {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-faint);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .canvas-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      line-height: 1.15;
+      font-weight: 600;
+      color: var(--text-ink);
+      margin-bottom: 24px;
+    }
+    .canvas-meta-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-neutral);
+    }
+    .chip {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-neutral);
+      color: var(--text-muted);
+    }
+    .chip.green {
+      border-color: var(--brand-emerald);
+      color: var(--brand-emerald);
+      background: rgba(16, 185, 129, 0.08);
+      font-weight: 700;
+    }
+
+    /* Canvas Body Prose */
+    .deck-canvas p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .deck-canvas strong { color: var(--text-ink); }
+    .deck-canvas h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--text-ink);
+      margin: 44px 0 18px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-neutral);
+    }
+
+    /* Multi-Language Code Tabs */
+    .tabbed-code {
+      background: #020C0E;
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      margin: 32px 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+    .tabbed-nav {
+      background: #041417;
+      display: flex;
+      border-bottom: 1px solid var(--border-neutral);
+    }
+    .code-tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 10px 16px;
+      color: var(--text-faint);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .code-tab-btn.active {
+      color: var(--brand-accent);
+      border-bottom-color: var(--brand-accent);
+      background: rgba(20, 184, 166, 0.05);
+      font-weight: 600;
+    }
+    .code-content {
+      padding: 20px;
+      color: #A7F3D0;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    /* Interactive Live State Simulator Card */
+    .state-simulator {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      margin: 36px 0;
+    }
+    .simulator-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .simulator-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--brand-emerald);
+      font-weight: 700;
+    }
+    .simulator-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .sim-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border-neutral);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-align: center;
+    }
+    .sim-step.active {
+      border-color: var(--brand-accent);
+      background: rgba(20, 184, 166, 0.08);
+      color: var(--brand-accent);
+      font-weight: bold;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .deck-container { grid-template-columns: 1fr; }
+      .deck-sidebar { position: static; }
+      .deck-canvas { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Switcher Bar -->
+  <header class="template-bar">
+    <div class="template-pills">
+      <span style="font-weight: 700; color: var(--text-ink); margin-right: 4px;">LAYOUT CONCEPTS:</span>
+      <a href="blog-template-1-dossier.html" class="tmpl-link">1. Architectural Dossier</a>
+      <a href="blog-template-2-editorial.html" class="tmpl-link">2. Cinematic Editorial</a>
+      <a href="blog-template-3-command-deck.html" class="tmpl-link active">3. Command Deck (Current)</a>
+    </div>
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+      <span id="themeIcon">☀️</span> <span id="themeText">LIGHT MODE</span>
+    </button>
+  </header>
+
+  <!-- Split-Screen Developer Workspace -->
+  <div class="deck-container">
+
+    <!-- Sticky Left Control Deck -->
+    <aside class="deck-sidebar">
+
+      <!-- Monospace File Path -->
+      <div class="deck-path">
+        <span>$</span>
+        <span>~/octively/blog/spec-langgraph-next15.md</span>
+      </div>
+
+      <!-- Live Telemetry HUD -->
+      <div class="spec-hud">
+        <div class="hud-box">
+          <span class="hud-label">FRAMEWORK</span>
+          <span class="hud-val">Next.js 15.1</span>
+        </div>
+        <div class="hud-box">
+          <span class="hud-label">ORCHESTRATION</span>
+          <span class="hud-val">LangGraph v0.2</span>
+        </div>
+        <div class="hud-box">
+          <span class="hud-label">PERSISTENCE</span>
+          <span class="hud-val">Neon Postgres</span>
+        </div>
+        <div class="hud-box">
+          <span class="hud-label">STREAMING</span>
+          <span class="hud-val">HTTP SSE v2</span>
+        </div>
+      </div>
+
+      <!-- Quick Action Toolbar -->
+      <div class="deck-actions">
+        <button class="btn-deck-action" onclick="copyMarkdown()">📋 Copy MD</button>
+        <button class="btn-deck-action" onclick="alert('Added to your workspace bookmarks!')">🔖 Bookmark</button>
+        <button class="btn-deck-action" onclick="likePost()">👍 <span id="deckLike">312</span></button>
+        <button class="btn-deck-action" onclick="copyLink()">🔗 Share</button>
+      </div>
+
+      <!-- Interactive Table of Contents -->
+      <div>
+        <div class="deck-toc-title">
+          <span>Table of Contents</span>
+          <span style="color: var(--brand-accent);">4 Sections</span>
+        </div>
+        <ul class="deck-toc-list">
+          <li class="deck-toc-item active"><a href="#c1">01. Serverless Process Fragility</a></li>
+          <li class="deck-toc-item"><a href="#c2">02. State Graphs &amp; Checkpoints</a></li>
+          <li class="deck-toc-item"><a href="#c3">03. Live Interactive Flow</a></li>
+          <li class="deck-toc-item"><a href="#c4">04. Next.js 15 SSE Adapter</a></li>
+        </ul>
+      </div>
+
+      <!-- Author Snippet -->
+      <div class="deck-author">
+        <img src="/assets/owais-profile.png" alt="Owais Abdullah" class="deck-avatar" onerror="this.src='/assets/placeholder.png'" />
+        <div>
+          <h4 style="font-size: 13px; font-weight: 700;">Owais Abdullah</h4>
+          <p style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">Octively Founder · Architect</p>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Scrolling Right Canvas -->
+    <main class="deck-canvas">
+      
+      <div class="canvas-prompt">
+        <span style="color: var(--brand-emerald);">●</span>
+        <span>SPECIFICATION PROTOCOL // VERIFIED 2026 ARCHITECTURE</span>
+      </div>
+
+      <h1 class="canvas-title">Architecting Production-Ready Autonomous AI Agents with Next.js 15 &amp; LangGraph</h1>
+
+      <div class="canvas-meta-chips">
+        <span class="chip green">● PRODUCTION READY</span>
+        <span class="chip">7 MIN READ</span>
+        <span class="chip">1,640 WORDS</span>
+        <span class="chip">OCTOBER 4, 2026</span>
+        <span class="chip">AI AGENTS &amp; RAG</span>
+      </div>
+
+      <p>
+        In 2026, building an AI system that answers a prompt is trivial. The hard problem—the one separating amateur wrappers from enterprise-grade software—is building <strong>stateful, fault-tolerant autonomous agents</strong> that can execute multi-step workflows spanning hours or days without losing context or drifting into hallucination loops.
+      </p>
+
+      <h2 id="c1">01. The Problem with Serverless Heaps</h2>
+      <p>
+        Standard LLM applications are stateless request-response pipelines. However, real-world work—like auditing an insurance portfolio, syncing e-commerce inventory across five suppliers, or executing autonomous outreach—requires hundreds of iterative steps: tool invocation, validation, self-correction, and retry policies.
+      </p>
+      <p>
+        When a serverless Lambda or edge runtime terminates mid-execution, a naive loop loses its memory. Without persistent checkpointing, you either pay duplicate API tokens restarting from scratch, or worse, execute duplicate side-effects.
+      </p>
+
+      <h2 id="c2">02. State Graphs &amp; Checkpoints</h2>
+      <p>
+        To solve state fragility, we structure our agent workflows as directed cyclical graphs using LangGraph. Each node represents a discrete, pure functional step, while edges define conditional branching.
+      </p>
+
+      <!-- Multi-Language Code Tabs -->
+      <div class="tabbed-code">
+        <div class="tabbed-nav">
+          <button class="code-tab-btn active" onclick="switchCodeTab(this, 'ts')">TypeScript (Next.js)</button>
+          <button class="code-tab-btn" onclick="switchCodeTab(this, 'py')">Python (LangGraph Core)</button>
+          <button class="code-tab-btn" onclick="switchCodeTab(this, 'curl')">cURL (Streaming API)</button>
+        </div>
+        <div class="code-content" id="codeDisplay">
+// TypeScript Next.js 15 Orchestration Adapter
+import { StateGraph, Annotation } from "@langchain/langgraph";
+
+export const AgentState = Annotation.Root({
+  messages: Annotation&lt;string[]&gt;({
+    reducer: (x, y) =&gt; x.concat(y),
+    default: () =&gt; [],
+  }),
+  currentStep: Annotation&lt;string&gt;({
+    reducer: (_, next) =&gt; next,
+    default: () =&gt; "planner",
+  }),
+});
+        </div>
+      </div>
+
+      <h2 id="c3">03. Interactive Live State Simulator</h2>
+      <p>
+        Observe how the runtime machine executes conditional evaluation and checkpoints intermediate state before dispatching external tool mutations:
+      </p>
+
+      <div class="state-simulator">
+        <div class="simulator-header">
+          <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 700;">RUNTIME STATE MACHINE VISUALIZER</span>
+          <span class="simulator-status">● LIVE CHECKPOINT: NODE 2</span>
+        </div>
+        <div class="simulator-steps">
+          <div class="sim-step">
+            <strong>01. Intent Planner</strong><br>
+            <span style="color: var(--text-faint); font-size: 10px;">Token validation passed</span>
+          </div>
+          <div class="sim-step active">
+            <strong>02. Neon WAL Commit</strong><br>
+            <span style="color: var(--brand-accent); font-size: 10px;">Checkpoint saved (4ms)</span>
+          </div>
+          <div class="sim-step">
+            <strong>03. Tool Dispatcher</strong><br>
+            <span style="color: var(--text-faint); font-size: 10px;">Awaiting resume event</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="c4">04. Next.js 15 Server-Sent Events Adapter</h2>
+      <p>
+        Next.js 15's native support for Server-Sent Events allows us to stream token deltas directly from LangGraph to the React client without holding heavyweight WebSocket connections open during long idle reasoning phases.
+      </p>
+      <p>
+        By combining persistent checkpoints with real-time token streaming, you deliver an enterprise-grade experience that feels instantaneous to the user while remaining completely immune to serverless runtime recycling.
+      </p>
+
+    </main>
+
+  </div>
+
+  <script>
+    // Theme Toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+      document.getElementById('themeText').textContent = isDark ? 'LIGHT MODE' : 'DARK MODE';
+    }
+
+    // Code Tab Switcher
+    function switchCodeTab(btn, lang) {
+      document.querySelectorAll('.code-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const el = document.getElementById('codeDisplay');
+      if (lang === 'ts') {
+        el.innerText = `// TypeScript Next.js 15 Orchestration Adapter\nimport { StateGraph, Annotation } from "@langchain/langgraph";\n\nexport const AgentState = Annotation.Root({\n  messages: Annotation<string[]>({\n    reducer: (x, y) => x.concat(y),\n    default: () => [],\n  }),\n});`;
+      } else if (lang === 'py') {
+        el.innerText = `# Python LangGraph Core Workflow\nfrom typing import TypedDict, Annotated, Sequence\nfrom langgraph.graph import StateGraph, END\n\nclass AgentState(TypedDict):\n    messages: Annotated[Sequence[str], add_messages]\n    current_step: str\n\nworkflow = StateGraph(AgentState)\nworkflow.add_node("planner", planner_node)`;
+      } else if (lang === 'curl') {
+        el.innerText = `curl -N -X POST https://owaisabdullah.dev/api/agents \\\n  -H "Content-Type: application/json" \\\n  -d '{"prompt": "Audit invoice data", "sessionId": "sess_8912"}'`;
+      }
+    }
+
+    function likePost() {
+      const el = document.getElementById('deckLike');
+      el.textContent = parseInt(el.textContent) + 1;
+    }
+
+    function copyMarkdown() {
+      navigator.clipboard.writeText('# Architecting Production-Ready Autonomous AI Agents with Next.js 15 & LangGraph');
+      alert('Markdown document copied to clipboard!');
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    }
+  </script>
+</body>
+</html>

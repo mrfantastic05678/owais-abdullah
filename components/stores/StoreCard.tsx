@@ -25,7 +25,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
   } = store;
 
   return (
-    <div className="group relative flex flex-col justify-between rounded-2xl border border-border bg-card text-card-foreground p-5 shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:-translate-y-1">
+    <div className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-[#10343A] bg-white dark:bg-[#081B1E] text-card-foreground p-5 shadow-xs transition-all duration-300 hover:border-teal-500/50 hover:shadow-lg hover:-translate-y-1">
       {/* Clickable full card overlay link to listing details */}
       <Link
         href={`/stores/${slug}`}
@@ -37,7 +37,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         {/* Top Header Row */}
         <div className="flex items-start justify-between gap-3 mb-3.5">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-border bg-muted/60 flex items-center justify-center shadow-xs">
+            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-200 dark:border-[#10343A] bg-slate-50 dark:bg-[#05181b] flex items-center justify-center shadow-xs">
               {logoUrl ? (
                 <Image
                   src={logoUrl}
@@ -54,7 +54,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
 
             <div className="space-y-1 min-w-0">
               <div className="flex items-center gap-1.5 min-w-0">
-                <h3 className="font-bold text-foreground text-base group-hover:text-primary transition-colors truncate">
+                <h3 className="font-bold text-foreground text-base group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate">
                   {name}
                 </h3>
                 {isClaimed && (
@@ -108,26 +108,26 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
       </div>
 
       {/* Footer Info & Actions */}
-      <div className="pt-3.5 border-t border-border/80 flex items-center justify-between gap-2 mt-auto relative z-20">
-        <span className="inline-flex items-center text-[11px] font-semibold text-muted-foreground bg-muted/70 px-2.5 py-0.5 rounded-md border border-border">
+      <div className="pt-3.5 border-t border-slate-100 dark:border-[#10343A] flex items-center justify-between gap-2 mt-auto relative z-20">
+        <span className="inline-flex items-center text-[11px] font-semibold text-muted-foreground bg-slate-100 dark:bg-[#05181b] px-2.5 py-0.5 rounded-md border border-slate-200 dark:border-[#10343A]">
           {platform || "Shopify"}
         </span>
 
         <div className="flex items-center gap-2">
-          {/* External website link (Only button that navigates to store external URL) */}
+          {/* External website link */}
           <a
             href={website}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors border border-border"
+            className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-[#05181b] rounded-lg transition-colors border border-slate-200 dark:border-[#10343A]"
             title={`Visit ${name} official website (${website})`}
             aria-label={`Visit ${name} website`}
           >
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
 
-          <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary group-hover:underline">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-teal-600 dark:text-teal-400 group-hover:underline">
             View Details
             <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
           </span>

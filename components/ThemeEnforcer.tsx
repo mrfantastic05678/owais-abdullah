@@ -9,23 +9,6 @@ import { useEffect } from "react";
  * On all other pages, this overrides whatever is in localStorage.
  */
 export function ThemeEnforcer() {
-  const pathname = usePathname();
-
-  useEffect(() => {
-    const isToggleAllowed =
-      pathname === "/blog" ||
-      pathname?.startsWith("/blog/") ||
-      pathname === "/stack" ||
-      pathname?.startsWith("/stack/") ||
-      pathname === "/stores" ||
-      pathname?.startsWith("/stores/");
-
-    if (!isToggleAllowed) {
-      // Force dark on non-toggle pages (home, about, services, contact)
-      document.documentElement.classList.add("dark");
-      document.documentElement.classList.remove("light");
-    }
-  }, [pathname]);
-
+  // Theme is user-controlled via next-themes across all pages
   return null;
 }

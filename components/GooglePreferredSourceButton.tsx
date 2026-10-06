@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Sparkles, ArrowUpRight, Check, Star } from "lucide-react";
+import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
 interface GooglePreferredSourceProps {
-  variant?: "card" | "pill" | "compact";
+  variant?: "card" | "pill" | "compact" | "sidebar-card";
   placement?: string;
   className?: string;
 }
@@ -161,14 +162,55 @@ export default function GooglePreferredSourceButton({
             className="group inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-white/90 text-neutral-900 font-semibold text-xs transition-all duration-200 shadow-md shadow-white/10 hover:shadow-white/20 active:scale-[0.98] shrink-0 self-start md:self-center"
           >
             <GoogleGIcon className="w-4 h-4" />
-            <span>{clicked ? "Added / Opening Preferences" : "Add as Preferred Source"}</span>
             {clicked ? (
-              <Check size={14} className="text-emerald-600" />
+              <>
+                <span>Opening Preferences</span>
+                <Check size={14} className="text-emerald-600" />
+              </>
             ) : (
-              <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <>
+                <SplitFlapLabel primary="Add as Preferred Source" secondary="Prioritize in Search" />
+                <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </>
             )}
           </button>
         </div>
+      </div>
+    );
+  }
+
+  // -------------------------------------------------------------------------
+  // VARIANT 1B: SIDEBAR CARD (For Sticky Sidebar in Editorial Ledger)
+  // -------------------------------------------------------------------------
+  if (variant === "sidebar-card") {
+    return (
+      <div className={`rounded-xl border border-border bg-gradient-to-br from-card to-secondary/30 p-4 sm:p-5 shadow-xs relative overflow-hidden ${className}`}>
+        <div className="flex items-center gap-2.5 mb-2">
+          <GoogleGIcon className="w-5 h-5 shrink-0" />
+          <h4 className="font-semibold text-xs sm:text-[13px] text-foreground tracking-tight">
+            Google Preferred Source
+          </h4>
+        </div>
+        <p className="text-[11.5px] text-muted-foreground leading-relaxed mb-3.5">
+          Prioritize Owais Abdullah in Google Search &amp; Discover for verified engineering insights and tech breakdowns.
+        </p>
+        <button
+          onClick={handleClick}
+          type="button"
+          className="group w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-secondary/80 hover:bg-accent/15 text-foreground hover:text-accent border border-border hover:border-accent font-medium text-xs transition-all active:scale-[0.98]"
+        >
+          {clicked ? (
+            <>
+              <Check className="w-3.5 h-3.5 text-emerald-500" />
+              <span>Added to Preferences</span>
+            </>
+          ) : (
+            <>
+              <span className="font-bold text-accent">+</span>
+              <SplitFlapLabel primary="Add to Preferred Sources" secondary="Follow in Google" />
+            </>
+          )}
+        </button>
       </div>
     );
   }
@@ -183,9 +225,11 @@ export default function GooglePreferredSourceButton({
         className={`group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border bg-card/80 hover:border-blue-500/40 hover:bg-card text-foreground text-xs font-medium transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-blue-500/10 active:scale-95 ${className}`}
       >
         <GoogleGIcon className="w-3.5 h-3.5" />
-        <span className="group-hover:text-blue-400 transition-colors">
-          {clicked ? "Opening Google Preferences..." : "Make Preferred on Google"}
-        </span>
+        {clicked ? (
+          <span className="text-blue-400">Opening Preferences...</span>
+        ) : (
+          <SplitFlapLabel primary="Make Preferred on Google" secondary="Prioritize Feed" />
+        )}
         <ArrowUpRight size={12} className="text-muted-foreground group-hover:text-blue-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
       </button>
     );

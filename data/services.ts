@@ -42,7 +42,7 @@ export const services: Record<string, Service> = {
     longDescription:
       "Imagine having a senior employee who works 24/7, manages your emails, handles customer support, audits your finances, and prepares Monday morning briefings—all without breaks. That's the power of Digital FTE (Full-Time Equivalent) development. I build autonomous AI agents using General Agents framework that proactively manage personal and business affairs, turning the AI from a chatbot into a proactive business partner.",
     icon: "Bot",
-    gradient: "from-blue-500 to-cyan-500",
+    gradient: "from-teal-600 via-teal-500 to-emerald-500",
     features: [
       "Autonomous AI Employees that work 24/7",
       "Monday Morning CEO Briefing with financial audits",
@@ -170,7 +170,7 @@ export const services: Record<string, Service> = {
     longDescription:
       "Automation is no longer about simple if-then rules. Modern automation uses AI agents that can understand context, make decisions, and handle complex workflows. I specialize in building custom AI agents using the OpenAI Agents SDK and n8n workflow automation—creating intelligent systems that integrate seamlessly with your existing tools and processes.",
     icon: "Zap",
-    gradient: "from-purple-500 to-pink-500",
+    gradient: "from-emerald-600 via-teal-600 to-teal-500",
     features: [
       "OpenAI Agents SDK development",
       "n8n workflow automation",
@@ -286,13 +286,13 @@ export const services: Record<string, Service> = {
     title: "Next.js SaaS Development",
     tagline: "Build Scalable SaaS Products",
     description:
-      "Full-stack SaaS products built with spec-driven development. From MVP to production-ready scaling with Next.js 15.",
+      "Full-stack SaaS products built with spec-driven development. From MVP to production-ready scaling with Next.js.",
     longDescription:
-      "Building a SaaS product requires more than just coding—it needs clear specifications, scalable architecture, and a path from MVP to production. I specialize in spec-driven SaaS development using Next.js 15, TypeScript, and modern AI integrations. Every feature is specified before coding, ensuring you get exactly what you need with minimal rework.",
+      "Building a SaaS product requires more than just coding—it needs clear specifications, scalable architecture, and a path from MVP to production. I specialize in spec-driven SaaS development using Next.js, TypeScript, and modern AI integrations. Every feature is specified before coding, ensuring you get exactly what you need with minimal rework.",
     icon: "Rocket",
-    gradient: "from-orange-500 to-red-500",
+    gradient: "from-teal-700 via-teal-600 to-emerald-600",
     features: [
-      "Next.js 15 with App Router",
+      "Next.js with App Router",
       "TypeScript for type safety",
       "Spec-driven development process",
       "AI-powered features",
@@ -304,7 +304,7 @@ export const services: Record<string, Service> = {
       "Deployment & DevOps",
     ],
     techStack: [
-      "Next.js 15 (App Router)",
+      "Next.js (App Router)",
       "TypeScript",
       "Tailwind CSS & shadcn/ui",
       "Prisma ORM",
@@ -331,7 +331,7 @@ export const services: Record<string, Service> = {
         step: 3,
         title: "MVP Development",
         description:
-          "Build core features rapidly using Next.js 15. Focus on delivering value quickly with clean, maintainable code.",
+          "Build core features rapidly using Next.js. Focus on delivering value quickly with clean, maintainable code.",
       },
       {
         step: 4,
@@ -353,7 +353,7 @@ export const services: Record<string, Service> = {
         period: "starting at",
         features: [
           "Core feature set",
-          "Next.js 15 + TypeScript",
+          "Next.js + TypeScript",
           "Basic authentication",
           "Payment integration",
           "Responsive design",
@@ -420,7 +420,7 @@ export const services: Record<string, Service> = {
     longDescription:
       "Whether you need a flexible content management system, a powerful e-commerce store, or a headless setup for maximum performance—I have you covered. With expertise in WordPress, Shopify, and Sanity CMS, I build solutions that fit your specific needs. From custom themes and plugins to complex integrations and headless architectures.",
     icon: "ShoppingCart",
-    gradient: "from-green-500 to-emerald-500",
+    gradient: "from-emerald-500 via-teal-500 to-teal-600",
     features: [
       "WordPress custom theme development",
       "WordPress plugin development",
@@ -559,7 +559,7 @@ export const services: Record<string, Service> = {
     longDescription:
       "Great products start with great specifications and solid architecture. I offer technical consulting that combines spec-driven development methodology with rapid MVP prototyping. Whether you need AI strategy, architecture reviews, or a working MVP to validate your idea—I help you make informed technical decisions and build products the right way from day one.",
     icon: "Lightbulb",
-    gradient: "from-yellow-500 to-orange-500",
+    gradient: "from-teal-600 to-emerald-500",
     features: [
       "Spec-driven development consulting",
       "AI implementation strategy",
@@ -679,7 +679,7 @@ export const services: Record<string, Service> = {
     longDescription:
       "Modern applications need to talk to each other seamlessly. Whether you need a robust API for your product, integrations with third-party services, or real-time features—API development is foundational to scalable software. I design and build RESTful and GraphQL APIs, create custom integrations, implement webhooks, and enable real-time communication.",
     icon: "Cpu",
-    gradient: "from-indigo-500 to-purple-500",
+    gradient: "from-teal-700 via-teal-600 to-teal-500",
     features: [
       "RESTful API design & development",
       "GraphQL API development",

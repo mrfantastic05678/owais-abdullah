@@ -6,8 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { PostCard } from "@/types/blogtypes";
 import { urlFor } from "@/sanity/lib/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import CharRevealHeading from "./CharRevealHeading";
+import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
 interface OverlappingSliderProps {
   posts: PostCard[];
@@ -32,6 +33,7 @@ export default function OverlappingSlider({
 }: OverlappingSliderProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<InstanceType<typeof Core> | null>(null);
+  const isDraggingRef = useRef(false);
   const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
@@ -48,19 +50,41 @@ export default function OverlappingSlider({
     const preventSelect = (e: Event) => e.preventDefault();
     wrapper.addEventListener("selectstart", preventSelect);
 
-    // Drag vs click: if the pointer moved, swallow the click so dragging
-    // never navigates to a card's link
-    let downX = 0;
+    // Drag vs click: accurately differentiate drag gestures from normal card clicks
+    let startX = 0;
+    let startY = 0;
+
     const onPointerDown = (e: PointerEvent) => {
-      downX = e.clientX;
+      startX = e.clientX;
+      startY = e.clientY;
+      isDraggingRef.current = false;
     };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (e.buttons > 0) {
+        const dist = Math.hypot(e.clientX - startX, e.clientY - startY);
+        if (dist > 14) {
+          isDraggingRef.current = true;
+        }
+      }
+    };
+
+    const onPointerUp = () => {
+      setTimeout(() => {
+        isDraggingRef.current = false;
+      }, 120);
+    };
+
     const onClickCapture = (e: MouseEvent) => {
-      if (Math.abs(e.clientX - downX) > 8) {
+      if (isDraggingRef.current) {
         e.preventDefault();
         e.stopPropagation();
       }
     };
+
     wrapper.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
     wrapper.addEventListener("click", onClickCapture, true);
     wrapper.style.userSelect = "none";
     wrapper.style.webkitUserSelect = "none";
@@ -73,10 +97,9 @@ export default function OverlappingSlider({
       lerpFactor,
       speedDecay,
       bounceLimit: 0,
-      setOffset: ({ itemWidth, totalWidth }: { itemWidth: number; totalWidth: number }) => {
-        const gapPx = window.innerWidth * gap;
-        const lastSlideOffset = (posts.length - 1) * (itemWidth + gapPx);
-        return totalWidth - lastSlideOffset;
+      setOffset: ({ itemWidth }: { itemWidth: number }) => {
+        // Allows the last card to scroll completely into clear, front view without right-edge clipping
+        return itemWidth + (window.innerWidth < 768 ? 40 : 120);
       },
       onUpdate: (instance: { current: number }) => {
         const vwOffset = window.innerWidth * 0.1;
@@ -96,17 +119,15 @@ export default function OverlappingSlider({
             // The vw push only applies while actually exiting — the resting
             // tilt is rotation/scale only, so the card stays in its slot
             const push = slideLeft < 0 ? ratio * vwOffset : 0;
-            slide.style.cssText = `
-              transform-origin: left 80%;
-              transform: translateX(${instance.current + exit + push}px) rotate(${-15 * ratio}deg) scale(${1 - ratio * 0.4});
-              position: relative;
-              z-index: ${i + 1};
-            `;
+            slide.style.transformOrigin = "left 80%";
+            slide.style.transform = `translateX(${instance.current + exit + push}px) rotate(${-15 * ratio}deg) scale(${1 - ratio * 0.4})`;
+            slide.style.position = "relative";
+            slide.style.zIndex = `${i + 1}`;
           } else {
-            slide.style.cssText = `
-              transform: translateX(${instance.current}px);
-              z-index: ${i + 1};
-            `;
+            slide.style.transformOrigin = "";
+            slide.style.transform = `translateX(${instance.current}px)`;
+            slide.style.position = "relative";
+            slide.style.zIndex = `${i + 1}`;
           }
         });
       },
@@ -155,6 +176,8 @@ export default function OverlappingSlider({
       if (animId !== null) cancelAnimationFrame(animId);
       wrapper.removeEventListener("selectstart", preventSelect);
       wrapper.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
       wrapper.removeEventListener("click", onClickCapture, true);
       slider.destroy();
       sliderRef.current = null;
@@ -164,7 +187,7 @@ export default function OverlappingSlider({
   const slideBy = (direction: "left" | "right") => {
     const slider = sliderRef.current;
     if (!slider) return;
-    const step = window.innerWidth * 0.25;
+    const step = window.innerWidth * 0.32;
     slider.target += direction === "left" ? step : -step;
     slider.target = Math.max(slider.maxScroll, Math.min(0, slider.target));
   };
@@ -187,69 +210,101 @@ export default function OverlappingSlider({
         </p>
       </div>
 
-      <div className="md:w-2/3 w-full h-full overflow-hidden relative py-10 md:py-0" data-cursor="drag" data-cursor-label="DRAG">
+      <div className="md:w-2/3 w-full h-full overflow-hidden relative py-6 sm:py-16 md:py-20" data-cursor="drag" data-cursor-label="DRAG">
         <div
           ref={wrapperRef}
-          className={`flex h-full items-center pl-10 md:pl-16 ${reduced ? "overflow-x-auto gap-4 snap-x snap-mandatory" : "will-change-transform"}`}
+          className={`flex h-full items-center pl-3 sm:pl-8 md:pl-16 ${reduced ? "overflow-x-auto gap-4 snap-x snap-mandatory" : "will-change-transform"}`}
         >
           {posts.map((post, i) => (
-            <Link
-              href={`/blog/${post.slug.current}`}
+            <div
               key={post.slug.current}
-              draggable={false}
-              onDragStart={(e) => e.preventDefault()}
-              data-cursor="link"
+              className="shrink-0 select-none relative"
+              style={{
+                width: cardWidth,
+                height: cardHeight,
+                minWidth: cardWidth,
+                marginRight: i < posts.length - 1 ? `${gap * 100}vw` : "4vw",
+              }}
             >
               <div
-                className="shrink-0 rounded-2xl flex flex-col overflow-hidden bg-card shadow-2xl relative cursor-grab active:cursor-grabbing"
-                style={{
-                  width: cardWidth,
-                  height: cardHeight,
-                  marginRight: i < posts.length - 1 ? `${gap * 100}vw` : undefined,
-                }}
+                className="w-full h-full rounded-2xl flex flex-col overflow-hidden bg-white dark:bg-[#081B1E] border border-slate-200 dark:border-teal-900/60 shadow-xl shadow-teal-950/10 relative cursor-grab active:cursor-grabbing group"
               >
-                <div className="relative w-full h-[50%] bg-muted pointer-events-none">
+                <div className="relative w-full h-[48%] bg-slate-100 dark:bg-slate-900 border-b border-slate-200/60 dark:border-teal-900/40 pointer-events-none shrink-0 overflow-hidden">
                   {post.mainImage && (
                     <Image
                       src={urlFor(post.mainImage).url()}
                       alt={post.title}
                       fill
                       className="object-cover"
+                      unoptimized
                     />
                   )}
                 </div>
-                <div className="p-[2vw] flex flex-col flex-grow justify-between pointer-events-none">
+                <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between overflow-hidden">
                   <div>
-                    <span className="text-xs font-mono text-accent bg-accent/10 px-2 py-1 rounded-sm uppercase tracking-wider">
+                    <span className="text-xs font-mono font-bold text-teal-800 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800/50 px-2 py-0.5 rounded-md uppercase tracking-wider inline-block">
                       {new Date(post._createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                     </span>
-                    <h3 className="text-lg md:text-[1.5vw] font-medium leading-tight text-foreground mt-3 line-clamp-2">
-                      {post.title}
+                    
+                    {/* Clickable Title with pointer cursor */}
+                    <h3 className="text-base sm:text-lg md:text-[1.3vw] font-bold leading-snug text-foreground mt-2 line-clamp-2">
+                      <Link
+                        href={`/blog/${post.slug.current}`}
+                        className="cursor-pointer hover:text-teal-700 dark:hover:text-teal-400 transition-colors inline"
+                        data-cursor="link"
+                        onClick={(e) => {
+                          if (isDraggingRef.current) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }
+                        }}
+                      >
+                        {post.title}
+                      </Link>
                     </h3>
+
+                    <p className="text-xs md:text-[0.88vw] text-muted-foreground line-clamp-2 mt-1.5 leading-relaxed">
+                      {post.summary}
+                    </p>
                   </div>
-                  <p className="text-xs md:text-[1vw] text-muted-foreground line-clamp-2">
-                    {post.summary}
-                  </p>
+
+                  {/* CTA Button Link with pointer cursor and button text hover animation */}
+                  <div className="pt-2">
+                    <Link
+                      href={`/blog/${post.slug.current}`}
+                      className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-teal-800 dark:text-teal-300 bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/30 hover:border-teal-500/50 transition-all group/btn"
+                      data-cursor="link"
+                      onClick={(e) => {
+                        if (isDraggingRef.current) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }
+                      }}
+                    >
+                      <SplitFlapLabel primary="Read Article" secondary="Read Story" />
+                      <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
-        {/* Navigation Arrows */}
+        {/* Navigation Arrows: Vibrant & theme-matched in light and dark */}
         <button
           onClick={() => slideBy("left")}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-md bg-card/50 backdrop-blur-sm border border-border/30 text-foreground/30 hover:text-foreground/70 hover:bg-card/80 transition-all duration-200 cursor-pointer"
-          aria-label="Previous"
+          className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-[#041417]/95 border border-slate-300 dark:border-teal-500/40 text-slate-800 dark:text-teal-200 shadow-lg hover:bg-teal-600 hover:text-white dark:hover:bg-teal-500 dark:hover:text-slate-950 transition-all flex items-center justify-center cursor-pointer backdrop-blur-md"
+          aria-label="Previous Slide"
         >
-          <ChevronLeft size={20} />
+          <ChevronLeft className="w-5 h-5" />
         </button>
         <button
           onClick={() => slideBy("right")}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-md bg-card/50 backdrop-blur-sm border border-border/30 text-foreground/30 hover:text-foreground/70 hover:bg-card/80 transition-all duration-200 cursor-pointer"
-          aria-label="Next"
+          className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-[#041417]/95 border border-slate-300 dark:border-teal-500/40 text-slate-800 dark:text-teal-200 shadow-lg hover:bg-teal-600 hover:text-white dark:hover:bg-teal-500 dark:hover:text-slate-950 transition-all flex items-center justify-center cursor-pointer backdrop-blur-md"
+          aria-label="Next Slide"
         >
-          <ChevronRight size={20} />
+          <ChevronRight className="w-5 h-5" />
         </button>
       </div>
     </div>

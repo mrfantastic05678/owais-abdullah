@@ -299,7 +299,7 @@ const existingProjects: Project[] = [
     link: "https://studio.octively.com/",
     category: "Platform",
     tags: ["Next.js", "SaaS", "AI", "Local Business", "B2B", "Cloudflare"],
-    techStack: ["Next.js 15", "React 19", "Tailwind CSS", "Radix UI", "shadcn/ui", "PostgreSQL", "Drizzle ORM", "Upstash Redis", "OpenRouter", "Docker", "Cloudflare"],
+    techStack: ["Next.js", "React 19", "Tailwind CSS", "Radix UI", "shadcn/ui", "PostgreSQL", "Drizzle ORM", "Upstash Redis", "OpenRouter", "Docker", "Cloudflare"],
   },
   // WordPress Projects
   {
@@ -678,7 +678,7 @@ const githubRepositories: Project[] = [
     slug: "owflex-chatbot-saas",
     deployedUrl: null,
     image: "/assets/projects/owflex.png",
-    techStack: ["Next.js 15", "TypeScript", "Drizzle ORM", "Neon Postgres", "Sanity CMS", "Stripe"],
+    techStack: ["Next.js", "TypeScript", "Drizzle ORM", "Neon Postgres", "Sanity CMS", "Stripe"],
     tags: ["Next.js", "SaaS", "AI Chatbot", "RAG", "Drizzle ORM"],
     stars: 0,
     language: "TypeScript",
@@ -809,6 +809,8 @@ export const skills = [
   "TypeScript",
   "React.js",
   "Next.js",
+  "Astro",
+  "Astro (Content-Fast Websites)",
   "Tailwind CSS",
   "Node.js",
   "Python",
@@ -874,7 +876,7 @@ export const profile = {
   locationLink: "https://www.google.com/maps/place/Pakistan",
   about: "Spec-Driven Developer. AI Agent Engineer. SaaS Architect.",
   summary:
-    "I build AI-Native companies through Digital FTEs — autonomous AI employees powered by Claude Code, OpenAI Agents SDK, and MCP. I also build Next.js SaaS products, agent orchestration systems, and automation pipelines. Core stack: TypeScript, Next.js, Python, Claude Code, OpenAI Agents SDK, PostgreSQL, pgvector, Cloudflare R2, Docker.",
+    "I build AI-Native companies through Digital FTEs — autonomous AI employees powered by Claude Code, OpenAI Agents SDK, and MCP. I also build Next.js SaaS products, ultra-fast content-driven websites with Astro, agent orchestration systems, and automation pipelines. Core stack: TypeScript, Next.js, Astro, Python, Claude Code, OpenAI Agents SDK, PostgreSQL, pgvector, Cloudflare R2, Docker.",
   personalWebsiteUrl: "https://owaisabdullah.dev/",
   githubUrl: "https://github.com/MrOwaisAbdullah",
   linkedInUrl: "https://www.linkedin.com/in/mrowaisabdullah/",

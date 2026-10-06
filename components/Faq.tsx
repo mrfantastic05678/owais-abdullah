@@ -1,5 +1,6 @@
 "use client";
-import CharRevealHeading from "@/components/CharRevealHeading";
+
+import React from "react";
 import {
   Accordion,
   AccordionContent,
@@ -7,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Faq } from "@/types/post";
+import { HelpCircle } from "lucide-react";
 
 interface FaqProps {
   faqs: Faq[];
@@ -18,33 +20,29 @@ export default function FaqSection({ faqs }: FaqProps) {
   }
 
   return (
-    <div className="my-8 sm:my-12">
-      <div className="text-center mb-6 sm:mb-8">
-        <h3 className="text-accent font-mono text-xs tracking-widest uppercase mb-2">Questions I get</h3>
-        <CharRevealHeading
-          as="h2"
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground"
-          highlightWords={["Questions"]}
-        >
-          Frequently Asked Questions
-        </CharRevealHeading>
+    <section id="faqs" className="mt-12 pt-8 border-t border-border/80 scroll-mt-28">
+      <div className="flex items-center gap-2 mb-6">
+        <HelpCircle className="w-5 h-5 text-accent" />
+        <h3 className="font-heading text-xl sm:text-2xl font-semibold text-foreground tracking-tight">
+          Architecture FAQs
+        </h3>
       </div>
-      <Accordion type="single" collapsible className="w-full space-y-3 sm:space-y-4">
+      <Accordion type="single" collapsible defaultValue="item-0" className="w-full space-y-3">
         {faqs.map((faq, index) => (
           <AccordionItem
             value={`item-${index}`}
             key={index}
-            className="border border-border rounded-lg bg-background/80 backdrop-blur-sm"
+            className="rounded-xl border border-[#143B42] dark:border-[#143B42] border-slate-300/80 bg-[#031215] dark:bg-[#031215] bg-[#EEF4F2] px-4 sm:px-5 py-0 overflow-hidden transition-all data-[state=open]:border-accent data-[state=open]:bg-[#04171B] dark:data-[state=open]:bg-[#04171B] shadow-xs"
           >
-            <AccordionTrigger className="p-3 sm:p-4 text-base sm:text-lg font-semibold text-left hover:text-primary transition-colors duration-300 hover:no-underline">
+            <AccordionTrigger className="py-4 text-xs sm:text-sm font-semibold text-left text-foreground hover:text-accent transition-colors hover:no-underline">
               {faq.question}
             </AccordionTrigger>
-            <AccordionContent className="p-3 sm:p-4 pt-0 text-sm sm:text-base text-muted-foreground font-poppins">
+            <AccordionContent className="pt-2 pb-4 text-xs sm:text-[13px] text-muted-foreground leading-relaxed border-t border-[#143B42]/80 dark:border-[#143B42]/80 border-slate-300/60">
               {faq.answer}
             </AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
-    </div>
+    </section>
   );
 }

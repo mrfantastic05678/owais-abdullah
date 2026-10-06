@@ -41,17 +41,17 @@ export function StackCard({ tool, featured = false }: Props) {
   return (
     <Link
       href={`/stack/${tool.slug.current}`}
-      className={`group relative block rounded-xl border transition-all duration-300 overflow-hidden ${
+      className={`group relative block rounded-2xl border transition-all duration-300 overflow-hidden bg-white dark:bg-[#081B1E] ${
         featured
-          ? 'border-accent/20 bg-gradient-to-br from-accent/5 to-transparent hover:border-accent/40 hover:shadow-[0_0_30px_-10px] hover:shadow-accent/20'
-          : 'border-border bg-card/50 hover:border-accent/30 hover:shadow-[0_0_30px_-10px] hover:shadow-accent/10'
+          ? 'border-teal-500/40 dark:border-teal-500/40 shadow-sm hover:border-teal-500 hover:shadow-lg hover:-translate-y-0.5'
+          : 'border-slate-200/90 dark:border-[#10343A] shadow-xs hover:border-teal-500/50 hover:shadow-md hover:-translate-y-0.5'
       }`}
     >
-      {/* Subtle top gradient line */}
-      <div className={`absolute top-0 left-0 right-0 h-px ${
+      {/* Subtle top gradient accent */}
+      <div className={`absolute top-0 left-0 right-0 h-0.5 ${
         featured
-          ? 'bg-gradient-to-r from-transparent via-accent/50 to-transparent'
-          : 'bg-gradient-to-r from-transparent via-border to-transparent group-hover:via-accent/30'
+          ? 'bg-gradient-to-r from-transparent via-teal-500 to-transparent'
+          : 'bg-gradient-to-r from-transparent via-slate-200 dark:via-[#10343A] to-transparent group-hover:via-teal-500/50'
       } transition-all duration-300`} />
 
       <div className="p-5">
@@ -59,7 +59,7 @@ export function StackCard({ tool, featured = false }: Props) {
           {/* Logo / Initial */}
           <div className="relative shrink-0">
             {tool.logo?.asset?.url ? (
-              <div className="relative w-12 h-12 rounded-lg bg-secondary/50 p-2 transition-all duration-300 group-hover:bg-secondary group-hover:scale-105">
+              <div className="relative w-12 h-12 rounded-xl bg-slate-50 dark:bg-[#05181b] border border-slate-200/70 dark:border-[#10343A] p-2 transition-all duration-300 group-hover:scale-105 shadow-2xs">
                 <Image
                   src={tool.logo.asset.url}
                   alt={`${tool.name} logo`}
@@ -69,7 +69,7 @@ export function StackCard({ tool, featured = false }: Props) {
                 />
               </div>
             ) : (
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent/20 to-accent/5 border border-accent/10 flex items-center justify-center text-accent font-bold text-lg transition-all duration-300 group-hover:border-accent/30 group-hover:from-accent/30">
+              <div className="w-12 h-12 rounded-xl bg-teal-500/10 dark:bg-teal-950/40 border border-teal-500/30 flex items-center justify-center text-teal-700 dark:text-teal-300 font-bold text-lg transition-all duration-300 group-hover:border-teal-500 shadow-2xs">
                 {tool.name.charAt(0)}
               </div>
             )}
@@ -78,11 +78,11 @@ export function StackCard({ tool, featured = false }: Props) {
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1.5">
-              <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors duration-200 truncate">
+              <h3 className="font-semibold text-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors duration-200 truncate">
                 {tool.name}
               </h3>
               {tool.featured && (
-                <span className="shrink-0 text-[10px] font-medium px-1.5 py-0.5 rounded bg-accent/10 text-accent border border-accent/20">
+                <span className="shrink-0 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-700 dark:text-teal-300 border border-teal-500/30">
                   ESSENTIAL
                 </span>
               )}
@@ -93,7 +93,7 @@ export function StackCard({ tool, featured = false }: Props) {
             </p>
 
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground border border-border">
+              <span className="text-[11px] font-medium font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#05181b] text-slate-700 dark:text-teal-200 border border-slate-200/80 dark:border-[#10343A]">
                 {tool.stackLayer}
               </span>
               {tool.projectsUsingIt && tool.projectsUsingIt.length > 0 && (

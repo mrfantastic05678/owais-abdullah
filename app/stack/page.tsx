@@ -6,6 +6,7 @@ import { StackCard } from '@/components/stack/StackCard'
 import { StackFilter } from '@/components/stack/StackFilter'
 import { Metadata } from 'next'
 import Link from 'next/link'
+import SplitFlapLabel from '@/components/ui/SplitFlapLabel'
 
 export const metadata: Metadata = {
   title: 'The Agent Stack — Tools I Use to Build Digital FTEs | Owais Abdullah',
@@ -67,22 +68,22 @@ export default async function StackPage() {
       </section>
 
       {/* CTA */}
-      <section className="relative rounded-xl border border-border overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent" />
+      <section className="relative rounded-2xl border border-slate-200/90 dark:border-[#10343A] bg-white dark:bg-[#081B1E] shadow-md overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 via-transparent to-transparent pointer-events-none" />
         <div className="relative p-8">
-          <h3 className="text-xl font-semibold mb-2">
+          <h3 className="text-xl font-semibold mb-2 text-foreground">
             Want an AI employee built on this exact stack?
           </h3>
-          <p className="text-muted-foreground mb-6 max-w-xl">
+          <p className="text-muted-foreground mb-6 max-w-xl leading-relaxed">
             I design, build, and operate autonomous agent systems for agencies and SaaS teams.
             Every system starts with a written spec.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent-hover text-accent-foreground rounded-lg font-medium text-sm transition-colors"
+            className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 text-white rounded-xl font-medium text-sm transition shadow-md hover:opacity-95"
           >
-            Book a Spec Call
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <SplitFlapLabel primary="Book a Spec Call" secondary="Schedule 30m" />
+            <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
@@ -90,53 +91,53 @@ export default async function StackPage() {
       </section>
 
       {/* Methodology Section */}
-      <section className="mt-16 pt-10 border-t border-border">
-        <h2 className="text-2xl font-bold mb-6">Why This Stack Wins</h2>
+      <section className="mt-16 pt-10 border-t border-border/60">
+        <h2 className="text-2xl font-bold mb-6 text-foreground">Why This Stack Wins</h2>
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          <div className="p-5 rounded-xl border border-border bg-card/30">
-            <h3 className="text-destructive font-semibold mb-3 text-sm tracking-wide">WHAT OTHERS DO</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+          <div className="p-6 rounded-2xl border border-slate-200/90 dark:border-[#10343A] bg-white dark:bg-[#081B1E] shadow-xs">
+            <h3 className="text-red-500 dark:text-red-400 font-semibold mb-3 text-xs tracking-wider uppercase font-mono">WHAT OTHERS DO</h3>
+            <ul className="space-y-2.5 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
-                <span className="text-destructive/60 mt-0.5">×</span>
+                <span className="text-red-500/80 mt-0.5">×</span>
                 Scrape 500 tools into a table
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-destructive/60 mt-0.5">×</span>
+                <span className="text-red-500/80 mt-0.5">×</span>
                 Generic descriptions
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-destructive/60 mt-0.5">×</span>
+                <span className="text-red-500/80 mt-0.5">×</span>
                 No opinion or ratings
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-destructive/60 mt-0.5">×</span>
+                <span className="text-red-500/80 mt-0.5">×</span>
                 Affiliate links everywhere
               </li>
             </ul>
           </div>
-          <div className="p-5 rounded-xl border border-border bg-card/30">
-            <h3 className="text-signal-500 font-semibold mb-3 text-sm tracking-wide">WHAT I DO</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+          <div className="p-6 rounded-2xl border border-slate-200/90 dark:border-[#10343A] bg-white dark:bg-[#081B1E] shadow-xs">
+            <h3 className="text-emerald-600 dark:text-emerald-400 font-semibold mb-3 text-xs tracking-wider uppercase font-mono">WHAT I DO</h3>
+            <ul className="space-y-2.5 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
-                <span className="text-signal-500/60 mt-0.5">✓</span>
+                <span className="text-emerald-600/80 mt-0.5">✓</span>
                 Curate tools I actually use
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-signal-500/60 mt-0.5">✓</span>
+                <span className="text-emerald-600/80 mt-0.5">✓</span>
                 Personal use cases with real projects
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-signal-500/60 mt-0.5">✓</span>
+                <span className="text-emerald-600/80 mt-0.5">✓</span>
                 Honest ratings (3/5 when deserved)
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-signal-500/60 mt-0.5">✓</span>
+                <span className="text-emerald-600/80 mt-0.5">✓</span>
                 Zero affiliates. Trust only.
               </li>
             </ul>
           </div>
         </div>
-        <div className="p-5 rounded-xl border border-border bg-card/30">
+        <div className="p-6 rounded-2xl border border-slate-200/90 dark:border-[#10343A] bg-white dark:bg-[#081B1E] shadow-xs">
           <p className="text-sm leading-relaxed text-muted-foreground">
             <strong className="text-foreground">The Stack as Proof:</strong> This page isn&apos;t a product — it&apos;s proof of work.
             When I recommend OpenAI Agents SDK or LiteLLM, it&apos;s because I run them in production for ShopMate,

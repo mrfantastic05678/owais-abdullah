@@ -1,173 +1,298 @@
 "use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaChevronRight } from "react-icons/fa";
-import { ChevronDown } from "lucide-react";
-import { RiNextjsLine, RiWordpressLine } from "react-icons/ri";
-import { TbBrandTypescript, TbBrandPython } from "react-icons/tb";
-import { Github, Linkedin, Mail } from "lucide-react";
-import dynamic from "next/dynamic";
-import { AnimatedTooltip } from "@/components/ui/AnimatedTooltip";
-import HeroFluid from "@/components/HeroFluid";
-import AskAIButton from "@/components/ui/AskAIButton";
-import MagneticButton from "@/components/ui/MagneticButton";
-import StatusDot from "@/components/ui/StatusDot";
+import { 
+  ArrowRight, 
+  ArrowUpRight,
+  Bot, 
+  Code2, 
+  Workflow, 
+  GraduationCap,
+  Linkedin, 
+  Github, 
+  Mail, 
+  ChevronDown 
+} from "lucide-react";
+import { profile } from "@/data/profile";
 import TiltCard from "@/components/ui/TiltCard";
+import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
-const Typewriter = dynamic(
-  () => import("nextjs-simple-typewriter").then((mod) => mod.Typewriter),
-  {
-    ssr: false,
-    loading: () => <span>AI Agent Developer</span>,
-  }
-);
-
-const tileClass =
-  "shadow-sm hover:scale-110 shadow-primary/20 rounded-lg bg-card p-3 text-2xl text-foreground hover:bg-muted border border-border transition-transform";
-
-const Hero = () => {
+export default function Hero() {
   return (
-    <section id="hero" className="relative flex items-center min-h-[100vh] -mt-24 pt-[150px] pb-[60px] bg-gradient-to-b from-background to-muted/20 dark:to-muted/10 overflow-hidden">
-      {/* WebGL fluid trail — desktop, motion-allowed, post-idle only */}
-      <HeroFluid />
+    <section 
+      id="hero" 
+      className="relative flex items-center min-h-[85vh] pt-20 sm:pt-24 pb-14 overflow-hidden"
+    >
+      {/* Background Micro-Dot Lattice & Ambient Glow */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20"
+        style={{
+          backgroundImage: "radial-gradient(rgba(13, 148, 136, 0.3) 1px, transparent 1px)",
+          backgroundSize: "28px 28px"
+        }}
+      />
+      <div 
+        className="absolute top-10 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none"
+        style={{ background: "radial-gradient(circle, #0D9488 0%, transparent 70%)" }}
+      />
+      <div 
+        className="absolute bottom-10 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-15 pointer-events-none"
+        style={{ background: "radial-gradient(circle, #0284C7 0%, transparent 70%)" }}
+      />
 
-      <div className="max-w-[1400px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-16 items-center relative z-10">
-        <div className="flex flex-col items-start text-left mb-16 lg:mb-0">
-          <div className="mb-6">
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-sm text-xs font-mono tracking-wide text-muted-foreground border border-border">
-              <StatusDot size={8} />
-              Available for AI Agent & SaaS projects
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 grid lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10 w-full">
+        
+        {/* Left Column: Headlines & CTAs */}
+        <div className="lg:col-span-7 space-y-6 text-left">
+          
+          {/* Availability Status Eyebrow */}
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium border border-teal-500/30 bg-teal-500/10 dark:bg-teal-950/40 text-teal-800 dark:text-teal-300 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[11px] font-bold tracking-wider uppercase">
+              AVAILABLE FOR AI AGENT &amp; NEXT.JS PROJECTS
             </span>
           </div>
 
-          <h1 className="text-[clamp(2.2rem,4.6vw,3.8rem)] leading-[1.08] mb-6 font-heading font-semibold text-foreground">
-            Hi, I&apos;m{" "}
-            <span className="text-highlight">Owais Abdullah</span>
-            <br />
-            {/* Every phrase below is short enough to stay on one line at
-                the largest clamp size, so no wrap-induced layout shift.
-                min-h is just a safety margin, not a multi-line reservation. */}
-            <span className="block min-h-[1.1em]">
-              <Typewriter
-                words={[
-                  "a Spec-Driven Developer.",
-                  "an AI Agent Developer.",
-                  "an AI-Driven Engineer.",
-                  "a Next.js SaaS Architect.",
-                  "a Full Stack Digital FTE.",
-                  "a TypeScript Specialist.",
-                  "a Python AI Developer.",
-                  "a CMS Expert.",
-                ]}
-                loop={0}
-                cursor
-                cursorStyle="|"
-                typeSpeed={70}
-                deleteSpeed={50}
-                delaySpeed={1000}
-              />
-            </span>
-          </h1>
-          <p className="mb-8 leading-[1.6] text-[clamp(1rem,2vw,1.1rem)] text-muted-foreground max-w-[48ch]">
-            I build production-ready web applications and AI agents using{" "}
-            <span className="text-accent font-semibold">spec-driven development</span> — Next.js SaaS
-            products, Digital FTEs, and automation. Founder of Octively.
-          </p>
+          {/* Master Headline: Large, Bold, Immediate 5-second clarity */}
+          <div className="space-y-4">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4.1rem] font-extrabold tracking-tight leading-[1.08] text-foreground">
+              I build{" "}
+              <span className="text-teal-700 dark:text-teal-400">
+                AI agents
+              </span>
+              <br />
+              &amp; production-ready
+              <br />
+              <span className="text-teal-700 dark:text-teal-400">
+                web apps
+              </span>
+              .
+            </h1>
 
-          <div className="flex gap-4 flex-wrap">
-            <MagneticButton>
+            <p className="text-base sm:text-lg max-w-xl leading-relaxed text-muted-foreground font-normal">
+              I design and ship AI agents, SaaS platforms, and intelligent workflow systems with Next.js, TypeScript, Python, and modern AI tooling.
+            </p>
+          </div>
+
+          {/* Action Buttons: Primary + Secondary */}
+          <div className="space-y-4 pt-1">
+            <div className="flex flex-wrap items-center gap-3.5">
               <Link
                 href="#contact"
-                className="group flex items-center text-accent-foreground bg-accent hover:bg-accent-hover py-3 rounded-md font-medium text-[0.95rem] px-6 transition-colors duration-200"
+                className="px-7 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 hover:opacity-95 shadow-lg shadow-teal-700/20 hover:scale-105 transition-all flex items-center gap-2 group"
               >
-                Start a project <FaChevronRight className="ml-2 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                <SplitFlapLabel primary="Start a Project" secondary="Let's Build It" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
-            </MagneticButton>
-            <Link
-              href="#story"
-              className="btn-progress-drain group flex items-center text-foreground bg-transparent border border-border hover:border-transparent py-3 rounded-md font-medium text-[0.95rem] px-6 transition-colors duration-200"
-            >
-              <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <rect x="1" y="1" width="98" height="98" rx="4" />
-              </svg>
-              How a Digital FTE works
-            </Link>
-          </div>
-
-          <AskAIButton />
-
-          <div className="flex flex-col lg:flex-row gap-4 items-start mt-6">
-            <div>
-              <p className="mb-2 font-bold font-mono text-xs tracking-widest uppercase text-muted-foreground">Tech Stack</p>
-              <div className="flex flex-row items-center gap-3 flex-wrap">
-                <AnimatedTooltip tooltipTitle="Next.js" tooltipDescription="SaaS & Full-Stack">
-                  <div className={tileClass}><RiNextjsLine /></div>
-                </AnimatedTooltip>
-                <AnimatedTooltip tooltipTitle="TypeScript" tooltipDescription="Type-Safe Development">
-                  <div className={tileClass}><TbBrandTypescript /></div>
-                </AnimatedTooltip>
-                <AnimatedTooltip tooltipTitle="Python" tooltipDescription="AI Agents & Automation">
-                  <div className={tileClass}><TbBrandPython /></div>
-                </AnimatedTooltip>
-                <AnimatedTooltip tooltipTitle="WordPress" tooltipDescription="CMS & E-commerce">
-                  <div className={tileClass}><RiWordpressLine /></div>
-                </AnimatedTooltip>
-              </div>
+              <Link
+                href="#projects"
+                className="px-7 py-3.5 rounded-xl text-sm font-semibold text-foreground bg-white dark:bg-[#081B1E] hover:bg-slate-50 dark:hover:bg-teal-950/40 border border-slate-200/90 dark:border-[#10343A] hover:border-teal-500 shadow-xs transition-all flex items-center gap-2 group"
+              >
+                <SplitFlapLabel primary="View Projects" secondary="Explore Builds" />
+                <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors" />
+              </Link>
             </div>
 
-            <div>
-              <p className="mb-2 font-bold font-mono text-xs tracking-widest uppercase text-muted-foreground lg:ml-4">Connect</p>
-              <div className="flex flex-row items-center gap-3 lg:ml-4">
-                <AnimatedTooltip tooltipTitle="Linkedin" tooltipDescription="Connect with me on Linkedin">
-                  <Link href={"https://www.linkedin.com/in/mrowaisabdullah/"} target="_blank" aria-label="Connect with me on LinkedIn">
-                    <div className={tileClass}><Linkedin /></div>
-                  </Link>
-                </AnimatedTooltip>
-                <AnimatedTooltip tooltipTitle="Github" tooltipDescription="View my repositories on Github">
-                  <Link href={"https://github.com/MrOwaisAbdullah"} target="_blank" aria-label="View my repositories on GitHub">
-                    <div className={tileClass}><Github /></div>
-                  </Link>
-                </AnimatedTooltip>
-                <AnimatedTooltip tooltipTitle="Email" tooltipDescription="Send me an email">
-                  <Link href={"mailto:mrowaisabdullah@gmail.com"} target="_blank" aria-label="Send me an email">
-                    <div className={tileClass}><Mail /></div>
-                  </Link>
-                </AnimatedTooltip>
-              </div>
+            {/* Capability Indicators underneath CTAs */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-mono text-muted-foreground pt-2">
+              <span className="flex items-center gap-1.5">
+                <Bot className="w-4 h-4 text-teal-600 dark:text-teal-400" /> AI Agents
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5 font-sans font-bold text-teal-700 dark:text-teal-400">
+                ▲ Next.js
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5">
+                <Workflow className="w-4 h-4 text-teal-600 dark:text-teal-400" /> Automation
+              </span>
             </div>
           </div>
+
+          {/* Social Connect Matrix */}
+          <div className="flex items-center gap-3 pt-2">
+            <span className="text-xs font-mono font-bold tracking-wider text-muted-foreground uppercase">
+              Connect:
+            </span>
+            <div className="flex items-center gap-2">
+              <Link
+                href={profile.linkedInUrl}
+                target="_blank"
+                className="w-9 h-9 rounded-xl bg-card border border-border/80 flex items-center justify-center text-muted-foreground hover:text-teal-700 dark:hover:text-teal-300 hover:border-teal-500/50 shadow-xs transition-all"
+                title="LinkedIn"
+                aria-label="Connect on LinkedIn"
+              >
+                <Linkedin className="w-4 h-4" />
+              </Link>
+              <Link
+                href={profile.githubUrl}
+                target="_blank"
+                className="w-9 h-9 rounded-xl bg-card border border-border/80 flex items-center justify-center text-muted-foreground hover:text-teal-700 dark:hover:text-teal-300 hover:border-teal-500/50 shadow-xs transition-all"
+                title="GitHub"
+                aria-label="View repositories on GitHub"
+              >
+                <Github className="w-4 h-4" />
+              </Link>
+              <Link
+                href={`mailto:${profile.contact.email}`}
+                className="w-9 h-9 rounded-xl bg-card border border-border/80 flex items-center justify-center text-muted-foreground hover:text-teal-700 dark:hover:text-teal-300 hover:border-teal-500/50 shadow-xs transition-all"
+                title="Email"
+                aria-label="Send email"
+              >
+                <Mail className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
         </div>
 
-        <div className="relative flex justify-center w-full">
-          <TiltCard className="relative w-[350px] h-[450px] md:w-[400px] md:h-[520px]">
-            <div data-tilt-layer className="hidden md:block absolute -left-4 -top-4 w-[90%] h-[90%] bg-primary/10 rounded-xl -rotate-6 z-0 dark:bg-ink-900/80"></div>
-            <div data-tilt-layer className="hidden md:block absolute -right-2 top-2 w-[90%] h-[90%] bg-accent/10 rounded-xl rotate-3 z-0 dark:bg-muted/30"></div>
-            <div className="relative z-10 bg-card rounded-xl overflow-hidden shadow-2xl h-[450px] md:h-[520px]">
-              <Image
-                src="/assets/owais-abdullah.webp"
-                className="object-cover object-top w-full h-full"
-                width={400}
-                height={520}
-                priority
-                alt="Owais Abdullah - Spec-Driven Developer & AI Engineer"
-              />
+        {/* Right Column: Profile Portrait Card with Stacked Cards, Neural Links & Neon Shadow */}
+        <div className="lg:col-span-5 flex justify-center lg:justify-end">
+          <TiltCard className="relative w-full max-w-[350px] sm:max-w-[390px] group" maxTilt={10} layerDrift={14}>
+            
+            {/* Ambient Neon Shadow / Halo - Low Opacity, Gentle Breathe Animation */}
+            <div className="absolute -inset-8 sm:-inset-12 rounded-[3rem] bg-gradient-to-tr from-teal-500/20 via-emerald-400/15 to-cyan-400/10 blur-3xl pointer-events-none opacity-30 dark:opacity-40 animate-hero-glow-breathe transition-all duration-500 -z-10" />
+
+            {/* Layered Stacked Cards (Rendered Behind Neural Links at z-0) */}
+            <div
+              data-tilt-layer
+              data-rotate="-4deg"
+              style={{ transform: "rotate(-4deg)" }}
+              className="absolute -inset-3.5 rounded-3xl bg-teal-500/5 dark:bg-teal-950/20 z-0 border border-teal-500/25 pointer-events-none transition-transform duration-300"
+            />
+            <div
+              data-tilt-layer
+              data-rotate="3deg"
+              style={{ transform: "rotate(3deg)" }}
+              className="absolute -inset-2 rounded-3xl bg-emerald-500/5 dark:bg-emerald-950/20 z-0 border border-emerald-500/25 pointer-events-none transition-transform duration-300"
+            />
+
+            {/* Symmetrical & Balanced Neural Links Network (Harmonious Hexagonal Constellation with Live Motion) */}
+            <svg
+              className="absolute -inset-10 sm:-inset-14 w-[calc(100%+80px)] sm:w-[calc(100%+112px)] h-[calc(100%+80px)] sm:h-[calc(100%+112px)] pointer-events-none z-10 opacity-80 dark:opacity-90 animate-hero-constellation"
+              viewBox="0 0 540 540"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <filter id="heroNodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="2.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Left Symmetrical Hexagonal Cluster Framing Bot Badge */}
+              <line x1="24" y1="240" x2="85" y2="140" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="85" y1="140" x2="165" y2="95" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="165" y1="95" x2="165" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="165" y1="240" x2="165" y2="385" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="165" y1="385" x2="85" y2="340" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="85" y1="340" x2="24" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              {/* Left Internal Spokes */}
+              <line x1="85" y1="140" x2="165" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              <line x1="85" y1="340" x2="165" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              <line x1="24" y1="240" x2="165" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+
+              {/* Right Symmetrical Hexagonal Cluster Framing Code Badge (Exact Mirror) */}
+              <line x1="516" y1="240" x2="455" y2="140" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="455" y1="140" x2="375" y2="95" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="375" y1="95" x2="375" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="375" y1="240" x2="375" y2="385" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="375" y1="385" x2="455" y2="340" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="455" y1="340" x2="516" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              {/* Right Internal Spokes */}
+              <line x1="455" y1="140" x2="375" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              <line x1="455" y1="340" x2="375" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              <line x1="516" y1="240" x2="375" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+
+              {/* Transversal Bridging Connectors Behind Portrait (With subtle live data pulse stream) */}
+              <line x1="165" y1="95" x2="375" y2="95" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              <line x1="165" y1="95" x2="375" y2="95" stroke="currentColor" strokeWidth="1.5" className="text-teal-500/50 dark:text-teal-300/60 animate-hero-stream" />
+              <line x1="165" y1="240" x2="375" y2="240" stroke="currentColor" strokeWidth="1" className="text-teal-600/25 dark:text-teal-400/35" />
+
+              {/* Lively Pinpoint Glowing Vertices with Staggered Pulse */}
+              {/* Left Vertices */}
+              <circle cx="24" cy="240" r="3.5" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0s" }} />
+              <circle cx="85" cy="140" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "0.6s" }} />
+              <circle cx="165" cy="95" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "1.2s" }} />
+              <circle cx="165" cy="240" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "1.8s" }} />
+              <circle cx="165" cy="385" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "2.4s" }} />
+              <circle cx="85" cy="340" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "1.0s" }} />
+
+              {/* Right Vertices (Symmetrically Mirrored with Staggered Delays) */}
+              <circle cx="516" cy="240" r="3.5" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0.3s" }} />
+              <circle cx="455" cy="140" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "0.9s" }} />
+              <circle cx="375" cy="95" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "1.5s" }} />
+              <circle cx="375" cy="240" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "2.1s" }} />
+              <circle cx="375" cy="385" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0.5s" }} />
+              <circle cx="455" cy="340" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "1.3s" }} />
+            </svg>
+
+            {/* Main Framing Card Backdrop (z-0: Behind Neural Links & Portrait) */}
+            <div className="absolute inset-0 rounded-[26px] bg-slate-50 dark:bg-[#081B1E] border border-slate-200/90 dark:border-[#10343A] shadow-xl dark:shadow-[0_0_30px_rgba(20,184,166,0.12)] z-0 pointer-events-none overflow-hidden">
+              <div className="absolute inset-2.5 sm:inset-3 rounded-2xl bg-slate-100/70 dark:bg-slate-900/50" />
             </div>
+
+            {/* Portrait Image (z-20: IN FRONT OF NEURAL LINKS, Cutout with Transparent BG) */}
+            <div className="relative z-20 w-full h-[450px] sm:h-[494px] p-2.5 sm:p-3 flex items-end justify-center pointer-events-none">
+              <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                <Image
+                  src="/assets/owais-abdullah.webp"
+                  alt="Owais Abdullah - AI Agent Architect & Web Application Engineer"
+                  fill
+                  className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  priority
+                  unoptimized
+                />
+              </div>
+            </div>
+
+            {/* Neural Floating Badge Left (AI Bot Node - IN FRONT at z-30, Balanced at top-[36%]) */}
+            <div className="absolute top-[36%] -left-5 sm:-left-7 z-30 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-[#081B1E]/95 border border-teal-500/30 shadow-lg shadow-teal-500/15 text-teal-600 dark:text-teal-400 backdrop-blur-sm animate-hero-float-left hover:scale-110 transition-transform">
+              <Bot className="w-5 h-5" />
+            </div>
+
+            {/* Neural Floating Badge Right (Code Node </> - IN FRONT at z-30, Balanced at top-[36%]) */}
+            <div className="absolute top-[36%] -right-5 sm:-right-7 z-30 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-[#081B1E]/95 border border-teal-500/30 shadow-lg shadow-teal-500/15 text-teal-600 dark:text-teal-400 backdrop-blur-sm animate-hero-float-right hover:scale-110 transition-transform">
+              <span className="font-mono font-bold text-xs sm:text-sm tracking-tighter">&lt;/&gt;</span>
+            </div>
+
+            {/* Floating Status Badge Top Right (IN FRONT at z-30) */}
+            <div className="absolute -top-3.5 right-2 sm:right-4 z-30 px-3.5 py-1.5 rounded-full border bg-white/95 dark:bg-[#081B1E]/95 backdrop-blur-md shadow-lg shadow-emerald-500/10 border-teal-500/30 flex items-center gap-2 pointer-events-none animate-hero-float-top">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-mono font-bold text-teal-800 dark:text-teal-300 tracking-wider">
+                AVAILABLE FOR PROJECTS
+              </span>
+            </div>
+
+            {/* Floating Role Badge Bottom Left (IN FRONT at z-30, Positioned on Left Side) */}
+            <div className="absolute bottom-6 -left-2 sm:-left-5 z-30 px-3.5 py-1.5 rounded-full border bg-white/95 dark:bg-[#081B1E]/95 backdrop-blur-md shadow-lg shadow-teal-500/15 border-teal-500/30 flex items-center gap-2 pointer-events-none animate-hero-float-bottom hover:scale-105 transition-transform">
+              <GraduationCap className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
+              <span className="text-[10px] font-mono font-bold text-teal-800 dark:text-teal-300 tracking-wider">
+                AI AGENT ARCHITECT
+              </span>
+            </div>
+
           </TiltCard>
         </div>
+
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll Down Indicator */}
       <a
         href="#about"
         aria-label="Scroll to about section"
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-muted-foreground hover:text-accent transition-colors"
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-muted-foreground hover:text-teal-700 dark:hover:text-teal-400 transition-colors"
       >
-        <span className="font-mono text-[0.6rem] tracking-[0.2em] uppercase">Scroll</span>
+        <span className="font-mono text-[10px] tracking-widest uppercase">Explore</span>
         <ChevronDown className="w-4 h-4 motion-safe:animate-bounce" />
       </a>
+
     </section>
   );
-};
-
-export default Hero;
+}

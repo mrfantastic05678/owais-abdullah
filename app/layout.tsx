@@ -123,7 +123,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -168,32 +168,6 @@ export default function RootLayout({
             }).replace(/</g, "\u003c"),
           }}
         />
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                var path = window.location.pathname;
-                var isToggleAllowed = path === '/blog' || path.startsWith('/blog/') || path === '/stack' || path.startsWith('/stack/') || path === '/stores' || path.startsWith('/stores/');
-                if (isToggleAllowed) {
-                  var t = localStorage.getItem('theme');
-                  if (t === 'light') {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.classList.add('light');
-                  } else {
-                    document.documentElement.classList.add('dark');
-                  }
-                } else {
-                  document.documentElement.classList.add('dark');
-                  document.documentElement.classList.remove('light');
-                }
-              } catch (e) {
-                document.documentElement.classList.add('dark');
-              }
-            `,
-          }}
-        />
       </head>
       <body
         suppressHydrationWarning
@@ -201,9 +175,13 @@ export default function RootLayout({
           clashDisplay.variable,
           satoshi.variable,
           newsreader.variable,
-          "font-sans antialiased"
+          "font-sans antialiased bg-background text-foreground relative min-h-screen selection:bg-teal-500/20 selection:text-teal-900 dark:selection:text-teal-100"
         )}
       >
+        {/* Fixed background micro-dot lattice and ambient mesh */}
+        <div className="fixed inset-0 pointer-events-none bg-dot-lattice z-0" />
+        <div className="fixed inset-0 pointer-events-none ambient-mesh z-0" />
+        
         {/* Google Analytics */}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
@@ -231,13 +209,16 @@ export default function RootLayout({
         />
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
+          enableSystem
           disableTransitionOnChange
         >
           <ThemeEnforcer />
           <LenisSmoothScroll>
             <CursorFollower />
-            <LayoutShell>{children}</LayoutShell>
+            <div className="relative z-10">
+              <LayoutShell>{children}</LayoutShell>
+            </div>
           </LenisSmoothScroll>
         </ThemeProvider>
       </body>

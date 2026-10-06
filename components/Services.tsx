@@ -1,57 +1,62 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import ServicesGrid from "@/components/ServicesGrid";
-import CharRevealHeading from "@/components/CharRevealHeading";
 import ProcessSteps from "@/components/ProcessSteps";
 
 const PROCESS_STEPS = [
-  { num: "01", title: "Spec", desc: "We write down exactly what the system must do before code exists." },
-  { num: "02", title: "Build", desc: "Agents, app, or automation — built against the spec, not around it." },
-  { num: "03", title: "Deploy", desc: "Production infrastructure, proactive monitoring, and handover docs." },
-  { num: "04", title: "Operate", desc: "The system runs reliably 24/7; you get reports, not surprises." },
+  { 
+    num: "01 / SPEC", 
+    title: "Write Specification", 
+    desc: "We write down exactly what the system must do before code exists. Schemas, failure states, and interfaces." 
+  },
+  { 
+    num: "02 / BUILD", 
+    title: "Architect & Code", 
+    desc: "Agents, apps, or automations — built against the verified spec, not around loose vibes." 
+  },
+  { 
+    num: "03 / DEPLOY", 
+    title: "Production Launch", 
+    desc: "Production infrastructure, proactive health telemetry, error budgets, and complete handover docs." 
+  },
+  { 
+    num: "04 / OPERATE", 
+    title: "Autonomous Ops", 
+    desc: "The system runs reliably 24/7; you get automated reports and briefings, not midnight surprises." 
+  },
 ];
 
-const Services = () => {
+export default function Services() {
   return (
     <>
-      <section className="max-w-7xl mx-auto scroll-smooth">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center py-16 px-4"
-        >
-          <p className="text-base text-accent font-medium sm:text-lg mb-2">What I Offer</p>
-          <CharRevealHeading
-            as="h2"
-            className="text-4xl md:text-5xl font-semibold text-foreground mb-3"
-            highlightWords={["build"]}
-          >
-            What I build
-          </CharRevealHeading>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
-            AI systems and web products that hold up in production — from
-            autonomous agents to full SaaS builds.
-          </p>
-        </motion.div>
-
-        <div className="px-5 pb-24">
-          <ServicesGrid />
+      <section id="services" className="max-w-7xl mx-auto px-5 py-16 sm:py-20 space-y-10">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <span className="text-xs font-mono uppercase tracking-wider font-bold text-teal-700 dark:text-teal-400">
+              WHAT I OFFER
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground mt-1">
+              What I build
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-xl mt-1">
+              AI systems and web products that hold up in production — from autonomous agents to full SaaS builds.
+            </p>
+          </div>
+          <div className="text-xs font-mono font-bold px-3 py-1.5 rounded-xl border border-border bg-card/80 text-muted-foreground w-fit">
+            6 CORE CAPABILITIES · ZERO VIBE CODING
+          </div>
         </div>
+
+        <ServicesGrid />
       </section>
 
       <ProcessSteps
-        eyebrow="How it works"
+        eyebrow="HOW I WORK · METHODOLOGY"
         heading="Spec first, then ship."
-        headingHighlight={["Spec", "first"]}
         description="Every system starts as a written spec — so you know what you're getting before a line of code exists."
         steps={PROCESS_STEPS}
       />
     </>
   );
-};
-
-export default Services;
+}

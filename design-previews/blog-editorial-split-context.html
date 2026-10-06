@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Variant 2B: Split-Hero Context Sidebar — Owais Abdullah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #031215;
+      --bg-card: #081B1E;
+      --bg-card-sub: #051619;
+      --border-neutral: #10343A;
+      --border-hover: #184D56;
+      --text-ink: #E6F7F3;
+      --text-muted: #8FB7AF;
+      --text-faint: #5C877E;
+      --brand-accent: #14B8A6;
+      --brand-teal-deep: #0D9488;
+      --brand-emerald: #10B981;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-display: 'Newsreader', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-card: 12px;
+      --radius-pill: 9999px;
+      --shadow-ambient: 0 1px 3px rgba(0, 0, 0, 0.4), 0 20px 38px -6px rgba(13, 148, 136, 0.12);
+    }
+
+    html:not(.dark) {
+      --bg-canvas: #F8FAFB;
+      --bg-card: #FFFFFF;
+      --bg-card-sub: #F0F5F4;
+      --border-neutral: #E2E8F0;
+      --border-hover: #CBD5E1;
+      --text-ink: #071916;
+      --text-muted: #24423C;
+      --text-faint: #5E7A75;
+      --brand-accent: #0D9488;
+      --brand-teal-deep: #0F766E;
+      --brand-emerald: #059669;
+      --shadow-ambient: 0 1px 3px rgba(7, 25, 22, 0.04), 0 20px 38px -6px rgba(13, 148, 136, 0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overflow-x: clip; }
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-ink);
+      font-family: var(--font-body);
+      line-height: 1.7;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      background-image: radial-gradient(rgba(20, 184, 166, 0.07) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+    }
+
+    /* Top Switcher Bar */
+    .template-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-neutral);
+      backdrop-filter: blur(14px);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .template-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tmpl-link {
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      color: var(--text-muted);
+      border: 1px solid var(--border-neutral);
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 0.2s ease;
+    }
+    .tmpl-link:hover { color: var(--text-ink); border-color: var(--brand-accent); }
+    .tmpl-link.active {
+      background: var(--brand-accent);
+      color: #031215;
+      border-color: var(--brand-accent);
+      font-weight: 700;
+    }
+    .theme-toggle-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-neutral);
+      background: var(--bg-card-sub);
+      color: var(--text-ink);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Reading Progress Line */
+    .reading-progress-track {
+      position: fixed;
+      top: 49px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      z-index: 99;
+    }
+    .reading-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-accent), var(--brand-emerald));
+      width: 0%;
+      transition: width 0.1s;
+    }
+
+    /* Site Nav */
+    .site-nav {
+      max-width: 1280px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-logo {
+      font-weight: 800;
+      font-size: 17px;
+      color: var(--text-ink);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-dot {
+      width: 9px;
+      height: 9px;
+      background: var(--brand-accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--brand-accent);
+    }
+
+    /* Split-Hero Section */
+    .split-hero-container {
+      max-width: 1280px;
+      margin: 32px auto 48px;
+      padding: 0 24px;
+    }
+    .split-hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 36px;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      padding: 40px;
+      box-shadow: var(--shadow-ambient);
+      position: relative;
+      overflow: hidden;
+    }
+    @media (max-width: 960px) { .split-hero { grid-template-columns: 1fr; padding: 28px 20px; } }
+    .split-hero::after {
+      content: "";
+      position: absolute;
+      top: -60px;
+      left: 30%;
+      width: 400px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(20, 184, 166, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(20, 184, 166, 0.12);
+      border: 1px solid rgba(20, 184, 166, 0.3);
+      color: var(--brand-accent);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 18px;
+    }
+    .split-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+      line-height: 1.15;
+      font-weight: 600;
+      color: var(--text-ink);
+      letter-spacing: -0.015em;
+      margin-bottom: 18px;
+    }
+    .split-hero-lead {
+      font-size: 1.08rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .hero-author-diptych {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-neutral);
+    }
+    .hero-author-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid var(--brand-accent);
+      object-fit: cover;
+    }
+    .split-hero-img-box {
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--border-neutral);
+      aspect-ratio: 16/10;
+      position: relative;
+    }
+    .split-hero-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Main 2-Column Content Layout (Prose 70% + Right Sidebar 30%) */
+    .article-layout {
+      max-width: 1280px;
+      margin: 0 auto 100px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 40px;
+      align-items: start;
+    }
+    @media (max-width: 1024px) { .article-layout { grid-template-columns: 1fr; } }
+
+    /* Core Article Body */
+    .article-body-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      padding: 44px 48px;
+      box-shadow: var(--shadow-ambient);
+    }
+    @media (max-width: 768px) { .article-body-card { padding: 28px 20px; } }
+    .drop-cap::first-letter {
+      float: left;
+      font-family: var(--font-display);
+      font-size: 4.6rem;
+      line-height: 0.8;
+      padding-top: 6px;
+      padding-right: 14px;
+      padding-bottom: 4px;
+      color: var(--brand-accent);
+      font-weight: 600;
+    }
+    .article-body-card p {
+      font-size: 1.08rem;
+      color: var(--text-muted);
+      line-height: 1.78;
+      margin-bottom: 24px;
+    }
+    .article-body-card strong { color: var(--text-ink); }
+    .article-body-card h2 {
+      font-family: var(--font-display);
+      font-size: 2.1rem;
+      color: var(--text-ink);
+      letter-spacing: -0.01em;
+      margin: 44px 0 18px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-neutral);
+    }
+    .article-body-card h2:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+    .article-body-card h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-ink);
+      margin: 32px 0 14px;
+    }
+
+    /* Code Block */
+    .clean-code-block {
+      background: #020C0E;
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      margin: 28px 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+    .code-titlebar {
+      padding: 10px 16px;
+      background: #041417;
+      border-bottom: 1px solid var(--border-neutral);
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-faint);
+      font-size: 12px;
+    }
+    .code-content { padding: 20px; color: #A7F3D0; overflow-x: auto; line-height: 1.6; }
+
+    /* Pull Quote */
+    .pull-quote {
+      margin: 36px 0;
+      padding: 24px 30px;
+      background: linear-gradient(90deg, rgba(20, 184, 166, 0.08), transparent);
+      border-left: 3px solid var(--brand-accent);
+      border-radius: 0 var(--radius-card) var(--radius-card) 0;
+    }
+    .pull-quote p {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-style: italic;
+      color: var(--text-ink);
+      line-height: 1.4;
+      margin: 0;
+    }
+    .pull-quote cite {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--brand-accent);
+      font-style: normal;
+    }
+
+    /* Post-Article Rating & Feedback Bar */
+    .post-rating-box {
+      margin-top: 48px;
+      padding: 24px;
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .rating-label h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .rating-label p { font-size: 12px; color: var(--text-faint); margin: 0; }
+    .rating-actions { display: flex; gap: 10px; }
+    .btn-rate {
+      background: var(--bg-card);
+      border: 1px solid var(--border-neutral);
+      color: var(--text-ink);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-rate:hover { border-color: var(--brand-accent); color: var(--brand-accent); }
+    .btn-rate.active { background: rgba(20, 184, 166, 0.15); border-color: var(--brand-accent); color: var(--brand-accent); font-weight: 700; }
+
+    /* Sticky Right Sidebar */
+    .sticky-sidebar {
+      position: sticky;
+      top: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .sidebar-widget {
+      background: var(--bg-card);
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      padding: 22px;
+      box-shadow: var(--shadow-ambient);
+    }
+    .widget-header {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-faint);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toc-link-item {
+      display: block;
+      padding: 6px 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      border-left: 2px solid transparent;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .toc-link-item:hover { color: var(--brand-accent); background: rgba(20, 184, 166, 0.06); }
+    .toc-link-item.active {
+      color: var(--brand-accent);
+      background: rgba(20, 184, 166, 0.1);
+      border-left-color: var(--brand-accent);
+      font-weight: 600;
+    }
+
+    /* Google Preferred Source Sidebar Card */
+    .pref-sidebar-box {
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(5, 150, 105, 0.05)), var(--bg-card-sub);
+      border: 1px dashed var(--brand-teal-deep);
+      border-radius: var(--radius-card);
+      padding: 18px;
+      text-align: center;
+    }
+    .btn-pref-sm {
+      background: var(--brand-teal-deep);
+      color: #FFF;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    .btn-pref-sm:hover { background: var(--brand-accent); }
+
+    /* Recent Articles List */
+    .recent-list-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-neutral);
+      display: block;
+      text-decoration: none;
+      color: var(--text-ink);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+      transition: color 0.2s;
+    }
+    .recent-list-item:last-child { border-bottom: none; }
+    .recent-list-item:hover { color: var(--brand-accent); }
+
+    /* Discussion Thread */
+    .comments-wrapper {
+      margin-top: 56px;
+      padding-top: 36px;
+      border-top: 1px solid var(--border-neutral);
+    }
+    .comments-heading {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: var(--text-ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .comment-card {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-card);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    /* Floating Dynamic Island Controller */
+    .dynamic-island {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 90;
+      background: rgba(8, 27, 30, 0.94);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-neutral);
+      border-radius: 50px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(20, 184, 166, 0.15);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    html:not(.dark) .dynamic-island {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: #CBD5E1;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    }
+    .island-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--brand-accent);
+      font-weight: 700;
+    }
+    .island-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-ink);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      transition: all 0.2s;
+    }
+    .island-btn:hover { background: rgba(20, 184, 166, 0.15); color: var(--brand-accent); }
+    .island-sep { width: 1px; height: 18px; background: var(--border-neutral); }
+  </style>
+</head>
+<body>
+
+  <!-- Top Switcher Bar -->
+  <header class="template-bar">
+    <div class="template-pills">
+      <span style="font-weight: 700; color: var(--text-ink); margin-right: 4px;">EDITORIAL VARIANTS:</span>
+      <a href="blog-editorial-dual-rail.html" class="tmpl-link">2A. Dual-Rail Cinematic</a>
+      <a href="blog-editorial-split-context.html" class="tmpl-link active">2B. Split-Hero Context Sidebar (Current)</a>
+      <a href="blog-editorial-modernist.html" class="tmpl-link">2C. Modernist Off-Canvas</a>
+    </div>
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+      <svg id="themeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <span id="themeText">LIGHT MODE</span>
+    </button>
+  </header>
+
+  <!-- Reading Progress Line -->
+  <div class="reading-progress-track">
+    <div class="reading-progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Site Nav -->
+  <nav class="site-nav">
+    <a href="/" class="brand-logo">
+      <span class="brand-dot"></span>
+      Owais Abdullah
+    </a>
+    <div>
+      <a href="/blog" class="tmpl-link" style="border: none;">← All Insights</a>
+      <a href="#contact" class="tmpl-link active" style="margin-left: 8px;">Book Consultation</a>
+    </div>
+  </nav>
+
+  <!-- Split-Hero Container -->
+  <div class="split-hero-container">
+    <section class="split-hero">
+      <div>
+        <span class="hero-badge">AI Systems &amp; Autonomous FTEs</span>
+        <h1 class="split-hero-title">Architecting Production-Ready Autonomous AI Agents with Next.js 15 &amp; LangGraph</h1>
+        <p class="split-hero-lead">
+          A blueprint for deploying stateful, multi-agent orchestrations that execute deterministic business logic, survive process failures, and stream reasoning tokens to modern interfaces.
+        </p>
+        <div class="hero-author-diptych">
+          <img src="/assets/owais-profile.png" alt="Owais Abdullah" class="hero-author-avatar" onerror="this.src='/assets/placeholder.png'" />
+          <div>
+            <div style="font-weight: 700; font-size: 13px;">Owais Abdullah</div>
+            <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">October 4, 2026 · 7 Min Read</div>
+          </div>
+        </div>
+      </div>
+      <div class="split-hero-img-box">
+        <img src="/assets/placeholder.png" alt="Architecture Diagram" />
+      </div>
+    </section>
+  </div>
+
+  <!-- 2-Column Article Layout -->
+  <main class="article-layout">
+
+    <!-- Article Content (Left Column) -->
+    <article class="article-body-card">
+      <p class="drop-cap">
+        In 2026, building an AI system that answers a prompt is trivial. The hard problem—the one separating amateur wrappers from enterprise-grade software—is building <strong>stateful, fault-tolerant autonomous agents</strong> that can execute multi-step workflows spanning hours or days without losing context or drifting into hallucination loops.
+      </p>
+
+      <h2 id="sec-1">1. The State Fragility Problem</h2>
+      <p>
+        When a serverless Lambda or edge runtime terminates mid-execution, a naive loop loses its memory. Without persistent checkpointing, you either pay duplicate API tokens restarting from scratch, or worse, execute duplicate side-effects.
+      </p>
+
+      <div class="pull-quote">
+        <p>"An autonomous agent without deterministic state persistence is not an employee; it is a chaotic random-number generator with an API token."</p>
+        <cite>— Owais Abdullah · Founder, Octively</cite>
+      </div>
+
+      <h2 id="sec-2">2. LangGraph State Machine Architecture</h2>
+      <p>
+        To solve state fragility, we structure our agent workflows as directed cyclical graphs using LangGraph. Each node represents a discrete, pure functional step, while edges define conditional branching.
+      </p>
+
+      <div class="clean-code-block" id="sec-3">
+        <div class="code-titlebar">
+          <span>src/agents/orchestrator.ts</span>
+          <span style="color: var(--brand-accent);">TypeScript 5.6</span>
+        </div>
+        <div class="code-content">
+import { StateGraph, Annotation } from "@langchain/langgraph";
+
+export const AgentState = Annotation.Root({
+  messages: Annotation&lt;string[]&gt;({
+    reducer: (x, y) =&gt; x.concat(y),
+    default: () =&gt; [],
+  }),
+  currentStep: Annotation&lt;string&gt;({
+    reducer: (_, next) =&gt; next,
+    default: () =&gt; "planner",
+  }),
+});
+        </div>
+      </div>
+
+      <h2 id="sec-4">3. Next.js 15 Streaming Adapter</h2>
+      <p>
+        Next.js 15's native support for Server-Sent Events allows us to stream token deltas directly from LangGraph to the React client without holding heavyweight WebSocket connections open during long idle reasoning phases.
+      </p>
+
+      <!-- Post-Article Feedback Box -->
+      <div class="post-rating-box">
+        <div class="rating-label">
+          <h4>Was this architecture blueprint helpful?</h4>
+          <p>Your feedback informs our next engineering deep-dive.</p>
+        </div>
+        <div class="rating-actions">
+          <button class="btn-rate" id="postLikeBtn" onclick="toggleRate('like')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+            <span id="postLikeCount">216</span> Helpful
+          </button>
+          <button class="btn-rate" id="postDislikeBtn" onclick="toggleRate('dislike')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"/></svg>
+            Needs work
+          </button>
+        </div>
+      </div>
+
+      <!-- Comments Thread -->
+      <section class="comments-wrapper" id="comments">
+        <h3 class="comments-heading">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-accent)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Technical Discussions (2)
+        </h3>
+
+        <div style="background: var(--bg-card-sub); border: 1px solid var(--border-neutral); border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+          <textarea placeholder="Join the discussion or ask an architectural question..." style="width: 100%; background: transparent; border: none; color: var(--text-ink); font-family: var(--font-body); font-size: 13px; min-height: 70px; outline: none; resize: vertical;"></textarea>
+          <div style="display: flex; justify-content: flex-end; padding-top: 8px; border-top: 1px solid var(--border-neutral);">
+            <button class="btn-action" style="border: none; cursor: pointer; padding: 6px 16px; font-size: 12px;">Post Perspective</button>
+          </div>
+        </div>
+
+        <div class="comment-card">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="font-size: 13px;">Danyal M. <span style="font-size: 11px; color: var(--text-faint); font-weight: normal;">· 3h ago</span></strong>
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--brand-accent);">#1</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.5;">
+            Are you using Neon's connection pooling with Prisma or drizzle for storing the state snapshots?
+          </p>
+        </div>
+
+        <div class="comment-card" style="margin-left: 20px; border-left: 3px solid var(--brand-accent);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="font-size: 13px;">Owais Abdullah <span style="background: rgba(20,184,166,0.15); color: var(--brand-accent); font-family: var(--font-mono); font-size: 10px; padding: 1px 6px; border-radius: 4px; margin-left: 6px;">AUTHOR</span></strong>
+            <span style="font-family: var(--font-mono); font-size: 10px; color: var(--brand-accent);">REPLY</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.5;">
+            We use Neon serverless driver directly over WebSocket/HTTP for checkpoint writes to keep cold-start connection latency under 15ms.
+          </p>
+        </div>
+      </section>
+
+    </article>
+
+    <!-- Sticky Right Sidebar -->
+    <aside class="sticky-sidebar">
+
+      <!-- Table of Contents -->
+      <div class="sidebar-widget">
+        <div class="widget-header">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Quick Navigation
+        </div>
+        <div>
+          <a href="#sec-1" class="toc-link-item active">1. The State Fragility Problem</a>
+          <a href="#sec-2" class="toc-link-item">2. LangGraph State Machine</a>
+          <a href="#sec-3" class="toc-link-item">3. Next.js 15 SSE Adapter</a>
+          <a href="#sec-4" class="toc-link-item">4. Human Validation Gates</a>
+          <a href="#comments" class="toc-link-item">5. Technical Discussions</a>
+        </div>
+      </div>
+
+      <!-- Author Card -->
+      <div class="sidebar-widget">
+        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px;">
+          <img src="/assets/owais-profile.png" alt="Owais" style="width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--brand-accent); object-fit: cover;" onerror="this.src='/assets/placeholder.png'" />
+          <div>
+            <div style="font-weight: 700; font-size: 14px;">Owais Abdullah</div>
+            <div style="font-size: 11px; color: var(--text-faint); font-family: var(--font-mono);">Founder, Octively</div>
+          </div>
+        </div>
+        <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
+          Specializing in autonomous AI employee architectures, LangGraph multi-agent clusters, and Next.js applications.
+        </p>
+        <a href="#contact" class="tmpl-link active" style="display: block; text-align: center; font-size: 12px;">Schedule Architecture Call →</a>
+      </div>
+
+      <!-- Google Preferred Sources Card -->
+      <div class="sidebar-widget">
+        <div class="pref-sidebar-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brand-accent)" stroke-width="2" style="margin-bottom: 6px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <div style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">Prioritize on Google</div>
+          <p style="font-size: 11px; color: var(--text-faint); line-height: 1.4; margin: 0;">
+            Add to your Preferred Sources for verified AI agent blueprints.
+          </p>
+          <button class="btn-pref-sm" onclick="alert('Added to Preferred Sources!')">+ Preferred Source</button>
+        </div>
+      </div>
+
+      <!-- Recent Insights -->
+      <div class="sidebar-widget">
+        <div class="widget-header">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Recent from Owais
+        </div>
+        <a href="#" class="recent-list-item">Hybrid Search with Pinecone &amp; Cohere in 2026 →</a>
+        <a href="#" class="recent-list-item">Zero-Downtime Neon Database Migrations →</a>
+        <a href="#" class="recent-list-item">Deploying Autonomous FTEs with CrewAI →</a>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Floating Dynamic Island Controller -->
+  <div class="dynamic-island">
+    <div class="island-progress">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="islandPercent">0%</span>
+      <span>READ</span>
+    </div>
+    <div class="island-sep"></div>
+    <button class="island-btn" onclick="toggleRate('like')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+      <span id="islandLikeCount">216</span>
+    </button>
+    <div class="island-sep"></div>
+    <a href="#comments" class="island-btn" style="text-decoration: none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>2</span>
+    </a>
+    <button class="island-btn" onclick="copyLink()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </button>
+  </div>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const doc = document.documentElement;
+      const total = doc.scrollHeight - doc.clientHeight;
+      const progress = Math.min(100, Math.round((doc.scrollTop / total) * 100));
+      document.getElementById('progressBar').style.width = progress + '%';
+      document.getElementById('islandPercent').textContent = progress + '%';
+    });
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      document.getElementById('themeText').textContent = isDark ? 'LIGHT MODE' : 'DARK MODE';
+    }
+
+    let rated = false;
+    function toggleRate(type) {
+      if (type === 'like' && !rated) {
+        const pCount = document.getElementById('postLikeCount');
+        const iCount = document.getElementById('islandLikeCount');
+        const val = parseInt(pCount.textContent) + 1;
+        pCount.textContent = val;
+        iCount.textContent = val;
+        document.getElementById('postLikeBtn').classList.add('active');
+        rated = true;
+      }
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    }
+  </script>
+</body>
+</html>

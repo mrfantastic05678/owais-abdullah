@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { MessageSquare, Send, Reply, User, CheckCircle2, AlertCircle, Shield, CornerDownRight } from "lucide-react";
+import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
 interface CommentItem {
   id: number;
@@ -85,7 +86,7 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
   };
 
   return (
-    <section className="mt-14 pt-10 border-t border-border/80">
+    <section id="comments" className="mt-14 pt-10 border-t border-border/80 scroll-mt-28">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center">
@@ -116,7 +117,7 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
       )}
 
       {/* Comment Form */}
-      <form onSubmit={handleSubmit} className="p-5 sm:p-6 rounded-2xl bg-card border border-border shadow-xs space-y-4 mb-10">
+      <form onSubmit={handleSubmit} className="p-5 sm:p-6 rounded-xl bg-[#031215] dark:bg-[#031215] bg-[#EEF4F2] border border-[#143B42] dark:border-[#143B42] border-slate-300/80 shadow-xs space-y-4 mb-10">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-foreground uppercase tracking-wider font-mono">
             {replyingTo ? "Leave a Reply" : "Leave a Comment"}
@@ -143,7 +144,7 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
               placeholder="e.g. Bilal Khan"
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary"
+              className="w-full px-3.5 py-2.5 text-xs rounded-lg bg-[#081B1E] dark:bg-[#081B1E] bg-white border border-[#18464E] dark:border-[#18464E] border-slate-300 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-accent"
             />
           </div>
           <div>
@@ -156,7 +157,7 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
               placeholder="e.g. bilal@example.com"
               value={authorEmail}
               onChange={(e) => setAuthorEmail(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary"
+              className="w-full px-3.5 py-2.5 text-xs rounded-lg bg-[#081B1E] dark:bg-[#081B1E] bg-white border border-[#18464E] dark:border-[#18464E] border-slate-300 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-accent"
             />
           </div>
         </div>
@@ -170,7 +171,7 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
             placeholder="https://yourbrand.com or linkedin.com/in/you"
             value={authorWebsite}
             onChange={(e) => setAuthorWebsite(e.target.value)}
-            className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary"
+            className="w-full px-3.5 py-2.5 text-xs rounded-lg bg-[#081B1E] dark:bg-[#081B1E] bg-white border border-[#18464E] dark:border-[#18464E] border-slate-300 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-accent"
           />
         </div>
 
@@ -184,7 +185,7 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
             placeholder="Write your constructive thoughts, critique, or questions here..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full px-3.5 py-2.5 text-xs rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary leading-relaxed resize-none"
+            className="w-full px-3.5 py-2.5 text-xs rounded-lg bg-[#081B1E] dark:bg-[#081B1E] bg-white border border-[#18464E] dark:border-[#18464E] border-slate-300 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-accent leading-relaxed resize-none"
           />
         </div>
 
@@ -192,10 +193,14 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
           <button
             type="submit"
             disabled={submitting}
-            className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs transition-all shadow-sm flex items-center gap-1.5 disabled:opacity-50"
+            className="group px-5 py-2.5 rounded-lg bg-accent hover:bg-accent-hover text-accent-foreground font-semibold text-xs transition-all shadow-xs flex items-center gap-1.5 disabled:opacity-50"
           >
-            <Send size={13} />
-            <span>{submitting ? "Posting..." : "Post Comment"}</span>
+            <Send size={13} className="group-hover:translate-x-0.5 transition-transform" />
+            {submitting ? (
+              <span>Posting...</span>
+            ) : (
+              <SplitFlapLabel primary="Post Comment" secondary="Submit Thoughts" />
+            )}
           </button>
         </div>
       </form>
@@ -207,16 +212,16 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
             Loading discussion...
           </div>
         ) : comments.length === 0 ? (
-          <div className="p-8 text-center rounded-2xl border border-dashed border-border text-xs text-muted-foreground">
+          <div className="p-8 text-center rounded-xl border border-dashed border-[#143B42] dark:border-[#143B42] border-slate-300 text-xs text-muted-foreground bg-[#031215]/50 dark:bg-[#031215]/50 bg-[#EEF4F2]/50">
             No comments yet. Be the first to share your thoughts!
           </div>
         ) : (
           comments.map((comment) => (
-            <div key={comment.id} className="p-5 rounded-2xl bg-card border border-border space-y-3">
+            <div key={comment.id} className="p-5 rounded-xl bg-[#031215] dark:bg-[#031215] bg-[#EEF4F2] border border-[#143B42] dark:border-[#143B42] border-slate-300/80 space-y-3 shadow-xs">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                    comment.isAdmin ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+                    comment.isAdmin ? "bg-accent text-accent-foreground" : "bg-muted text-foreground"
                   }`}>
                     {comment.isAdmin ? <Shield size={13} /> : comment.authorName.charAt(0).toUpperCase()}
                   </div>
@@ -226,7 +231,7 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
                         {comment.authorName}
                       </span>
                       {comment.isAdmin && (
-                        <span className="px-1.5 py-0.2 rounded bg-primary/20 text-primary text-[10px] font-semibold">
+                        <span className="px-1.5 py-0.2 rounded bg-accent/20 text-accent text-[10px] font-semibold">
                           Author
                         </span>
                       )}
@@ -235,7 +240,7 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
                           href={comment.authorWebsite}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[10px] text-muted-foreground hover:text-primary transition-colors underline"
+                          className="text-[10px] text-muted-foreground hover:text-accent transition-colors underline"
                         >
                           Website
                         </a>
@@ -253,7 +258,7 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
 
                 <button
                   onClick={() => setReplyingTo(comment.id)}
-                  className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors"
+                  className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-accent transition-colors"
                 >
                   <Reply size={12} />
                   <span>Reply</span>
@@ -266,17 +271,17 @@ export default function BlogCommentsSection({ postSlug }: { postSlug: string }) 
 
               {/* Nested Replies */}
               {comment.replies && comment.replies.length > 0 && (
-                <div className="pl-6 pt-2 space-y-3 border-l-2 border-primary/20 ml-3">
+                <div className="pl-6 pt-2 space-y-3 border-l-2 border-accent/30 ml-3">
                   {comment.replies.map((reply) => (
-                    <div key={reply.id} className="p-3.5 rounded-xl bg-muted/40 border border-border/70 space-y-1.5">
+                    <div key={reply.id} className="p-3.5 rounded-lg bg-[#05171B] dark:bg-[#05171B] bg-white border border-[#18464E] dark:border-[#18464E] border-slate-300 space-y-1.5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
-                          <CornerDownRight size={12} className="text-primary" />
+                          <CornerDownRight size={12} className="text-accent" />
                           <span className="text-xs font-bold text-foreground">
                             {reply.authorName}
                           </span>
                           {reply.isAdmin && (
-                            <span className="px-1.5 py-0.2 rounded bg-primary/20 text-primary text-[10px] font-semibold">
+                            <span className="px-1.5 py-0.2 rounded bg-accent/20 text-accent text-[10px] font-semibold">
                               Author
                             </span>
                           )}

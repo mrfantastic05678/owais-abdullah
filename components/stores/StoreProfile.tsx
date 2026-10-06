@@ -62,7 +62,7 @@ export const StoreProfile: React.FC<StoreProfileProps> = ({ store, similarStores
     twitterUrl,
   } = store;
 
-  const brandColor = themeColor || "#3D7BFF";
+  const brandColor = themeColor || "#0D9488";
   const brandHighlights: string[] = Array.isArray(highlights) ? highlights : [];
 
   const handleCopyLink = () => {

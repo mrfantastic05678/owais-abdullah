@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowUpRight, Sparkles, User } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 
+import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
+
 export interface AuthorInfo {
   name?: string;
   image?: {
@@ -23,11 +25,45 @@ export default function BlogAuthorCard({
   variant = "detailed",
 }: {
   author?: AuthorInfo | null;
-  variant?: "compact" | "detailed";
+  variant?: "compact" | "detailed" | "sidebar";
 }) {
   const name = author?.name || "Owais Abdullah";
   const bio = author?.bio?.trim() || FALLBACK_BIO;
-  const avatar = author?.image ? urlFor(author.image).width(200).height(200).url() : "/assets/owais-abdullah.webp";
+  const avatar = author?.image ? urlFor(author.image).width(200).height(200).url() : "/assets/owais-profile.png";
+
+  // SIDEBAR VARIANT (For Editorial Ledger sticky sidebar)
+  if (variant === "sidebar") {
+    return (
+      <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-accent shrink-0">
+            <Image
+              src={avatar}
+              alt={name}
+              fill
+              sizes="44px"
+              className="object-cover"
+              unoptimized={avatar.startsWith("/assets")}
+            />
+          </div>
+          <div>
+            <h4 className="font-semibold text-xs sm:text-[13px] text-foreground leading-tight">{name}</h4>
+            <p className="text-[11px] font-mono text-muted-foreground">Founder, Octively</p>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground leading-relaxed mb-3.5">
+          Designing autonomous AI employees and Next.js platforms from Karachi for founders globally.
+        </p>
+        <Link
+          href="/contact"
+          className="group w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-accent hover:bg-accent-hover text-accent-foreground font-semibold text-xs transition-colors shadow-xs"
+        >
+          <SplitFlapLabel primary="Book Consultation" secondary="Schedule 30m" />
+          <span className="text-[11px] group-hover:translate-x-0.5 transition-transform">→</span>
+        </Link>
+      </div>
+    );
+  }
 
   // COMPACT VARIANT (Used on main /blog archive page next to featured article)
   if (variant === "compact") {

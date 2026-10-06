@@ -7,6 +7,7 @@ import ProcessSteps from "@/components/ProcessSteps";
 import CharRevealHeading from "@/components/CharRevealHeading";
 import StatusDot from "@/components/ui/StatusDot";
 import MagneticButton from "@/components/ui/MagneticButton";
+import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
 export const metadata: Metadata = {
   title: "Services | Owais Abdullah - Spec-Driven Developer & AI Engineer",
@@ -48,18 +49,22 @@ export const metadata: Metadata = {
 
 const WHY_WORK_WITH_ME = [
   {
+    num: "01",
     title: "Spec-Driven Approach",
     desc: "Clear specifications before coding means fewer surprises, less rework, and a product that matches your brief.",
   },
   {
+    num: "02",
     title: "AI-First Development",
     desc: "The OpenAI Agents SDK and modern automation tooling, applied where they actually save your team time.",
   },
   {
+    num: "03",
     title: "Modern Tech Stack",
-    desc: "Next.js 15, TypeScript, and Tailwind CSS — built for performance and easy to hand off to another engineer.",
+    desc: "Next.js, TypeScript, and Tailwind CSS — built for performance and easy to hand off to another engineer.",
   },
   {
+    num: "04",
     title: "Full-Stack Expertise",
     desc: "Frontend, backend, APIs, and deployment — one person who understands the whole system, not just their slice.",
   },
@@ -76,7 +81,7 @@ export default function ServicesPage() {
   return (
     <>
       <JsonLdSchema type="services" pageUrl="https://owaisabdullah.dev/services" />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         {/* Hero */}
         <section className="relative py-20 px-5 overflow-hidden">
           <div
@@ -105,24 +110,24 @@ export default function ServicesPage() {
               <MagneticButton>
                 <Link
                   href="#contact"
-                  className="group inline-flex items-center px-8 py-3 text-accent-foreground bg-accent hover:bg-accent-hover rounded-md font-medium transition-colors duration-200"
+                  className="group inline-flex items-center justify-center px-7 sm:px-8 py-3.5 text-white bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 hover:opacity-95 rounded-md font-medium transition-all shadow-md"
                 >
-                  Start a project
+                  <SplitFlapLabel primary="Start a project" secondary="Let's Build It" className="min-w-[8rem]" />
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </MagneticButton>
               <Link
                 href="/contact"
-                className="inline-flex items-center px-8 py-3 text-foreground bg-transparent border border-border hover:border-accent hover:text-accent rounded-md font-medium transition-colors duration-200"
+                className="group inline-flex items-center justify-center px-7 sm:px-8 py-3.5 text-foreground bg-card hover:bg-teal-500/10 border border-border hover:border-teal-500 rounded-md font-medium transition-colors duration-200 min-w-[9.5rem]"
               >
-                Contact Me
+                <SplitFlapLabel primary="Contact Me" secondary="Send Spec Brief" className="min-w-[7.5rem]" />
               </Link>
             </div>
           </div>
         </section>
 
         {/* Services Grid */}
-        <section className="py-20 px-5 border-t border-border">
+        <section className="py-20 px-5 border-t border-border/40">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
               <span className="text-accent font-mono text-xs tracking-widest uppercase mb-2 block">What I offer</span>
@@ -135,7 +140,7 @@ export default function ServicesPage() {
         </section>
 
         {/* Why Work With Me */}
-        <section className="py-20 px-5 bg-card/40 border-t border-border">
+        <section className="py-20 px-5 border-t border-border/40">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
               <span className="text-accent font-mono text-xs tracking-widest uppercase mb-2 block">Why work with me</span>
@@ -144,13 +149,24 @@ export default function ServicesPage() {
               </CharRevealHeading>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {WHY_WORK_WITH_ME.map(({ title, desc }) => (
+              {WHY_WORK_WITH_ME.map(({ num, title, desc }) => (
                 <div
                   key={title}
-                  className="p-6 rounded-xl border border-border bg-card hover:border-accent transition-colors duration-300"
+                  className="p-7 sm:p-8 rounded-2xl border border-slate-200/90 dark:border-[#10343A] bg-white dark:bg-[#081B1E] hover:border-teal-500/50 hover:shadow-lg transition-all duration-300 shadow-sm flex flex-col justify-between group"
                 >
-                  <h3 className="text-xl font-medium text-foreground mb-3">{title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{desc}</p>
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="font-mono text-xs font-semibold px-2.5 py-1 rounded-md bg-teal-500/10 text-teal-700 dark:text-teal-400 border border-teal-500/20">
+                        {num}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                      {title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
+                      {desc}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -179,17 +195,17 @@ export default function ServicesPage() {
               <MagneticButton>
                 <Link
                   href="/contact"
-                  className="group inline-flex items-center px-8 py-3 text-accent-foreground bg-accent hover:bg-accent-hover rounded-md font-medium transition-colors duration-200"
+                  className="group inline-flex items-center justify-center px-7 sm:px-8 py-3.5 text-white bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 hover:opacity-95 rounded-md font-medium transition-all shadow-md"
                 >
-                  Get In Touch
+                  <SplitFlapLabel primary="Get In Touch" secondary="Book Spec Call" className="min-w-[7.5rem]" />
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </MagneticButton>
               <a
                 href="mailto:mrowaisabdullah@gmail.com"
-                className="inline-flex items-center px-8 py-3 text-foreground bg-transparent border border-border hover:border-accent hover:text-accent rounded-md font-medium transition-colors duration-200"
+                className="group inline-flex items-center justify-center px-7 sm:px-8 py-3.5 text-foreground bg-card hover:bg-teal-500/10 border border-border hover:border-teal-500 rounded-md font-medium transition-colors duration-200 min-w-[10rem]"
               >
-                Email Me
+                <SplitFlapLabel primary="Email Me" secondary="Send Direct Msg" className="min-w-[8rem]" />
               </a>
             </div>
           </div>

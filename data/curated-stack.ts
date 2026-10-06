@@ -94,6 +94,12 @@ export const curatedStackLayers: StackLayerSummary[] = [
     primaryTools: ["Claude Code", "Playwright", "Inngest", "Sanity CMS", "Tavily API"],
     role: "Agent development loops, web scraping/testing, background cron jobs, and CMS operations.",
   },
+  {
+    layer: "Frontend & Web Architecture",
+    category: "frontend",
+    primaryTools: ["Next.js", "Astro", "React", "Tailwind CSS"],
+    role: "Full-stack apps with Next.js App Router, and ultra-fast, zero-JS content-driven websites with Astro for maximum SEO and performance.",
+  },
 ];
 
 export const initialCuratedTools: CuratedToolItem[] = [
