@@ -47,18 +47,23 @@ export default function EditorialCodeBlock({
           <button
             type="button"
             onClick={handleCopy}
-            className="group inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary/60 hover:bg-secondary text-[11px] text-muted-foreground hover:text-foreground border border-border transition-all active:scale-95"
+            className={`group/copy inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-sans font-medium transition-all active:scale-95 cursor-pointer border ${
+              copied
+                ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.25)]"
+                : "bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 hover:text-teal-100 border-teal-500/30 hover:border-teal-400/50 shadow-xs"
+            }`}
             title="Copy code to clipboard"
+            aria-label="Copy code to clipboard"
           >
             {copied ? (
               <>
-                <Check className="w-3 h-3 text-emerald-400" />
-                <span className="text-emerald-400 font-sans font-medium">Copied!</span>
+                <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span className="text-emerald-300">Copied!</span>
               </>
             ) : (
               <>
-                <Copy className="w-3 h-3" />
-                <SplitFlapLabel primary="Copy" secondary="Copy Code" />
+                <Copy className="w-3.5 h-3.5 text-teal-400 group-hover/copy:scale-110 group-hover/copy:text-teal-200 transition-transform shrink-0" />
+                <span>Copy</span>
               </>
             )}
           </button>

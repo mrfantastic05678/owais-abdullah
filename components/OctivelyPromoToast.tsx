@@ -25,6 +25,7 @@ interface PromoConfig {
   mode?: "ab_test" | "variant_a" | "variant_b";
   scrollTriggerPercent?: number;
   delaySeconds?: number;
+  autoCloseSeconds?: number;
   dismissalCooldown?: "session" | "3_hours" | "6_hours" | "12_hours" | "24_hours" | "3_days" | "7_days";
   position?: "bottom-right" | "bottom-left" | "bottom-center" | "top-right" | "top-left" | "top-center" | "middle-right" | "middle-left" | "middle-center";
   variantA?: {
@@ -87,6 +88,8 @@ export default function OctivelyPromoToast() {
   const [variant, setVariant] = useState<VariantType>("A");
   const [config, setConfig] = useState<PromoConfig | null>(null);
   const impressionLoggedRef = useRef(false);
+  const isHoveredRef = useRef(false);
+  const autoCloseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Fetch live config from Sanity
@@ -222,6 +225,48 @@ export default function OctivelyPromoToast() {
     } catch {}
   };
 
+  // Auto-close countdown (default 15 seconds) with smart hover pause
+  useEffect(() => {
+    if (!isVisible) {
+      if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
+      return;
+    }
+
+    const autoCloseSeconds = config?.autoCloseSeconds ?? 15;
+    if (autoCloseSeconds <= 0) return;
+
+    const ms = autoCloseSeconds * 1000;
+
+    autoCloseTimerRef.current = setTimeout(() => {
+      if (!isHoveredRef.current) {
+        handleDismiss();
+      }
+    }, ms);
+
+    return () => {
+      if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
+    };
+  }, [isVisible, config?.autoCloseSeconds]);
+
+  const handleMouseEnter = () => {
+    isHoveredRef.current = true;
+    if (autoCloseTimerRef.current) clearTimeout(autoCloseTimerRef.current);
+  };
+
+  const handleMouseLeave = () => {
+    isHoveredRef.current = false;
+    const autoCloseSeconds = config?.autoCloseSeconds ?? 15;
+    if (autoCloseSeconds > 0) {
+      // Resume a gentle grace period (8 seconds) so it won't disappear abruptly
+      const graceMs = Math.min(autoCloseSeconds * 1000, 8000);
+      autoCloseTimerRef.current = setTimeout(() => {
+        if (!isHoveredRef.current) {
+          handleDismiss();
+        }
+      }, graceMs);
+    }
+  };
+
   const handleCtaClick = () => {
     try {
       const payload = JSON.stringify({ event: "click", variant, path: pathname });
@@ -246,7 +291,7 @@ export default function OctivelyPromoToast() {
     ? urlFor(dataB.founderAvatar).width(80).height(80).url()
     : "/assets/owais-abdullah.webp";
 
-  const position = config?.position || "bottom-right";
+  const position = config?.position || "bottom-left";
   const positionClasses: Record<string, string> = {
     "bottom-right": "bottom-5 right-5",
     "bottom-left": "bottom-5 left-5",
@@ -258,7 +303,7 @@ export default function OctivelyPromoToast() {
     "middle-left": "top-1/2 -translate-y-1/2 left-5",
     "middle-center": "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
   };
-  const activePositionClass = positionClasses[position] || "bottom-5 right-5";
+  const activePositionClass = positionClasses[position] || "bottom-5 left-5";
 
   // Dynamic tracked target URLs with utm_content set to current pathname
   const trackedUrlA = buildTrackedUrl(dataA?.ctaUrl, "A", config?.campaignName, pathname);
@@ -276,6 +321,8 @@ export default function OctivelyPromoToast() {
           className={`fixed z-[6000] font-sans pointer-events-auto ${activePositionClass}`}
           role="complementary"
           aria-label={config?.title || "Promotional Announcement"}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           {/* Eye-Catchy Luxury Dark Teal Card with Glowing Holographic Border */}
           <div className="relative overflow-hidden rounded-2xl border border-teal-400/40 bg-gradient-to-br from-[#062429] via-[#031518] to-[#01090B] text-white shadow-[0_22px_60px_rgba(0,0,0,0.85),0_0_35px_rgba(20,184,166,0.22)] p-4 sm:p-5 backdrop-blur-2xl ring-1 ring-teal-300/20">

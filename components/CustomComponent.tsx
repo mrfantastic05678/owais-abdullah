@@ -187,11 +187,32 @@ export const CustomComponent: PortableTextComponents = {
         </div>
       </blockquote>
     ),
-    normal: ({ children }: { children?: ReactNode }) => (
-      <p className="text-base sm:text-[1.08rem] leading-[1.82] mb-6 text-muted-foreground/95 font-normal [&>strong]:text-foreground">
-        {children}
-      </p>
-    ),
+    code: ({ children }: { children?: ReactNode }) => {
+      const code = extractPlainText(children);
+      return <EditorialCodeBlock code={code} />;
+    },
+    pre: ({ children }: { children?: ReactNode }) => {
+      const code = extractPlainText(children);
+      return <EditorialCodeBlock code={code} />;
+    },
+    normal: ({ children }: { children?: ReactNode }) => {
+      const text = extractPlainText(children);
+      const trimmed = text.trim();
+      // Handle markdown fenced code blocks typed into normal paragraph blocks
+      if (trimmed.startsWith("```") && trimmed.endsWith("```") && trimmed.length > 6) {
+        const lines = trimmed.slice(3, -3).trim().split("\n");
+        const firstLine = lines[0].trim();
+        const hasLang = /^[a-zA-Z0-9_+#.-]+$/.test(firstLine);
+        const lang = hasLang ? firstLine : undefined;
+        const codeBody = hasLang ? lines.slice(1).join("\n") : lines.join("\n");
+        return <EditorialCodeBlock code={codeBody || trimmed} language={lang} />;
+      }
+      return (
+        <p className="text-base sm:text-[1.08rem] leading-[1.82] mb-6 text-muted-foreground/95 font-normal [&>strong]:text-foreground">
+          {children}
+        </p>
+      );
+    },
   },
   list: {
     bullet: ({ children }: { children?: ReactNode }) => (
@@ -290,6 +311,42 @@ export const CustomComponent: PortableTextComponents = {
           language={value.language}
           filename={value.filename}
         />
+      );
+    },
+    codeBlock: ({
+      value,
+    }: {
+      value?: { code?: string; language?: string; filename?: string };
+    }) => {
+      if (!value?.code) return null;
+      return (
+        <EditorialCodeBlock
+          code={value.code}
+          language={value.language}
+          filename={value.filename}
+        />
+      );
+    },
+    markdown: ({
+      value,
+    }: {
+      value?: { markdown?: string; content?: string; text?: string };
+    }) => {
+      const text = value?.markdown || value?.content || value?.text || "";
+      if (!text) return null;
+      const trimmed = text.trim();
+      if (trimmed.startsWith("```") && trimmed.endsWith("```")) {
+        const lines = trimmed.slice(3, -3).trim().split("\n");
+        const firstLine = lines[0].trim();
+        const hasLang = /^[a-zA-Z0-9_+#.-]+$/.test(firstLine);
+        const lang = hasLang ? firstLine : undefined;
+        const codeBody = hasLang ? lines.slice(1).join("\n") : lines.join("\n");
+        return <EditorialCodeBlock code={codeBody} language={lang} />;
+      }
+      return (
+        <div className="my-6 rounded-xl border border-border bg-[#020C0E] p-4 font-mono text-xs text-[#99F6E4]">
+          <pre className="m-0 overflow-x-auto font-mono whitespace-pre-wrap">{text}</pre>
+        </div>
       );
     },
     image: ({

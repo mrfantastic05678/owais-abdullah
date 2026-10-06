@@ -3,7 +3,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const promoBannerType = defineType({
   name: "promoBanner",
-  title: "Promotional Toast Banner (Global / Multi-purpose)",
+  title: "Promo Toast Banner",
   type: "document",
   icon: SparklesIcon,
   fields: [
@@ -12,15 +12,15 @@ export const promoBannerType = defineType({
       title: "Internal Campaign Name",
       description: "Internal reference name for this promo banner in Sanity Studio",
       type: "string",
-      initialValue: "Global Promotional Toast Banner",
+      initialValue: "Promo Toast Banner",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "campaignName",
       title: "Campaign Tag / Identifier (for UTM Tracking)",
-      description: "Identifier used as utm_campaign in analytics (e.g. octively_free, newsletter_growth, digital_fte_promo)",
+      description: "Identifier used as utm_campaign in analytics (e.g. featured_promo, newsletter_growth, partner_deal)",
       type: "string",
-      initialValue: "octively_free",
+      initialValue: "featured_promo",
     }),
     defineField({
       name: "isActive",
@@ -59,6 +59,13 @@ export const promoBannerType = defineType({
       initialValue: 6,
     }),
     defineField({
+      name: "autoCloseSeconds",
+      title: "Auto-Close Timer (Seconds)",
+      description: "Automatically dismiss the toast after this many seconds once displayed (default: 15s. Set to 0 to disable).",
+      type: "number",
+      initialValue: 15,
+    }),
+    defineField({
       name: "dismissalCooldown",
       title: "Dismissal Cooldown Period",
       description: "How long the toast stays hidden after a visitor clicks Close (X)",
@@ -83,8 +90,8 @@ export const promoBannerType = defineType({
       type: "string",
       options: {
         list: [
-          { title: "Bottom Right (Default)", value: "bottom-right" },
-          { title: "Bottom Left", value: "bottom-left" },
+          { title: "Bottom Left (Default)", value: "bottom-left" },
+          { title: "Bottom Right", value: "bottom-right" },
           { title: "Bottom Center", value: "bottom-center" },
           { title: "Top Right", value: "top-right" },
           { title: "Top Left", value: "top-left" },
@@ -94,7 +101,7 @@ export const promoBannerType = defineType({
           { title: "Middle Center", value: "middle-center" },
         ],
       },
-      initialValue: "bottom-right",
+      initialValue: "bottom-left",
     }),
 
     // Variant A Group

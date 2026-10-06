@@ -13,6 +13,7 @@ export async function GET() {
       mode,
       scrollTriggerPercent,
       delaySeconds,
+      autoCloseSeconds,
       dismissalCooldown,
       position,
       variantA{
@@ -29,8 +30,8 @@ export async function GET() {
         founderName,
         founderTitle,
         founderAvatar,
+        headline,
         note,
-        bulletPoints,
         ctaText,
         ctaUrl
       }

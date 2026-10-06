@@ -27,9 +27,7 @@ Tactics library for ContentFTE's brief, draft, and eval agents — and for any h
 
 ## Sources
 
-- **Edward Sturm (@buildinpublic)** — compact keywords, PAA atomization, LLM query fan-out, self-first listicles, press releases, refresh protocol. edwardsturm.com
-- **Daniel Agrici (@AgriciDaniel)** — citability scoring, agent readiness, falsifiable eval, discourse research, fact-check gates, brand-file auto-loading. github.com/AgriciDaniel/claude-seo · github.com/AgriciDaniel/claude-blog
-- **General SEO** — standard practice where the playbook assumed background knowledge (technical foundations, on-page basics).
+Distilled from practitioner SEO/AEO/GEO systems and open-source SEO skill implementations, plus general SEO practice where background knowledge was assumed (technical foundations, on-page basics).
 
 ## Maintenance
 

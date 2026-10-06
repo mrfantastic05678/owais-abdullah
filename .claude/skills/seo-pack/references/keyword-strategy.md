@@ -26,3 +26,12 @@
 - **Tactic:** Generate many similar pages (locations, comparisons, use-cases) from one template — but each page must carry unique data (local stats, real examples).
 - **Why:** Scale without tripping thin-content filters.
 - **ContentFTE wiring:** Programmatic engine sits under the cluster plan; unique-data requirement enforced at eval.
+
+## Site keyword ledger (campaign memory)
+- **Tactic:** Every site keeps a keyword ledger (Postgres): keyword, intent, volume, difficulty, priority score, cluster, status (`researched → approved → queued → briefed → drafted → published → ranking → won | lost | retired`), target URL, research snapshot, review date (30/60 days).
+- **Rule:** Briefs may only pull from `approved`/`queued` rows. No ledger row, no brief — kills random one-off topics.
+- **Priority:** `(volume × intent_value × winnability) / difficulty`. Engine always works the highest-scoring queued keyword next.
+- **Lifecycle:** rank tracking writes back `won`/`lost`; lost keywords auto-generate refresh briefs, won keywords free their slot. Every 30/60 days the operator reviews: retire winners and dead keywords, approve the next batch. History is kept — never blindly re-target a loser.
+- **Cluster coverage:** track published-pages ÷ cluster-keywords per cluster, not just single-keyword wins.
+- **Query mining:** monthly GSC scan for impression-earning queries with no targeting page → suggested ledger additions.
+- **ContentFTE wiring:** spec §5.16. The ledger is the campaign's memory; the calendar view (keyword → week) is the Phase 1 operator view and Phase 2 customer feature.
