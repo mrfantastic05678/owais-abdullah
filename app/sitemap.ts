@@ -188,6 +188,12 @@ export default async function sitemap(props: { id: Promise<string> | string }): 
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/journey`,
+      lastModified: currentDate,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/services`,
       lastModified: currentDate,
       changeFrequency: "weekly",

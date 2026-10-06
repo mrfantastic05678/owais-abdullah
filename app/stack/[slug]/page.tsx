@@ -68,6 +68,7 @@ export default async function ToolReviewPage({ params }: Props) {
     reviewBody: tool.useCase,
     author: {
       '@type': 'Person',
+      '@id': 'https://owaisabdullah.dev/#person',
       name: 'Owais Abdullah',
       url: 'https://owaisabdullah.dev',
     },
@@ -87,6 +88,7 @@ export default async function ToolReviewPage({ params }: Props) {
     },
     publisher: {
       '@type': 'Organization',
+      '@id': 'https://owaisabdullah.dev/#organization',
       name: 'Owais Abdullah',
       url: 'https://owaisabdullah.dev',
     },

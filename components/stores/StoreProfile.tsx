@@ -77,16 +77,22 @@ export const StoreProfile: React.FC<StoreProfileProps> = ({ store, similarStores
   const socialList = [instagramUrl, facebookUrl, tiktokUrl, youtubeUrl, linkedinUrl, twitterUrl].filter(Boolean);
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": ["OnlineStore", "Organization"],
     name: name,
     url: website,
     description: description,
+    currenciesAccepted: "PKR",
+    paymentAccepted: "Cash on Delivery, Credit Card, Bank Transfer",
+    areaServed: {
+      "@type": "Country",
+      name: "Pakistan",
+    },
     address: {
       "@type": "PostalAddress",
       addressLocality: city,
       addressCountry: "PK",
     },
-    ...(logoUrl ? { logo: logoUrl } : {}),
+    ...(logoUrl ? { logo: logoUrl, image: logoUrl } : {}),
     ...(socialList.length > 0 ? { sameAs: socialList } : {}),
   };
 

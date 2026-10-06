@@ -10,34 +10,27 @@ import MagneticButton from "@/components/ui/MagneticButton";
 import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
 export const metadata: Metadata = {
-  title: "Services | Owais Abdullah - Spec-Driven Developer & AI Engineer",
+  title: "AI Agent Development Services & Solutions | Owais Abdullah",
   description:
-    "Explore services offered by Owais Abdullah: Digital FTE Development, AI Agents & Automations, Next.js SaaS Development, CMS & E-commerce, Technical Consulting, and API Development.",
+    "AI agent development services by Owais Abdullah. Build autonomous Digital FTEs, intelligent n8n workflows, Next.js SaaS, and custom LLM tools. View pricing.",
   keywords: [
+    "AI Agent Development Services",
+    "Hire AI Agent Developer",
+    "AI Chatbot Developer",
+    "AI Workflow Automation",
     "Digital FTE Development",
     "AI Employee Development",
-    "AI Agents Development",
     "OpenAI Agents SDK",
     "n8n Automation",
     "Next.js SaaS Development",
     "Spec-Driven Development",
-    "WordPress Development",
-    "Shopify Development",
-    "Headless CMS",
-    "Sanity CMS",
     "Technical Consulting",
     "MVP Development",
-    "API Development",
-    "GraphQL API",
-    "REST API",
-    "Webhooks",
-    "AI Strategy",
-    "Startup CTO",
   ],
   openGraph: {
-    title: "Services | Owais Abdullah - Spec-Driven Developer & AI Engineer",
+    title: "AI Agent Development Services & Solutions | Owais Abdullah",
     description:
-      "Explore services offered by Owais Abdullah: Digital FTE Development, AI Agents & Automations, Next.js SaaS Development, CMS & E-commerce, Technical Consulting, and API Development.",
+      "AI agent development services by Owais Abdullah. Build autonomous Digital FTEs, intelligent n8n workflows, Next.js SaaS, and custom LLM tools. View pricing.",
     url: "https://owaisabdullah.dev/services",
     siteName: "Owais Abdullah Portfolio",
     type: "website",

@@ -29,11 +29,29 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     };
   }
 
+  const title = category.metaTitle || `Best ${category.name} E-commerce Stores in Pakistan | Owais Abdullah`;
+  const description =
+    category.metaDescription ||
+    `Discover the top ${category.name.toLowerCase()} online stores in Pakistan. Browse verified e-commerce shops from Karachi, Lahore, and across Pakistan.`;
+
   return {
-    title: category.metaTitle || `Best ${category.name} E-commerce Stores in Pakistan | Owais Abdullah`,
-    description:
-      category.metaDescription ||
-      `Discover the top ${category.name.toLowerCase()} online stores in Pakistan. Browse verified e-commerce shops from Karachi, Lahore, and across Pakistan.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://owaisabdullah.dev/stores/category/${slug}`,
+      siteName: "Owais Abdullah Portfolio",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: `https://owaisabdullah.dev/stores/category/${slug}`,
+    },
   };
 }
 
@@ -52,8 +70,38 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   const stores = await getStoresByCategory(category.name, city);
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://owaisabdullah.dev"
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Stores",
+        item: "https://owaisabdullah.dev/stores"
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: category.name,
+        item: `https://owaisabdullah.dev/stores/category/${slug}`
+      }
+    ]
+  };
+
   return (
     <div className="space-y-8">
+      {/* Breadcrumb JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Breadcrumb Navigation */}
       <nav className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <Link href="/" className="hover:text-foreground flex items-center gap-1">

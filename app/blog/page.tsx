@@ -1,5 +1,6 @@
 import React from "react";
 import BlogArchive from "@/components/BlogArchive";
+import JsonLdSchema from "@/components/JsonLdSchema";
 import { Metadata } from "next";
 
 // ISR: prerendered HTML with posts, refreshed every 24h (on-demand revalidated on publish)
@@ -54,10 +55,13 @@ export const metadata: Metadata = {
 
 const page = () => {
   return (
-    <div className="min-h-screen mt-2 mb-20 ">
-      <h1 className="sr-only">Blog — Owais Abdullah on Spec-Driven Development &amp; AI</h1>
-      <BlogArchive />
-    </div>
+    <>
+      <JsonLdSchema type="blog" pageUrl="https://owaisabdullah.dev/blog" />
+      <div className="min-h-screen mt-2 mb-20 ">
+        <h1 className="sr-only">Blog — Owais Abdullah on Spec-Driven Development &amp; AI</h1>
+        <BlogArchive />
+      </div>
+    </>
   );
 };
 

@@ -163,16 +163,18 @@ export const services: Record<string, Service> = {
 
   "ai-agents": {
     slug: "ai-agents",
-    title: "Custom AI Agents & Automations",
-    tagline: "Intelligent Automation at Scale",
+    title: "AI Agent Development Services & Automations",
+    tagline: "Intelligent AI Automation at Scale",
     description:
-      "Custom AI agents powered by OpenAI Agents SDK and n8n. Build intelligent workflows that automate repetitive tasks.",
+      "Professional AI agent development services powered by OpenAI Agents SDK and n8n. Build intelligent systems that automate business operations 24/7.",
     longDescription:
-      "Automation is no longer about simple if-then rules. Modern automation uses AI agents that can understand context, make decisions, and handle complex workflows. I specialize in building custom AI agents using the OpenAI Agents SDK and n8n workflow automation—creating intelligent systems that integrate seamlessly with your existing tools and processes.",
+      "Automation is no longer about simple if-then rules. Modern automation uses AI agents that can understand context, make decisions, and handle complex workflows. I specialize in AI agent development services using the OpenAI Agents SDK, Claude Code, and n8n workflow automation—creating intelligent systems that integrate seamlessly with your existing tools and processes.",
     icon: "Zap",
     gradient: "from-emerald-600 via-teal-600 to-teal-500",
     features: [
+      "AI agent development services",
       "OpenAI Agents SDK development",
+      "Custom AI chatbot development",
       "n8n workflow automation",
       "Custom General Agents",
       "AI-powered decision making",

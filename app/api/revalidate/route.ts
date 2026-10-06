@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
 
     if (path) {
       revalidatePath(path);
+      pingIndexNow([path]).catch(() => {});
       return NextResponse.json({ revalidated: true, path, now: Date.now() });
     }
 
@@ -30,9 +31,11 @@ export async function GET(request: NextRequest) {
     revalidatePath("/blog");
     revalidatePath("/stores");
     revalidatePath("/sitemap.xml");
+    const defaultPaths = ["/", "/blog", "/stores", "/sitemap.xml"];
+    pingIndexNow(defaultPaths).catch(() => {});
     return NextResponse.json({
       revalidated: true,
-      defaultPaths: ["/", "/blog", "/stores", "/sitemap.xml"],
+      defaultPaths,
       now: Date.now(),
     });
   } catch (err) {
@@ -121,9 +124,42 @@ function handleRevalidation(body: any) {
     revalidated.push("/", "/blog", "/stores", "/stack", "/api/profile", "profile-stack", "/sitemap.xml");
   }
 
+  // Instant notification to Bing, Yandex, and IndexNow crawlers
+  pingIndexNow(revalidated).catch(() => {});
+
   return NextResponse.json({
     revalidated: true,
     paths: revalidated,
     now: Date.now(),
   });
+}
+
+const INDEXNOW_KEY = "4ecdaee7d3534b4c80cecb7fa8cf55aa";
+const BASE_URL = "https://owaisabdullah.dev";
+
+async function pingIndexNow(paths: string[]) {
+  try {
+    const urls = paths
+      .filter((p) => typeof p === "string" && !p.startsWith("profile-") && !p.startsWith("toolReview"))
+      .map((p) => (p.startsWith("http") ? p : `${BASE_URL}${p.startsWith("/") ? "" : "/"}${p}`))
+      .filter((u) => !u.includes("/api/") && !u.includes("/private"));
+
+    if (urls.length === 0) return;
+
+    await fetch("https://api.indexnow.org/indexnow", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({
+        host: "owaisabdullah.dev",
+        key: INDEXNOW_KEY,
+        keyLocation: `${BASE_URL}/${INDEXNOW_KEY}.txt`,
+        urlList: urls,
+      }),
+      signal: AbortSignal.timeout(4000),
+    });
+  } catch (err) {
+    console.error("IndexNow ping non-fatal notice:", err);
+  }
 }

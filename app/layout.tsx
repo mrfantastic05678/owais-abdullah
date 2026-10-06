@@ -13,11 +13,11 @@ import { LayoutShell } from "@/components/LayoutShell";
 export const metadata: Metadata = {
   metadataBase: new URL("https://owaisabdullah.dev"),
   title: {
-    default: "Owais Abdullah | AI Engineer & SaaS Developer",
+    default: "Owais Abdullah | AI Automation Agency & Custom Agent Development",
     template: "%s | Owais Abdullah",
   },
   description:
-    "AI engineer building Digital FTEs, custom agents, and Next.js SaaS. OpenAI Agents SDK, TypeScript, Python. View projects.",
+    "AI automation agency and custom agent development services by Owais Abdullah. Autonomous Digital FTEs, Next.js SaaS, and OpenAI Agents SDK. Hire an AI dev.",
   keywords: [
     "Owais Abdullah",
     "Owais",
@@ -50,6 +50,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": "https://owaisabdullah.dev/feed.xml",
+    },
   },
   manifest: "/manifest.json",
   icons: {
@@ -71,24 +74,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://owaisabdullah.dev",
-    title: "Owais Abdullah | AI Engineer & SaaS Developer",
+    title: "Owais Abdullah | AI Automation Agency & Custom Agent Development",
     description:
-      "AI engineer building Digital FTEs, custom agents, and Next.js SaaS. OpenAI Agents SDK, TypeScript, Python.",
+      "AI automation agency and custom agent development services by Owais Abdullah. Autonomous Digital FTEs, Next.js SaaS, and OpenAI Agents SDK.",
     siteName: "Owais Abdullah Portfolio",
     images: [
       {
         url: "/assets/owais-abdullah-og.png",
         width: 1200,
         height: 630,
-        alt: "Owais Abdullah - Spec-Driven Developer & AI Engineer",
+        alt: "Owais Abdullah - AI Automation Agency & Custom Agent Development",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Owais Abdullah | AI Engineer & SaaS Developer",
+    title: "Owais Abdullah | AI Automation Agency & Custom Agent Development",
     description:
-      "AI engineer building Digital FTEs, custom agents, and Next.js SaaS. OpenAI Agents SDK, TypeScript, Python.",
+      "AI automation agency and custom agent development services by Owais Abdullah. Autonomous Digital FTEs, Next.js SaaS, and OpenAI Agents SDK.",
     images: ["/assets/owais-abdullah-og.png"],
     creator: "@mrowaisabdullah",
   },

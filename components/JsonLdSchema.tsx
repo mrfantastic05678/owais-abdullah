@@ -1,7 +1,8 @@
 import React from 'react';
+import { services } from '@/data/services';
 
 interface JsonLdSchemaProps {
-  type: 'home' | 'about' | 'projects' | 'skills' | 'contact' | 'services' | 'service';
+  type: 'home' | 'about' | 'projects' | 'skills' | 'contact' | 'services' | 'service' | 'blog';
   pageUrl: string;
   faqs?: { question: string; answer: string }[];
 }
@@ -88,6 +89,7 @@ const JsonLdSchema: React.FC<JsonLdSchemaProps> = ({ type, pageUrl, faqs }) => {
     "description": "Professional portfolio showcasing AI Agents Development, Full Stack Development, and Next.js expertise",
     "publisher": {
       "@type": "Person",
+      "@id": `${baseUrl}/#person`,
       "name": "Owais Abdullah"
     },
     "potentialAction": {
@@ -149,28 +151,88 @@ const JsonLdSchema: React.FC<JsonLdSchemaProps> = ({ type, pageUrl, faqs }) => {
     "keywords": "AI Agents Development, Full Stack Development, Next.js, React, Web Development"
   } : null;
 
-  // Service Schema for Contact page
+  // Service Schema for Contact page or individual Service page
+  const serviceSlug = pageUrl ? pageUrl.split('/').filter(Boolean).pop() : undefined;
+  const currentService = serviceSlug && services[serviceSlug] ? services[serviceSlug] : null;
+
   const serviceSchema = type === 'contact' ? {
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": `${pageUrl}#service`,
-    "name": "Web Development Services",
-    "description": "Professional web development and AI integration services by Owais Abdullah",
+    "name": "AI Agent & Web Development Services",
+    "description": "Professional AI agent development, Digital FTE automation, and full-stack web engineering by Owais Abdullah",
     "provider": {
       "@id": `${baseUrl}/#person`
     },
     "serviceType": [
-      "AI Agents Development",
+      "AI Agent Development",
+      "Digital FTE Systems",
       "Full Stack Development",
-      "Next.js Development",
-      "React Development",
-      "Web Application Development"
+      "Next.js SaaS Development"
     ],
     "areaServed": "Worldwide",
     "availableChannel": {
       "@type": "ServiceChannel",
       "serviceUrl": pageUrl
     }
+  } : type === 'service' && currentService ? {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${pageUrl}#service`,
+    "name": currentService.title,
+    "description": currentService.description,
+    "provider": {
+      "@id": `${baseUrl}/#person`
+    },
+    "serviceType": currentService.title,
+    "areaServed": "Worldwide",
+    "offers": {
+      "@type": "Offer",
+      "price": currentService.pricing?.[0]?.price ? currentService.pricing[0].price.replace(/[^0-9]/g, "") : "1500",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "availableChannel": {
+      "@type": "ServiceChannel",
+      "serviceUrl": pageUrl
+    }
+  } : null;
+
+  // Services Catalog for /services hub
+  const servicesCatalogSchema = type === 'services' ? {
+    "@context": "https://schema.org",
+    "@type": "OfferCatalog",
+    "@id": `${pageUrl}#catalog`,
+    "name": "AI Agent & Software Development Services",
+    "itemListElement": Object.values(services).map((srv, idx) => ({
+      "@type": "Offer",
+      "position": idx + 1,
+      "name": srv.title,
+      "description": srv.description,
+      "url": `${baseUrl}/services/${srv.slug}`,
+      "itemOffered": {
+        "@type": "Service",
+        "name": srv.title,
+        "description": srv.description
+      }
+    }))
+  } : null;
+
+  // Blog Archive Schema
+  const blogSchema = type === 'blog' ? {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${pageUrl}#blog`,
+    "name": "Owais Abdullah Blog — Spec-Driven Development & AI Insights",
+    "description": "Get the latest insights on spec-driven development, AI agents, SaaS architecture, and Next.js best practices.",
+    "url": pageUrl,
+    "publisher": {
+      "@id": `${baseUrl}/#organization`
+    },
+    "author": {
+      "@id": `${baseUrl}/#person`
+    },
+    "inLanguage": "en-US"
   } : null;
 
   // FAQPage Schema for service pages
@@ -232,6 +294,8 @@ const JsonLdSchema: React.FC<JsonLdSchemaProps> = ({ type, pageUrl, faqs }) => {
     webPageSchema,
     ...(creativeWorkSchema ? [creativeWorkSchema] : []),
     ...(serviceSchema ? [serviceSchema] : []),
+    ...(servicesCatalogSchema ? [servicesCatalogSchema] : []),
+    ...(blogSchema ? [blogSchema] : []),
     ...(faqSchema ? [faqSchema] : []),
     ...(softwareSchema ? [softwareSchema] : [])
   ];
@@ -258,7 +322,8 @@ function getPageTitle(type: string): string {
     skills: "Skills | Owais Abdullah - AI Agents Developer & Full Stack Developer",
     contact: "Contact | Owais Abdullah - AI Agents Developer & Full Stack Developer",
     services: "Services | Owais Abdullah - Spec-Driven Developer & AI Engineer",
-    service: "Service | Owais Abdullah - Spec-Driven Developer & AI Engineer"
+    service: "Service | Owais Abdullah - Spec-Driven Developer & AI Engineer",
+    blog: "Blog | Owais Abdullah - Spec-Driven Development & AI Insights"
   };
   return titles[type as keyof typeof titles] || titles.home;
 }
@@ -271,7 +336,8 @@ function getPageDescription(type: string): string {
     skills: "Discover Owais Abdullah's technical skills and expertise. AI Agents Developer, Full Stack Developer, and Next.js specialist proficient in React, TypeScript, AI integration, and modern web technologies.",
     contact: "Get in touch with Owais Abdullah - AI Agents Developer, Full Stack Developer, and Next.js specialist. Available for freelance projects, collaborations, and professional opportunities in web development and AI integration.",
     services: "Explore services offered by Owais Abdullah: Digital FTE Development, AI Agents & Automations, Next.js SaaS Development, CMS & E-commerce, Technical Consulting, and API Development.",
-    service: "Professional services by Owais Abdullah - Spec-Driven Developer & AI Engineer specializing in AI Agents, Next.js, and modern web development."
+    service: "Professional services by Owais Abdullah - Spec-Driven Developer & AI Engineer specializing in AI Agents, Next.js, and modern web development.",
+    blog: "Get the latest insights on spec-driven development, AI agents, SaaS architecture, and Next.js best practices."
   };
   return descriptions[type as keyof typeof descriptions] || descriptions.home;
 }
@@ -304,6 +370,10 @@ function getBreadcrumbItems(type: string, baseUrl: string) {
     service: [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl },
       { "@type": "ListItem", "position": 2, "name": "Services", "item": `${baseUrl}/services` }
+    ],
+    blog: [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${baseUrl}/blog` }
     ]
   };
   return breadcrumbs[type as keyof typeof breadcrumbs] || breadcrumbs.home;

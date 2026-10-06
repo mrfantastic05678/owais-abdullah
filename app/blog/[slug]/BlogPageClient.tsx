@@ -399,8 +399,43 @@ export default function BlogPageClient({
         </div>
       </main>
 
-      {/* 4. Related Posts Section (1380px max width Bottom Grid) */}
-      <section className="max-w-[1380px] mx-auto px-4 sm:px-6 w-full mb-20">
+      {/* 4. Engineering Solutions & Related Posts Section */}
+      <section className="max-w-[1380px] mx-auto px-4 sm:px-6 w-full mb-20 space-y-12">
+        {/* Contextual Service Callout: Routes PageRank to Money Pages */}
+        <div className="rounded-2xl border border-[#143B42] dark:border-[#143B42] border-slate-300 bg-[#031215] dark:bg-[#031215] bg-[#EEF4F2] p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="max-w-2xl">
+            <span className="font-mono text-[10px] sm:text-[11px] font-bold text-accent uppercase tracking-wider block mb-1.5">
+              Production AI Implementation
+            </span>
+            <h3
+              className="text-xl sm:text-2xl font-bold text-foreground tracking-tight mb-2"
+              style={{ fontFamily: "var(--font-newsreader), Georgia, serif" }}
+            >
+              Ready to Deploy Autonomous AI Employees &amp; Agents?
+            </h3>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              Move beyond manual tutorials. We architect custom AI agents, 24/7 Digital FTEs,
+              and spec-driven Next.js SaaS platforms tailored to your business operations.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <Link
+              href="/services/ai-agents"
+              className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold bg-accent text-accent-foreground hover:bg-accent-hover transition-colors shadow-xs"
+            >
+              <SplitFlapLabel primary="AI Agent Services" secondary="View Pricing →" className="min-w-[7.2rem]" />
+              <ArrowLeft className="w-3.5 h-3.5 rotate-180 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+            <Link
+              href="/services/digital-fte"
+              className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border border-border bg-card/80 text-foreground hover:border-accent/40 transition-colors"
+            >
+              <SplitFlapLabel primary="Digital FTEs" secondary="Learn More" className="min-w-[5.8rem]" />
+            </Link>
+          </div>
+        </div>
+
         <RelatedPosts
           currentSlug={slug}
           categories={blog.categories?.map((c) => c.title) || []}

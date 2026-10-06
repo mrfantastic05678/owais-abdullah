@@ -277,79 +277,89 @@ export default function OctivelyPromoToast() {
           role="complementary"
           aria-label={config?.title || "Promotional Announcement"}
         >
-          {/* Deep Blue Gradient Card with Glowing Border */}
-          <div className="relative overflow-hidden rounded-2xl border border-blue-400/35 bg-gradient-to-br from-[#0F224A] via-[#0A1838] to-[#071128] text-white shadow-[0_20px_50px_rgba(10,24,56,0.7)] p-4 sm:p-5 backdrop-blur-xl">
-            {/* Ambient Corner Glow */}
-            <div className="absolute -top-10 -right-10 w-28 h-28 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none" />
-            <div className="absolute -bottom-10 -left-10 w-28 h-28 bg-blue-600/25 rounded-full blur-2xl pointer-events-none" />
+          {/* Eye-Catchy Luxury Dark Teal Card with Glowing Holographic Border */}
+          <div className="relative overflow-hidden rounded-2xl border border-teal-400/40 bg-gradient-to-br from-[#062429] via-[#031518] to-[#01090B] text-white shadow-[0_22px_60px_rgba(0,0,0,0.85),0_0_35px_rgba(20,184,166,0.22)] p-4 sm:p-5 backdrop-blur-2xl ring-1 ring-teal-300/20">
+            {/* Ambient Background Grid Pattern */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-20"
+              style={{
+                backgroundImage: "radial-gradient(#2dd4bf 1px, transparent 1px)",
+                backgroundSize: "16px 16px"
+              }}
+            />
+
+            {/* Ambient Corner Flare */}
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-teal-400/25 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none" />
 
             {/* Dismiss Button */}
             <button
               onClick={handleDismiss}
-              aria-label="Close"
-              className="absolute top-3 right-3 w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white flex items-center justify-center transition-colors z-20"
+              aria-label="Close promotion"
+              className="absolute top-3 right-3 w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-teal-200 hover:text-white flex items-center justify-center transition-all z-20 hover:scale-110 active:scale-95"
             >
               <X size={13} />
             </button>
 
             {variant === "A" ? (
-              /* ================= VARIANT A: VISUAL / LEAD MAGNET BLUE GRADIENT TOAST ================= */
-              <div className="flex flex-col gap-2.5">
+              /* ================= VARIANT A: VISUAL / LEAD MAGNET TEAL GRADIENT TOAST ================= */
+              <div className="relative z-10 flex flex-col gap-2.5">
                 {/* Header Tag */}
                 <div className="flex items-center gap-1.5 pr-6">
-                  <div className="w-5 h-5 rounded-md bg-cyan-400/20 text-cyan-300 flex items-center justify-center shrink-0">
+                  <div className="w-5 h-5 rounded-md bg-teal-400/20 text-teal-300 flex items-center justify-center shrink-0 border border-teal-400/30">
                     <Code2 size={12} />
                   </div>
-                  <span className="text-[10px] font-semibold text-cyan-300 tracking-wider uppercase font-mono flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-signal-500 animate-pulse" />
+                  <span className="text-[10px] font-bold text-teal-300 tracking-wider uppercase font-mono flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal-500/15 border border-teal-500/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#34d399]" />
                     {dataA?.badgeText || "For Agencies & Devs · Free"}
                   </span>
                 </div>
 
                 {/* Hooking Headline */}
-                <h4 className="text-[13.5px] font-bold text-white leading-snug font-sans">
+                <h4 className="text-[14px] font-extrabold text-white leading-snug font-sans tracking-tight">
                   {dataA?.headline || "Ship Branded AI Chatbots to Clients in 2 Minutes"}
                 </h4>
 
                 {/* Minimal Subtext */}
-                <p className="text-[11.5px] text-blue-100/80 leading-relaxed font-sans">
+                <p className="text-[11.5px] text-teal-100/80 leading-relaxed font-sans">
                   {dataA?.description ||
                     "1-line embed, white-label client portals, zero maintenance. Monetize AI chatbots for your clients today."}
                 </p>
 
-                {/* Highlighted Glowing CTA with Dynamic UTM tracking */}
+                {/* Highlighted Glowing CTA with Dynamic UTM tracking & Shimmer */}
                 <a
                   href={trackedUrlA}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
-                  className="group mt-1 flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-600 hover:brightness-110 text-white font-bold text-xs transition-all duration-200 shadow-md shadow-cyan-500/25 active:scale-[0.98]"
+                  className="group relative overflow-hidden mt-1 flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-300 hover:brightness-110 text-[#021316] font-extrabold text-xs transition-all duration-200 shadow-lg shadow-teal-500/30 active:scale-[0.98]"
                 >
-                  <span>{dataA?.ctaText || "Claim Free AI Chatbot"}</span>
-                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-200" />
+                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+                  <span className="relative z-10">{dataA?.ctaText || "Claim Free AI Chatbot"}</span>
+                  <ArrowRight size={13} className="relative z-10 group-hover:translate-x-1 transition-transform duration-200" />
                 </a>
               </div>
             ) : (
               /* ================= VARIANT B: PERSONAL NOTE / EDITORIAL PITCH ================= */
-              <div className="flex flex-col gap-2.5">
+              <div className="relative z-10 flex flex-col gap-2.5">
                 {/* Founder Header */}
-                <div className="flex items-center gap-2 pr-6">
-                  <div className="relative w-7 h-7 rounded-full overflow-hidden border border-cyan-400/50 bg-muted shrink-0">
+                <div className="flex items-center gap-2.5 pr-6">
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-teal-400/70 shadow-[0_0_12px_rgba(20,184,166,0.45)] shrink-0 bg-[#031518]">
                     <Image
                       src={founderAvatarB}
                       alt={dataB?.founderName || "Owais Abdullah"}
                       fill
-                      sizes="28px"
+                      sizes="32px"
                       className="object-cover object-top"
                       unoptimized={founderAvatarB.startsWith("/assets")}
                     />
                   </div>
                   <div>
-                    <span className="text-[9.5px] font-mono uppercase text-cyan-300 font-semibold block leading-none">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-teal-300 font-bold block leading-none">
                       {dataB?.badgeText || "Founder Note · Free for Agencies"}
                     </span>
                     {dataB?.founderName && (
-                      <span className="text-[10px] text-white/80 font-sans block leading-none mt-0.5">
+                      <span className="text-[10px] text-teal-100/70 font-sans block leading-none mt-1">
                         {dataB.founderName} {dataB.founderTitle ? `· ${dataB.founderTitle}` : ""}
                       </span>
                     )}
@@ -357,26 +367,29 @@ export default function OctivelyPromoToast() {
                 </div>
 
                 {/* Hooking Headline */}
-                <h4 className="text-[13.5px] font-bold text-white leading-snug font-sans">
+                <h4 className="text-[14px] font-extrabold text-white leading-snug font-sans tracking-tight">
                   {dataB?.headline || "Monetize Custom AI Chatbots for Your Web Clients"}
                 </h4>
 
-                {/* Minimal Subtext */}
-                <p className="text-[11.5px] text-blue-100/80 leading-relaxed font-sans">
-                  &ldquo;{dataB?.note ||
-                    "I built Octively so developers and agency owners can deploy custom trained AI chatbots to clients with zero backend code."}&rdquo;
-                </p>
+                {/* Editorial Quote Box */}
+                <div className="relative pl-3 border-l-2 border-teal-500/40 my-0.5">
+                  <p className="text-[11.5px] text-teal-100/90 leading-relaxed italic font-serif">
+                    &ldquo;{dataB?.note ||
+                      "I built Octively so developers and agency owners can deploy custom trained AI chatbots to clients with zero backend code."}&rdquo;
+                  </p>
+                </div>
 
-                {/* Highlighted Glowing CTA with Dynamic UTM tracking */}
+                {/* Highlighted Glowing CTA with Dynamic UTM tracking & Shimmer */}
                 <a
                   href={trackedUrlB}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
-                  className="group mt-1 flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-600 hover:brightness-110 text-white font-bold text-xs transition-all duration-200 shadow-md shadow-cyan-500/25 active:scale-[0.98]"
+                  className="group relative overflow-hidden mt-1 flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-teal-400 via-emerald-400 to-teal-300 hover:brightness-110 text-[#021316] font-extrabold text-xs transition-all duration-200 shadow-lg shadow-teal-500/30 active:scale-[0.98]"
                 >
-                  <span>{dataB?.ctaText || "Claim Free AI Chatbot"}</span>
-                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-200" />
+                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+                  <span className="relative z-10">{dataB?.ctaText || "Claim Free AI Chatbot"}</span>
+                  <ArrowRight size={13} className="relative z-10 group-hover:translate-x-1 transition-transform duration-200" />
                 </a>
               </div>
             )}

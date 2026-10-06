@@ -66,6 +66,9 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: `/blog/${slug}`,
+      types: {
+        "text/markdown": `/blog/${slug}/raw`,
+      },
     },
   };
 }

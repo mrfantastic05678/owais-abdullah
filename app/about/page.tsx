@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import AboutPageContent from "./AboutPageContent";
+import JsonLdSchema from "@/components/JsonLdSchema";
 
 export const metadata: Metadata = {
   title: "About Owais Abdullah | Spec-Driven Developer & AI Engineer",
@@ -49,7 +50,12 @@ export const metadata: Metadata = {
 };
 
 const AboutPage = () => {
-  return <AboutPageContent />;
+  return (
+    <>
+      <JsonLdSchema type="about" pageUrl="https://owaisabdullah.dev/about" />
+      <AboutPageContent />
+    </>
+  );
 };
 
 export default AboutPage;

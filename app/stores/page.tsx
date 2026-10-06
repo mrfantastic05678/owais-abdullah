@@ -7,12 +7,31 @@ import { StoreCard } from "@/components/stores/StoreCard";
 import { Sparkles, ArrowRight, ShieldCheck, Plus, ShoppingBag, MapPin } from "lucide-react";
 import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
+import { Metadata } from "next";
+
 export const revalidate = 86400; // 24 hours ISR (on-demand revalidated on mutations)
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Pakistani E-commerce Store Directory | Discover Online Shops",
   description:
     "Curated directory of Pakistan's best online stores. Find fashion, beauty, and home brands from Karachi, Lahore, and across Pakistan.",
+  openGraph: {
+    title: "Pakistani E-commerce Store Directory | Discover Online Shops",
+    description:
+      "Curated directory of Pakistan's best online stores. Find fashion, beauty, and home brands from Karachi, Lahore, and across Pakistan.",
+    url: "https://owaisabdullah.dev/stores",
+    siteName: "Owais Abdullah Portfolio",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pakistani E-commerce Store Directory | Discover Online Shops",
+    description:
+      "Curated directory of Pakistan's best online stores. Find fashion, beauty, and home brands from Karachi, Lahore, and across Pakistan.",
+  },
+  alternates: {
+    canonical: "https://owaisabdullah.dev/stores",
+  },
 };
 
 export default async function StoresHomePage() {

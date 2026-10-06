@@ -6,15 +6,17 @@ interface SanityPost {
   title: string;
   slug: { current: string };
   summary?: string;
-  publishedAt: string;
+  _createdAt?: string;
+  publishedAt?: string;
 }
 
 export async function GET() {
   const posts: SanityPost[] = await client.fetch(
-    `*[_type == "post"] | order(publishedAt desc)[0...50]{
+    `*[_type == "post"] | order(_createdAt desc)[0...50]{
       title,
       slug,
       summary,
+      _createdAt,
       publishedAt
     }`
   );
@@ -28,7 +30,7 @@ export async function GET() {
       <link>${baseUrl}/blog/${post.slug.current}</link>
       <guid isPermaLink="true">${baseUrl}/blog/${post.slug.current}</guid>
       <description><![CDATA[${post.summary || ""}]]></description>
-      <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
+      <pubDate>${new Date(post._createdAt || post.publishedAt || Date.now()).toUTCString()}</pubDate>
     </item>`
     )
     .join("\n");

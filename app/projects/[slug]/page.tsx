@@ -79,7 +79,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       images: [project.image || "/assets/owais-abdullah-og.png"]
-    }
+    },
+    alternates: {
+      canonical: `https://owaisabdullah.dev/projects/${project.slug}`,
+    },
   };
 }
 
@@ -91,33 +94,63 @@ export default async function ProjectShowcasePage({ params }: PageProps) {
     notFound();
   }
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: project.title,
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Cloud, Docker, Node.js, Python",
-    description: project.description,
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD"
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: project.title,
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Cloud, Docker, Node.js, Python",
+      description: project.description,
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD"
+      },
+      author: {
+        "@type": "Person",
+        "@id": "https://owaisabdullah.dev/#person",
+        name: "Owais Abdullah",
+        url: "https://owaisabdullah.dev"
+      },
+      url: `https://owaisabdullah.dev/projects/${project.slug}`
     },
-    author: {
-      "@type": "Person",
-      name: "Owais Abdullah",
-      url: "https://owaisabdullah.dev"
-    },
-    url: `https://owaisabdullah.dev/projects/${project.slug}`
-  };
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://owaisabdullah.dev"
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Projects",
+          item: "https://owaisabdullah.dev/projects"
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: project.title,
+          item: `https://owaisabdullah.dev/projects/${project.slug}`
+        }
+      ]
+    }
+  ];
 
   return (
     <article className="min-h-screen pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
       {/* JSON-LD Rich Snippet */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {jsonLd.map((schema, idx) => (
+        <script
+          key={idx}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
 
       {/* Breadcrumb Navigation */}
       <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8" aria-label="Breadcrumb">

@@ -7,7 +7,7 @@ import SkillSlider from "@/components/SkillSlider";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "Skills of Owais Abdullah ",
+  title: "Technical Skills & AI Stack | Owais Abdullah",
   description:
     "Discover the technical skills and expertise of Owais Abdullah, including AI Agents Development, Full Stack Development, Next.js, React, and more.",
   authors: [{ name: "Owais Abdullah" }],

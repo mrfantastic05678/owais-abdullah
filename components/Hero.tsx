@@ -169,7 +169,7 @@ export default function Hero() {
               className="absolute -inset-2 rounded-3xl bg-emerald-500/5 dark:bg-emerald-950/20 z-0 border border-emerald-500/25 pointer-events-none transition-transform duration-300"
             />
 
-            {/* Symmetrical & Balanced Neural Links Network (Harmonious Hexagonal Constellation with Live Motion) */}
+            {/* Asymmetric Dynamic Neural Constellation (Non-mirrored Organic AI Topology) */}
             <svg
               className="absolute -inset-10 sm:-inset-14 w-[calc(100%+80px)] sm:w-[calc(100%+112px)] h-[calc(100%+80px)] sm:h-[calc(100%+112px)] pointer-events-none z-10 opacity-80 dark:opacity-90 animate-hero-constellation"
               viewBox="0 0 540 540"
@@ -186,51 +186,50 @@ export default function Hero() {
                 </filter>
               </defs>
 
-              {/* Left Symmetrical Hexagonal Cluster Framing Bot Badge */}
-              <line x1="24" y1="240" x2="85" y2="140" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="85" y1="140" x2="165" y2="95" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="165" y1="95" x2="165" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="165" y1="240" x2="165" y2="385" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="165" y1="385" x2="85" y2="340" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="85" y1="340" x2="24" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              {/* Left Internal Spokes */}
-              <line x1="85" y1="140" x2="165" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
-              <line x1="85" y1="340" x2="165" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
-              <line x1="24" y1="240" x2="165" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              {/* Left Asymmetric Neural Branch (High-reaching upward & wide angle) */}
+              <line x1="38" y1="120" x2="105" y2="70" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="105" y1="70" x2="165" y2="135" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="38" y1="120" x2="65" y2="230" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              <line x1="65" y1="230" x2="165" y2="135" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              <line x1="65" y1="230" x2="28" y2="310" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="28" y1="310" x2="115" y2="395" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="115" y1="395" x2="175" y2="320" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="65" y1="230" x2="175" y2="320" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/30 dark:text-teal-400/40" />
 
-              {/* Right Symmetrical Hexagonal Cluster Framing Code Badge (Exact Mirror) */}
-              <line x1="516" y1="240" x2="455" y2="140" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="455" y1="140" x2="375" y2="95" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="375" y1="95" x2="375" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="375" y1="240" x2="375" y2="385" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="375" y1="385" x2="455" y2="340" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              <line x1="455" y1="340" x2="516" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
-              {/* Right Internal Spokes */}
-              <line x1="455" y1="140" x2="375" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
-              <line x1="455" y1="340" x2="375" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
-              <line x1="516" y1="240" x2="375" y2="240" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              {/* Right Asymmetric Neural Branch (Dense lower telemetry & extended lateral reach) */}
+              <line x1="375" y1="105" x2="445" y2="165" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="445" y1="165" x2="522" y2="260" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="522" y1="260" x2="465" y2="365" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="465" y1="365" x2="495" y2="445" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              <line x1="495" y1="445" x2="410" y2="425" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="410" y1="425" x2="365" y2="340" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/40 dark:text-teal-400/50" />
+              <line x1="445" y1="165" x2="365" y2="340" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/30 dark:text-teal-400/40" />
+              <line x1="465" y1="365" x2="365" y2="340" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
 
-              {/* Transversal Bridging Connectors Behind Portrait (With subtle live data pulse stream) */}
-              <line x1="165" y1="95" x2="375" y2="95" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
-              <line x1="165" y1="95" x2="375" y2="95" stroke="currentColor" strokeWidth="1.5" className="text-teal-500/50 dark:text-teal-300/60 animate-hero-stream" />
-              <line x1="165" y1="240" x2="375" y2="240" stroke="currentColor" strokeWidth="1" className="text-teal-600/25 dark:text-teal-400/35" />
+              {/* Asymmetric Transversal Bridging Connectors (Dynamic Angled Backbones) */}
+              <line x1="165" y1="135" x2="375" y2="105" stroke="currentColor" strokeWidth="1.2" className="text-teal-600/35 dark:text-teal-400/45" />
+              <line x1="165" y1="135" x2="375" y2="105" stroke="currentColor" strokeWidth="1.5" className="text-teal-500/50 dark:text-teal-300/60 animate-hero-stream" />
+              <line x1="175" y1="320" x2="365" y2="340" stroke="currentColor" strokeWidth="1" className="text-teal-600/25 dark:text-teal-400/35" />
+              <line x1="105" y1="70" x2="375" y2="105" stroke="currentColor" strokeWidth="0.8" strokeDasharray="3 3" className="text-teal-600/25 dark:text-teal-400/30" />
 
-              {/* Lively Pinpoint Glowing Vertices with Staggered Pulse */}
-              {/* Left Vertices */}
-              <circle cx="24" cy="240" r="3.5" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0s" }} />
-              <circle cx="85" cy="140" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "0.6s" }} />
-              <circle cx="165" cy="95" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "1.2s" }} />
-              <circle cx="165" cy="240" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "1.8s" }} />
-              <circle cx="165" cy="385" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "2.4s" }} />
-              <circle cx="85" cy="340" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "1.0s" }} />
+              {/* Asymmetric Glowing Vertices with Organic Sizing & Staggered Pulses */}
+              {/* Left Asymmetric Nodes */}
+              <circle cx="38" cy="120" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0.2s" }} />
+              <circle cx="105" cy="70" r="4" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0.8s" }} />
+              <circle cx="165" cy="135" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "1.4s" }} />
+              <circle cx="65" cy="230" r="3.2" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "1.9s" }} />
+              <circle cx="28" cy="310" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "0.5s" }} />
+              <circle cx="115" cy="395" r="3.5" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "1.1s" }} />
+              <circle cx="175" cy="320" r="2.8" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "2.3s" }} />
 
-              {/* Right Vertices (Symmetrically Mirrored with Staggered Delays) */}
-              <circle cx="516" cy="240" r="3.5" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0.3s" }} />
-              <circle cx="455" cy="140" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "0.9s" }} />
-              <circle cx="375" cy="95" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "1.5s" }} />
-              <circle cx="375" cy="240" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "2.1s" }} />
-              <circle cx="375" cy="385" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0.5s" }} />
-              <circle cx="455" cy="340" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "1.3s" }} />
+              {/* Right Asymmetric Nodes (Distinct Coordinates, Varying Mass) */}
+              <circle cx="375" cy="105" r="3.5" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0.4s" }} />
+              <circle cx="445" cy="165" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "1.2s" }} />
+              <circle cx="522" cy="260" r="4.2" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "0.1s" }} />
+              <circle cx="465" cy="365" r="2.8" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "1.7s" }} />
+              <circle cx="495" cy="445" r="3.2" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "2.1s" }} />
+              <circle cx="410" cy="425" r="2.5" fill="#14B8A6" className="animate-hero-node" style={{ animationDelay: "0.9s" }} />
+              <circle cx="365" cy="340" r="3" fill="#14B8A6" filter="url(#heroNodeGlow)" className="animate-hero-node" style={{ animationDelay: "1.5s" }} />
             </svg>
 
             {/* Main Framing Card Backdrop (z-0: Behind Neural Links & Portrait) */}

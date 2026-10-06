@@ -29,11 +29,29 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
     };
   }
 
+  const title = city.metaTitle || `Online Stores in ${city.name}, Pakistan | E-commerce Directory`;
+  const description =
+    city.metaDescription ||
+    `Browse e-commerce stores based in ${city.name}. Find fashion, beauty, and lifestyle brands shipping across Pakistan.`;
+
   return {
-    title: city.metaTitle || `Online Stores in ${city.name}, Pakistan | E-commerce Directory`,
-    description:
-      city.metaDescription ||
-      `Browse e-commerce stores based in ${city.name}. Find fashion, beauty, and lifestyle brands shipping across Pakistan.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://owaisabdullah.dev/stores/city/${slug}`,
+      siteName: "Owais Abdullah Portfolio",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: `https://owaisabdullah.dev/stores/city/${slug}`,
+    },
   };
 }
 
@@ -52,8 +70,38 @@ export default async function CityPage({ params, searchParams }: CityPageProps) 
 
   const stores = await getStoresByCity(city.name, category);
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://owaisabdullah.dev"
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Stores",
+        item: "https://owaisabdullah.dev/stores"
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: city.name,
+        item: `https://owaisabdullah.dev/stores/city/${slug}`
+      }
+    ]
+  };
+
   return (
     <div className="space-y-8">
+      {/* Breadcrumb JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Breadcrumb Navigation */}
       <nav className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <Link href="/" className="hover:text-foreground flex items-center gap-1">

@@ -37,6 +37,14 @@ export async function generateMetadata({ params }: StorePageProps): Promise<Meta
       description: cleanDescription,
       images: store.logoUrl ? [store.logoUrl] : [],
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${store.name} | ${store.category} Store`,
+      description: cleanDescription,
+    },
+    alternates: {
+      canonical: `https://owaisabdullah.dev/stores/${slug}`,
+    },
   };
 }
 
@@ -51,8 +59,44 @@ export default async function StoreDetailPage({ params }: StorePageProps) {
   const categorySlug = store.category.toLowerCase().replace(/\s+/g, "-");
   const similarStores = await getSimilarStores(store.category, store.id, 3);
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://owaisabdullah.dev"
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Stores",
+        item: "https://owaisabdullah.dev/stores"
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: store.category,
+        item: `https://owaisabdullah.dev/stores/category/${categorySlug}`
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: store.name,
+        item: `https://owaisabdullah.dev/stores/${slug}`
+      }
+    ]
+  };
+
   return (
     <div className="space-y-8">
+      {/* Breadcrumb JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Breadcrumb Navigation */}
       <nav className="flex items-center gap-1.5 text-xs text-muted-foreground flex-wrap">
         <Link href="/" className="hover:text-foreground flex items-center gap-1">

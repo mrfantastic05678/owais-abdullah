@@ -4,26 +4,58 @@ import type React from "react";
 import { motion } from "framer-motion";
 import SkillCard from "../components/ui/SkillCard";
 import CharRevealHeading from "@/components/CharRevealHeading";
-import { FaReact, FaWordpress, FaNodeJs } from "react-icons/fa";
+import Link from "next/link";
+import { FaNodeJs } from "react-icons/fa";
 import { BiLogoTypescript, BiLogoPython } from "react-icons/bi";
-import { SiNextdotjs, SiOpenai, SiSanity, SiTailwindcss, SiSqlite, SiPrisma, SiPostgresql, SiAstro } from "react-icons/si";
-import { Zap } from "lucide-react";
+import { SiNextdotjs, SiOpenai, SiTailwindcss, SiPostgresql, SiAstro, SiDocker } from "react-icons/si";
+import { Bot, Layers, ArrowRight, Cpu, Sparkles } from "lucide-react";
 
 const skills = [
-  { icon: <SiOpenai />, title: "OpenAI Agents SDK", description: "Developing autonomous AI agents with the OpenAI Agents SDK." },
-  { icon: <SiNextdotjs />, title: "Next.js", description: "Building fast, dynamic, and SEO-friendly web applications." },
-  { icon: <SiAstro />, title: "Astro", description: "Building ultra-fast, content-driven websites with zero JS by default and Island architecture." },
-  { icon: <Zap className="text-amber-400" />, title: "Performance & Web Vitals", description: "60FPS smooth UI engineering, GPU layer optimization, mobile touch responsiveness, and sub-second load times." },
-  { icon: <FaReact />, title: "React.js", description: "Developing interactive UIs with component-based architecture." },
-  { icon: <BiLogoTypescript />, title: "TypeScript", description: "Ensuring type safety and scalability in web applications." },
-  { icon: <SiTailwindcss />, title: "Tailwind CSS", description: "Crafting modern and responsive UI with utility-first styling." },
-  { icon: <FaNodeJs />, title: "Node.js", description: "Creating backend logic and API services." },
-  { icon: <SiPostgresql />, title: "PostgreSQL", description: "Relational database management for robust data handling." },
-  { icon: <SiSqlite />, title: "SQLite", description: "Lightweight database management for structured data storage." },
-  { icon: <SiPrisma />, title: "Prisma ORM", description: "Handling database interactions efficiently with TypeScript." },
-  { icon: <SiSanity />, title: "Sanity CMS", description: "Managing content dynamically using a headless CMS." },
-  { icon: <BiLogoPython />, title: "Python & AI Integration", description: "Implementing AI features and automation in applications." },
-  { icon: <FaWordpress />, title: "WordPress", description: "Developing custom themes and optimizing WordPress websites." },
+  {
+    icon: <SiOpenai />,
+    title: "OpenAI Agents SDK & Claude Code",
+    description: "Architecting autonomous AI agents, Digital FTEs, multi-agent swarms, and self-correcting execution loops.",
+  },
+  {
+    icon: <SiNextdotjs />,
+    title: "Next.js (App Router)",
+    description: "Building production SaaS platforms, dynamic API routes, server actions, and high-conversion web apps.",
+  },
+  {
+    icon: <BiLogoTypescript />,
+    title: "TypeScript",
+    description: "Ensuring end-to-end type safety, strict Zod schema validation, and maintainable enterprise-grade architecture.",
+  },
+  {
+    icon: <BiLogoPython />,
+    title: "Python & AI Automations",
+    description: "Developing automated background processes, event-driven watchers, data scrapers, and custom LLM toolkits.",
+  },
+  {
+    icon: <Cpu />,
+    title: "Model Context Protocol (MCP)",
+    description: "Standardized tool calling, external database & filesystem integration, and cross-platform agent execution.",
+  },
+  {
+    icon: <SiPostgresql />,
+    title: "PostgreSQL & pgvector",
+    description: "Serverless relational data modeling with Neon, vector embeddings, and persistent semantic agent memory.",
+  },
+  {
+    icon: <SiAstro />,
+    title: "Astro",
+    description: "Building ultra-fast, zero-JS content-driven websites with Island architecture for optimal SEO and performance.",
+  },
+  {
+    icon: <SiTailwindcss />,
+    title: "Tailwind CSS & Smooth UI",
+    description: "60FPS responsive interface engineering, GPU layer compositing, mobile touch responsiveness, and design systems.",
+  },
+  {
+    icon: <SiDocker />,
+    title: "Docker & Cloud Infrastructure",
+    description: "Containerized agent runtimes, Cloudflare R2 object storage, FastAPIs, and resilient production deployments.",
+  },
 ];
 
 const containerVariants = {
@@ -53,7 +85,10 @@ const Skill: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <p className="text-base text-accent font-medium sm:text-lg mb-2">Expertise</p>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold tracking-wider uppercase bg-teal-500/10 border border-teal-500/30 text-teal-700 dark:text-teal-300 mb-3">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>CORE EXPERTISE</span>
+          </div>
           <CharRevealHeading
             as="h2"
             className="text-4xl md:text-5xl font-semibold text-foreground mb-3"
@@ -62,7 +97,7 @@ const Skill: React.FC = () => {
             Skills & Technologies
           </CharRevealHeading>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
-            The toolkit behind the projects on this site — frontend, backend, AI agents, and content infrastructure.
+            The core 9 capabilities behind every autonomous agent, SaaS application, and digital product I engineer.
           </p>
         </motion.div>
 
@@ -79,6 +114,18 @@ const Skill: React.FC = () => {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Button to go to The Agent Stack */}
+        <div className="mt-12 text-center flex items-center justify-center">
+          <Link
+            href="/stack"
+            className="group inline-flex items-center gap-2.5 px-6 sm:px-7 py-3.5 rounded-xl border border-teal-500/40 bg-teal-500/10 hover:bg-teal-500/20 text-teal-700 dark:text-teal-300 font-bold text-xs sm:text-sm transition-all shadow-sm hover:shadow-teal-500/20 active:scale-[0.98]"
+          >
+            <Layers className="w-4 h-4 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform" />
+            <span>Explore The Full Agent Stack</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
       </div>
     </motion.section>
   );

@@ -16,14 +16,18 @@ const JsonLdBlog: React.FC<JsonLdBlogProps> = ({ blog, slug }) => {
     image: urlFor(blog.mainImage).url(),
     author: {
       "@type": "Person",
-      name: blog.author.name,
+      "@id": "https://owaisabdullah.dev/#person",
+      name: blog.author?.name || "Owais Abdullah",
+      url: "https://owaisabdullah.dev",
     },
     publisher: {
       "@type": "Organization",
+      "@id": "https://owaisabdullah.dev/#organization",
       name: "Owais Abdullah",
+      url: "https://owaisabdullah.dev",
       logo: {
         "@type": "ImageObject",
-        url: "https://owaisabdullah.dev/assets/logo.png",
+        url: "https://owaisabdullah.dev/assets/owais-abdullah-og.png",
       },
     },
     datePublished: blog._createdAt,
