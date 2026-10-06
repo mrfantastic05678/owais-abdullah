@@ -59,5 +59,61 @@ export const blockContentType = defineType({
         },
       ],
     }),
+    // Code block object -- matches EditorialCodeBlock and /blog/[slug]/raw
+    // ({_type: "code", code, language, filename}). Multi-line code must NOT
+    // live in a `block` (the renderer would collapse it into one <p> line).
+    defineArrayMember({
+      type: "object",
+      name: "code",
+      title: "Code",
+      fields: [
+        { name: "code", type: "text", title: "Code" },
+        { name: "language", type: "string", title: "Language" },
+        { name: "filename", type: "string", title: "Filename" },
+      ],
+    }),
+    // GFM pipe tables ({_type: "table", rows: [tableRow{cells: [tableCell{children}]}]});
+    // row 0 is rendered as the header row by CustomComponent.
+    defineArrayMember({
+      type: "object",
+      name: "table",
+      title: "Table",
+      fields: [
+        {
+          name: "rows",
+          type: "array",
+          title: "Rows",
+          of: [
+            {
+              type: "object",
+              name: "tableRow",
+              title: "Row",
+              fields: [
+                {
+                  name: "cells",
+                  type: "array",
+                  title: "Cells",
+                  of: [
+                    {
+                      type: "object",
+                      name: "tableCell",
+                      title: "Cell",
+                      fields: [
+                        {
+                          name: "children",
+                          type: "array",
+                          title: "Content",
+                          of: [{ type: "block" }],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }),
   ],
 });

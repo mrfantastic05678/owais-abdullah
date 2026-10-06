@@ -36,6 +36,76 @@ function slugifyHeading(text: string): string {
     .replace(/\s+/g, "-");
 }
 
+/**
+ * Renders Portable Text spans (a table cell's content) with their marks:
+ * strong/em/code/strike/underline/highlight + link annotations.
+ */
+function renderCellSpans(
+  block: { children?: unknown[]; markDefs?: unknown[] } | undefined
+): ReactNode {
+  const children = (block?.children || []) as Array<{
+    _type?: string;
+    text?: string;
+    marks?: string[];
+  }>;
+  const markDefs = (block?.markDefs || []) as Array<{
+    _key: string;
+    _type?: string;
+    href?: string;
+  }>;
+  const defs: Record<string, { _type?: string; href?: string }> = {};
+  for (const def of markDefs) defs[def._key] = def;
+
+  return children
+    .filter((span) => span._type === "span" && span.text)
+    .map((span, i) => {
+      let node: ReactNode = span.text;
+      const marks = span.marks || [];
+      let href = "";
+      for (const mark of marks) {
+        if (defs[mark]?._type === "link") href = defs[mark].href || "";
+      }
+      if (marks.includes("code"))
+        node = (
+          <code className="bg-secondary/70 border border-border/80 text-teal-600 dark:text-teal-300 px-1 py-0.5 rounded text-[0.85em] font-mono">
+            {node}
+          </code>
+        );
+      if (marks.includes("em")) node = <em>{node}</em>;
+      if (marks.includes("strong")) node = <strong className="font-semibold text-foreground">{node}</strong>;
+      if (marks.includes("strike-through")) node = <del className="line-through text-muted-foreground/60">{node}</del>;
+      if (marks.includes("underline")) node = <u>{node}</u>;
+      if (marks.includes("highlight"))
+        node = (
+          <mark className="bg-teal-500/15 text-teal-800 dark:text-teal-200 px-1 py-0.5 rounded">
+            {node}
+          </mark>
+        );
+      if (href)
+        node = (
+          <a
+            href={href}
+            target={href.startsWith("http") && !href.includes("owaisabdullah.dev") ? "_blank" : undefined}
+            rel="noopener noreferrer"
+            className="text-accent underline underline-offset-4 decoration-accent/40"
+          >
+            {node}
+          </a>
+        );
+      return <span key={i}>{node}</span>;
+    });
+}
+
+function renderTableCell(cell: {
+  children?: Array<{ children?: unknown[]; markDefs?: unknown[] }>;
+}): ReactNode {
+  const blocks = cell.children || [];
+  if (blocks.length === 0) return null;
+  return blocks.map((block, i) => (
+    <React.Fragment key={i}>{renderCellSpans(block)}</React.Fragment>
+  ));
+}
+
 export const CustomComponent: PortableTextComponents = {
   block: {
     h1: (props: { children?: ReactNode }) => {
@@ -242,6 +312,56 @@ export const CustomComponent: PortableTextComponents = {
               priority={false}
             />
           </div>
+        </div>
+      );
+    },
+    // GFM pipe table written by the content pipeline
+    // ({_type: "table", rows: [{cells: [{children: [block...]}]}]});
+    // row 0 renders as <thead>, the rest as <tbody>.
+    table: ({
+      value,
+    }: {
+      value?: {
+        rows?: Array<{
+          cells?: Array<{
+            children?: Array<{ children?: unknown[]; markDefs?: unknown[] }>;
+          }>;
+        }>;
+      };
+    }) => {
+      const rows = value?.rows || [];
+      if (rows.length === 0) return null;
+      const [header, ...body] = rows;
+      return (
+        <div className="my-8 overflow-x-auto rounded-xl border border-border bg-card shadow-xs">
+          <table className="w-full text-sm sm:text-[0.95rem] border-collapse">
+            <thead>
+              <tr className="bg-secondary/60">
+                {(header.cells || []).map((cell, i) => (
+                  <th
+                    key={i}
+                    className="border-b border-border px-4 py-3 text-left font-semibold text-foreground"
+                  >
+                    {renderTableCell(cell)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {body.map((row, r) => (
+                <tr key={r} className="odd:bg-secondary/20">
+                  {(row.cells || []).map((cell, i) => (
+                    <td
+                      key={i}
+                      className="border-b border-border/60 px-4 py-3 align-top text-muted-foreground/95"
+                    >
+                      {renderTableCell(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       );
     },
