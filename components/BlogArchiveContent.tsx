@@ -101,14 +101,20 @@ export default function BlogArchiveContent({ posts }: { posts: PostCard[] }) {
               href={`/blog/${featured.slug.current}`}
               className="group grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 px-3 md:pl-4 md:pr-0 items-center border border-border rounded-xl overflow-hidden bg-card hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5 transition-all duration-300 h-full"
             >
-              <div className="relative aspect-video overflow-hidden rounded-lg">
-                <BlogImageWithSkeleton
-                  src={urlFor(featured.mainImage).width(900).url()}
-                  alt={featured.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+              <div className="relative aspect-video overflow-hidden rounded-lg bg-muted/20">
+                {featured.mainImage?.asset ? (
+                  <BlogImageWithSkeleton
+                    src={urlFor(featured.mainImage).width(900).url()}
+                    alt={featured.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground/40 text-xs font-mono">
+                    ARTICLE
+                  </div>
+                )}
               </div>
               <div className="p-4 md:pr-10 md:pl-6 md:py-8">
                 <div className="flex flex-wrap gap-2 mb-3">

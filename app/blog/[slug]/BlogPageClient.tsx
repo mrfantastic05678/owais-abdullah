@@ -295,7 +295,7 @@ export default function BlogPageClient({
         </div>
 
         {/* Framed Banner Image */}
-        {blog.mainImage && (
+        {blog.mainImage?.asset && (
           <div className="w-full aspect-[16/9] md:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden border border-border bg-card shadow-sm relative mb-10">
             <BlogImageWithSkeleton
               src={urlFor(blog.mainImage).url()}

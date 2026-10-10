@@ -28,6 +28,10 @@ export async function generateMetadata({
   const query = `*[_type == "post" && slug.current == "${slug}"]{
     title,
     summary,
+    seoTitle,
+    seoDescription,
+    focusKeyword,
+    tldr,
     mainImage,
     author->{name}
   }[0]`;
@@ -41,28 +45,39 @@ export async function generateMetadata({
     };
   }
 
+  // Fallback chain (mirrors the engine's derivation): a post written before
+  // these fields existed, or one whose SEO fields were never filled in, keeps
+  const metaTitle = blog.seoTitle || blog.title;
+  const metaDescription = blog.seoDescription || blog.summary;
+
+  const hasMainImage = Boolean(blog.mainImage?.asset);
+  const ogImageUrl = hasMainImage
+    ? (urlFor(blog.mainImage).width(1200).height(630).url() as string)
+    : "https://owaisabdullah.dev/assets/owais-abdullah-og.png";
+
   return {
-    title: blog.title,
-    description: blog.summary,
-    authors: [{ name: blog.author.name }],
+    title: metaTitle,
+    description: metaDescription,
+    keywords: blog.focusKeyword ? [blog.focusKeyword] : undefined,
+    authors: [{ name: blog.author?.name || "Owais Abdullah" }],
     openGraph: {
-      title: `${blog.title} | Owais Abdullah`,
-      description: blog.summary,
+      title: `${metaTitle} | Owais Abdullah`,
+      description: metaDescription,
       url: `https://owaisabdullah.dev/blog/${slug}`,
       images: [
         {
-          url: urlFor(blog.mainImage).url() as string,
+          url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: blog.title,
+          alt: blog.mainImage?.alt || blog.title,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${blog.title} | Owais Abdullah`,
-      description: blog.summary,
-      images: [urlFor(blog.mainImage).url() as string],
+      title: `${metaTitle} | Owais Abdullah`,
+      description: metaDescription,
+      images: [ogImageUrl],
     },
     alternates: {
       canonical: `/blog/${slug}`,
@@ -84,6 +99,10 @@ export default async function Page({
     title,
     mainImage,
     summary,
+    seoTitle,
+    seoDescription,
+    focusKeyword,
+    tldr,
     content,
     faqs,
     _createdAt,
@@ -93,7 +112,7 @@ export default async function Page({
 
   const blog: Post = await client.fetch(query);
 
-  const recentQuery = `*[_type == "post" && slug.current != $slug] | order(_createdAt desc)[0...4]{
+  const recentQuery = `*[_type == "post" && slug.current != $slug && defined(mainImage.asset)] | order(_createdAt desc)[0...4]{
     _id,
     title,
     slug,

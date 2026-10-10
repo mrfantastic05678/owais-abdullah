@@ -9,6 +9,14 @@ export interface Post {
   _id: string;
   title: string;
   summary: string;
+  /** SEO title (<=60 chars). Falls back to `title` when empty. */
+  seoTitle?: string;
+  /** Meta description (<=160 chars). Falls back to `summary` when empty. */
+  seoDescription?: string;
+  /** The primary keyword this post targets. */
+  focusKeyword?: string;
+  /** The 40-60 word TL;DR answer (AEO). */
+  tldr?: string;
   content: PortableTextBlock[];
   faqs: Faq[];
   categories: { title: string }[];
