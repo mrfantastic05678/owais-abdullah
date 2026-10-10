@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#021215" />
+      <stop offset="50%" stop-color="#051e22" />
+      <stop offset="100%" stop-color="#082b30" />
+    </linearGradient>
+    <linearGradient id="cyan-glow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.4" />
+    </linearGradient>
+    <linearGradient id="border-glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0d9488" stop-opacity="0.1" />
+      <stop offset="50%" stop-color="#14b8a6" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.1" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#134e4a" stroke-width="0.75" stroke-opacity="0.25" />
+      <circle cx="40" cy="40" r="1" fill="#14b8a6" fill-opacity="0.2" />
+    </pattern>
+    <radialGradient id="ambient" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#021215" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="675" fill="url(#bg)" />
+  <rect width="1200" height="675" fill="url(#ambient)" />
+  <rect width="1200" height="675" fill="url(#grid)" />
+
+  <!-- Frame border -->
+  <rect x="30" y="30" width="1140" height="615" rx="16" fill="none" stroke="url(#border-glow)" stroke-width="1.5" />
+
+  <!-- Corner Crosshairs -->
+  <path d="M 45 35 L 45 55 M 35 45 L 55 45" stroke="#14b8a6" stroke-width="1.5" stroke-opacity="0.7" />
+  <path d="M 1155 35 L 1155 55 M 1145 45 L 1165 45" stroke="#14b8a6" stroke-width="1.5" stroke-opacity="0.7" />
+  <path d="M 45 625 L 45 645 M 35 635 L 55 635" stroke="#14b8a6" stroke-width="1.5" stroke-opacity="0.7" />
+  <path d="M 1155 625 L 1155 645 M 1145 635 L 1165 635" stroke="#14b8a6" stroke-width="1.5" stroke-opacity="0.7" />
+
+  <!-- Center Hexagon / Terminal Symbol -->
+  <g transform="translate(600, 310)">
+    <!-- Outer pulse circle -->
+    <circle r="90" fill="#082b30" fill-opacity="0.5" stroke="#0d9488" stroke-width="1.5" stroke-opacity="0.5" stroke-dasharray="6 4" />
+    <circle r="70" fill="#031a1d" stroke="#14b8a6" stroke-width="2" stroke-opacity="0.8" />
+    
+    <!-- Code prompt symbol: > _ -->
+    <path d="M -24 -16 L -4 0 L -24 16" fill="none" stroke="#2dd4bf" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="6" y1="16" x2="26" y2="16" stroke="#2dd4bf" stroke-width="4.5" stroke-linecap="round" />
+  </g>
+
+  <!-- Typography -->
+  <text x="600" y="450" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace" font-size="14" font-weight="700" letter-spacing="4" fill="#2dd4bf">
+    ENGINEERING ARTICLE
+  </text>
+  <text x="600" y="485" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="600" fill="#e2e8f0" letter-spacing="0.5">
+    Owais Abdullah · AI &amp; Full-Stack Insights
+  </text>
+
+  <!-- Status pill -->
+  <g transform="translate(600, 530)">
+    <rect x="-90" y="-14" width="180" height="28" rx="14" fill="#031a1d" stroke="#14b8a6" stroke-width="1" stroke-opacity="0.4" />
+    <circle cx="-65" cy="0" r="4" fill="#10b981" />
+    <text x="6" y="4" text-anchor="middle" font-family="monospace" font-size="11" font-weight="600" letter-spacing="1.5" fill="#94a3b8">
+      PRODUCTION SPEC
+    </text>
+  </g>
+</svg>

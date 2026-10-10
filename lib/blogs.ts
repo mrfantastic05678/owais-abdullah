@@ -5,7 +5,7 @@ import { PostCard } from "@/types/blogtypes";
 // part of the prerendered HTML (crawlable by search engines and AI models).
 export async function getBlogPosts(): Promise<PostCard[]> {
   try {
-    const query = `*[_type == "post" && defined(mainImage.asset)] | order(_createdAt desc){
+    const query = `*[_type == "post"] | order(_createdAt desc){
       title,
       slug,
       mainImage,

@@ -112,7 +112,7 @@ export default async function Page({
 
   const blog: Post = await client.fetch(query);
 
-  const recentQuery = `*[_type == "post" && slug.current != $slug && defined(mainImage.asset)] | order(_createdAt desc)[0...4]{
+  const recentQuery = `*[_type == "post" && slug.current != $slug] | order(_createdAt desc)[0...4]{
     _id,
     title,
     slug,

@@ -295,18 +295,20 @@ export default function BlogPageClient({
         </div>
 
         {/* Framed Banner Image */}
-        {blog.mainImage?.asset && (
-          <div className="w-full aspect-[16/9] md:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden border border-border bg-card shadow-sm relative mb-10">
-            <BlogImageWithSkeleton
-              src={urlFor(blog.mainImage).url()}
-              alt={blog.title}
-              fill
-              priority
-              sizes="(max-width: 1380px) 100vw, 1380px"
-              className="object-cover"
-            />
-          </div>
-        )}
+        <div className="w-full aspect-[16/9] md:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden border border-border bg-card shadow-sm relative mb-10">
+          <BlogImageWithSkeleton
+            src={
+              blog.mainImage?.asset
+                ? urlFor(blog.mainImage).url()
+                : "/assets/blog-placeholder.svg"
+            }
+            alt={blog.title}
+            fill
+            priority
+            sizes="(max-width: 1380px) 100vw, 1380px"
+            className="object-cover"
+          />
+        </div>
       </header>
 
       {/* 3. Main Grid (Desktop: 290px Left Sticky Sidebar + Reading Canvas | Mobile: Canvas First, Sidebar Second) */}

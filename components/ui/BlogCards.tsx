@@ -20,19 +20,17 @@ const BlogCards = ({ post }: { post: PostCard }) => {
     >
       {/* Thumbnail */}
       <div className="relative overflow-hidden aspect-video bg-muted/20">
-        {post.mainImage?.asset ? (
-          <BlogImageWithSkeleton
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            src={urlFor(post.mainImage).width(640).height(360).url()}
-            alt={post.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground/40 text-xs font-mono">
-            ARTICLE
-          </div>
-        )}
+        <BlogImageWithSkeleton
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src={
+            post.mainImage?.asset
+              ? urlFor(post.mainImage).width(640).height(360).url()
+              : "/assets/blog-placeholder.svg"
+          }
+          alt={post.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
