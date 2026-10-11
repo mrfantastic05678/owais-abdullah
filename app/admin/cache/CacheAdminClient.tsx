@@ -13,7 +13,15 @@ export default function CacheAdminClient() {
     setLoading(true);
     setResult(null);
 
-    const pass = getAdminAuthToken() || "owais-revalidate-2026";
+    const pass = getAdminAuthToken();
+    if (!pass) {
+      setResult({
+        success: false,
+        message: "Not signed in — sign in to the admin panel first, then purge.",
+      });
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/revalidate", {

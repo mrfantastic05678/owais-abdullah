@@ -6,10 +6,10 @@ import { desc, eq, sql } from "drizzle-orm";
 export const dynamic = "force-dynamic";
 
 function checkAuth(req: NextRequest, bodyPassword?: string): boolean {
+  // No hardcoded default (previous one is in git history); unset env denies.
   const serverPassword =
-    process.env.ADMIN_PASSWORD ||
-    process.env.ANALYTICS_PASSWORD ||
-    "owais-vault-2026";
+    process.env.ADMIN_PASSWORD ??
+    process.env.ANALYTICS_PASSWORD;
 
   const cookieToken = req.cookies.get("admin_auth_session")?.value;
   const authHeader = req.headers.get("authorization")?.replace("Bearer ", "");

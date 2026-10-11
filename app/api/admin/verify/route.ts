@@ -2,12 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-function getExpectedPassword(): string {
-  return (
-    process.env.ADMIN_PASSWORD ||
-    process.env.ANALYTICS_PASSWORD ||
-    "owais-vault-2026"
-  );
+// No hardcoded default: the previous one is in git history. Unset env =>
+// every verification fails (callers compare against `undefined`).
+function getExpectedPassword(): string | undefined {
+  return process.env.ADMIN_PASSWORD ?? process.env.ANALYTICS_PASSWORD;
 }
 
 // POST: Verify password and issue cookie

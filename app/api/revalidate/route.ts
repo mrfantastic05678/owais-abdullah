@@ -9,11 +9,12 @@ export async function GET(request: NextRequest) {
   const path = searchParams.get("path");
   const tag = searchParams.get("tag");
 
+  // Fail closed: no env secret configured => deny every request. The previous
+  // hardcoded default secret is in git history and must never be reachable
+  // again.
   const validSecret =
-    process.env.SANITY_REVALIDATE_SECRET ||
-    process.env.REVALIDATE_SECRET ||
-    "owais-revalidate-2026";
-  if (secret !== validSecret) {
+    process.env.SANITY_REVALIDATE_SECRET ?? process.env.REVALIDATE_SECRET;
+  if (!validSecret || secret !== validSecret) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
 
@@ -52,10 +53,9 @@ export async function POST(request: NextRequest) {
     const urlSecret = searchParams.get("secret");
     const headerSecret = request.headers.get("x-webhook-secret");
     const signature = request.headers.get("sanity-webhook-signature");
+    // Fail closed, same rule as GET above.
     const validSecret =
-      process.env.SANITY_REVALIDATE_SECRET ||
-      process.env.REVALIDATE_SECRET ||
-      "owais-revalidate-2026";
+      process.env.SANITY_REVALIDATE_SECRET ?? process.env.REVALIDATE_SECRET;
 
     const rawBody = await request.text();
     let body: any = null;
@@ -150,11 +150,16 @@ function handleRevalidation(body: any) {
   });
 }
 
-const INDEXNOW_KEY = "4ecdaee7d3534b4c80cecb7fa8cf55aa";
+// Rotated 2026-10-11: the previous key was hardcoded here (and in git
+// history), so a fresh key lives in env only. Unset => pings are skipped
+// rather than sent with a guessable key.
+const INDEXNOW_KEY = process.env.INDEXNOW_KEY;
 const BASE_URL = "https://owaisabdullah.dev";
 
 async function pingIndexNow(paths: string[]) {
   try {
+    if (!INDEXNOW_KEY) return;
+
     const urls = paths
       .filter((p) => typeof p === "string" && !p.startsWith("profile-") && !p.startsWith("toolReview"))
       .map((p) => (p.startsWith("http") ? p : `${BASE_URL}${p.startsWith("/") ? "" : "/"}${p}`))
