@@ -90,6 +90,14 @@ export const postType = defineType({
         "The primary keyword this post targets (the Yoast/Rank Math focus-keyphrase equivalent).",
     }),
     defineField({
+      name: "secondaryKeywords",
+      title: "Secondary Keywords",
+      type: "array",
+      of: [{type: "string"}],
+      description:
+        "2-3 supporting keywords, each used verbatim in its own H2/H3 heading and 2-3 body sentences.",
+    }),
+    defineField({
       name: "tldr",
       title: "TL;DR",
       type: "text",
