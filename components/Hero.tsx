@@ -72,20 +72,20 @@ export default function Hero() {
 
           {/* Action Buttons: Primary + Secondary */}
           <div className="space-y-4 pt-1">
-            <div className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center sm:gap-3.5">
+            <div className="flex flex-wrap items-center gap-3.5">
               <Link
                 href="#contact"
-                className="w-full justify-center px-4 py-3 sm:px-7 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 hover:opacity-95 shadow-lg shadow-teal-700/20 hover:-translate-y-0.5 transition-transform duration-200 flex items-center gap-1.5 sm:gap-2 group text-center"
+                className="px-7 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 hover:opacity-95 shadow-lg shadow-teal-700/20 hover:-translate-y-0.5 transition-transform duration-200 flex items-center gap-2 group"
               >
                 <SplitFlapLabel primary="Start a Project" secondary="Let's Build It" />
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 href="#projects"
-                className="w-full justify-center px-4 py-3 sm:px-7 sm:py-3.5 rounded-xl text-xs sm:text-sm font-semibold text-foreground bg-white dark:bg-[#081B1E] hover:bg-slate-50 dark:hover:bg-teal-950/40 border border-slate-200/90 dark:border-[#10343A] hover:border-teal-500 shadow-xs hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-1.5 sm:gap-2 group text-center"
+                className="px-7 py-3.5 rounded-xl text-sm font-semibold text-foreground bg-white dark:bg-[#081B1E] hover:bg-slate-50 dark:hover:bg-teal-950/40 border border-slate-200/90 dark:border-[#10343A] hover:border-teal-500 shadow-xs hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2 group"
               >
                 <SplitFlapLabel primary="View Projects" secondary="Explore Builds" />
-                <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors shrink-0" />
+                <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors" />
               </Link>
               <button
                 type="button"
@@ -94,7 +94,7 @@ export default function Hero() {
                     window.dispatchEvent(new CustomEvent("open-chat-voice"));
                   }
                 }}
-                className="hidden sm:inline-flex px-5 py-3.5 rounded-xl text-sm font-semibold text-teal-800 dark:text-teal-200 bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/35 hover:border-teal-500 shadow-xs transition-all items-center gap-2 group cursor-pointer"
+                className="px-5 py-3.5 rounded-xl text-sm font-semibold text-teal-800 dark:text-teal-200 bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/35 hover:border-teal-500 shadow-xs transition-all flex items-center gap-2 group cursor-pointer"
                 title="Talk directly with Otto AI"
               >
                 <span className="relative flex h-2 w-2">
@@ -106,8 +106,8 @@ export default function Hero() {
               </button>
             </div>
 
-            {/* Capability Indicators underneath CTAs (hidden on mobile to prevent stack clutter) */}
-            <div className="hidden sm:flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-mono text-muted-foreground pt-2">
+            {/* Capability Indicators underneath CTAs */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-mono text-muted-foreground pt-2">
               <span className="flex items-center gap-1.5">
                 <Bot className="w-4 h-4 text-teal-600 dark:text-teal-400" /> AI Agents
               </span>
