@@ -83,7 +83,7 @@ export default function Home() {
     <>
       <JsonLdSchema type="home" pageUrl="https://owaisabdullah.dev" />
       <DotRail />
-      {/* <Hero /> (Temporarily removed for visual review; easy one-line restore) */}
+      <Hero />
       <SkillSlider />
       <AboutSection />
       <StatsBand />

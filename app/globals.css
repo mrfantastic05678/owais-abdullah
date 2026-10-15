@@ -63,13 +63,13 @@
   }
 
   .dark {
-    /* HTML Template Design Tokens (Dark Mode - Architectural Night Teal) */
-    --bg-canvas: #031215;
-    --bg-card: #081B1E;
-    --bg-card-sub: #051619;
+    /* HTML Template Design Tokens (Dark Mode - Architectural Night Teal with Crisp Contrast) */
+    --bg-canvas: #020F12;
+    --bg-card: #0A262C;
+    --bg-card-sub: #071D22;
     
-    --border-neutral: #10343A;
-    --border-hover: #184D56;
+    --border-neutral: rgba(20, 184, 166, 0.22);
+    --border-hover: rgba(20, 184, 166, 0.45);
     
     --text-ink: #E6F7F3;
     --text-muted: #8FB7AF;
@@ -79,14 +79,14 @@
     --brand-teal-deep: #0D9488;
     --brand-emerald: #10B981;
     
-    --shadow-ambient: 0 1px 3px rgba(0, 0, 0, 0.4), 0 20px 38px -6px rgba(13, 148, 136, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    --shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 28px 50px -8px rgba(20, 184, 166, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    --shadow-ambient: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(20, 184, 166, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    --shadow-hover: 0 10px 30px -4px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(20, 184, 166, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
     --background: var(--bg-canvas);
     --foreground: var(--text-ink);
-    --card: #081B1E;
+    --card: var(--bg-card);
     --card-foreground: var(--text-ink);
-    --popover: #081B1E;
+    --popover: var(--bg-card);
     --popover-foreground: var(--text-ink);
     --primary: #0D9488;
     --primary-foreground: #ffffff;
@@ -144,20 +144,24 @@
 .clean-glass-card {
   position: relative;
   background-color: #FFFFFF;
-  border: 1px solid var(--border-neutral);
+  border: 1px solid rgba(13, 148, 136, 0.2);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-ambient);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 10px -2px rgba(7, 25, 22, 0.06), 0 12px 28px -4px rgba(13, 148, 136, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dark .clean-glass-card {
-  background-color: #081B1E;
-  border-color: #10343A;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 20px 38px -6px rgba(13, 148, 136, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: linear-gradient(180deg, #0A262C 0%, #071F24 100%);
+  border: 1px solid rgba(20, 184, 166, 0.24);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(20, 184, 166, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 .clean-glass-card:hover {
   border-color: var(--border-hover);
   box-shadow: var(--shadow-hover);
   transform: translateY(-2px);
+}
+.dark .clean-glass-card:hover {
+  border-color: rgba(20, 184, 166, 0.5);
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(20, 184, 166, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 /* Dual-accent highlighted word inside headings */
