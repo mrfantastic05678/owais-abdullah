@@ -161,6 +161,28 @@ export const siteAnalyticsEvents = pgTable(
   ]
 );
 
+// Chat sessions history for Otto AI (Text & Live Voice)
+export const chatSessions = pgTable(
+  "chat_sessions",
+  {
+    id: varchar("id", { length: 128 }).primaryKey(),
+    mode: varchar("mode", { length: 32 }).default("text").notNull(),
+    messages: jsonb("messages").$type<Array<{ role: "user" | "assistant"; content: string; timestamp?: string }>>().notNull(),
+    messageCount: integer("message_count").default(0).notNull(),
+    hasLead: boolean("has_lead").default(false).notNull(),
+    leadInfo: jsonb("lead_info").$type<{ name?: string; email?: string; message?: string }>(),
+    startedAt: timestamp("started_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    userAgent: text("user_agent"),
+    ip: varchar("ip", { length: 100 }),
+  },
+  (table) => [
+    index("chat_sessions_mode_idx").on(table.mode),
+    index("chat_sessions_has_lead_idx").on(table.hasLead),
+    index("chat_sessions_updated_at_idx").on(table.updatedAt),
+  ]
+);
+
 export type DirectoryStore = typeof directoryStores.$inferSelect;
 export type NewDirectoryStore = typeof directoryStores.$inferInsert;
 export type DirectoryClaim = typeof directoryClaims.$inferSelect;
@@ -171,3 +193,6 @@ export type BlogPostMetric = typeof blogPostMetrics.$inferSelect;
 export type BlogComment = typeof blogComments.$inferSelect;
 export type NewBlogComment = typeof blogComments.$inferInsert;
 export type SiteAnalyticsEvent = typeof siteAnalyticsEvents.$inferSelect;
+export type ChatSession = typeof chatSessions.$inferSelect;
+export type NewChatSession = typeof chatSessions.$inferInsert;
+

@@ -39,7 +39,7 @@ const STARTER_PROMPTS = [
 export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"text" | "voice">("text");
-  const { messages, input, setInput, handleSubmit, isLoading, clearChat, addMessages } = useChat();
+  const { messages, input, setInput, handleSubmit, isLoading, clearChat, addMessages, syncSessionToDb } = useChat();
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -70,12 +70,12 @@ export function ChatBot() {
   } = useLiveVoice({
     onSessionEnd: (history) => {
       if (history.length > 0) {
-        addMessages(
-          history.map((h) => ({
-            role: h.role,
-            content: h.text,
-          }))
-        );
+        const mapped = history.map((h) => ({
+          role: h.role,
+          content: h.text,
+        }));
+        addMessages(mapped);
+        syncSessionToDb([...messages, ...mapped], undefined, "voice");
       }
     },
     onOpenLeadDrawer: () => {
@@ -261,6 +261,15 @@ export function ChatBot() {
 
       if (res.ok) {
         setLeadStatus("success");
+        syncSessionToDb(
+          messages,
+          {
+            name: leadName.trim(),
+            email: leadEmail.trim(),
+            message: leadMessage.trim(),
+          },
+          mode
+        );
         setTimeout(() => {
           setShowLeadForm(false);
           setLeadStatus("idle");
@@ -436,7 +445,7 @@ export function ChatBot() {
             id="chatbot-window"
             data-lenis-prevent="true"
             onWheel={(e) => e.stopPropagation()}
-            className="fixed bottom-[72px] sm:bottom-[78px] right-4 sm:right-6 z-[5000] w-[350px] sm:w-[380px] max-w-[calc(100vw-2rem)] font-sans overscroll-contain"
+            className="fixed bottom-[84px] sm:bottom-[90px] right-4 sm:right-6 z-[5000] w-[350px] sm:w-[380px] max-w-[calc(100vw-2rem)] font-sans overscroll-contain"
             initial={{ opacity: 0, y: 14, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 14, scale: 0.97 }}
@@ -445,43 +454,49 @@ export function ChatBot() {
             <div
               data-lenis-prevent="true"
               onWheel={(e) => e.stopPropagation()}
-              className="h-[455px] sm:h-[475px] max-h-[calc(100vh-8.5rem)] flex flex-col rounded-2xl border border-slate-200 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
+              className="h-[450px] sm:h-[470px] max-h-[calc(100vh-8.8rem)] flex flex-col rounded-2xl border border-slate-200 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
             >
-              {/* Header with Mode Toggle & Navigation */}
-              <div className="px-3.5 py-2.5 border-b border-slate-200/80 dark:border-teal-900/40 bg-slate-50/70 dark:bg-[#031114] flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2">
-                  <div className="relative w-7 h-7 rounded-xl overflow-hidden bg-teal-500/10 border border-teal-500/20 p-0.5 flex items-center justify-center shrink-0">
+              {/* Hallmark-Crafted Header: Unified segmented control, restrained typography, zero button zoo */}
+              <div className="px-3.5 py-2.5 border-b border-slate-200/70 dark:border-teal-900/40 bg-white/95 dark:bg-[#031316]/95 backdrop-blur-sm flex items-center justify-between shrink-0 select-none">
+                {/* Brand & Identity */}
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="relative w-7 h-7 rounded-full bg-gradient-to-tr from-teal-500/15 via-teal-500/10 to-emerald-500/20 border border-teal-500/30 p-1 flex items-center justify-center shrink-0">
                     <Image
                       src="/assets/bot.png"
                       alt="Otto AI"
-                      width={28}
-                      height={28}
+                      width={20}
+                      height={20}
                       className="w-full h-full object-contain"
                     />
-                    <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 border border-background" />
+                    <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-background" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-xs text-foreground tracking-tight font-sans">
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-xs text-foreground tracking-tight leading-none font-sans">
                       Otto AI
                     </h3>
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-medium">
-                        {mode === "voice" ? "Live Voice" : "Text Assistant"}
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/80" />
+                      <span className="text-[10px] text-muted-foreground font-sans font-medium leading-none">
+                        {mode === "voice" ? "Voice Session" : showLeadForm ? "Project Spec" : "Assistant"}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1">
-                  {/* Mode Switcher Tabs */}
-                  <div className="flex items-center bg-slate-200/60 dark:bg-[#071F23] rounded-lg p-0.5 border border-slate-300/40 dark:border-teal-900/40">
+                {/* Unified Navigation & Controls */}
+                <div className="flex items-center gap-1.5">
+                  {/* Single Unified 3-Mode Segmented Control */}
+                  <div className="flex items-center bg-slate-100 dark:bg-[#071F23] rounded-lg p-0.5 border border-slate-200/80 dark:border-teal-900/40">
                     <button
-                      onClick={handleSwitchToText}
+                      onClick={() => {
+                        if (mode === "voice") stopVoiceSession();
+                        setShowLeadForm(false);
+                        setMode("text");
+                      }}
                       title="Text Chat"
-                      className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold transition-all cursor-pointer ${
-                        mode === "text"
-                          ? "bg-white dark:bg-[#031518] text-teal-700 dark:text-teal-300 shadow-xs"
+                      className={`px-2 py-1 rounded-md text-[10px] font-medium transition-all cursor-pointer ${
+                        mode === "text" && !showLeadForm
+                          ? "bg-white dark:bg-[#031518] text-foreground font-semibold shadow-xs"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
@@ -489,55 +504,59 @@ export function ChatBot() {
                     </button>
                     <button
                       onClick={handleSwitchToVoice}
-                      title="Live Voice Mode"
-                      className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                      title="Live Voice"
+                      className={`px-2 py-1 rounded-md text-[10px] font-medium flex items-center gap-1 transition-all cursor-pointer ${
                         mode === "voice"
-                          ? "bg-teal-600 text-white shadow-xs"
+                          ? "bg-teal-600 text-white font-semibold shadow-xs"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       <Mic className="w-2.5 h-2.5" />
                       <span>Live</span>
                     </button>
+                    <button
+                      onClick={() => {
+                        if (mode === "voice") stopVoiceSession();
+                        setMode("text");
+                        setShowLeadForm(true);
+                      }}
+                      title="Project Spec Intake"
+                      className={`px-2 py-1 rounded-md text-[10px] font-medium flex items-center gap-1 transition-all cursor-pointer ${
+                        showLeadForm
+                          ? "bg-teal-600 text-white font-semibold shadow-xs"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Mail className="w-2.5 h-2.5" />
+                      <span>Spec</span>
+                    </button>
                   </div>
 
-                  {/* Spec Intake / Contact Drawer Toggle */}
-                  <button
-                    onClick={() => {
-                      if (mode === "voice") stopVoiceSession();
-                      setMode("text");
-                      setShowLeadForm((prev) => !prev);
-                    }}
-                    title={showLeadForm ? "Back to chat" : "Submit project spec"}
-                    className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
-                      showLeadForm
-                        ? "bg-teal-600 text-white"
-                        : "bg-teal-500/10 text-teal-700 dark:text-teal-300 hover:bg-teal-500/20 border border-teal-500/30"
-                    }`}
-                  >
-                    <Mail className="w-3 h-3" />
-                    <span>{showLeadForm ? "Chat" : "Spec"}</span>
-                  </button>
+                  {/* Subtle Hairline Divider */}
+                  <div className="w-px h-3.5 bg-slate-200 dark:bg-teal-900/60 mx-0.5" />
 
-                  {mode === "text" && !showLeadForm && (
+                  {/* Actions (Reset & Close) */}
+                  <div className="flex items-center gap-0.5">
+                    {mode === "text" && !showLeadForm && (
+                      <button
+                        onClick={clearChat}
+                        title="Reset conversation"
+                        aria-label="Reset conversation"
+                        className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-teal-950/60 transition-colors cursor-pointer"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+
                     <button
-                      onClick={clearChat}
-                      title="Reset conversation"
-                      aria-label="Reset conversation"
-                      className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-slate-200/50 dark:hover:bg-teal-950/50 transition-colors cursor-pointer"
+                      onClick={toggleChat}
+                      title="Close"
+                      aria-label="Close"
+                      className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-teal-950/60 transition-colors cursor-pointer"
                     >
-                      <RotateCcw className="w-3.5 h-3.5" />
+                      <X className="w-3.5 h-3.5" />
                     </button>
-                  )}
-
-                  <button
-                    onClick={toggleChat}
-                    title="Close"
-                    aria-label="Close"
-                    className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-slate-200/50 dark:hover:bg-teal-950/50 transition-colors cursor-pointer"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
+                  </div>
                 </div>
               </div>
 
@@ -750,19 +769,6 @@ export function ChatBot() {
                           </div>
                         ) : (
                           <div key={index} className="space-y-1 text-left group pt-0.5">
-                            <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-mono">
-                              <div className="w-4 h-4 rounded-md overflow-hidden bg-teal-500/10 border border-teal-500/20 p-0.5 flex items-center justify-center shrink-0">
-                                <Image
-                                  src="/assets/bot.png"
-                                  alt="Otto AI"
-                                  width={16}
-                                  height={16}
-                                  className="w-full h-full object-contain"
-                                />
-                              </div>
-                              <span className="font-semibold text-foreground/80 font-sans">Otto AI</span>
-                            </div>
-
                             {message.content.includes("rate limit") && (
                               <div className="mb-1.5 flex items-center gap-1 text-amber-500 font-medium text-xs bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-md w-fit">
                                 <AlertTriangle className="h-3 w-3" />
@@ -770,53 +776,51 @@ export function ChatBot() {
                               </div>
                             )}
 
-                            <div className="rounded-xl px-3 py-2 bg-slate-100/70 dark:bg-[#071F23] border border-slate-200/60 dark:border-teal-900/30 text-foreground font-sans">
-                              <div className="text-xs leading-relaxed text-foreground font-sans space-y-1.5">
-                                <ReactMarkdown
-                                  components={{
-                                    p: ({ children }) => (
-                                      <p className="mb-1.5 last:mb-0 leading-relaxed font-sans text-foreground">
-                                        {children}
-                                      </p>
-                                    ),
-                                    strong: ({ children }) => (
-                                      <strong className="font-bold text-foreground font-sans">
-                                        {children}
-                                      </strong>
-                                    ),
-                                    ul: ({ children }) => (
-                                      <ul className="list-disc pl-3.5 mb-1.5 space-y-0.5 font-sans text-foreground">
-                                        {children}
-                                      </ul>
-                                    ),
-                                    ol: ({ children }) => (
-                                      <ol className="list-decimal pl-3.5 mb-1.5 space-y-0.5 font-sans text-foreground">
-                                        {children}
-                                      </ol>
-                                    ),
-                                    li: ({ children }) => (
-                                      <li className="leading-relaxed font-sans">{children}</li>
-                                    ),
-                                    code: ({ children }) => (
-                                      <code className="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-[#041417] font-mono text-[10px] text-teal-700 dark:text-teal-300 border border-slate-300 dark:border-teal-900/40">
-                                        {children}
-                                      </code>
-                                    ),
-                                    a: ({ href, children }) => (
-                                      <a
-                                        href={href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-teal-600 dark:text-teal-400 underline font-semibold hover:opacity-80 font-sans"
-                                      >
-                                        {children}
-                                      </a>
-                                    ),
-                                  }}
-                                >
-                                  {message.content}
-                                </ReactMarkdown>
-                              </div>
+                            <div className="text-xs leading-relaxed text-foreground font-sans space-y-1.5 px-1 py-0.5">
+                              <ReactMarkdown
+                                components={{
+                                  p: ({ children }) => (
+                                    <p className="mb-1.5 last:mb-0 leading-relaxed font-sans text-foreground">
+                                      {children}
+                                    </p>
+                                  ),
+                                  strong: ({ children }) => (
+                                    <strong className="font-bold text-foreground font-sans">
+                                      {children}
+                                    </strong>
+                                  ),
+                                  ul: ({ children }) => (
+                                    <ul className="list-disc pl-3.5 mb-1.5 space-y-0.5 font-sans text-foreground">
+                                      {children}
+                                    </ul>
+                                  ),
+                                  ol: ({ children }) => (
+                                    <ol className="list-decimal pl-3.5 mb-1.5 space-y-0.5 font-sans text-foreground">
+                                      {children}
+                                    </ol>
+                                  ),
+                                  li: ({ children }) => (
+                                    <li className="leading-relaxed font-sans">{children}</li>
+                                  ),
+                                  code: ({ children }) => (
+                                    <code className="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-[#071F23] font-mono text-[10px] text-teal-700 dark:text-teal-300 border border-slate-300/60 dark:border-teal-900/40">
+                                      {children}
+                                    </code>
+                                  ),
+                                  a: ({ href, children }) => (
+                                    <a
+                                      href={href}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-teal-600 dark:text-teal-400 underline font-semibold hover:opacity-80 font-sans"
+                                    >
+                                      {children}
+                                    </a>
+                                  ),
+                                }}
+                              >
+                                {message.content}
+                              </ReactMarkdown>
                             </div>
 
                             <div className="pl-1 pt-0.5 opacity-60 group-hover:opacity-100 transition-opacity">

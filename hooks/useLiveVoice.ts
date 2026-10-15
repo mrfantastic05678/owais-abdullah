@@ -52,6 +52,13 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const hasSpokenRef = useRef(false);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Transcript accumulator refs (avoids stale closures during turns and teardown)
+  const transcriptHistoryRef = useRef<Array<{ role: "user" | "assistant"; text: string }>>([]);
+  const currentUserTranscriptRef = useRef<string>("");
+  const currentAssistantTranscriptRef = useRef<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const speechRecognitionRef = useRef<any>(null);
+
   const optionsRef = useRef(options);
   optionsRef.current = options;
 
@@ -93,6 +100,15 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       audioPlayerRef.current = null;
     }
 
+    if (speechRecognitionRef.current) {
+      try {
+        speechRecognitionRef.current.stop();
+      } catch {
+        // ignore
+      }
+      speechRecognitionRef.current = null;
+    }
+
     if (wsRef.current) {
       try {
         wsRef.current.close(1000, "User ended voice session");
@@ -108,15 +124,32 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
     }
     hasSpokenRef.current = false;
 
+    // Flush any pending speech turn before finalizing
+    const pendingUser = currentUserTranscriptRef.current.trim();
+    const pendingAssistant = currentAssistantTranscriptRef.current.trim();
+    if (pendingUser) {
+      transcriptHistoryRef.current.push({ role: "user", text: pendingUser });
+      currentUserTranscriptRef.current = "";
+    }
+    if (pendingAssistant) {
+      transcriptHistoryRef.current.push({ role: "assistant", text: pendingAssistant });
+      currentAssistantTranscriptRef.current = "";
+    }
+
+    const fullHistory = [...transcriptHistoryRef.current];
+    setTranscriptHistory(fullHistory);
+
     setStatus("ended");
     setVolumeLevel(0);
     setIsUserSpeaking(false);
     userVolumeRef.current = 0;
+    setAssistantTranscript("");
+    setUserTranscript("");
 
-    if (optionsRef.current.onSessionEnd && transcriptHistory.length > 0) {
-      optionsRef.current.onSessionEnd(transcriptHistory);
+    if (optionsRef.current.onSessionEnd && fullHistory.length > 0) {
+      optionsRef.current.onSessionEnd(fullHistory);
     }
-  }, [transcriptHistory]);
+  }, []);
 
   // Client Tool Execution (Agent capabilities)
   const executeClientTool = useCallback((name: string, args: Record<string, unknown>) => {
@@ -146,6 +179,9 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       setStatus("requesting-mic");
       setUserTranscript("");
       setAssistantTranscript("");
+      transcriptHistoryRef.current = [];
+      currentUserTranscriptRef.current = "";
+      currentAssistantTranscriptRef.current = "";
 
       // 1. Initialize Player and resume audio pipeline
       const player = new LiveAudioPlayer(24000);
@@ -163,7 +199,39 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       });
       mediaStreamRef.current = stream;
 
-      // 3. Request short-lived ephemeral token from Next.js backend
+      // 3. Optional local browser speech recognition fallback for zero-latency user captions
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        if (SpeechRecognition) {
+          const sr = new SpeechRecognition();
+          sr.continuous = true;
+          sr.interimResults = true;
+          sr.lang = "en-US";
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          sr.onresult = (evt: any) => {
+            let chunk = "";
+            for (let i = evt.resultIndex; i < evt.results.length; ++i) {
+              if (evt.results[i].isFinal) {
+                chunk += evt.results[i][0].transcript;
+              }
+            }
+            if (chunk.trim()) {
+              currentUserTranscriptRef.current = (
+                currentUserTranscriptRef.current ? `${currentUserTranscriptRef.current} ` : ""
+              ) + chunk.trim();
+              setUserTranscript(currentUserTranscriptRef.current);
+            }
+          };
+          sr.onerror = () => {};
+          sr.start();
+          speechRecognitionRef.current = sr;
+        }
+      } catch {
+        // browser recognition optional
+      }
+
+      // 4. Request short-lived ephemeral token from Next.js backend
       setStatus("connecting");
       const tokenRes = await fetch("/api/live-token", { method: "POST" });
       if (!tokenRes.ok) {
@@ -174,7 +242,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       const { token, model } = await tokenRes.json();
       if (!token) throw new Error("No authorization token received.");
 
-      // 4. Connect to Live WebSocket directly from browser
+      // 5. Connect to Live WebSocket directly from browser
       const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${encodeURIComponent(
         token
       )}`;
@@ -183,10 +251,10 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       wsRef.current = ws;
 
       ws.onopen = async () => {
-        // Send initial Session Setup configuration
+        // Send initial Session Setup configuration with native transcription enabled
         const setupMessage = {
           setup: {
-            model: model || "models/gemini-3.8-live",
+            model: model || "models/gemini-3.1-flash-live-preview",
             generationConfig: {
               responseModalities: ["AUDIO"],
               speechConfig: {
@@ -197,6 +265,8 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
                 },
               },
             },
+            inputAudioTranscription: {},
+            outputAudioTranscription: {},
             systemInstruction: {
               parts: [{ text: VOICE_PERSONA }],
             },
@@ -233,7 +303,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
 
         ws.send(JSON.stringify(setupMessage));
 
-        // 5. Initialize AudioWorklet for 16kHz mono streaming
+        // 6. Initialize AudioWorklet for 16kHz mono streaming
         const AudioContextClass =
           window.AudioContext ||
           (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -248,25 +318,22 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
 
         workletNode.port.onmessage = (e) => {
           if (ws.readyState === WebSocket.OPEN) {
-            const pcmBuffer = e.data as ArrayBuffer;
-            const base64Data = arrayBufferToBase64(pcmBuffer);
+            const pcmInt16Buffer = e.data as ArrayBuffer;
+            const base64Data = arrayBufferToBase64(pcmInt16Buffer);
 
-            // Calculate user voice amplitude for real-time visual feedback
-            const int16Array = new Int16Array(pcmBuffer);
-            let sum = 0;
-            const step = 4;
-            for (let i = 0; i < int16Array.length; i += step) {
-              sum += Math.abs(int16Array[i]);
+            // Compute mic amplitude for acoustic visualizer & VAD
+            const int16Array = new Int16Array(pcmInt16Buffer);
+            let sumSq = 0;
+            for (let i = 0; i < int16Array.length; i++) {
+              sumSq += int16Array[i] * int16Array[i];
             }
-            const avgAmp = int16Array.length > 0 ? sum / (int16Array.length / step) : 0;
-            // Background room noise threshold ~180; speech range 600 - 8000
-            const normMic = Math.min(1, Math.max(0, (avgAmp - 180) / 3800));
+            const rms = Math.sqrt(sumSq / int16Array.length);
+            const normMic = Math.min(rms / 12000, 1);
             userVolumeRef.current = normMic;
-            const isSpeakingNow = normMic > 0.055;
-            setIsUserSpeaking(isSpeakingNow);
 
-            // Turn Detection & Speech Bracketing
-            if (isSpeakingNow) {
+            // User speech detection & Turn completion trigger
+            if (normMic > 0.055) {
+              setIsUserSpeaking(true);
               hasSpokenRef.current = true;
               if (silenceTimerRef.current) {
                 clearTimeout(silenceTimerRef.current);
@@ -286,6 +353,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
                     );
                     hasSpokenRef.current = false;
                     silenceTimerRef.current = null;
+                    setIsUserSpeaking(false);
                   }
                 }, 650);
               }
@@ -308,7 +376,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
         micSource.connect(workletNode);
         setStatus("listening");
 
-        // 6. Start UI audio animation loop reacting to BOTH user and assistant speech
+        // 7. Start UI audio animation loop reacting to BOTH user and assistant speech
         const freqData = new Uint8Array(32);
         let currentSmoothed = 0;
 
@@ -360,7 +428,23 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             return;
           }
 
-          // Handle incoming audio & transcripts
+          // 1. Capture model spoken transcript from native outputAudioTranscription
+          if (data.serverContent?.outputTranscription?.text) {
+            const chunk = data.serverContent.outputTranscription.text;
+            currentAssistantTranscriptRef.current += chunk;
+            setAssistantTranscript((prev) => prev + chunk);
+          }
+
+          // 2. Capture user spoken transcript from native inputAudioTranscription
+          if (data.serverContent?.inputTranscription?.text) {
+            const userChunk = data.serverContent.inputTranscription.text.trim();
+            if (userChunk) {
+              currentUserTranscriptRef.current = userChunk;
+              setUserTranscript(userChunk);
+            }
+          }
+
+          // 3. Handle incoming audio & parts fallback
           if (data.serverContent?.modelTurn?.parts) {
             for (const part of data.serverContent.modelTurn.parts) {
               // Play incoming 24kHz audio chunk
@@ -369,25 +453,35 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
                 setStatus("speaking");
               }
 
-              // Text caption parts
-              if (part.text) {
+              // Text caption parts fallback
+              if (part.text && !currentAssistantTranscriptRef.current.includes(part.text)) {
+                currentAssistantTranscriptRef.current += part.text;
                 setAssistantTranscript((prev) => prev + part.text);
               }
             }
           }
 
-          // Handle turn complete
+          // 4. Handle turn complete: commit dialogue turn to session history
           if (data.serverContent?.turnComplete) {
             setStatus("listening");
-            setAssistantTranscript((finalText) => {
-              if (finalText.trim()) {
-                setTranscriptHistory((hist) => [...hist, { role: "assistant", text: finalText.trim() }]);
-              }
-              return "";
-            });
+            const userSpeech = currentUserTranscriptRef.current.trim();
+            const assistantSpeech = currentAssistantTranscriptRef.current.trim();
+
+            if (userSpeech) {
+              transcriptHistoryRef.current.push({ role: "user", text: userSpeech });
+            }
+            if (assistantSpeech) {
+              transcriptHistoryRef.current.push({ role: "assistant", text: assistantSpeech });
+            }
+
+            currentUserTranscriptRef.current = "";
+            currentAssistantTranscriptRef.current = "";
+            setTranscriptHistory([...transcriptHistoryRef.current]);
+            setAssistantTranscript("");
+            setUserTranscript("");
           }
 
-          // Handle tool calls
+          // 5. Handle tool calls
           if (data.toolCall?.functionCalls) {
             const functionResponses = [];
             for (const fc of data.toolCall.functionCalls) {

@@ -17,6 +17,7 @@ import {
   Lock,
   ArrowUpRight,
   ExternalLink,
+  Bot,
 } from "lucide-react";
 
 import {
@@ -231,6 +232,12 @@ export default function AdminDashboardShell({ children }: AdminLayoutProps) {
       href: "/admin/comments",
       icon: MessageSquare,
       badge: "Community",
+    },
+    {
+      label: "Otto AI Sessions",
+      href: "/admin/chats",
+      icon: Bot,
+      badge: "Agent",
     },
     {
       label: "Cache & Webhooks",

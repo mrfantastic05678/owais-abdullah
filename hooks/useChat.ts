@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { z } from "zod";
 
 // Message schema
@@ -38,12 +38,65 @@ Your question was: *"${sanitizedQuery}"*
 const AUTO_CLEAR_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 export function useChat() {
-  // Initialize messages as an empty array
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const clearTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const clearLocalStorage = useCallback(() => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("chatMessages");
+      localStorage.removeItem("chatLastUpdated");
+      setMessages([
+        {
+          role: "assistant",
+          content: "I am Owais's AI assistant. Ask me anything about his spec-driven development process, Digital FTEs, Next.js SaaS architecture, or ultra-fast Astro builds.",
+        },
+      ]);
+    }
+  }, []);
+
+  const startAutoClearTimer = useCallback(() => {
+    if (clearTimerRef.current) {
+      clearTimeout(clearTimerRef.current);
+    }
+    clearTimerRef.current = setTimeout(() => {
+      clearLocalStorage();
+    }, AUTO_CLEAR_TIMEOUT);
+  }, [clearLocalStorage]);
+
+  // Sync conversation session to Neon PostgreSQL
+  const syncSessionToDb = useCallback(
+    async (
+      msgs: Message[],
+      lead?: { name?: string; email?: string; message?: string },
+      sessionMode: string = "text"
+    ) => {
+      if (typeof window === "undefined" || msgs.length <= 1) return;
+      try {
+        let sessionId = sessionStorage.getItem("otto_chat_session_id");
+        if (!sessionId) {
+          sessionId = `sess_${Math.random().toString(36).substring(2, 9)}_${Date.now().toString(36)}`;
+          sessionStorage.setItem("otto_chat_session_id", sessionId);
+        }
+
+        await fetch("/api/chat/session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sessionId,
+            mode: sessionMode,
+            messages: msgs,
+            leadInfo: lead,
+          }),
+        });
+      } catch {
+        // fail-safe background sync
+      }
+    },
+    []
+  );
 
   // Initialize messages and set auto-clear
   useEffect(() => {
@@ -51,12 +104,12 @@ export function useChat() {
       if (typeof window !== "undefined") {
         const stored = localStorage.getItem("chatMessages");
         const lastUpdated = localStorage.getItem("chatLastUpdated");
-        
+
         // Check if we should clear existing messages
         if (stored && lastUpdated) {
           const lastUpdateTime = parseInt(lastUpdated);
           const timeSinceLastUpdate = Date.now() - lastUpdateTime;
-          
+
           if (timeSinceLastUpdate > AUTO_CLEAR_TIMEOUT) {
             clearLocalStorage();
           }
@@ -68,7 +121,7 @@ export function useChat() {
             const parsed = JSON.parse(stored);
             if (Array.isArray(parsed)) {
               setMessages(parsed);
-              startAutoClearTimer(); // Start timer after loading
+              startAutoClearTimer();
             }
           } catch (e) {
             console.error("Error parsing chatMessages:", e);
@@ -91,48 +144,20 @@ export function useChat() {
         clearTimeout(clearTimerRef.current);
       }
     };
-  }, []);
+  }, [clearLocalStorage, startAutoClearTimer]);
 
-  // Save messages and update timer
+  // Save messages to localStorage and auto-sync to DB
   useEffect(() => {
     if (typeof window !== "undefined" && messages.length > 0) {
       localStorage.setItem("chatMessages", JSON.stringify(messages));
       localStorage.setItem("chatLastUpdated", Date.now().toString());
-      startAutoClearTimer(); // Reset timer on any message change
-    }
-  }, [messages]);
+      startAutoClearTimer();
 
-  const startAutoClearTimer = () => {
-    // Clear any existing timer
-    if (clearTimerRef.current) {
-      clearTimeout(clearTimerRef.current);
+      if (messages.length > 1) {
+        syncSessionToDb(messages);
+      }
     }
-    
-    // Set new timer
-    clearTimerRef.current = setTimeout(() => {
-      clearLocalStorage();
-    }, AUTO_CLEAR_TIMEOUT);
-  };
-
-  const clearLocalStorage = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("chatMessages");
-      localStorage.removeItem("chatLastUpdated");
-      setMessages([
-        {
-          role: "assistant",
-          content: "I am Owais's AI assistant. Ask me anything about his spec-driven development process, Digital FTEs, Next.js SaaS architecture, or ultra-fast Astro builds.",
-        },
-      ]);
-    }
-  };
-
-  // Save messages to localStorage whenever they change
-  useEffect(() => {
-    if (typeof window !== "undefined" && messages.length > 0) {
-      localStorage.setItem("chatMessages", JSON.stringify(messages));
-    }
-  }, [messages]);
+  }, [messages, startAutoClearTimer, syncSessionToDb]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,28 +165,33 @@ export function useChat() {
 
     if (!input.trim()) return;
 
-    // Validate input
     try {
       UserInputSchema.parse(input);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        setValidationError(error.errors[0]?.message || "Invalid input");
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        setValidationError(err.errors[0].message);
         return;
       }
     }
 
     const userMessage: Message = { role: "user", content: input };
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInput("");
     setIsLoading(true);
 
     try {
-      // Call the API route
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: updatedMessages.map((msg) => ({
+            role: msg.role === "user" ? "user" : "model",
+            parts: [{ text: msg.content }],
+          })),
+        }),
       });
 
       if (response.ok) {
@@ -176,7 +206,7 @@ export function useChat() {
       console.error("Error:", error);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "*Sorry, I&apos;m having trouble right now. Try again soon!*" },
+        { role: "assistant", content: "*Sorry, I'm having trouble right now. Try again soon!*" },
       ]);
     } finally {
       setIsLoading(false);
@@ -196,5 +226,6 @@ export function useChat() {
     validationError,
     clearChat: clearLocalStorage,
     addMessages,
+    syncSessionToDb,
   };
 }
