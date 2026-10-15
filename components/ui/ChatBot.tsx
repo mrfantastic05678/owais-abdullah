@@ -52,6 +52,8 @@ export function ChatBot() {
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [leadName, setLeadName] = useState("");
   const [leadEmail, setLeadEmail] = useState("");
+  const [leadWebsite, setLeadWebsite] = useState("");
+  const [leadPhone, setLeadPhone] = useState("");
   const [leadMessage, setLeadMessage] = useState("");
   const [leadStatus, setLeadStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [leadError, setLeadError] = useState("");
@@ -248,6 +250,14 @@ export function ChatBot() {
     setLeadError("");
 
     try {
+      const formattedMessage = [
+        leadMessage.trim(),
+        leadWebsite.trim() ? `Website/Store: ${leadWebsite.trim()}` : "",
+        leadPhone.trim() ? `WhatsApp/Phone: ${leadPhone.trim()}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n\n");
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -255,7 +265,7 @@ export function ChatBot() {
           name: leadName.trim(),
           email: leadEmail.trim(),
           subject: "Project Inquiry via Chat Widget",
-          message: leadMessage.trim(),
+          message: formattedMessage,
         }),
       });
 
@@ -266,7 +276,10 @@ export function ChatBot() {
           {
             name: leadName.trim(),
             email: leadEmail.trim(),
+            website: leadWebsite.trim(),
+            phone: leadPhone.trim(),
             message: leadMessage.trim(),
+            source: "spec_form",
           },
           mode
         );
@@ -275,6 +288,8 @@ export function ChatBot() {
           setLeadStatus("idle");
           setLeadName("");
           setLeadEmail("");
+          setLeadWebsite("");
+          setLeadPhone("");
           setLeadMessage("");
         }, 2200);
       } else {
@@ -680,6 +695,22 @@ export function ChatBot() {
                           placeholder="Work Email"
                           value={leadEmail}
                           onChange={(e) => setLeadEmail(e.target.value)}
+                          className="w-full text-xs rounded-xl border border-slate-200 dark:border-teal-900/60 bg-white dark:bg-[#071F23] px-3 py-2 outline-none focus:border-teal-500 font-sans"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="text"
+                          placeholder="Website / Store (opt)"
+                          value={leadWebsite}
+                          onChange={(e) => setLeadWebsite(e.target.value)}
+                          className="w-full text-xs rounded-xl border border-slate-200 dark:border-teal-900/60 bg-white dark:bg-[#071F23] px-3 py-2 outline-none focus:border-teal-500 font-sans"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Phone / WhatsApp (opt)"
+                          value={leadPhone}
+                          onChange={(e) => setLeadPhone(e.target.value)}
                           className="w-full text-xs rounded-xl border border-slate-200 dark:border-teal-900/60 bg-white dark:bg-[#071F23] px-3 py-2 outline-none focus:border-teal-500 font-sans"
                         />
                       </div>

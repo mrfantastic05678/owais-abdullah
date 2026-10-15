@@ -236,3 +236,5 @@ export function parseTelemetry(req: NextRequest, clientPayload?: Record<string, 
     timestamp: new Date().toISOString(),
   };
 }
+
+export const extractTelemetry = parseTelemetry;

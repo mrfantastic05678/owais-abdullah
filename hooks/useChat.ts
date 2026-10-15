@@ -70,11 +70,24 @@ export function useChat() {
   const syncSessionToDb = useCallback(
     async (
       msgs: Message[],
-      lead?: { name?: string; email?: string; message?: string },
+      lead?: {
+        name?: string;
+        email?: string;
+        website?: string;
+        phone?: string;
+        message?: string;
+        source?: string;
+      },
       sessionMode: string = "text"
     ) => {
       if (typeof window === "undefined" || msgs.length <= 1) return;
       try {
+        let visitorId = localStorage.getItem("otto_visitor_id");
+        if (!visitorId) {
+          visitorId = `vis_${Math.random().toString(36).substring(2, 9)}_${Date.now().toString(36)}`;
+          localStorage.setItem("otto_visitor_id", visitorId);
+        }
+
         let sessionId = sessionStorage.getItem("otto_chat_session_id");
         if (!sessionId) {
           sessionId = `sess_${Math.random().toString(36).substring(2, 9)}_${Date.now().toString(36)}`;
@@ -86,9 +99,11 @@ export function useChat() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             sessionId,
+            visitorId,
             mode: sessionMode,
             messages: msgs,
             leadInfo: lead,
+            path: window.location.pathname || "/",
           }),
         });
       } catch {

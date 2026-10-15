@@ -18,11 +18,18 @@ import {
   X,
   Copy,
   Check,
-  Shield,
-  Layers,
+  Globe,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Calendar,
+  PhoneCall,
+  Sparkles,
+  Compass,
 } from "lucide-react";
 import { getAdminAuthToken } from "@/lib/admin-auth";
-import { formatDistanceToNow } from "date-fns";
+import { resolveCountry } from "@/lib/analytics-parser";
+import { formatDistanceToNow, format } from "date-fns";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -32,15 +39,33 @@ interface ChatMessage {
 
 interface ChatSessionRecord {
   id: string;
+  visitorId?: string | null;
   mode: "text" | "voice" | "hybrid";
   messages: ChatMessage[];
   messageCount: number;
+  turnCount?: number;
   hasLead: boolean;
   leadInfo?: {
     name?: string;
     email?: string;
+    phone?: string;
+    website?: string;
+    company?: string;
+    budget?: string;
+    timeline?: string;
     message?: string;
+    source?: string;
   } | null;
+  country?: string | null;
+  countryCode?: string | null;
+  city?: string | null;
+  region?: string | null;
+  device?: string | null;
+  browser?: string | null;
+  os?: string | null;
+  referrer?: string | null;
+  referrerDomain?: string | null;
+  path?: string | null;
   startedAt: string;
   updatedAt: string;
   userAgent?: string | null;
@@ -54,6 +79,21 @@ interface ChatStats {
   hybrid: number;
   leads: number;
   totalMessages: number;
+}
+
+// Calculate active duration string
+function calculateDuration(start: string, end: string): string {
+  try {
+    const s = new Date(start).getTime();
+    const e = new Date(end).getTime();
+    const diffSec = Math.max(0, Math.floor((e - s) / 1000));
+    if (diffSec < 60) return `${diffSec}s active`;
+    const mins = Math.floor(diffSec / 60);
+    const secs = diffSec % 60;
+    return `${mins}m ${secs}s`;
+  } catch {
+    return "brief";
+  }
 }
 
 export default function ChatsAdminClient() {
@@ -158,11 +198,16 @@ export default function ChatsAdminClient() {
       const inLead =
         s.leadInfo?.name?.toLowerCase().includes(q) ||
         s.leadInfo?.email?.toLowerCase().includes(q) ||
+        s.leadInfo?.phone?.toLowerCase().includes(q) ||
+        s.leadInfo?.website?.toLowerCase().includes(q) ||
         s.leadInfo?.message?.toLowerCase().includes(q);
-      const inIp = s.ip?.toLowerCase().includes(q);
-      const inId = s.id.toLowerCase().includes(q);
+      const inGeo =
+        s.country?.toLowerCase().includes(q) ||
+        s.city?.toLowerCase().includes(q) ||
+        s.ip?.toLowerCase().includes(q);
+      const inId = s.id.toLowerCase().includes(q) || s.visitorId?.toLowerCase().includes(q);
 
-      return inMessages || inLead || inIp || inId;
+      return inMessages || inLead || inGeo || inId;
     });
   }, [sessions, modeFilter, searchQuery]);
 
@@ -176,14 +221,14 @@ export default function ChatsAdminClient() {
               <Bot className="w-5 h-5 text-teal-600 dark:text-teal-400" />
             </div>
             <h1 className="text-xl font-bold text-foreground tracking-tight font-sans">
-              Otto AI Sessions Vault
+              Otto AI Sessions &amp; Intelligence Vault
             </h1>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
               Live DB
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Real-time transcripts, voice dialogues, and client intake specs logged in Neon PostgreSQL.
+            Complete telemetry, multi-session history, geo tracking, and qualified client specs recorded in Neon PostgreSQL.
           </p>
         </div>
 
@@ -220,7 +265,7 @@ export default function ChatsAdminClient() {
         <div className="p-4 rounded-2xl bg-card border border-border shadow-xs">
           <div className="flex items-center gap-1.5 text-[11px] font-mono text-muted-foreground">
             <Mail className="w-3.5 h-3.5 text-emerald-500" />
-            <span>Leads Captured</span>
+            <span>Specs &amp; Leads</span>
           </div>
           <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{stats.leads}</p>
         </div>
@@ -237,10 +282,10 @@ export default function ChatsAdminClient() {
           <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search transcripts, client emails, names, or IP..."
+            placeholder="Search transcripts, client emails, websites, cities, or IP..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-card border border-border text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-1 focus:ring-teal-500"
+            className="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-card border border-border text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-1 focus:ring-teal-500 font-sans"
           />
         </div>
 
@@ -248,9 +293,9 @@ export default function ChatsAdminClient() {
         <div className="flex items-center gap-1 bg-muted p-1 rounded-xl border border-border self-start sm:self-auto overflow-x-auto max-w-full">
           {[
             { id: "all", label: `All (${sessions.length})` },
+            { id: "leads", label: `Specs/Leads (${stats.leads})` },
             { id: "voice", label: `Voice (${stats.voice})` },
             { id: "text", label: `Text (${stats.text})` },
-            { id: "leads", label: `Leads (${stats.leads})` },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -267,7 +312,7 @@ export default function ChatsAdminClient() {
         </div>
       </div>
 
-      {/* Sessions Grid / Table */}
+      {/* Sessions Grid */}
       {loading ? (
         <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
           <RefreshCw className="w-6 h-6 animate-spin text-teal-600 dark:text-teal-400" />
@@ -292,15 +337,21 @@ export default function ChatsAdminClient() {
           {filteredSessions.map((session) => {
             const firstUserMsg = session.messages.find((m) => m.role === "user");
             const lastMsg = session.messages[session.messages.length - 1];
+            const countryMeta = resolveCountry(session.countryCode || "GL");
+            const duration = calculateDuration(session.startedAt, session.updatedAt);
 
             return (
               <div
                 key={session.id}
                 onClick={() => setSelectedSession(session)}
-                className="p-4 rounded-2xl bg-card border border-border hover:border-teal-500/50 hover:shadow-md transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group"
+                className={`p-4 rounded-2xl bg-card border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group ${
+                  session.hasLead
+                    ? "border-emerald-500/40 hover:border-emerald-500 shadow-sm shadow-emerald-500/5"
+                    : "border-border hover:border-teal-500/50 hover:shadow-md"
+                }`}
               >
-                <div className="min-w-0 space-y-1.5 flex-1">
-                  {/* Metadata Row */}
+                <div className="min-w-0 space-y-2 flex-1">
+                  {/* Top Metadata Row: Mode, Lead, Location, Time */}
                   <div className="flex flex-wrap items-center gap-2">
                     {/* Mode Badge */}
                     <span
@@ -322,39 +373,102 @@ export default function ChatsAdminClient() {
                     {session.hasLead && (
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
                         <CheckCircle2 className="w-2.5 h-2.5" />
-                        <span>Lead Captured</span>
+                        <span>Lead / Project Captured</span>
                       </span>
                     )}
 
-                    <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      <span>{formatDistanceToNow(new Date(session.updatedAt), { addSuffix: true })}</span>
+                    {/* Location Badge (Flag + Country + City) */}
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono text-foreground/80 bg-muted/60 border border-border flex items-center gap-1">
+                      <span>{countryMeta.flag}</span>
+                      <span>
+                        {session.city ? `${session.city}, ` : ""}
+                        {session.country || countryMeta.name}
+                      </span>
                     </span>
 
-                    <span className="text-[10px] font-mono text-muted-foreground/70">
-                      ID: {session.id.slice(0, 16)}...
+                    {/* Device & Browser Badge */}
+                    {(session.device || session.browser) && (
+                      <span className="text-[10px] font-mono text-muted-foreground flex items-center gap-1">
+                        {session.device === "Mobile" ? (
+                          <Smartphone className="w-2.5 h-2.5" />
+                        ) : session.device === "Tablet" ? (
+                          <Tablet className="w-2.5 h-2.5" />
+                        ) : (
+                          <Monitor className="w-2.5 h-2.5" />
+                        )}
+                        <span>
+                          {session.browser || "Web"} · {session.os || "OS"}
+                        </span>
+                      </span>
+                    )}
+
+                    {/* Duration & Time */}
+                    <span className="text-[10px] font-mono text-muted-foreground flex items-center gap-1">
+                      <Clock className="w-2.5 h-2.5" />
+                      <span>{duration}</span>
+                      <span>· {formatDistanceToNow(new Date(session.updatedAt), { addSuffix: true })}</span>
                     </span>
                   </div>
 
-                  {/* Lead Info Pill if present */}
+                  {/* Comprehensive Lead Card if present */}
                   {session.leadInfo && (
-                    <div className="p-2 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-xs flex flex-wrap items-center gap-3">
-                      {session.leadInfo.name && (
-                        <span className="font-semibold text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
-                          <User className="w-3 h-3" />
-                          <span>{session.leadInfo.name}</span>
-                        </span>
-                      )}
-                      {session.leadInfo.email && (
-                        <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                          <Mail className="w-3 h-3" />
-                          <span>{session.leadInfo.email}</span>
-                        </span>
+                    <div className="p-2.5 rounded-xl bg-emerald-500/5 border border-emerald-500/25 space-y-1">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+                        {session.leadInfo.name && (
+                          <span className="font-bold text-foreground flex items-center gap-1">
+                            <User className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                            <span>{session.leadInfo.name}</span>
+                          </span>
+                        )}
+                        {session.leadInfo.email && (
+                          <a
+                            href={`mailto:${session.leadInfo.email}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 font-mono text-[11px]"
+                          >
+                            <Mail className="w-3 h-3" />
+                            <span>{session.leadInfo.email}</span>
+                          </a>
+                        )}
+                        {session.leadInfo.website && (
+                          <a
+                            href={
+                              session.leadInfo.website.startsWith("http")
+                                ? session.leadInfo.website
+                                : `https://${session.leadInfo.website}`
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-teal-600 dark:text-teal-400 hover:underline flex items-center gap-1 font-mono text-[11px]"
+                          >
+                            <Globe className="w-3 h-3" />
+                            <span>{session.leadInfo.website}</span>
+                            <ExternalLink className="w-2.5 h-2.5" />
+                          </a>
+                        )}
+                        {session.leadInfo.phone && (
+                          <a
+                            href={`https://wa.me/${session.leadInfo.phone.replace(/\D/g, "")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 font-mono text-[11px]"
+                          >
+                            <PhoneCall className="w-3 h-3" />
+                            <span>{session.leadInfo.phone}</span>
+                          </a>
+                        )}
+                      </div>
+                      {session.leadInfo.message && (
+                        <p className="text-[11px] text-muted-foreground line-clamp-1 italic font-sans pt-0.5">
+                          &ldquo;{session.leadInfo.message}&rdquo;
+                        </p>
                       )}
                     </div>
                   )}
 
-                  {/* Message Preview */}
+                  {/* Message Preview Snippet */}
                   <p className="text-xs text-foreground/90 line-clamp-2 font-sans">
                     {firstUserMsg ? (
                       <>
@@ -363,13 +477,30 @@ export default function ChatsAdminClient() {
                       </>
                     ) : lastMsg ? (
                       <>
-                        <span className="font-semibold text-muted-foreground">Last Turn: </span>
+                        <span className="font-semibold text-muted-foreground">Turn: </span>
                         <span>{lastMsg.content}</span>
                       </>
                     ) : (
-                      <span className="text-muted-foreground italic">Empty session initialized</span>
+                      <span className="text-muted-foreground italic">Session initialized</span>
                     )}
                   </p>
+
+                  {/* Footer Bar: Visitor ID & Referrer */}
+                  <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-muted-foreground/75 pt-0.5">
+                    <span>Visitor: {session.visitorId?.slice(0, 14) || session.id.slice(0, 14)}</span>
+                    {session.turnCount && session.turnCount > 1 && (
+                      <span className="text-teal-600 dark:text-teal-400 font-bold">
+                        · {session.turnCount} turns
+                      </span>
+                    )}
+                    {session.referrerDomain && session.referrerDomain !== "Direct" && (
+                      <span className="flex items-center gap-1">
+                        <Compass className="w-2.5 h-2.5" />
+                        <span>Via {session.referrerDomain}</span>
+                      </span>
+                    )}
+                    {session.ip && <span>· IP: {session.ip}</span>}
+                  </div>
                 </div>
 
                 {/* Right Actions */}
@@ -396,7 +527,7 @@ export default function ChatsAdminClient() {
       {/* Transcript Inspection Modal Drawer */}
       {selectedSession && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-150">
-          <div className="bg-card border border-border rounded-2xl w-full max-w-2xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden">
+          <div className="bg-card border border-border rounded-2xl w-full max-w-2xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden font-sans">
             {/* Modal Header */}
             <div className="px-5 py-4 border-b border-border flex items-center justify-between">
               <div>
@@ -406,9 +537,15 @@ export default function ChatsAdminClient() {
                   </span>
                   <h3 className="font-bold text-sm text-foreground">Conversation Transcript</h3>
                 </div>
-                <p className="text-[11px] text-muted-foreground font-mono mt-0.5">
-                  ID: {selectedSession.id} · {selectedSession.messages.length} exchanges
-                </p>
+                <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground font-mono mt-1">
+                  <span>{resolveCountry(selectedSession.countryCode || "GL").flag}</span>
+                  <span>
+                    {selectedSession.city ? `${selectedSession.city}, ` : ""}
+                    {selectedSession.country || "Global"}
+                  </span>
+                  <span>· IP: {selectedSession.ip}</span>
+                  <span>· {selectedSession.messages.length} exchanges</span>
+                </div>
               </div>
 
               <div className="flex items-center gap-1.5">
@@ -440,31 +577,69 @@ export default function ChatsAdminClient() {
 
             {/* Client Spec Details if present */}
             {selectedSession.leadInfo && (
-              <div className="p-4 bg-emerald-500/5 border-b border-emerald-500/20 space-y-1">
+              <div className="p-4 bg-emerald-500/5 border-b border-emerald-500/20 space-y-2">
                 <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Client Project Spec &amp; Contact</span>
                 </p>
-                <div className="grid grid-cols-2 gap-2 text-xs pt-1">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                   <div>
-                    <span className="text-muted-foreground">Name: </span>
+                    <span className="text-muted-foreground block text-[10px] font-mono">NAME</span>
                     <span className="font-semibold text-foreground">{selectedSession.leadInfo.name || "—"}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Email: </span>
-                    <span className="font-semibold text-foreground">{selectedSession.leadInfo.email || "—"}</span>
+                    <span className="text-muted-foreground block text-[10px] font-mono">EMAIL</span>
+                    <span className="font-semibold text-foreground font-mono text-[11px]">
+                      {selectedSession.leadInfo.email || "—"}
+                    </span>
                   </div>
+                  <div>
+                    <span className="text-muted-foreground block text-[10px] font-mono">WEBSITE / STORE</span>
+                    {selectedSession.leadInfo.website ? (
+                      <a
+                        href={
+                          selectedSession.leadInfo.website.startsWith("http")
+                            ? selectedSession.leadInfo.website
+                            : `https://${selectedSession.leadInfo.website}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-teal-600 dark:text-teal-400 underline flex items-center gap-1 font-mono text-[11px]"
+                      >
+                        <span>{selectedSession.leadInfo.website}</span>
+                        <ExternalLink className="w-2.5 h-2.5" />
+                      </a>
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </div>
+                  {selectedSession.leadInfo.phone && (
+                    <div>
+                      <span className="text-muted-foreground block text-[10px] font-mono">WHATSAPP / PHONE</span>
+                      <a
+                        href={`https://wa.me/${selectedSession.leadInfo.phone.replace(/\D/g, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px] hover:underline"
+                      >
+                        {selectedSession.leadInfo.phone}
+                      </a>
+                    </div>
+                  )}
                 </div>
                 {selectedSession.leadInfo.message && (
-                  <p className="text-xs text-foreground/90 pt-1 font-mono bg-background/50 p-2 rounded-lg">
-                    {selectedSession.leadInfo.message}
-                  </p>
+                  <div className="pt-1">
+                    <span className="text-muted-foreground block text-[10px] font-mono mb-0.5">PROJECT REQUIREMENTS</span>
+                    <p className="text-xs text-foreground/90 font-mono bg-background/60 p-2.5 rounded-lg border border-border">
+                      {selectedSession.leadInfo.message}
+                    </p>
+                  </div>
                 )}
               </div>
             )}
 
             {/* Transcript Messages Stream */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 font-sans">
               {selectedSession.messages.length === 0 ? (
                 <p className="text-center text-xs text-muted-foreground italic py-8">
                   No dialogue turns recorded in this session.

@@ -161,25 +161,50 @@ export const siteAnalyticsEvents = pgTable(
   ]
 );
 
-// Chat sessions history for Otto AI (Text & Live Voice)
+// Chat sessions history for Otto AI (Text & Live Voice) with deep telemetry & location
 export const chatSessions = pgTable(
   "chat_sessions",
   {
     id: varchar("id", { length: 128 }).primaryKey(),
+    visitorId: varchar("visitor_id", { length: 128 }),
     mode: varchar("mode", { length: 32 }).default("text").notNull(),
     messages: jsonb("messages").$type<Array<{ role: "user" | "assistant"; content: string; timestamp?: string }>>().notNull(),
     messageCount: integer("message_count").default(0).notNull(),
+    turnCount: integer("turn_count").default(0).notNull(),
     hasLead: boolean("has_lead").default(false).notNull(),
-    leadInfo: jsonb("lead_info").$type<{ name?: string; email?: string; message?: string }>(),
+    leadInfo: jsonb("lead_info").$type<{
+      name?: string;
+      email?: string;
+      phone?: string;
+      website?: string;
+      company?: string;
+      budget?: string;
+      timeline?: string;
+      message?: string;
+      source?: string;
+    }>(),
+    // Geolocation & Device Telemetry
+    country: varchar("country", { length: 100 }),
+    countryCode: varchar("country_code", { length: 10 }),
+    city: varchar("city", { length: 100 }),
+    region: varchar("region", { length: 100 }),
+    device: varchar("device", { length: 50 }),
+    browser: varchar("browser", { length: 100 }),
+    os: varchar("os", { length: 100 }),
+    referrer: text("referrer"),
+    referrerDomain: varchar("referrer_domain", { length: 255 }),
+    path: varchar("path", { length: 255 }),
+    ip: varchar("ip", { length: 100 }),
+    userAgent: text("user_agent"),
     startedAt: timestamp("started_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
-    userAgent: text("user_agent"),
-    ip: varchar("ip", { length: 100 }),
   },
   (table) => [
     index("chat_sessions_mode_idx").on(table.mode),
     index("chat_sessions_has_lead_idx").on(table.hasLead),
     index("chat_sessions_updated_at_idx").on(table.updatedAt),
+    index("chat_sessions_visitor_idx").on(table.visitorId),
+    index("chat_sessions_country_idx").on(table.countryCode),
   ]
 );
 
