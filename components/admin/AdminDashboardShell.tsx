@@ -18,6 +18,7 @@ import {
   ArrowUpRight,
   ExternalLink,
   Bot,
+  Mail,
 } from "lucide-react";
 
 import {
@@ -49,10 +50,12 @@ export default function AdminDashboardShell({ children }: AdminLayoutProps) {
   const [mounted, setMounted] = useState(false);
 
   // Login Gate State
+  const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [resetSent, setResetSent] = useState("");
 
   useEffect(() => {
     setMounted(true);
@@ -75,16 +78,44 @@ export default function AdminDashboardShell({ children }: AdminLayoutProps) {
 
     setLoginLoading(true);
     setLoginError("");
+    setResetSent("");
 
-    const result = await verifyAdminPassword(passwordInput.trim());
+    const result = await verifyAdminPassword(passwordInput.trim(), emailInput.trim() || undefined);
     if (result.success) {
       setAdminAuthToken(passwordInput.trim());
       setIsLoggedIn(true);
       setPasswordInput("");
     } else {
-      setLoginError(result.error || "Invalid administrative key. Access denied.");
+      setLoginError(result.error || "Invalid administrative credentials. Access denied.");
     }
     setLoginLoading(false);
+  };
+
+  const handleSendResetLink = async () => {
+    if (!emailInput.trim()) {
+      setLoginError("Please enter your administrative email in the field above to receive a link.");
+      return;
+    }
+    setLoginLoading(true);
+    setLoginError("");
+    setResetSent("");
+    try {
+      const res = await fetch("/api/admin/request-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailInput.trim() }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        setResetSent(data.message || "A secure access and password reset link has been sent to your email.");
+      } else {
+        setLoginError(data.error || "Failed to send reset link.");
+      }
+    } catch (err: any) {
+      setLoginError(err.message || "Failed to communicate with auth server.");
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
   const handleLogout = () => {
@@ -107,23 +138,19 @@ export default function AdminDashboardShell({ children }: AdminLayoutProps) {
   // 2. Unauthenticated: Render Centralized Superadmin Login Gate
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden">
-        {/* Subtle Ambient Glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
+      <div className="min-h-screen text-foreground flex items-center justify-center p-4 relative overflow-hidden">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.25 }}
-          className="w-full max-w-md p-6 sm:p-8 rounded-2xl bg-card border border-border shadow-2xl relative z-10"
+          className="w-full max-w-md p-6 sm:p-8 rounded-2xl bg-transparent border border-border/60 relative z-10"
         >
           {/* Lock Header */}
           <div className="flex flex-col items-center text-center mb-6">
-            <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/25 text-primary flex items-center justify-center mb-4 shadow-sm">
+            <div className="w-14 h-14 rounded-2xl border border-primary/30 text-primary flex items-center justify-center mb-4">
               <Lock size={26} />
             </div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-[11px] font-mono font-bold mb-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-primary/30 text-primary text-[11px] font-mono font-bold mb-2">
               <ShieldCheck size={13} />
               SUPERADMIN ACCESS GATE
             </div>
@@ -139,6 +166,25 @@ export default function AdminDashboardShell({ children }: AdminLayoutProps) {
           <form onSubmit={handleLoginSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-mono text-muted-foreground block">
+                Administrative Email
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted-foreground">
+                  <Mail size={16} />
+                </div>
+                <input
+                  type="email"
+                  placeholder="admin@domain.com"
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-transparent border border-border text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-mono"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono text-muted-foreground block">
                 Administrative Password
               </label>
               <div className="relative">
@@ -150,7 +196,7 @@ export default function AdminDashboardShell({ children }: AdminLayoutProps) {
                   placeholder="Enter administrative password..."
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
-                  className="w-full pl-10 pr-10 py-3 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                  className="w-full pl-10 pr-10 py-3 rounded-xl bg-transparent border border-border text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                   autoFocus
                   required
                 />
@@ -163,7 +209,35 @@ export default function AdminDashboardShell({ children }: AdminLayoutProps) {
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
+
+              <div className="flex items-center justify-between pt-1">
+                <button
+                  type="button"
+                  onClick={handleSendResetLink}
+                  disabled={loginLoading}
+                  className="text-[11px] font-mono text-primary/90 hover:text-primary hover:underline transition-colors cursor-pointer"
+                >
+                  Forgot or need to reset password?
+                </button>
+                <Link
+                  href="/admin/reset"
+                  className="text-[11px] font-mono text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Reset options →
+                </Link>
+              </div>
             </div>
+
+            {resetSent && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2"
+              >
+                <ShieldCheck size={15} className="shrink-0" />
+                <span>{resetSent}</span>
+              </motion.div>
+            )}
 
             {loginError && (
               <motion.div
@@ -196,12 +270,12 @@ export default function AdminDashboardShell({ children }: AdminLayoutProps) {
           </form>
 
           {/* Security Information Footer */}
-          <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+          <div className="mt-6 pt-4 border-t border-border/60 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Single Sign-On Active
             </span>
-            <span className="text-[10px]">Route: {pathname}</span>
+            <span className="text-[10px] text-muted-foreground/60">Secured Access</span>
           </div>
         </motion.div>
       </div>

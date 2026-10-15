@@ -100,12 +100,18 @@ export function clearAdminAuthToken(): void {
 /**
  * Verifies the admin password against the server API.
  */
-export async function verifyAdminPassword(password: string): Promise<{ success: boolean; error?: string }> {
+export async function verifyAdminPassword(
+  password: string,
+  email?: string
+): Promise<{ success: boolean; error?: string }> {
   try {
+    const payload: { password: string; email?: string } = { password };
+    if (email?.trim()) payload.email = email.trim();
+
     const res = await fetch("/api/admin/verify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify(payload),
     });
 
     const data = await res.json().catch(() => ({}));

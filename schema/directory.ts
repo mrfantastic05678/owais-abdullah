@@ -208,6 +208,13 @@ export const chatSessions = pgTable(
   ]
 );
 
+// Administrative Key-Value Settings (custom passwords, runtime toggles)
+export const adminSettings = pgTable("admin_settings", {
+  key: varchar("key", { length: 128 }).primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export type DirectoryStore = typeof directoryStores.$inferSelect;
 export type NewDirectoryStore = typeof directoryStores.$inferInsert;
 export type DirectoryClaim = typeof directoryClaims.$inferSelect;
@@ -220,4 +227,6 @@ export type NewBlogComment = typeof blogComments.$inferInsert;
 export type SiteAnalyticsEvent = typeof siteAnalyticsEvents.$inferSelect;
 export type ChatSession = typeof chatSessions.$inferSelect;
 export type NewChatSession = typeof chatSessions.$inferInsert;
+export type AdminSetting = typeof adminSettings.$inferSelect;
+
 

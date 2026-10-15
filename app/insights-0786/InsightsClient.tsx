@@ -286,18 +286,15 @@ export default function InsightsClient() {
   // =========================================================================
   if (!isAuthenticated) {
     return (
-      <main className="min-h-screen pt-32 pb-20 px-4 flex items-center justify-center bg-background text-foreground relative overflow-hidden">
-        {/* Background ambient mesh */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[100px] pointer-events-none" />
-
+      <main className="min-h-screen pt-32 pb-20 px-4 flex items-center justify-center text-foreground relative overflow-hidden">
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="w-full max-w-md bg-card/90 border border-border rounded-2xl p-7 shadow-2xl backdrop-blur-xl relative z-10"
+          className="w-full max-w-md bg-transparent border border-border/60 rounded-2xl p-7 relative z-10"
         >
           <div className="flex flex-col items-center text-center mb-6">
-            <div className="w-12 h-12 rounded-xl bg-accent/15 border border-accent/30 text-accent flex items-center justify-center mb-3 shadow-inner">
+            <div className="w-12 h-12 rounded-xl border border-accent/40 text-accent flex items-center justify-center mb-3">
               <Lock size={22} />
             </div>
             <span className="text-[11px] font-mono tracking-widest uppercase text-accent font-bold mb-1">
@@ -319,7 +316,7 @@ export default function InsightsClient() {
                 placeholder="Enter password..."
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
-                className="w-full pl-10 pr-10 py-3 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+                className="w-full pl-10 pr-10 py-3 rounded-xl bg-transparent border border-border text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
                 autoFocus
               />
               <button
@@ -330,6 +327,15 @@ export default function InsightsClient() {
               >
                 <Eye size={16} />
               </button>
+            </div>
+
+            <div className="flex items-center justify-between text-xs">
+              <Link
+                href="/admin/reset"
+                className="text-[11px] font-mono text-accent hover:underline transition-colors"
+              >
+                Forgot or need password reset? Send email link →
+              </Link>
             </div>
 
             {authError && (
@@ -362,8 +368,8 @@ export default function InsightsClient() {
             </button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-[11px] font-mono text-muted-foreground">
-            <span>Route: /insights-0786</span>
+          <div className="mt-6 pt-4 border-t border-border/60 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+            <span>Secure Access Gateway</span>
             <span className="text-signal-500">noindex · secure</span>
           </div>
         </motion.div>

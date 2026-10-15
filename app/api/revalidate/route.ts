@@ -14,7 +14,12 @@ export async function GET(request: NextRequest) {
   // again.
   const validSecret =
     process.env.SANITY_REVALIDATE_SECRET ?? process.env.REVALIDATE_SECRET;
-  if (!validSecret || secret !== validSecret) {
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  const isAuthorized =
+    (validSecret && secret === validSecret) ||
+    (adminPassword && secret === adminPassword);
+
+  if (!isAuthorized) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
 

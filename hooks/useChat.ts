@@ -203,8 +203,8 @@ export function useChat() {
         },
         body: JSON.stringify({
           messages: updatedMessages.map((msg) => ({
-            role: msg.role === "user" ? "user" : "model",
-            parts: [{ text: msg.content }],
+            role: msg.role === "user" ? "user" : "assistant",
+            content: msg.content,
           })),
         }),
       });
@@ -215,7 +215,9 @@ export function useChat() {
       } else if (response.status === 429) {
         setMessages((prev) => [...prev, { role: "assistant", content: getMockResponse(input) }]);
       } else {
-        throw new Error("API error");
+        const errorData = await response.json().catch(() => ({}));
+        console.error("[useChat] API Error:", response.status, errorData);
+        throw new Error(errorData.error || "API error");
       }
     } catch (error) {
       console.error("Error:", error);

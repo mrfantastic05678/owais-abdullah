@@ -46,14 +46,27 @@ export function sanitizeUserMessage(content: string): string {
 }
 
 // ── Zod Schemas for Chat & Session ───────────────────────────────────────────
-export const ChatMessageSchema = z.object({
-  role: z.enum(["user", "assistant"]),
-  content: z
-    .string()
-    .min(1, "Message content cannot be empty.")
-    .max(3000, "Message exceeds 3000 characters limit."),
-  timestamp: z.string().optional(),
-});
+export const ChatMessageSchema = z.preprocess(
+  (val: any) => {
+    if (val && typeof val === "object") {
+      const role = val.role === "model" ? "assistant" : val.role;
+      let content = val.content;
+      if (!content && Array.isArray(val.parts) && val.parts[0]?.text) {
+        content = val.parts[0].text;
+      }
+      return { ...val, role, content: content ?? "" };
+    }
+    return val;
+  },
+  z.object({
+    role: z.enum(["user", "assistant"]),
+    content: z
+      .string()
+      .min(1, "Message content cannot be empty.")
+      .max(4000, "Message exceeds character limit."),
+    timestamp: z.string().optional(),
+  })
+);
 
 export const ChatRequestSchema = z.object({
   messages: z

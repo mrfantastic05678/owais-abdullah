@@ -60,9 +60,12 @@ export default function StatsBand() {
       ref={containerRef} 
       className="my-12 max-w-6xl mx-auto px-5 sm:px-6"
     >
-      <div className="clean-glass-card p-7 sm:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
+      <div className="clean-glass-card p-5 sm:p-8 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center md:text-left">
         {STATS.map(({ value, suffix, label }, idx) => (
-          <div key={label} className="space-y-1">
+          <div 
+            key={label} 
+            className={`space-y-1 ${idx >= 2 ? "hidden md:block" : ""}`}
+          >
             <span
               data-count={value}
               data-suffix={suffix}

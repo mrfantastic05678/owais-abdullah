@@ -1,24 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getActiveAdminPassword, verifyAdminResetToken, getAdminEmail } from "@/lib/admin-token";
 
 export const dynamic = "force-dynamic";
 
-// No hardcoded default: the previous one is in git history. Unset env =>
-// every verification fails (callers compare against `undefined`).
-function getExpectedPassword(): string | undefined {
-  return process.env.ADMIN_PASSWORD ?? process.env.ANALYTICS_PASSWORD;
+function getExpectedEmail(): string | undefined {
+  return getAdminEmail();
 }
 
-// POST: Verify password and issue cookie
+// POST: Verify credentials OR 1-click reset token, then issue secure admin cookie
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
+    const email = (body.email || "").toLowerCase().trim();
     const password = (body.password || "").trim();
+    const magicToken = (body.token || "").trim();
 
-    const expected = getExpectedPassword();
+    const expectedEmail = getExpectedEmail();
+    const expectedPassword = await getActiveAdminPassword();
 
-    if (!password || password !== expected) {
+    // 1. Support 1-Click Magic Link Token
+    if (magicToken) {
+      const verification = verifyAdminResetToken(magicToken);
+      if (verification.valid) {
+        const res = NextResponse.json({
+          success: true,
+          message: "Magic link authentication successful",
+          token: expectedPassword,
+        });
+
+        res.cookies.set("admin_auth_session", expectedPassword, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 30, // 30 days
+          sameSite: "lax",
+          httpOnly: false,
+          secure: process.env.NODE_ENV === "production",
+        });
+
+        return res;
+      }
       return NextResponse.json(
-        { error: "Invalid admin password. Access denied." },
+        { error: verification.error || "Invalid or expired magic link" },
+        { status: 401 }
+      );
+    }
+
+    // 2. Standard Email + Password verification
+    if (email && email !== expectedEmail) {
+      return NextResponse.json(
+        { error: "Unauthorized administrative email. Access denied." },
+        { status: 401 }
+      );
+    }
+
+    if (!password || password !== expectedPassword) {
+      return NextResponse.json(
+        { error: "Invalid administrative credentials. Access denied." },
         { status: 401 }
       );
     }
@@ -34,14 +70,14 @@ export async function POST(req: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24 * 30, // 30 days
       sameSite: "lax",
-      httpOnly: false, // Client accessible for sync
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
     });
 
     return res;
   } catch (err: any) {
     return NextResponse.json(
-      { error: err.message || "Failed to verify admin password" },
+      { error: err.message || "Failed to verify admin credentials" },
       { status: 500 }
     );
   }
@@ -55,13 +91,15 @@ export async function GET(req: NextRequest) {
     const queryToken = req.nextUrl.searchParams.get("token");
 
     const token = (cookieToken || authHeader || queryToken || "").trim();
-    const expected = getExpectedPassword();
+    const expected = await getActiveAdminPassword();
 
-    if (!token || token !== expected) {
+    const isMatch = token && (token === expected || verifyAdminResetToken(token).valid);
+
+    if (!isMatch) {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
 
-    return NextResponse.json({ authenticated: true });
+    return NextResponse.json({ authenticated: true, email: getExpectedEmail() });
   } catch (err: any) {
     return NextResponse.json(
       { authenticated: false, error: err.message },

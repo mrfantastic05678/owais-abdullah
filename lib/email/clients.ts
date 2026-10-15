@@ -8,4 +8,4 @@ export const getResend = () =>
 export const FROM_ADDRESS =
   process.env.RESEND_FROM_EMAIL ?? "Owais Abdullah <onboarding@resend.dev>";
 export const TO_ADDRESS =
-  process.env.CONTACT_TO_EMAIL ?? "mrowaisabdullah@gmail.com";
+  process.env.CONTACT_TO_EMAIL || process.env.ADMIN_EMAIL || "";

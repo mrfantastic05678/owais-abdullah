@@ -11,10 +11,9 @@ export async function POST(req: NextRequest) {
     const authHeader = req.headers.get("authorization")?.replace("Bearer ", "");
     const password = body.password || cookieToken || authHeader;
 
-    // No hardcoded default (previous one is in git history); unset env denies.
-    const serverPassword =
-      process.env.ADMIN_PASSWORD ??
-      process.env.ANALYTICS_PASSWORD;
+    // Check active admin password (DB first, then env)
+    const { getActiveAdminPassword } = await import("@/lib/admin-token");
+    const serverPassword = await getActiveAdminPassword();
 
     if (!password || password !== serverPassword) {
       return NextResponse.json({ error: "Invalid password" }, { status: 401 });
