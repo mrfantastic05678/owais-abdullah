@@ -183,5 +183,18 @@ export function useChat() {
     }
   };
 
-  return { messages, input, setInput, handleSubmit, isLoading, validationError, clearChat: clearLocalStorage };
+  const addMessages = (newMsgs: Message[]) => {
+    setMessages((prev) => [...prev, ...newMsgs]);
+  };
+
+  return {
+    messages,
+    input,
+    setInput,
+    handleSubmit,
+    isLoading,
+    validationError,
+    clearChat: clearLocalStorage,
+    addMessages,
+  };
 }

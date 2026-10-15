@@ -13,7 +13,9 @@ import {
   Linkedin, 
   Github, 
   Mail, 
-  ChevronDown 
+  ChevronDown,
+  Mic,
+  Sparkles
 } from "lucide-react";
 import { profile } from "@/data/profile";
 import TiltCard from "@/components/ui/TiltCard";
@@ -93,6 +95,23 @@ export default function Hero() {
                 <SplitFlapLabel primary="View Projects" secondary="Explore Builds" />
                 <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors" />
               </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new CustomEvent("open-chat-voice"));
+                  }
+                }}
+                className="px-5 py-3.5 rounded-xl text-sm font-semibold text-teal-800 dark:text-teal-200 bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/35 hover:border-teal-500 shadow-xs transition-all flex items-center gap-2 group cursor-pointer"
+                title="Talk directly with Owais AI (Gemini 3.8 Live Voice)"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <Mic className="w-4 h-4 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform" />
+                <SplitFlapLabel primary="Talk to My AI" secondary="Live Voice" />
+              </button>
             </div>
 
             {/* Capability Indicators underneath CTAs */}

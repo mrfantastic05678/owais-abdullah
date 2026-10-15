@@ -14,10 +14,17 @@ import {
   Loader2,
   Mail,
   ArrowLeft,
+  Mic,
+  MicOff,
+  PhoneOff,
+  Radio,
+  FileText,
+  Volume2,
 } from "lucide-react";
 import Image from "next/image";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "@/hooks/useChat";
+import { useLiveVoice } from "@/hooks/useLiveVoice";
 import ReactMarkdown from "react-markdown";
 import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
@@ -30,11 +37,14 @@ const STARTER_PROMPTS = [
 
 export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
-  const { messages, input, setInput, handleSubmit, isLoading, clearChat } = useChat();
+  const [mode, setMode] = useState<"text" | "voice">("text");
+  const { messages, input, setInput, handleSubmit, isLoading, clearChat, addMessages } = useChat();
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLInputElement>(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showProactiveNudge, setShowProactiveNudge] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   // In-chat Lead Form Drawer state
@@ -45,9 +55,86 @@ export function ChatBot() {
   const [leadStatus, setLeadStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [leadError, setLeadError] = useState("");
 
-  // Show tooltip periodically when closed
+  // Live Voice Hook
+  const {
+    status: voiceStatus,
+    errorMessage: voiceError,
+    isMuted: isVoiceMuted,
+    assistantTranscript,
+    volumeLevel,
+    startSession: startVoiceSession,
+    stopSession: stopVoiceSession,
+    toggleMute: toggleVoiceMute,
+  } = useLiveVoice({
+    onSessionEnd: (history) => {
+      if (history.length > 0) {
+        addMessages(
+          history.map((h) => ({
+            role: h.role,
+            content: h.text,
+          }))
+        );
+      }
+    },
+    onOpenLeadDrawer: () => {
+      setShowLeadForm(true);
+      setMode("text");
+    },
+  });
+
+  // Switch to Voice Mode
+  const handleSwitchToVoice = () => {
+    setShowLeadForm(false);
+    setMode("voice");
+    startVoiceSession();
+  };
+
+  // Switch to Text Mode
+  const handleSwitchToText = () => {
+    stopVoiceSession();
+    setMode("text");
+  };
+
+  // Proactive scroll-depth and section linger detection
   useEffect(() => {
-    if (isOpen) {
+    if (typeof window === "undefined") return;
+
+    const hasSeenNudge = sessionStorage.getItem("portfolio_proactive_nudge_shown");
+    if (hasSeenNudge || isOpen) return;
+
+    const triggerNudge = () => {
+      if (!sessionStorage.getItem("portfolio_proactive_nudge_shown")) {
+        setShowProactiveNudge(true);
+        sessionStorage.setItem("portfolio_proactive_nudge_shown", "true");
+      }
+    };
+
+    // Scroll depth trigger (>35% of page)
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0 && scrollY / docHeight > 0.35) {
+        triggerNudge();
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+
+    // Time-on-page linger trigger (12 seconds)
+    const lingerTimer = setTimeout(() => {
+      triggerNudge();
+    }, 12000);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      clearTimeout(lingerTimer);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isOpen]);
+
+  // Periodic subtle tooltip when closed and no proactive nudge is active
+  useEffect(() => {
+    if (isOpen || showProactiveNudge) {
       setShowTooltip(false);
       return;
     }
@@ -61,8 +148,8 @@ export function ChatBot() {
         hideTimeout = setTimeout(() => {
           setShowTooltip(false);
           startCycle();
-        }, 8000);
-      }, 5000);
+        }, 7000);
+      }, 6000);
     };
 
     startCycle();
@@ -71,26 +158,54 @@ export function ChatBot() {
       clearTimeout(showTimeout);
       clearTimeout(hideTimeout);
     };
-  }, [isOpen]);
+  }, [isOpen, showProactiveNudge]);
 
   // Scroll to bottom when user sends a message or when loading
   useEffect(() => {
-    if (isOpen && messages.length > 1 && messagesEndRef.current && !showLeadForm) {
+    if (isOpen && mode === "text" && messages.length > 1 && messagesEndRef.current && !showLeadForm) {
       messagesEndRef.current.scrollIntoView({
         behavior: "smooth",
         block: "end",
       });
     }
-  }, [messages.length, isLoading, isOpen, showLeadForm]);
+  }, [messages.length, isLoading, isOpen, showLeadForm, mode]);
 
-  // Global listener for "open-chat" event
+  // Global listeners for "open-chat" and "open-chat-voice" events
   useEffect(() => {
-    const open = () => setIsOpen(true);
-    window.addEventListener("open-chat", open);
-    return () => window.removeEventListener("open-chat", open);
-  }, []);
+    const openText = () => {
+      setIsOpen(true);
+      setShowProactiveNudge(false);
+      setMode("text");
+    };
 
-  const toggleChat = () => setIsOpen((prev) => !prev);
+    const openVoice = () => {
+      setIsOpen(true);
+      setShowProactiveNudge(false);
+      setShowLeadForm(false);
+      setMode("voice");
+      startVoiceSession();
+    };
+
+    window.addEventListener("open-chat", openText);
+    window.addEventListener("open-chat-voice", openVoice);
+
+    return () => {
+      window.removeEventListener("open-chat", openText);
+      window.removeEventListener("open-chat-voice", openVoice);
+    };
+  }, [startVoiceSession]);
+
+  const toggleChat = () => {
+    if (isOpen) {
+      if (mode === "voice") {
+        stopVoiceSession();
+      }
+      setIsOpen(false);
+    } else {
+      setShowProactiveNudge(false);
+      setIsOpen(true);
+    }
+  };
 
   const handleChipClick = (prompt: string) => {
     if (prompt.includes("discuss a project") || prompt.includes("Book a Spec Call")) {
@@ -167,9 +282,82 @@ export function ChatBot() {
       {/* Floating Trigger FAB */}
       <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-[5001]">
         <div className="relative">
-          {/* Tooltip anchored cleanly to the right so it never clips off-screen */}
+          {/* Proactive Client Closer Nudge Toast */}
           <AnimatePresence>
-            {showTooltip && !isOpen && (
+            {showProactiveNudge && !isOpen && (
+              <motion.div
+                className="absolute -top-32 right-0 w-[310px] sm:w-[330px] bg-white dark:bg-[#041619] rounded-2xl p-3.5 shadow-2xl border border-teal-500/40 z-50 text-foreground"
+                initial={{ opacity: 0, y: 12, scale: 0.94 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: { type: "spring", stiffness: 400, damping: 20 },
+                }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg overflow-hidden bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0">
+                      <Image
+                        src="/assets/bot.png"
+                        alt="Owais AI"
+                        width={24}
+                        height={24}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold leading-tight">Scope an AI Agent or Web App?</p>
+                      <p className="text-[10px] text-muted-foreground font-medium">Owais AI Concierge is active</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowProactiveNudge(false)}
+                    className="text-muted-foreground hover:text-foreground text-xs p-1 rounded-md"
+                    aria-label="Dismiss message"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="mt-2.5 flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setShowProactiveNudge(false);
+                      setIsOpen(true);
+                      setShowLeadForm(true);
+                      setMode("text");
+                    }}
+                    className="flex-1 py-1.5 px-2.5 bg-gradient-to-r from-teal-700 to-emerald-600 hover:opacity-95 text-white rounded-lg text-[11px] font-bold shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <FileText className="w-3 h-3" />
+                    <span>Scope My Project</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowProactiveNudge(false);
+                      setIsOpen(true);
+                      setShowLeadForm(false);
+                      setMode("voice");
+                      startVoiceSession();
+                    }}
+                    className="py-1.5 px-2.5 bg-teal-500/10 hover:bg-teal-500/20 text-teal-700 dark:text-teal-300 border border-teal-500/30 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <Mic className="w-3 h-3 text-teal-600 dark:text-teal-400" />
+                    <span>Live Voice</span>
+                  </button>
+                </div>
+
+                {/* Arrow indicator */}
+                <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-white dark:bg-[#041619] border-r border-b border-teal-500/40 rotate-45" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Simple Tooltip (when closed and no proactive nudge) */}
+          <AnimatePresence>
+            {showTooltip && !isOpen && !showProactiveNudge && (
               <motion.div
                 className="absolute -top-12 right-0 bg-white dark:bg-[#071F22] text-slate-800 dark:text-teal-100 text-xs font-semibold px-3.5 py-1.5 rounded-full whitespace-nowrap shadow-xl border border-teal-500/30 flex items-center gap-1.5 pointer-events-none"
                 initial={{ opacity: 0, y: 6, scale: 0.95 }}
@@ -183,14 +371,13 @@ export function ChatBot() {
                 transition={{ duration: 0.15 }}
               >
                 <Sparkles className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
-                <span>Talk with Owais AI</span>
-                {/* Pointer arrow aligned over button center */}
+                <span>Talk with Owais AI (Text &amp; Voice)</span>
                 <div className="absolute -bottom-1 right-6 w-2 h-2 bg-white dark:bg-[#071F22] border-r border-b border-teal-500/30 rotate-45" />
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Launcher Button: Theme-Aware (Matches Light & Dark Modes) */}
+          {/* Launcher FAB */}
           <motion.button
             onClick={toggleChat}
             aria-label={isOpen ? "Close AI chat" : "Open AI chat"}
@@ -240,14 +427,14 @@ export function ChatBot() {
         </div>
       </div>
 
-      {/* Chat Window: Sits above launcher */}
+      {/* Main Chat/Voice Drawer Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             id="chatbot-window"
             data-lenis-prevent="true"
             onWheel={(e) => e.stopPropagation()}
-            className="fixed bottom-[86px] sm:bottom-[96px] right-5 sm:right-6 z-[5000] w-[370px] sm:w-[395px] max-w-[calc(100vw-2.5rem)] font-sans overscroll-contain"
+            className="fixed bottom-[86px] sm:bottom-[96px] right-5 sm:right-6 z-[5000] w-[375px] sm:w-[410px] max-w-[calc(100vw-2.5rem)] font-sans overscroll-contain"
             initial={{ opacity: 0, y: 14, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 14, scale: 0.97 }}
@@ -256,12 +443,11 @@ export function ChatBot() {
             <div
               data-lenis-prevent="true"
               onWheel={(e) => e.stopPropagation()}
-              className="h-[495px] max-h-[calc(100vh-7.5rem)] flex flex-col rounded-2xl border border-slate-200 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
+              className="h-[520px] max-h-[calc(100vh-7.5rem)] flex flex-col rounded-2xl border border-slate-200 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
             >
-              
-              {/* Clean Minimalist Header */}
+              {/* Header with Mode Toggle & Navigation */}
               <div className="px-3.5 py-2.5 border-b border-slate-200/80 dark:border-teal-900/40 bg-slate-50/70 dark:bg-[#031114] flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <div className="relative w-7 h-7 rounded-xl overflow-hidden bg-teal-500/10 border border-teal-500/20 p-0.5 flex items-center justify-center shrink-0">
                     <Image
                       src="/assets/bot.png"
@@ -276,36 +462,74 @@ export function ChatBot() {
                     <h3 className="font-bold text-xs text-foreground tracking-tight font-sans">
                       Owais AI Concierge
                     </h3>
-                    <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                    <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      <span>Online · Spec Architect</span>
-                    </span>
+                      <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-medium">
+                        {mode === "voice" ? "Gemini Live" : "Text Assistant"}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-1">
+                  {/* Mode Switcher Tabs */}
+                  <div className="flex items-center bg-slate-200/60 dark:bg-[#071F23] rounded-lg p-0.5 border border-slate-300/40 dark:border-teal-900/40">
+                    <button
+                      onClick={handleSwitchToText}
+                      title="Text Chat"
+                      className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                        mode === "text"
+                          ? "bg-white dark:bg-[#031518] text-teal-700 dark:text-teal-300 shadow-xs"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Chat
+                    </button>
+                    <button
+                      onClick={handleSwitchToVoice}
+                      title="Live Voice (Gemini 3.8 Live)"
+                      className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                        mode === "voice"
+                          ? "bg-teal-600 text-white shadow-xs"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Mic className="w-2.5 h-2.5" />
+                      <span>Live</span>
+                    </button>
+                  </div>
+
+                  {/* Spec Intake / Contact Drawer Toggle */}
                   <button
-                    onClick={() => setShowLeadForm((prev) => !prev)}
-                    title={showLeadForm ? "Back to chat" : "Leave message"}
-                    className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                    onClick={() => {
+                      if (mode === "voice") stopVoiceSession();
+                      setMode("text");
+                      setShowLeadForm((prev) => !prev);
+                    }}
+                    title={showLeadForm ? "Back to chat" : "Submit project spec"}
+                    className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
                       showLeadForm
                         ? "bg-teal-600 text-white"
                         : "bg-teal-500/10 text-teal-700 dark:text-teal-300 hover:bg-teal-500/20 border border-teal-500/30"
                     }`}
                   >
                     <Mail className="w-3 h-3" />
-                    <span>{showLeadForm ? "Chat" : "Contact"}</span>
+                    <span>{showLeadForm ? "Chat" : "Spec"}</span>
                   </button>
+
+                  {mode === "text" && !showLeadForm && (
+                    <button
+                      onClick={clearChat}
+                      title="Reset conversation"
+                      aria-label="Reset conversation"
+                      className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-slate-200/50 dark:hover:bg-teal-950/50 transition-colors cursor-pointer"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+
                   <button
-                    onClick={clearChat}
-                    title="Reset conversation"
-                    aria-label="Reset conversation"
-                    className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-slate-200/50 dark:hover:bg-teal-950/50 transition-colors cursor-pointer"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={toggleChat}
                     title="Close"
                     aria-label="Close"
                     className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-slate-200/50 dark:hover:bg-teal-950/50 transition-colors cursor-pointer"
@@ -315,8 +539,148 @@ export function ChatBot() {
                 </div>
               </div>
 
-              {/* In-Chat Form View */}
-              {showLeadForm ? (
+              {/* Mode 1: Live Voice UI */}
+              {mode === "voice" ? (
+                <div className="flex-1 min-h-0 p-5 bg-gradient-to-b from-slate-50/50 to-white dark:from-[#041619] dark:to-[#020e10] flex flex-col justify-between items-center text-center">
+                  
+                  {/* Top Live Badge */}
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/25 text-teal-700 dark:text-teal-300 text-[11px] font-mono font-semibold">
+                    <Radio className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
+                    <span>
+                      {voiceStatus === "requesting-mic" && "Requesting Microphone..."}
+                      {voiceStatus === "connecting" && "Establishing Direct WSS Link..."}
+                      {voiceStatus === "listening" && "Listening · Speak Freely"}
+                      {voiceStatus === "speaking" && "Otto Voice is Answering..."}
+                      {voiceStatus === "error" && "Connection Error"}
+                      {voiceStatus === "ended" && "Voice Session Finished"}
+                      {voiceStatus === "idle" && "Ready to Connect"}
+                    </span>
+                  </div>
+
+                  {/* Pulsing Visualizer Core & Waveform */}
+                  <div className="my-auto flex flex-col items-center justify-center">
+                    <div className="relative flex items-center justify-center">
+                      {/* Outer reactive sound halo */}
+                      <motion.div
+                        className="absolute rounded-full bg-teal-500/20 blur-xl pointer-events-none"
+                        animate={{
+                          width: `${120 + volumeLevel * 140}px`,
+                          height: `${120 + volumeLevel * 140}px`,
+                          opacity: voiceStatus === "speaking" || voiceStatus === "listening" ? 0.8 : 0.2,
+                        }}
+                        transition={{ duration: 0.1 }}
+                      />
+
+                      {/* Main Orb */}
+                      <motion.div
+                        className={`w-28 h-28 rounded-full border-2 flex items-center justify-center shadow-2xl backdrop-blur-md relative z-10 ${
+                          voiceStatus === "speaking"
+                            ? "border-emerald-400 bg-emerald-500/15 shadow-emerald-500/20"
+                            : voiceStatus === "listening"
+                            ? "border-teal-500 bg-teal-500/10 shadow-teal-500/20"
+                            : "border-slate-300 dark:border-teal-900 bg-slate-100 dark:bg-[#071F23]"
+                        }`}
+                        animate={{
+                          scale: 1 + Math.min(volumeLevel * 0.45, 0.35),
+                        }}
+                        transition={{ duration: 0.08 }}
+                      >
+                        <div className="relative w-16 h-16 flex items-center justify-center">
+                          <Image
+                            src="/assets/bot.png"
+                            alt="Otto Voice"
+                            width={54}
+                            height={54}
+                            className="object-contain filter drop-shadow-md"
+                          />
+                        </div>
+                      </motion.div>
+                    </div>
+
+                    {/* Waveform Soundbars */}
+                    <div className="flex items-center gap-1.5 mt-6 h-8">
+                      {[0.4, 0.7, 1.0, 0.6, 0.9, 0.5, 0.8].map((factor, i) => (
+                        <motion.div
+                          key={i}
+                          className="w-1 rounded-full bg-teal-500"
+                          animate={{
+                            height:
+                              voiceStatus === "speaking" || voiceStatus === "listening"
+                                ? `${Math.max(6, Math.min(32, 8 + volumeLevel * 60 * factor))}px`
+                                : "6px",
+                          }}
+                          transition={{ duration: 0.08 }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Live Assistant Caption Stream */}
+                    {assistantTranscript && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-3 px-4 py-2 rounded-xl bg-slate-100/80 dark:bg-[#061E22] border border-slate-200 dark:border-teal-900/40 max-w-[320px] text-xs font-sans text-foreground leading-relaxed text-center line-clamp-3"
+                      >
+                        <Volume2 className="w-3 h-3 text-teal-600 dark:text-teal-400 inline-block mr-1.5" />
+                        <span>{assistantTranscript}</span>
+                      </motion.div>
+                    )}
+
+                    {voiceError && (
+                      <p className="mt-2 text-[11px] text-rose-500 font-mono px-3 py-1 bg-rose-500/10 rounded-lg border border-rose-500/20">
+                        {voiceError}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Bottom Voice Controls */}
+                  <div className="w-full space-y-3 pt-2">
+                    <div className="flex items-center justify-center gap-3">
+                      {/* Mute Button */}
+                      <button
+                        onClick={toggleVoiceMute}
+                        disabled={voiceStatus !== "listening" && voiceStatus !== "speaking"}
+                        title={isVoiceMuted ? "Unmute microphone" : "Mute microphone"}
+                        className={`w-11 h-11 rounded-2xl flex items-center justify-center border transition-all cursor-pointer ${
+                          isVoiceMuted
+                            ? "bg-rose-500/10 border-rose-500/40 text-rose-500 hover:bg-rose-500/20"
+                            : "bg-slate-100 dark:bg-[#071F23] border-slate-200 dark:border-teal-900/50 text-foreground hover:bg-slate-200 dark:hover:bg-teal-900/30"
+                        }`}
+                      >
+                        {isVoiceMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                      </button>
+
+                      {/* End Call Button */}
+                      <button
+                        onClick={handleSwitchToText}
+                        title="End Voice Call and return to chat"
+                        className="px-5 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-rose-900/20 cursor-pointer transition-all hover:scale-105"
+                      >
+                        <PhoneOff className="w-4 h-4" />
+                        <span>End Call</span>
+                      </button>
+
+                      {/* Open Spec Form */}
+                      <button
+                        onClick={() => {
+                          stopVoiceSession();
+                          setMode("text");
+                          setShowLeadForm(true);
+                        }}
+                        title="Switch to Spec Intake Form"
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center border bg-slate-100 dark:bg-[#071F23] border-slate-200 dark:border-teal-900/50 text-foreground hover:bg-slate-200 dark:hover:bg-teal-900/30 transition-all cursor-pointer"
+                      >
+                        <FileText className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                      </button>
+                    </div>
+
+                    <p className="text-[10px] font-mono text-muted-foreground/75">
+                      Barge-in supported · Interruption flushes output instantaneously
+                    </p>
+                  </div>
+                </div>
+              ) : showLeadForm ? (
+                /* Mode 2: In-Chat Form View */
                 <div
                   data-lenis-prevent="true"
                   onWheel={(e) => e.stopPropagation()}
@@ -383,7 +747,6 @@ export function ChatBot() {
                         </div>
                       )}
 
-                      {/* CTA Button with Departure-Board Hover Text Change Animation */}
                       <button
                         type="submit"
                         disabled={leadStatus === "loading" || leadStatus === "success"}
@@ -404,7 +767,6 @@ export function ChatBot() {
                         )}
                       </button>
 
-                      {/* Back to chat button below submit button */}
                       <button
                         type="button"
                         onClick={() => setShowLeadForm(false)}
@@ -416,7 +778,6 @@ export function ChatBot() {
                     </form>
                   </div>
 
-                  {/* Powered by Octively footer inside form drawer */}
                   <div className="text-[10px] font-mono text-center text-muted-foreground/75 pt-2 flex items-center justify-center gap-1">
                     <span>Powered by</span>
                     <a
@@ -430,7 +791,7 @@ export function ChatBot() {
                   </div>
                 </div>
               ) : (
-                /* Standard Messages Stream */
+                /* Mode 3: Standard Text Messages Stream */
                 <>
                   <ScrollArea
                     className="flex-1 min-h-0 px-3.5 py-3 font-sans overscroll-contain"
@@ -439,10 +800,8 @@ export function ChatBot() {
                     onWheel={(e) => e.stopPropagation()}
                   >
                     <div className="space-y-3.5 font-sans">
-                      
                       {messages.map((message, index) =>
                         message.role === "user" ? (
-                          /* User Message */
                           <div key={index} className="flex justify-end pt-0.5">
                             <div className="rounded-2xl rounded-br-xs px-3.5 py-2 max-w-[82%] bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 text-white shadow-xs font-sans">
                               <p className="text-xs leading-relaxed whitespace-pre-wrap break-words font-sans">
@@ -451,7 +810,6 @@ export function ChatBot() {
                             </div>
                           </div>
                         ) : (
-                          /* Assistant Message with Agent Logo */
                           <div key={index} className="space-y-1 text-left group pt-0.5">
                             <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-mono">
                               <div className="w-4 h-4 rounded-md overflow-hidden bg-teal-500/10 border border-teal-500/20 p-0.5 flex items-center justify-center shrink-0">
@@ -522,7 +880,6 @@ export function ChatBot() {
                               </div>
                             </div>
 
-                            {/* Copy button */}
                             <div className="pl-1 pt-0.5 opacity-60 group-hover:opacity-100 transition-opacity">
                               <button
                                 type="button"
@@ -595,7 +952,7 @@ export function ChatBot() {
                     </div>
                   </ScrollArea>
 
-                  {/* Composer Input Area */}
+                  {/* Input Form */}
                   <div className="p-2.5 border-t border-slate-200/80 dark:border-teal-900/40 bg-slate-50/70 dark:bg-[#031114] shrink-0">
                     <form
                       onSubmit={handleSubmit}
@@ -621,7 +978,6 @@ export function ChatBot() {
                       </button>
                     </form>
 
-                    {/* Powered by Octively footer */}
                     <div className="text-[10px] font-mono text-center text-muted-foreground/75 pt-1.5 flex items-center justify-center gap-1">
                       <span>Powered by</span>
                       <a
@@ -636,7 +992,6 @@ export function ChatBot() {
                   </div>
                 </>
               )}
-
             </div>
           </motion.div>
         )}

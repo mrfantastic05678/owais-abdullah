@@ -47,3 +47,6 @@ workbox.map
 
 # Local scripts (may contain sensitive data)
 scripts/
+
+# Local router ledger
+data/

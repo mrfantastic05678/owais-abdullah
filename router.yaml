@@ -1,0 +1,14 @@
+project: owais-portfolio
+listen: { host: 127.0.0.1, port: 8787 }
+
+fleet_mode: merge
+fleet:
+  - { model: gemini-2.5-flash, rpm: 15, rpd: 1500, tpm: 1000000, tier: bulk }
+  - { model: gemini-flash-latest, rpm: 5, rpd: 20, tpm: 250000, tier: scarce }
+
+disabled: []
+
+pacing: { max_queue_wait_s: 30, burn_curve: even }
+learning: { auto_apply: true }
+modalities: [chat]
+ledger_path: ./data/ledger.sqlite
