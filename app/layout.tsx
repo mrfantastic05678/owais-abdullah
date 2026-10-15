@@ -218,7 +218,6 @@ export default function RootLayout({
         >
           <ThemeEnforcer />
           <LenisSmoothScroll>
-            <CursorFollower />
             <div className="relative z-10">
               <LayoutShell>{children}</LayoutShell>
             </div>

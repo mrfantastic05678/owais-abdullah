@@ -29,20 +29,23 @@ export default function ServicesGrid() {
   const servicesList = Object.values(services);
 
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {servicesList.map((service) => {
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {servicesList.map((service, index) => {
         const Icon = iconMap[service.icon] || Lightbulb;
         const badge = badgeMap[service.slug] || "PRODUCTION";
+        const isFlagship = index === 0; // Digital FTE flagship card gets spotlight asymmetry
 
         return (
           <div
             key={service.slug}
-            className="clean-glass-card rounded-xl group p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5"
+            className={`clean-glass-card rounded-2xl group p-6 sm:p-7 flex flex-col justify-between transition-transform duration-200 hover:-translate-y-1 ${
+              isFlagship ? "md:col-span-2 lg:col-span-2 border-teal-500/40 bg-teal-500/[0.03] dark:bg-teal-950/20" : ""
+            }`}
           >
             {/* Top row: Icon + Pill Badge */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-teal-50 dark:bg-[#072428] border border-teal-200/80 dark:border-teal-700/50 flex items-center justify-center text-teal-700 dark:text-teal-300 group-hover:scale-105 transition-transform shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-teal-50 dark:bg-[#072428] border border-teal-200/80 dark:border-teal-700/50 flex items-center justify-center text-teal-700 dark:text-teal-300 shadow-xs">
                   <Icon className="w-5 h-5" />
                 </div>
                 <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border border-teal-200 dark:border-teal-700/60 bg-teal-50 text-teal-800 dark:bg-[#042024] dark:text-teal-300 shadow-xs">
@@ -52,17 +55,23 @@ export default function ServicesGrid() {
 
               {/* Title & Description */}
               <div>
-                <h3 className="text-base font-bold text-foreground group-hover:text-teal-700 dark:group-hover:text-teal-400 transition-colors">
+                <h3 className={`font-bold text-foreground group-hover:text-teal-700 dark:group-hover:text-teal-400 transition-colors ${
+                  isFlagship ? "text-xl sm:text-2xl" : "text-base sm:text-lg"
+                }`}>
                   {service.title}
                 </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed mt-2 line-clamp-2">
+                <p className={`text-xs text-muted-foreground leading-relaxed mt-2 ${
+                  isFlagship ? "max-w-2xl text-sm" : "line-clamp-2"
+                }`}>
                   {service.description}
                 </p>
               </div>
 
               {/* Feature Bullets */}
-              <ul className="space-y-1.5 pt-1 text-xs text-muted-foreground">
-                {service.features.slice(0, 3).map((feat, i) => (
+              <ul className={`space-y-1.5 pt-1 text-xs text-muted-foreground ${
+                isFlagship ? "grid sm:grid-cols-2 gap-2 space-y-0 pt-2" : ""
+              }`}>
+                {service.features.slice(0, isFlagship ? 4 : 3).map((feat, i) => (
                   <li key={i} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-teal-600 dark:bg-teal-400 shrink-0" />
                     <span className="line-clamp-1">{feat}</span>
@@ -72,9 +81,9 @@ export default function ServicesGrid() {
             </div>
 
             {/* Bottom: Tech Stack Pills & Learn More Link */}
-            <div className="pt-4 mt-4 border-t border-border/70 space-y-3">
+            <div className="pt-4 mt-5 border-t border-border/70 space-y-3">
               <div className="flex flex-wrap gap-1.5">
-                {service.techStack.slice(0, 3).map((tech, idx) => (
+                {service.techStack.slice(0, isFlagship ? 5 : 3).map((tech, idx) => (
                   <span
                     key={idx}
                     className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#072428] text-slate-700 dark:text-teal-200 border border-slate-200/60 dark:border-teal-800/40 font-semibold"

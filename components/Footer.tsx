@@ -54,16 +54,6 @@ export default function Footer() {
         }}
       />
 
-      {/* Ambient Glow Orbs */}
-      <div 
-        className="absolute -top-32 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none"
-        style={{ background: "radial-gradient(circle, #0D9488 0%, transparent 70%)" }}
-      />
-      <div 
-        className="absolute -bottom-32 right-1/4 w-96 h-96 rounded-full blur-3xl opacity-15 pointer-events-none"
-        style={{ background: "radial-gradient(circle, #059669 0%, transparent 70%)" }}
-      />
-
       {/* Top CTA Banner */}
       <div className="max-w-6xl mx-auto px-5 sm:px-6 pt-12 relative z-10">
         <div className="p-8 sm:p-10 rounded-3xl border border-teal-500/30 relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-br from-teal-700/85 via-teal-800/90 to-teal-950/95 backdrop-blur-xl">
@@ -84,7 +74,7 @@ export default function Footer() {
           <div className="relative z-10 flex flex-wrap items-center justify-center gap-3.5 shrink-0">
             <Link 
               href="#contact" 
-              className="group px-6 py-3.5 rounded-xl text-sm font-bold text-teal-950 bg-white hover:bg-teal-50 shadow-lg hover:scale-105 transition-all flex items-center gap-2"
+              className="group px-6 py-3.5 rounded-xl text-sm font-bold text-teal-950 bg-white hover:bg-teal-50 shadow-lg hover:-translate-y-0.5 transition-transform duration-200 flex items-center gap-2"
             >
               <SplitFlapLabel primary="Start a Project" secondary="Let's Build It" />
               <ArrowRight className="w-4 h-4 text-teal-700 group-hover:translate-x-0.5 transition-transform" />

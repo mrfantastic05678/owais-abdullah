@@ -189,7 +189,7 @@ export default function Header() {
                 onClick={() => setServicesMenuOpen(!servicesMenuOpen)}
                 aria-expanded={servicesMenuOpen}
               >
-                <Sparkles className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
+                <Bot className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
                 <span>Services</span>
                 <span className="hidden xl:inline-block text-[10px] bg-teal-500/15 text-teal-700 dark:text-teal-300 px-1.5 py-0.5 rounded font-mono font-bold shrink-0">
                   6 Shipped

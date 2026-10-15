@@ -66,9 +66,9 @@ export default function StatsBand() {
             <span
               data-count={value}
               data-suffix={suffix}
-              className={`block font-extrabold text-3xl sm:text-4xl tracking-tight ${
+              className={`block font-extrabold text-3xl sm:text-4xl tracking-tight tabular-nums ${
                 idx === 1 
-                  ? "bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 dark:from-teal-400 dark:to-emerald-400 bg-clip-text text-transparent"
+                  ? "text-teal-700 dark:text-teal-400"
                   : idx === 3
                   ? "text-emerald-700 dark:text-emerald-400"
                   : "text-foreground"

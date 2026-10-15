@@ -27,21 +27,13 @@ export default function Hero() {
       id="hero" 
       className="relative flex items-center min-h-[85vh] pt-20 sm:pt-24 pb-14 overflow-hidden"
     >
-      {/* Background Micro-Dot Lattice & Ambient Glow */}
+      {/* Background Micro-Dot Lattice */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20"
         style={{
           backgroundImage: "radial-gradient(rgba(13, 148, 136, 0.3) 1px, transparent 1px)",
           backgroundSize: "28px 28px"
         }}
-      />
-      <div 
-        className="absolute top-10 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-20 pointer-events-none"
-        style={{ background: "radial-gradient(circle, #0D9488 0%, transparent 70%)" }}
-      />
-      <div 
-        className="absolute bottom-10 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl opacity-15 pointer-events-none"
-        style={{ background: "radial-gradient(circle, #0284C7 0%, transparent 70%)" }}
       />
 
       <div className="max-w-6xl mx-auto px-5 sm:px-6 grid lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10 w-full">
@@ -83,14 +75,14 @@ export default function Hero() {
             <div className="flex flex-wrap items-center gap-3.5">
               <Link
                 href="#contact"
-                className="px-7 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 hover:opacity-95 shadow-lg shadow-teal-700/20 hover:scale-105 transition-all flex items-center gap-2 group"
+                className="px-7 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 hover:opacity-95 shadow-lg shadow-teal-700/20 hover:-translate-y-0.5 transition-transform duration-200 flex items-center gap-2 group"
               >
                 <SplitFlapLabel primary="Start a Project" secondary="Let's Build It" />
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
                 href="#projects"
-                className="px-7 py-3.5 rounded-xl text-sm font-semibold text-foreground bg-white dark:bg-[#081B1E] hover:bg-slate-50 dark:hover:bg-teal-950/40 border border-slate-200/90 dark:border-[#10343A] hover:border-teal-500 shadow-xs transition-all flex items-center gap-2 group"
+                className="px-7 py-3.5 rounded-xl text-sm font-semibold text-foreground bg-white dark:bg-[#081B1E] hover:bg-slate-50 dark:hover:bg-teal-950/40 border border-slate-200/90 dark:border-[#10343A] hover:border-teal-500 shadow-xs hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2 group"
               >
                 <SplitFlapLabel primary="View Projects" secondary="Explore Builds" />
                 <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors" />
