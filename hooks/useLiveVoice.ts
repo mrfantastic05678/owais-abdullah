@@ -23,7 +23,7 @@ You speak with natural warmth, clarity, confidence, and conversational brevity. 
 
 Key Guidelines:
 - Keep answers concise (1-3 conversational sentences). Avoid long monologues.
-- You know Owais's full background: Full-Stack Engineer, AI Agents Architect, builder of Digital FTEs, Next.js SaaS apps, and high-performance Astro web systems.
+- You know Owais's full background: Full-Stack Engineer, AI Agents Architect, builder of Digital FTEs, Next.js SaaS platforms, and high-performance Astro web systems.
 - When someone asks what Owais builds, mention:
   "Owais builds autonomous AI agents, Digital FTEs that automate company operations 24/7, and high-scale Next.js SaaS platforms. What kind of project are you looking to launch?"
 - If they want to see his work, call the tool 'navigate_to_section' with 'work' or 'services'.
@@ -40,6 +40,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const [assistantTranscript, setAssistantTranscript] = useState("");
   const [transcriptHistory, setTranscriptHistory] = useState<Array<{ role: "user" | "assistant"; text: string }>>([]);
   const [volumeLevel, setVolumeLevel] = useState(0);
+  const [isUserSpeaking, setIsUserSpeaking] = useState(false);
 
   const wsRef = useRef<WebSocket | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -47,6 +48,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const workletNodeRef = useRef<AudioWorkletNode | null>(null);
   const audioPlayerRef = useRef<LiveAudioPlayer | null>(null);
   const animFrameRef = useRef<number | null>(null);
+  const userVolumeRef = useRef(0);
 
   const optionsRef = useRef(options);
   optionsRef.current = options;
@@ -100,6 +102,8 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
 
     setStatus("ended");
     setVolumeLevel(0);
+    setIsUserSpeaking(false);
+    userVolumeRef.current = 0;
 
     if (optionsRef.current.onSessionEnd && transcriptHistory.length > 0) {
       optionsRef.current.onSessionEnd(transcriptHistory);
@@ -156,13 +160,13 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       const tokenRes = await fetch("/api/live-token", { method: "POST" });
       if (!tokenRes.ok) {
         const errorData = await tokenRes.json().catch(() => ({}));
-        throw new Error(errorData.error || "Failed to acquire voice authorization token.");
+        throw new Error(errorData.error || "Failed to initialize voice session.");
       }
 
       const { token, model } = await tokenRes.json();
       if (!token) throw new Error("No authorization token received.");
 
-      // 4. Connect to Gemini Live WebSocket directly from browser to Google
+      // 4. Connect to Live WebSocket directly from browser
       const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${encodeURIComponent(
         token
       )}`;
@@ -239,7 +243,20 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             const pcmBuffer = e.data as ArrayBuffer;
             const base64Data = arrayBufferToBase64(pcmBuffer);
 
-            // Stream real-time audio chunk to Gemini
+            // Calculate user voice amplitude for real-time visual feedback
+            const int16Array = new Int16Array(pcmBuffer);
+            let sum = 0;
+            const step = 4;
+            for (let i = 0; i < int16Array.length; i += step) {
+              sum += Math.abs(int16Array[i]);
+            }
+            const avgAmp = int16Array.length > 0 ? sum / (int16Array.length / step) : 0;
+            // Background room noise threshold ~180; speech range 600 - 8000
+            const normMic = Math.min(1, Math.max(0, (avgAmp - 180) / 3800));
+            userVolumeRef.current = normMic;
+            setIsUserSpeaking(normMic > 0.06);
+
+            // Stream real-time audio chunk
             ws.send(
               JSON.stringify({
                 realtimeInput: {
@@ -258,26 +275,48 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
         micSource.connect(workletNode);
         setStatus("listening");
 
-        // 6. Start UI audio waveform loop
+        // 6. Start UI audio animation loop reacting to BOTH user and assistant speech
         const freqData = new Uint8Array(32);
+        let currentSmoothed = 0;
+
         const updateWaveform = () => {
-          if (player) {
-            player.getFrequencyData(freqData);
+          let targetVol = 0;
+
+          if (audioPlayerRef.current && audioPlayerRef.current.isSpeaking) {
+            audioPlayerRef.current.getFrequencyData(freqData);
             let sum = 0;
             for (let i = 0; i < freqData.length; i++) {
               sum += freqData[i];
             }
-            const avg = sum / (freqData.length * 255);
-            setVolumeLevel(avg);
+            targetVol = sum / (freqData.length * 255);
+          } else {
+            // When assistant isn't speaking, react to user mic input
+            targetVol = userVolumeRef.current;
           }
+
+          // Smooth interpolation for fluid organic feel
+          currentSmoothed += (targetVol - currentSmoothed) * 0.28;
+          setVolumeLevel(currentSmoothed);
+
           animFrameRef.current = requestAnimationFrame(updateWaveform);
         };
         updateWaveform();
       };
 
-      ws.onmessage = (event) => {
+      // Robust message parsing supporting both string and Blob types
+      ws.onmessage = async (event) => {
         try {
-          const data = JSON.parse(event.data);
+          let rawText = "";
+          if (typeof event.data === "string") {
+            rawText = event.data;
+          } else if (event.data instanceof Blob) {
+            rawText = await event.data.text();
+          } else if (event.data instanceof ArrayBuffer) {
+            rawText = new TextDecoder().decode(event.data);
+          }
+
+          if (!rawText) return;
+          const data = JSON.parse(rawText);
 
           // Handle Barge-in (interrupted)
           if (data.serverContent?.interrupted) {
@@ -326,7 +365,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
               });
             }
 
-            // Return tool response to Gemini Live
+            // Return tool response
             ws.send(
               JSON.stringify({
                 toolResponse: {
@@ -336,19 +375,19 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             );
           }
         } catch (err) {
-          console.error("[useLiveVoice] Error parsing server message:", err);
+          console.error("[useLiveVoice] Error parsing message:", err);
         }
       };
 
       ws.onerror = (e) => {
-        console.error("[useLiveVoice] WebSocket error:", e);
-        setErrorMessage("Connection to Google Live API encountered an issue.");
+        console.error("[useLiveVoice] WebSocket connection issue:", e);
+        setErrorMessage("Live voice connection encountered an issue.");
         setStatus("error");
       };
 
       ws.onclose = (event) => {
         if (event.code !== 1000) {
-          console.warn("[useLiveVoice] WebSocket closed unexpectedly:", event.code, event.reason);
+          console.warn("[useLiveVoice] WebSocket closed:", event.code, event.reason);
           if (status !== "ended") {
             setErrorMessage("Voice session disconnected.");
             setStatus("error");
@@ -356,7 +395,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
         }
       };
     } catch (err: unknown) {
-      console.error("[useLiveVoice] Session initialization failed:", err);
+      console.error("[useLiveVoice] Initialization failed:", err);
       const message = err instanceof Error ? err.message : "Could not connect to microphone or voice service.";
       setErrorMessage(message);
       setStatus("error");
@@ -389,6 +428,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
     assistantTranscript,
     transcriptHistory,
     volumeLevel,
+    isUserSpeaking,
     startSession,
     stopSession,
     toggleMute,

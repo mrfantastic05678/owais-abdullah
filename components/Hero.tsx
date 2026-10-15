@@ -103,7 +103,7 @@ export default function Hero() {
                   }
                 }}
                 className="px-5 py-3.5 rounded-xl text-sm font-semibold text-teal-800 dark:text-teal-200 bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/35 hover:border-teal-500 shadow-xs transition-all flex items-center gap-2 group cursor-pointer"
-                title="Talk directly with Owais AI (Gemini 3.8 Live Voice)"
+                title="Talk directly with Owais AI"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>

@@ -25,6 +25,7 @@ import Image from "next/image";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "@/hooks/useChat";
 import { useLiveVoice } from "@/hooks/useLiveVoice";
+import { VoiceVisualizer } from "@/components/ui/VoiceVisualizer";
 import ReactMarkdown from "react-markdown";
 import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
@@ -62,6 +63,7 @@ export function ChatBot() {
     isMuted: isVoiceMuted,
     assistantTranscript,
     volumeLevel,
+    isUserSpeaking,
     startSession: startVoiceSession,
     stopSession: stopVoiceSession,
     toggleMute: toggleVoiceMute,
@@ -465,7 +467,7 @@ export function ChatBot() {
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-medium">
-                        {mode === "voice" ? "Gemini Live" : "Text Assistant"}
+                        {mode === "voice" ? "Live Voice" : "Text Assistant"}
                       </span>
                     </div>
                   </div>
@@ -487,7 +489,7 @@ export function ChatBot() {
                     </button>
                     <button
                       onClick={handleSwitchToVoice}
-                      title="Live Voice (Gemini 3.8 Live)"
+                      title="Live Voice Mode"
                       className={`px-2 py-1 rounded-md text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
                         mode === "voice"
                           ? "bg-teal-600 text-white shadow-xs"
@@ -541,87 +543,24 @@ export function ChatBot() {
 
               {/* Mode 1: Live Voice UI */}
               {mode === "voice" ? (
-                <div className="flex-1 min-h-0 p-5 bg-gradient-to-b from-slate-50/50 to-white dark:from-[#041619] dark:to-[#020e10] flex flex-col justify-between items-center text-center">
+                <div className="flex-1 min-h-0 p-4 bg-gradient-to-b from-slate-50/70 via-white to-slate-50/50 dark:from-[#041619] dark:via-[#031114] dark:to-[#020b0d] flex flex-col justify-between items-center text-center">
                   
-                  {/* Top Live Badge */}
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/25 text-teal-700 dark:text-teal-300 text-[11px] font-mono font-semibold">
-                    <Radio className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
-                    <span>
-                      {voiceStatus === "requesting-mic" && "Requesting Microphone..."}
-                      {voiceStatus === "connecting" && "Establishing Direct WSS Link..."}
-                      {voiceStatus === "listening" && "Listening · Speak Freely"}
-                      {voiceStatus === "speaking" && "Otto Voice is Answering..."}
-                      {voiceStatus === "error" && "Connection Error"}
-                      {voiceStatus === "ended" && "Voice Session Finished"}
-                      {voiceStatus === "idle" && "Ready to Connect"}
-                    </span>
-                  </div>
+                  {/* OpenAI / Google Live Visual Cues Core */}
+                  <div className="my-auto flex flex-col items-center justify-center w-full">
+                    <VoiceVisualizer
+                      status={voiceStatus}
+                      volume={volumeLevel}
+                      isUserSpeaking={isUserSpeaking}
+                    />
 
-                  {/* Pulsing Visualizer Core & Waveform */}
-                  <div className="my-auto flex flex-col items-center justify-center">
-                    <div className="relative flex items-center justify-center">
-                      {/* Outer reactive sound halo */}
-                      <motion.div
-                        className="absolute rounded-full bg-teal-500/20 blur-xl pointer-events-none"
-                        animate={{
-                          width: `${120 + volumeLevel * 140}px`,
-                          height: `${120 + volumeLevel * 140}px`,
-                          opacity: voiceStatus === "speaking" || voiceStatus === "listening" ? 0.8 : 0.2,
-                        }}
-                        transition={{ duration: 0.1 }}
-                      />
-
-                      {/* Main Orb */}
-                      <motion.div
-                        className={`w-28 h-28 rounded-full border-2 flex items-center justify-center shadow-2xl backdrop-blur-md relative z-10 ${
-                          voiceStatus === "speaking"
-                            ? "border-emerald-400 bg-emerald-500/15 shadow-emerald-500/20"
-                            : voiceStatus === "listening"
-                            ? "border-teal-500 bg-teal-500/10 shadow-teal-500/20"
-                            : "border-slate-300 dark:border-teal-900 bg-slate-100 dark:bg-[#071F23]"
-                        }`}
-                        animate={{
-                          scale: 1 + Math.min(volumeLevel * 0.45, 0.35),
-                        }}
-                        transition={{ duration: 0.08 }}
-                      >
-                        <div className="relative w-16 h-16 flex items-center justify-center">
-                          <Image
-                            src="/assets/bot.png"
-                            alt="Otto Voice"
-                            width={54}
-                            height={54}
-                            className="object-contain filter drop-shadow-md"
-                          />
-                        </div>
-                      </motion.div>
-                    </div>
-
-                    {/* Waveform Soundbars */}
-                    <div className="flex items-center gap-1.5 mt-6 h-8">
-                      {[0.4, 0.7, 1.0, 0.6, 0.9, 0.5, 0.8].map((factor, i) => (
-                        <motion.div
-                          key={i}
-                          className="w-1 rounded-full bg-teal-500"
-                          animate={{
-                            height:
-                              voiceStatus === "speaking" || voiceStatus === "listening"
-                                ? `${Math.max(6, Math.min(32, 8 + volumeLevel * 60 * factor))}px`
-                                : "6px",
-                          }}
-                          transition={{ duration: 0.08 }}
-                        />
-                      ))}
-                    </div>
-
-                    {/* Live Assistant Caption Stream */}
+                    {/* Live Assistant Caption Subtitle Stream */}
                     {assistantTranscript && (
                       <motion.div
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="mt-3 px-4 py-2 rounded-xl bg-slate-100/80 dark:bg-[#061E22] border border-slate-200 dark:border-teal-900/40 max-w-[320px] text-xs font-sans text-foreground leading-relaxed text-center line-clamp-3"
+                        className="mt-3 px-4 py-2 rounded-xl bg-slate-100/90 dark:bg-[#071F23] border border-slate-200/80 dark:border-teal-900/40 max-w-[320px] text-xs font-sans text-foreground leading-relaxed text-center line-clamp-3 shadow-xs"
                       >
-                        <Volume2 className="w-3 h-3 text-teal-600 dark:text-teal-400 inline-block mr-1.5" />
+                        <Volume2 className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 inline-block mr-1.5 shrink-0" />
                         <span>{assistantTranscript}</span>
                       </motion.div>
                     )}

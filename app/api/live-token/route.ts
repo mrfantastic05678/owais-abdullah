@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return new Response(
-        JSON.stringify({ error: "Gemini API key is not configured on the server." }),
+        JSON.stringify({ error: "Voice assistant is not configured on the server." }),
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
     }
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Mint short-lived ephemeral token from Google
+    // 3. Mint short-lived ephemeral token
     // Window: 2 minutes to establish connection; session ceiling: 30 minutes
     const now = Date.now();
     const expireTime = new Date(now + 30 * 60 * 1000).toISOString();
@@ -86,9 +86,9 @@ export async function POST(request: NextRequest) {
 
     if (!tokenResponse.ok) {
       const errorText = await tokenResponse.text();
-      console.error("[live-token] Google auth_tokens mint error:", tokenResponse.status, errorText);
+      console.error("[live-token] Auth token mint error:", tokenResponse.status, errorText);
       return new Response(
-        JSON.stringify({ error: "Failed to mint voice session token from Google." }),
+        JSON.stringify({ error: "Failed to initialize voice session token." }),
         { status: 502, headers: { "Content-Type": "application/json" } }
       );
     }
