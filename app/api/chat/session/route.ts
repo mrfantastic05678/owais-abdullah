@@ -3,6 +3,10 @@ import { db } from "@/lib/db";
 import { chatSessions } from "@/schema/directory";
 import { sql } from "drizzle-orm";
 import { extractTelemetry } from "@/lib/analytics-parser";
+import {
+  ChatSessionUpsertSchema,
+  checkRateLimit,
+} from "@/lib/chat-security";
 
 interface LeadPayload {
   name?: string;
@@ -43,8 +47,16 @@ function extractProjectSignals(messages: Array<{ role: string; content: string }
       // Phone
       if (!result.phone) {
         const phoneMatch = m.content.match(phoneRegex);
-        if (phoneMatch && phoneMatch[1].replace(/\D/g, "").length >= 9) {
-          result.phone = phoneMatch[1].trim();
+        if (phoneMatch && phoneMatch[1].replace(/\D/g, "").length >= 7) {
+          result.phone = phoneMatch[1];
+        }
+      }
+
+      // Name indicator heuristic
+      if (!result.name) {
+        const nameMatch = m.content.match(/(?:my name is|i'm|i am|this is)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/i);
+        if (nameMatch) {
+          result.name = nameMatch[1];
         }
       }
     }
@@ -54,35 +66,49 @@ function extractProjectSignals(messages: Array<{ role: string; content: string }
 }
 
 export async function POST(req: NextRequest) {
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+    req.headers.get("x-real-ip") ||
+    "127.0.0.1";
+
+  // Rate Limiting (Max 30 sync calls per IP per minute)
+  if (checkRateLimit(`session_${ip}`, 30, 60_000)) {
+    return NextResponse.json(
+      { success: false, error: "Too many session updates. Rate limited." },
+      { status: 429 }
+    );
+  }
+
   try {
     if (!db) {
       return NextResponse.json({ success: false, error: "Database not configured" }, { status: 503 });
     }
 
-    const body = await req.json();
+    let rawBody: unknown;
+    try {
+      rawBody = await req.json();
+    } catch {
+      return NextResponse.json({ success: false, error: "Invalid JSON body" }, { status: 400 });
+    }
+
+    // Strict Zod Validation
+    const parsed = ChatSessionUpsertSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      const firstError = parsed.error.errors[0]?.message ?? "Invalid session payload format";
+      return NextResponse.json({ success: false, error: firstError }, { status: 422 });
+    }
+
     const {
       sessionId,
       visitorId,
-      mode = "text",
-      messages = [],
+      mode,
+      messages,
       leadInfo: providedLead,
       path = "/",
-    } = body;
-
-    if (!sessionId || typeof sessionId !== "string") {
-      return NextResponse.json({ success: false, error: "Invalid sessionId" }, { status: 400 });
-    }
-
-    if (!Array.isArray(messages)) {
-      return NextResponse.json({ success: false, error: "Invalid messages payload" }, { status: 400 });
-    }
+    } = parsed.data;
 
     // 1. Extract high-precision telemetry & geolocation
     const telemetry = extractTelemetry(req);
-    const ip =
-      req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
-      req.headers.get("x-real-ip") ||
-      "127.0.0.1";
     const userAgent = req.headers.get("user-agent") || "unknown";
 
     // 2. Intelligent lead synthesis (provided lead + dialogue heuristics)
@@ -129,21 +155,14 @@ export async function POST(req: NextRequest) {
       .onConflictDoUpdate({
         target: chatSessions.id,
         set: {
-          mode: sql`CASE WHEN ${chatSessions.mode} != ${mode} THEN 'hybrid' ELSE ${mode} END`,
           messages,
           messageCount,
           turnCount: sql`${chatSessions.turnCount} + 1`,
-          hasLead: hasLead ? true : sql`${chatSessions.hasLead}`,
-          leadInfo: hasLead ? mergedLead : sql`${chatSessions.leadInfo}`,
-          // Keep highest precision location
-          country: telemetry.country ? telemetry.country : sql`${chatSessions.country}`,
-          countryCode: telemetry.countryCode ? telemetry.countryCode : sql`${chatSessions.countryCode}`,
-          city: telemetry.city ? telemetry.city : sql`${chatSessions.city}`,
-          region: telemetry.region ? telemetry.region : sql`${chatSessions.region}`,
-          device: telemetry.device ? telemetry.device : sql`${chatSessions.device}`,
-          browser: telemetry.browser ? telemetry.browser : sql`${chatSessions.browser}`,
-          os: telemetry.os ? telemetry.os : sql`${chatSessions.os}`,
+          hasLead: sql`CASE WHEN ${hasLead} THEN true ELSE ${chatSessions.hasLead} END`,
+          leadInfo: hasLead ? mergedLead : sql`COALESCE(${chatSessions.leadInfo}, ${hasLead ? JSON.stringify(mergedLead) : "null"}::jsonb)`,
           updatedAt: new Date(),
+          path,
+          mode,
         },
       });
 
