@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
     return new Response(
       JSON.stringify({
         token: tokenName,
-        model: "models/gemini-3.8-live",
+        model: "models/gemini-3.1-flash-live-preview",
         voice: "Kore",
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }

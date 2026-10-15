@@ -18,7 +18,7 @@ export interface LiveVoiceHookOptions {
 }
 
 const VOICE_PERSONA = `
-You are Otto Voice, the real-time AI Voice Assistant on Owais Abdullah's portfolio site (owaisabdullah.dev).
+You are Otto AI, the real-time AI Voice Assistant on Owais Abdullah's portfolio site (owaisabdullah.dev). Your initials O.A. mirror Owais Abdullah.
 You speak with natural warmth, clarity, confidence, and conversational brevity. You are having a real-time phone-like voice conversation with a visitor.
 
 Key Guidelines:
@@ -49,6 +49,8 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const audioPlayerRef = useRef<LiveAudioPlayer | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const userVolumeRef = useRef(0);
+  const hasSpokenRef = useRef(false);
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const optionsRef = useRef(options);
   optionsRef.current = options;
@@ -99,6 +101,12 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       }
       wsRef.current = null;
     }
+
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+    hasSpokenRef.current = false;
 
     setStatus("ended");
     setVolumeLevel(0);
@@ -254,18 +262,43 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             // Background room noise threshold ~180; speech range 600 - 8000
             const normMic = Math.min(1, Math.max(0, (avgAmp - 180) / 3800));
             userVolumeRef.current = normMic;
-            setIsUserSpeaking(normMic > 0.06);
+            const isSpeakingNow = normMic > 0.055;
+            setIsUserSpeaking(isSpeakingNow);
 
-            // Stream real-time audio chunk
+            // Turn Detection & Speech Bracketing
+            if (isSpeakingNow) {
+              hasSpokenRef.current = true;
+              if (silenceTimerRef.current) {
+                clearTimeout(silenceTimerRef.current);
+                silenceTimerRef.current = null;
+              }
+            } else if (hasSpokenRef.current) {
+              // User finished speaking, trigger turn inference after 650ms of silence
+              if (!silenceTimerRef.current) {
+                silenceTimerRef.current = setTimeout(() => {
+                  if (hasSpokenRef.current && ws.readyState === WebSocket.OPEN) {
+                    ws.send(
+                      JSON.stringify({
+                        clientContent: {
+                          turnComplete: true,
+                        },
+                      })
+                    );
+                    hasSpokenRef.current = false;
+                    silenceTimerRef.current = null;
+                  }
+                }, 650);
+              }
+            }
+
+            // Stream real-time audio chunk using standard audio field
             ws.send(
               JSON.stringify({
                 realtimeInput: {
-                  mediaChunks: [
-                    {
-                      mimeType: "audio/pcm;rate=16000",
-                      data: base64Data,
-                    },
-                  ],
+                  audio: {
+                    mimeType: "audio/pcm;rate=16000",
+                    data: base64Data,
+                  },
                 },
               })
             );

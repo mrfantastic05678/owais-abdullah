@@ -303,7 +303,7 @@ export function ChatBot() {
                     <div className="w-7 h-7 rounded-lg overflow-hidden bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0">
                       <Image
                         src="/assets/bot.png"
-                        alt="Owais AI"
+                        alt="Otto AI"
                         width={24}
                         height={24}
                         className="w-full h-full object-contain"
@@ -311,7 +311,7 @@ export function ChatBot() {
                     </div>
                     <div>
                       <p className="text-xs font-bold leading-tight">Scope an AI Agent or Web App?</p>
-                      <p className="text-[10px] text-muted-foreground font-medium">Owais AI Concierge is active</p>
+                      <p className="text-[10px] text-muted-foreground font-medium">Otto AI is active</p>
                     </div>
                   </div>
                   <button
@@ -373,7 +373,7 @@ export function ChatBot() {
                 transition={{ duration: 0.15 }}
               >
                 <Sparkles className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
-                <span>Talk with Owais AI (Text &amp; Voice)</span>
+                <span>Talk with Otto AI (Text &amp; Voice)</span>
                 <div className="absolute -bottom-1 right-6 w-2 h-2 bg-white dark:bg-[#071F22] border-r border-b border-teal-500/30 rotate-45" />
               </motion.div>
             )}
@@ -414,7 +414,7 @@ export function ChatBot() {
                   <div className="relative w-8 h-8 flex items-center justify-center">
                     <Image
                       src="/assets/bot.png"
-                      alt="Owais AI Agent"
+                      alt="Otto AI Agent"
                       width={32}
                       height={32}
                       className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(20,184,166,0.25)]"
@@ -436,7 +436,7 @@ export function ChatBot() {
             id="chatbot-window"
             data-lenis-prevent="true"
             onWheel={(e) => e.stopPropagation()}
-            className="fixed bottom-[86px] sm:bottom-[96px] right-5 sm:right-6 z-[5000] w-[375px] sm:w-[410px] max-w-[calc(100vw-2.5rem)] font-sans overscroll-contain"
+            className="fixed bottom-[72px] sm:bottom-[78px] right-4 sm:right-6 z-[5000] w-[350px] sm:w-[380px] max-w-[calc(100vw-2rem)] font-sans overscroll-contain"
             initial={{ opacity: 0, y: 14, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 14, scale: 0.97 }}
@@ -445,7 +445,7 @@ export function ChatBot() {
             <div
               data-lenis-prevent="true"
               onWheel={(e) => e.stopPropagation()}
-              className="h-[520px] max-h-[calc(100vh-7.5rem)] flex flex-col rounded-2xl border border-slate-200 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
+              className="h-[455px] sm:h-[475px] max-h-[calc(100vh-8.5rem)] flex flex-col rounded-2xl border border-slate-200 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
             >
               {/* Header with Mode Toggle & Navigation */}
               <div className="px-3.5 py-2.5 border-b border-slate-200/80 dark:border-teal-900/40 bg-slate-50/70 dark:bg-[#031114] flex items-center justify-between shrink-0">
@@ -453,7 +453,7 @@ export function ChatBot() {
                   <div className="relative w-7 h-7 rounded-xl overflow-hidden bg-teal-500/10 border border-teal-500/20 p-0.5 flex items-center justify-center shrink-0">
                     <Image
                       src="/assets/bot.png"
-                      alt="Owais AI"
+                      alt="Otto AI"
                       width={28}
                       height={28}
                       className="w-full h-full object-contain"
@@ -462,7 +462,7 @@ export function ChatBot() {
                   </div>
                   <div>
                     <h3 className="font-bold text-xs text-foreground tracking-tight font-sans">
-                      Owais AI Concierge
+                      Otto AI
                     </h3>
                     <div className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -754,13 +754,13 @@ export function ChatBot() {
                               <div className="w-4 h-4 rounded-md overflow-hidden bg-teal-500/10 border border-teal-500/20 p-0.5 flex items-center justify-center shrink-0">
                                 <Image
                                   src="/assets/bot.png"
-                                  alt="Owais AI"
+                                  alt="Otto AI"
                                   width={16}
                                   height={16}
                                   className="w-full h-full object-contain"
                                 />
                               </div>
-                              <span className="font-semibold text-foreground/80 font-sans">Owais AI</span>
+                              <span className="font-semibold text-foreground/80 font-sans">Otto AI</span>
                             </div>
 
                             {message.content.includes("rate limit") && (
