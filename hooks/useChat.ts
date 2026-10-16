@@ -210,8 +210,9 @@ export function useChat(options: UseChatOptions = {}) {
         headers: {
           "Content-Type": "application/json",
         },
+        // Send only the last 12 turns (sliding window) to save tokens and prevent context bloat
         body: JSON.stringify({
-          messages: updatedMessages.map((msg) => ({
+          messages: updatedMessages.slice(-12).map((msg) => ({
             role: msg.role === "user" ? "user" : "assistant",
             content: msg.content,
           })),

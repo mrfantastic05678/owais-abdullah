@@ -168,8 +168,9 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // 4. Sanitize messages before routing to LLM (strip fake lead markers, dangerous tokens)
-    const sanitizedMessages = messages.map((m) => ({
+    // 4. Sanitize messages and apply server-side sliding context window (last 12 turns max)
+    // This strictly caps token consumption and prevents context bloat on long conversations
+    const windowedMessages = messages.slice(-12).map((m) => ({
       role: m.role,
       content: sanitizeUserMessage(m.content),
     }));
@@ -179,7 +180,7 @@ export async function POST(request: NextRequest) {
     // 5. Try Gemini Router if configured
     if (GEMINI_ROUTER_URL) {
       try {
-        modelResult = await callGeminiRouter(sanitizedMessages);
+        modelResult = await callGeminiRouter(windowedMessages);
       } catch (routerErr) {
         console.warn("[chat] Gemini router unreachable or failed, falling back to direct GenAI:", routerErr);
       }
@@ -187,7 +188,7 @@ export async function POST(request: NextRequest) {
 
     // 6. Direct Google GenAI fallback
     if (!modelResult) {
-      modelResult = await callDirectGoogleGenAI(sanitizedMessages);
+      modelResult = await callDirectGoogleGenAI(windowedMessages);
     }
 
     let responseText = modelResult.text || "";
