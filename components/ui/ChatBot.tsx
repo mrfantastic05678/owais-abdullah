@@ -157,8 +157,8 @@ export function ChatBot() {
           role: h.role,
           content: h.text,
         }));
-        addMessages(mapped);
-        syncSessionToDb([...messages, ...mapped], undefined, "voice");
+        // Persist voice session telemetry directly to DB without polluting text chat interface
+        syncSessionToDb(mapped, undefined, "voice");
       }
     },
     onOpenLeadDrawer: () => {
@@ -668,18 +668,6 @@ export function ChatBot() {
                       volume={volumeLevel}
                       isUserSpeaking={isUserSpeaking}
                     />
-
-                    {/* Live Assistant Caption Subtitle Stream */}
-                    {assistantTranscript && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mt-3 px-4 py-2 rounded-xl bg-slate-100/90 dark:bg-[#071F23] border border-slate-200/80 dark:border-teal-900/40 max-w-[320px] text-xs font-sans text-foreground leading-relaxed text-center line-clamp-3 shadow-xs"
-                      >
-                        <Volume2 className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 inline-block mr-1.5 shrink-0" />
-                        <span>{assistantTranscript}</span>
-                      </motion.div>
-                    )}
 
                     {voiceError && (
                       <p className="mt-2 text-[11px] text-rose-500 font-mono px-3 py-1 bg-rose-500/10 rounded-lg border border-rose-500/20">
