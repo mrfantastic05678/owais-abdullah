@@ -15,22 +15,11 @@ export type LiveVoiceStatus =
 export interface LiveVoiceHookOptions {
   onSessionEnd?: (transcriptHistory: Array<{ role: "user" | "assistant"; text: string }>) => void;
   onOpenLeadDrawer?: () => void;
+  onExecuteTool?: (name: string, args: Record<string, unknown>) => Promise<Record<string, unknown>> | Record<string, unknown>;
 }
 
-const VOICE_PERSONA = `
-You are Otto AI, the real-time AI Voice Assistant on Owais Abdullah's portfolio site (owaisabdullah.dev). Your initials O.A. mirror Owais Abdullah.
-You speak with natural warmth, clarity, confidence, and conversational brevity. You are having a real-time phone-like voice conversation with a visitor.
-
-Key Guidelines:
-- Keep answers concise (1-3 conversational sentences). Avoid long monologues.
-- You know Owais's full background: Full-Stack Engineer, AI Agents Architect, builder of Digital FTEs, Next.js SaaS platforms, and high-performance Astro web systems.
-- When someone asks what Owais builds, mention:
-  "Owais builds autonomous AI agents, Digital FTEs that automate company operations 24/7, and high-scale Next.js SaaS platforms. What kind of project are you looking to launch?"
-- If they want to see his work, call the tool 'navigate_to_section' with 'work' or 'services'.
-- If they are ready to discuss hiring, getting an estimate, or building a project, call 'open_lead_drawer' and tell them:
-  "I've opened the project intake form right on your screen. You can pop your details in there, or reach Owais directly on WhatsApp."
-- Languages: English default, but you understand and can speak Urdu or other languages fluently if the visitor speaks them.
-`;
+import { AGENT_FUNCTION_DECLARATIONS } from "@/lib/agent-tools";
+import { getVoicePersonaPrompt } from "@/lib/canonical-context";
 
 export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const [status, setStatus] = useState<LiveVoiceStatus>("idle");
@@ -49,15 +38,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const audioPlayerRef = useRef<LiveAudioPlayer | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const userVolumeRef = useRef(0);
-  const hasSpokenRef = useRef(false);
-  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Transcript accumulator refs (avoids stale closures during turns and teardown)
-  const transcriptHistoryRef = useRef<Array<{ role: "user" | "assistant"; text: string }>>([]);
-  const currentUserTranscriptRef = useRef<string>("");
-  const currentAssistantTranscriptRef = useRef<string>("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const speechRecognitionRef = useRef<any>(null);
+  const sessionResumptionHandleRef = useRef<string | null>(null);
 
   const optionsRef = useRef(options);
   optionsRef.current = options;
@@ -100,15 +81,6 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       audioPlayerRef.current = null;
     }
 
-    if (speechRecognitionRef.current) {
-      try {
-        speechRecognitionRef.current.stop();
-      } catch {
-        // ignore
-      }
-      speechRecognitionRef.current = null;
-    }
-
     if (wsRef.current) {
       try {
         wsRef.current.close(1000, "User ended voice session");
@@ -118,27 +90,6 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       wsRef.current = null;
     }
 
-    if (silenceTimerRef.current) {
-      clearTimeout(silenceTimerRef.current);
-      silenceTimerRef.current = null;
-    }
-    hasSpokenRef.current = false;
-
-    // Flush any pending speech turn before finalizing
-    const pendingUser = currentUserTranscriptRef.current.trim();
-    const pendingAssistant = currentAssistantTranscriptRef.current.trim();
-    if (pendingUser) {
-      transcriptHistoryRef.current.push({ role: "user", text: pendingUser });
-      currentUserTranscriptRef.current = "";
-    }
-    if (pendingAssistant) {
-      transcriptHistoryRef.current.push({ role: "assistant", text: pendingAssistant });
-      currentAssistantTranscriptRef.current = "";
-    }
-
-    const fullHistory = [...transcriptHistoryRef.current];
-    setTranscriptHistory(fullHistory);
-
     setStatus("ended");
     setVolumeLevel(0);
     setIsUserSpeaking(false);
@@ -146,8 +97,8 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
     setAssistantTranscript("");
     setUserTranscript("");
 
-    if (optionsRef.current.onSessionEnd && fullHistory.length > 0) {
-      optionsRef.current.onSessionEnd(fullHistory);
+    if (optionsRef.current.onSessionEnd) {
+      optionsRef.current.onSessionEnd([]);
     }
   }, []);
 
@@ -177,11 +128,6 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
     try {
       setErrorMessage(null);
       setStatus("requesting-mic");
-      setUserTranscript("");
-      setAssistantTranscript("");
-      transcriptHistoryRef.current = [];
-      currentUserTranscriptRef.current = "";
-      currentAssistantTranscriptRef.current = "";
 
       // 1. Initialize Player and resume audio pipeline
       const player = new LiveAudioPlayer(24000);
@@ -199,39 +145,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       });
       mediaStreamRef.current = stream;
 
-      // 3. Optional local browser speech recognition fallback for zero-latency user captions
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-        if (SpeechRecognition) {
-          const sr = new SpeechRecognition();
-          sr.continuous = true;
-          sr.interimResults = true;
-          sr.lang = "en-US";
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          sr.onresult = (evt: any) => {
-            let chunk = "";
-            for (let i = evt.resultIndex; i < evt.results.length; ++i) {
-              if (evt.results[i].isFinal) {
-                chunk += evt.results[i][0].transcript;
-              }
-            }
-            if (chunk.trim()) {
-              currentUserTranscriptRef.current = (
-                currentUserTranscriptRef.current ? `${currentUserTranscriptRef.current} ` : ""
-              ) + chunk.trim();
-              setUserTranscript(currentUserTranscriptRef.current);
-            }
-          };
-          sr.onerror = () => {};
-          sr.start();
-          speechRecognitionRef.current = sr;
-        }
-      } catch {
-        // browser recognition optional
-      }
-
-      // 4. Request short-lived ephemeral token from Next.js backend
+      // 3. Request short-lived ephemeral token from Next.js backend
       setStatus("connecting");
       const tokenRes = await fetch("/api/live-token", { method: "POST" });
       if (!tokenRes.ok) {
@@ -239,10 +153,10 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
         throw new Error(errorData.error || "Failed to initialize voice session.");
       }
 
-      const { token, model } = await tokenRes.json();
+      const { token, model, systemInstruction: remoteInstruction } = await tokenRes.json();
       if (!token) throw new Error("No authorization token received.");
 
-      // 5. Connect to Live WebSocket directly from browser
+      // 4. Connect to Live WebSocket directly from browser
       const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${encodeURIComponent(
         token
       )}`;
@@ -251,8 +165,8 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       wsRef.current = ws;
 
       ws.onopen = async () => {
-        // Send initial Session Setup configuration with native transcription enabled
-        const setupMessage = {
+        // Send initial Session Setup configuration (clean audio-only without text transcription overhead)
+        const setupMessage: Record<string, unknown> = {
           setup: {
             model: model || "models/gemini-3.1-flash-live-preview",
             generationConfig: {
@@ -265,45 +179,23 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
                 },
               },
             },
-            inputAudioTranscription: {},
-            outputAudioTranscription: {},
             systemInstruction: {
-              parts: [{ text: VOICE_PERSONA }],
+              parts: [{ text: remoteInstruction || getVoicePersonaPrompt() }],
             },
             tools: [
               {
-                functionDeclarations: [
-                  {
-                    name: "navigate_to_section",
-                    description: "Smoothly navigate the portfolio page to a section (e.g. 'work', 'services', 'contact', 'hero').",
-                    parameters: {
-                      type: "OBJECT",
-                      properties: {
-                        section: {
-                          type: "STRING",
-                          description: "The section identifier: 'work', 'services', 'contact', or 'hero'",
-                        },
-                      },
-                      required: ["section"],
-                    },
-                  },
-                  {
-                    name: "open_lead_drawer",
-                    description: "Open the interactive project spec intake drawer in the chat interface.",
-                    parameters: {
-                      type: "OBJECT",
-                      properties: {},
-                    },
-                  },
-                ],
+                functionDeclarations: AGENT_FUNCTION_DECLARATIONS,
               },
             ],
+            sessionResumption: sessionResumptionHandleRef.current
+              ? { handle: sessionResumptionHandleRef.current }
+              : {},
           },
         };
 
         ws.send(JSON.stringify(setupMessage));
 
-        // 6. Initialize AudioWorklet for 16kHz mono streaming
+        // 5. Initialize AudioWorklet for 16kHz mono streaming
         const AudioContextClass =
           window.AudioContext ||
           (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -321,7 +213,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             const pcmInt16Buffer = e.data as ArrayBuffer;
             const base64Data = arrayBufferToBase64(pcmInt16Buffer);
 
-            // Compute mic amplitude for acoustic visualizer & VAD
+            // Compute mic amplitude for visualizer and echo-gate
             const int16Array = new Int16Array(pcmInt16Buffer);
             let sumSq = 0;
             for (let i = 0; i < int16Array.length; i++) {
@@ -331,35 +223,19 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             const normMic = Math.min(rms / 12000, 1);
             userVolumeRef.current = normMic;
 
-            // User speech detection & Turn completion trigger
-            if (normMic > 0.055) {
-              setIsUserSpeaking(true);
-              hasSpokenRef.current = true;
-              if (silenceTimerRef.current) {
-                clearTimeout(silenceTimerRef.current);
-                silenceTimerRef.current = null;
-              }
-            } else if (hasSpokenRef.current) {
-              // User finished speaking, trigger turn inference after 650ms of silence
-              if (!silenceTimerRef.current) {
-                silenceTimerRef.current = setTimeout(() => {
-                  if (hasSpokenRef.current && ws.readyState === WebSocket.OPEN) {
-                    ws.send(
-                      JSON.stringify({
-                        clientContent: {
-                          turnComplete: true,
-                        },
-                      })
-                    );
-                    hasSpokenRef.current = false;
-                    silenceTimerRef.current = null;
-                    setIsUserSpeaking(false);
-                  }
-                }, 650);
-              }
+            // Acoustic Echo Gate:
+            // If the assistant is actively talking through the device speakers,
+            // suppress streaming speaker bleed into the mic to prevent self-interruption loops.
+            // Only stream if the user is intentionally speaking loudly over the assistant (barge-in).
+            const isAssistantSpeaking = audioPlayerRef.current?.isSpeaking ?? false;
+            if (isAssistantSpeaking && normMic < 0.16) {
+              setIsUserSpeaking(false);
+              return;
             }
 
-            // Stream real-time audio chunk using standard audio field
+            setIsUserSpeaking(normMic > 0.05);
+
+            // Stream real-time audio chunk (Google's server-side VAD handles turn detection natively)
             ws.send(
               JSON.stringify({
                 realtimeInput: {
@@ -428,78 +304,61 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             return;
           }
 
-          // 1. Capture model spoken transcript from native outputAudioTranscription
-          if (data.serverContent?.outputTranscription?.text) {
-            const chunk = data.serverContent.outputTranscription.text;
-            currentAssistantTranscriptRef.current += chunk;
-            setAssistantTranscript((prev) => prev + chunk);
-          }
 
-          // 2. Capture user spoken transcript from native inputAudioTranscription
-          if (data.serverContent?.inputTranscription?.text) {
-            const userChunk = data.serverContent.inputTranscription.text.trim();
-            if (userChunk) {
-              currentUserTranscriptRef.current = userChunk;
-              setUserTranscript(userChunk);
-            }
-          }
-
-          // 3. Handle incoming audio & parts fallback
+          // 3. Handle incoming 24kHz audio playback
           if (data.serverContent?.modelTurn?.parts) {
             for (const part of data.serverContent.modelTurn.parts) {
-              // Play incoming 24kHz audio chunk
               if (part.inlineData?.data && audioPlayerRef.current) {
                 audioPlayerRef.current.playChunk(part.inlineData.data);
                 setStatus("speaking");
               }
-
-              // Text caption parts fallback
-              if (part.text && !currentAssistantTranscriptRef.current.includes(part.text)) {
-                currentAssistantTranscriptRef.current += part.text;
-                setAssistantTranscript((prev) => prev + part.text);
-              }
             }
           }
 
-          // 4. Handle turn complete: commit dialogue turn to session history
+          // 4. Handle turn complete
           if (data.serverContent?.turnComplete) {
             setStatus("listening");
-            const userSpeech = currentUserTranscriptRef.current.trim();
-            const assistantSpeech = currentAssistantTranscriptRef.current.trim();
-
-            if (userSpeech) {
-              transcriptHistoryRef.current.push({ role: "user", text: userSpeech });
-            }
-            if (assistantSpeech) {
-              transcriptHistoryRef.current.push({ role: "assistant", text: assistantSpeech });
-            }
-
-            currentUserTranscriptRef.current = "";
-            currentAssistantTranscriptRef.current = "";
-            setTranscriptHistory([...transcriptHistoryRef.current]);
-            setAssistantTranscript("");
-            setUserTranscript("");
           }
 
-          // 5. Handle tool calls
+          // 5. Handle session resumption update
+          if (data.sessionResumptionUpdate?.newHandle) {
+            sessionResumptionHandleRef.current = data.sessionResumptionUpdate.newHandle;
+          }
+
+          // 6. Handle tool calls
           if (data.toolCall?.functionCalls) {
             const functionResponses = [];
             for (const fc of data.toolCall.functionCalls) {
-              const result = executeClientTool(fc.name, fc.args || {});
+              let output: Record<string, unknown> = { status: "completed" };
+              if (optionsRef.current.onExecuteTool) {
+                try {
+                  output = (await optionsRef.current.onExecuteTool(
+                    fc.name,
+                    fc.args || {}
+                  )) as Record<string, unknown>;
+                } catch (toolErr) {
+                  output = { status: "error", error: String(toolErr) };
+                }
+              } else {
+                output = executeClientTool(fc.name, fc.args || {});
+              }
+
               functionResponses.push({
-                response: { output: result },
+                response: { output },
                 id: fc.id,
               });
             }
 
-            // Return tool response
-            ws.send(
-              JSON.stringify({
-                toolResponse: {
-                  functionResponses,
-                },
-              })
-            );
+            // Return tool response back to Gemini Live
+            if (ws.readyState === WebSocket.OPEN) {
+              ws.send(
+                JSON.stringify({
+                  toolResponse: {
+                    functionResponses,
+                  },
+                })
+              );
+            }
           }
         } catch (err) {
           console.error("[useLiveVoice] Error parsing message:", err);

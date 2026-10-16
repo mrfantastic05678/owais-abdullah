@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { getVoicePersonaPrompt } from "@/lib/canonical-context";
 
 // In-memory rate limiting map (IP -> timestamps array)
 const mintRateLimitMap = new Map<string, number[]>();
@@ -30,6 +31,34 @@ function isRateLimited(ip: string): boolean {
   }
 
   return false;
+}
+
+// Verify Cloudflare Turnstile token if secret key is present in environment
+async function verifyTurnstile(token: string | null, ip: string): Promise<boolean> {
+  const secretKey = process.env.TURNSTILE_SECRET_KEY;
+  if (!secretKey) return true; // Progressive enhancement: bypass if not configured in current environment
+
+  if (!token) return false;
+
+  try {
+    const formData = new URLSearchParams();
+    formData.append("secret", secretKey);
+    formData.append("response", token);
+    formData.append("remoteip", ip);
+
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      body: formData,
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (!res.ok) return false;
+    const data = await res.json();
+    return data.success === true;
+  } catch (err) {
+    console.error("[live-token] Turnstile verification exception:", err);
+    return false;
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -65,7 +94,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Mint short-lived ephemeral token
+    // 3. Optional Cloudflare Turnstile verification
+    const turnstileToken =
+      request.headers.get("x-turnstile-token") ||
+      request.nextUrl.searchParams.get("turnstileToken");
+
+    const isTurnstileValid = await verifyTurnstile(turnstileToken, ip);
+    if (!isTurnstileValid) {
+      return new Response(
+        JSON.stringify({ error: "Turnstile bot verification required. Please refresh and try again." }),
+        { status: 403, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // 4. Mint short-lived ephemeral token
     // Window: 2 minutes to establish connection; session ceiling: 30 minutes
     const now = Date.now();
     const expireTime = new Date(now + 30 * 60 * 1000).toISOString();
@@ -108,6 +150,7 @@ export async function POST(request: NextRequest) {
         token: tokenName,
         model: "models/gemini-3.1-flash-live-preview",
         voice: "Kore",
+        systemInstruction: getVoicePersonaPrompt(),
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
