@@ -1,289 +1,218 @@
-# Owais Abdullah — AI Agent Builder & SaaS Founder
+# Owais Abdullah — AI Agent Architect & Full-Stack Engineer
 
-> Building AI-Native companies through Digital FTEs, SaaS products, and production automation.
+> Building autonomous AI employees (Digital FTEs), high-scale Next.js SaaS platforms, and production-grade intelligent workflow systems.
 
-**Live:** [owaisabdullah.dev](https://owaisabdullah.dev) | **GitHub:** [MrOwaisAbdullah](https://github.com/MrOwaisAbdullah) | **LinkedIn:** [mrowaisabdullah](https://linkedin.com/in/mrowaisabdullah)
-
----
-
-## What I Do
-
-I'm a Forward Deployed Engineer (FDE) who builds AI Workers — Digital FTEs that operate like full-time employees. I also build Next.js SaaS products, agent orchestration systems, and automation pipelines.
-
-| Service | What It Is |
-|---------|------------|
-| **Digital FTEs** | Autonomous AI employees handling business operations 24/7 |
-| **SaaS Products** | Production web apps (Octively, RentParlo, TeamFlow) |
-| **AI Agent Systems** | Multi-agent orchestration, MCP tooling, memory pipelines |
-| **Technical Consulting** | Architecture, MVP development, deployment |
+**Live:** [owaisabdullah.dev](https://owaisabdullah.dev) | **GitHub:** [MrOwaisAbdullah](https://github.com/MrOwaisAbdullah) | **LinkedIn:** [mrowaisabdullah](https://linkedin.com/in/mrowaisabdullah) | **X:** [@mrowaisabdullah](https://x.com/mrowaisabdullah)
 
 ---
 
-## Tech Stack
+## ⚡ What I Build
 
-### AI & Agents
+I am a Forward Deployed Engineer (FDE) and AI Systems Architect. I design and ship AI Workers — Digital FTEs that operate autonomously 24/7 with persistent memory vaults, tool execution, and human-in-the-loop gating — alongside full-stack SaaS applications, headless commerce systems, and distributed APIs.
 
-| Technology | Use |
-|------------|-----|
-| Claude Code | Primary general agent, spec-driven development |
-| OpenAI Agents SDK | Building multi-agent systems |
-| Claude Agent SDK | Agent runtime, tool orchestration |
-| MCP (Model Context Protocol) | Tool interfaces, external connectors |
-| Gemini AI | Chatbot, content generation |
-| OpenRouter | Multi-model routing, cost optimization |
-| DeepSeek | Cost-efficient inference |
-| Paperclip | Agent workforce control plane |
-| OpenClaw | Personal AI employees on messaging apps |
-| Hermes | Memory-first personal agents |
-
-### Frontend
-
-| Technology | Use |
-|------------|-----|
-| Next.js (App Router) | Web framework, SSR, ISR |
-| TypeScript | Type safety, strict mode |
-| Tailwind CSS | Utility-first styling |
-| shadcn/ui | UI component library (Radix UI primitives) |
-| Framer Motion | UI animations, layout transitions |
-| GSAP | Scroll-triggered animations, scroll effects |
-| Three.js | 3D visuals, WebGL |
-| Scroll Story 3D *(planned)* | Apple/Nike-style scroll-scrubbed product reveals |
-
-### Backend & Data
-
-| Technology | Use |
-|------------|-----|
-| Python (FastAPI) | API backends, agent harnesses |
-| PostgreSQL / Neon | Relational database |
-| pgvector | Vector search, RAG pipelines |
-| Sanity CMS | Headless CMS for blog content |
-| Better Auth | Authentication |
-| Prisma ORM | Database ORM |
-| Zod | Schema validation |
-
-### Cloud & Infrastructure
-
-| Technology | Use |
-|------------|-----|
-| Vercel | Frontend deployment, edge functions |
-| Cloudflare R2 | File storage, CDN |
-| AWS S3 | Object storage |
-| Docker | Containerization |
-| Dokploy / Coolify | VPS deployment platforms |
-| Inngest | Durable execution, agent orchestration |
-| Brevo | Email marketing |
-| Resend | Transactional email |
-
-### Tools & Automation
-
-| Technology | Use |
-|------------|-----|
-| OpenCode | Alternative coding agent |
-| Playwright | Browser automation, screenshots |
-| Obsidian | Memory vault, knowledge base |
-| Python Scripts | Agent-executable automation |
-| Git | Version control |
-| ESLint | Code quality |
+| Focus Area | Engineering Capability |
+| :--- | :--- |
+| **Autonomous Digital FTEs** | Multi-agent swarms powered by Claude Code & OpenAI Agents SDK with persistent Obsidian memory vaults, MCP tools, and Python execution harnesses. |
+| **Full-Stack SaaS Platforms** | Production web applications built with Next.js (App Router), TypeScript, Tailwind CSS, and Server Actions (e.g. Octively, RentParlo, TeamFlow). |
+| **Real-Time Multimodal Voice** | Low-latency bidirectional voice assistants using Google Gemini Live API via WebSockets, AudioWorklet PCM streaming, and interruption barge-in. |
+| **Database & Directory Systems** | High-scale relational data modeling with Neon Serverless Postgres, Drizzle ORM, and pgvector for RAG retrieval. |
+| **Spec-First Engineering** | Rigorous verification, zero AI vibe-coding, strict Zod runtime contracts, sliding-window rate limits, and prompt-injection guardrails. |
 
 ---
 
-## Pages & Routes
+## 🛠️ Production Tech Stack
 
-| Page | Route | Description |
-|------|-------|-------------|
-| **Home** | `/` | Hero, About, Services, Tech Stack, Projects, Blog, Experience, Contact |
-| **About** | `/about` | Bio, Experience Timeline, Skills |
-| **Projects** | `/projects` | Tabbed grid — 9 categories, 36+ projects |
-| **Blog** | `/blog` | Sanity CMS posts with ISR (30 min revalidation) |
-| **Services** | `/services` | 6 service offerings with pricing |
-| **Skills** | `/skills` | 46+ skills with progress bars |
-| **Contact** | `/contact` | Form with validation + Resend integration |
-| **Studio** | `/studio` | Sanity CMS admin dashboard |
+### 1. AI Agents & Intelligence
+- **Agent Runtimes:** Claude Code, OpenAI Agents SDK, Claude Agent SDK, LangChain / LangGraph
+- **Tool Protocol:** Model Context Protocol (MCP) servers, Python automation harnesses
+- **Real-Time Voice:** Google Gemini Multimodal Live API (`gemini-2.5-flash`), WebSockets, AudioWorklet (16kHz PCM capture, 24kHz gapless playback)
+- **Model Routing:** OpenRouter, Google AI Studio, DeepSeek
+- **Memory & Context:** Git-versioned Obsidian markdown vaults, vector embeddings (`pgvector`)
+
+### 2. Frontend & Interaction Design
+- **Framework:** Next.js (App Router, Server Components, Server Actions, On-Demand ISR)
+- **Language:** TypeScript (Strict Mode)
+- **Design System:** Architectural Obsidian palette (`#020D10`), subtle hairline borders (`rgba(255, 255, 255, 0.08)`), authentic frosted glassmorphism (`backdrop-filter: blur(20px)`), dual-pitch dot lattices
+- **Styling:** Tailwind CSS, CSS Custom Properties
+- **Motion & Physics:** Framer Motion, GSAP ScrollTrigger (60FPS/120FPS GPU layer compositing, native mobile touch preservation)
+- **Typography:** Clash Display (Display/Headings), Satoshi (Body Text)
+
+### 3. Backend, Database & Storage
+- **Database:** Neon Serverless PostgreSQL with connection pooling
+- **ORM:** Drizzle ORM (type-safe schema definitions and push migrations)
+- **Content Engine:** Sanity Headless CMS with real-time GROQ queries and on-demand webhooks
+- **Authentication:** Unified administrative single sign-on with HMAC-SHA256 signed magic access links and persistent database credential storage
+- **Email Delivery:** Resend transactional email API with verified domain delivery
+
+### 4. Security & Guardrails
+- **Input Validation:** Strict Zod schema verification on all chat, session, and administrative endpoints
+- **Rate Limiting:** In-memory sliding-window IP rate limiting (15 req/min on AI chat, 6 sessions/10 min on live voice)
+- **AI Safety:** Pre-LLM prompt-injection deflection heuristics, system instruction defense rules, and contact lead marker sanitization
+- **Zero-Trust Recovery:** Passwordless email magic links with 30-minute expirations for administrative access and credential rotation
 
 ---
 
-## Features
+## 🚀 Key Architectural Features
 
-- **PWA** — Offline support, installable via `@ducanh2912/next-pwa`
-- **AI Chatbot** — Gemini AI with context about my work
-- **Dark/Light Theme** — System-aware, CSS custom properties
-- **SEO** — JSON-LD schema, dynamic sitemap, `llms.txt` for AI crawlers
-- **Responsive** — Mobile-first, works on all devices
-- **Animations** — Framer Motion + GSAP ScrollTrigger
-- **ISR** — Incremental Static Regeneration for blog and projects
-- **Email** — Resend (transactional) + Brevo (marketing)
-- **Scroll Story 3D** *(planned)* — Apple/Nike-style scroll-triggered product reveal using canvas frame sequences
+### 🎙️ Real-Time Gemini Live Voice Assistant ("Otto AI")
+- **Bidirectional WebSocket Streaming:** The browser connects directly to Google's edge via WebSockets using short-lived, server-minted ephemeral tokens (`POST /api/live-token`), eliminating server audio bandwidth bottlenecks.
+- **AudioWorklet Resampling:** Native 44.1kHz/48kHz microphone audio is downsampled off-the-main-thread to 16kHz mono 16-bit linear PCM with zero UI jank.
+- **Gapless 24kHz Playback:** Audio chunks from Gemini are scheduled with microsecond-precision audio cursors.
+- **True Interruption (Barge-In):** When `serverContent.interrupted === true` is received, queued audio sources halt immediately, enabling natural conversational interruptions.
+- **Client Tool Calling:** Otto AI can trigger client UI actions directly over voice (e.g. `navigate_to_section`, `open_lead_drawer`).
+
+### 📦 12-Column Balanced Bento Services Grid
+- Asymmetric layout designed with zero orphaned cards:
+  - **Row 1:** 7 columns (Digital FTE Flagship) + 5 columns (Multi-Model Agent Swarms) = 12 cols.
+  - **Row 2:** 3 + 3 + 3 + 3 = 12 cols (SaaS Engineering, Headless Commerce, Spec Audit, Distributed APIs).
+- Domain-specific architectural badges (`AUTONOMOUS FTE`, `MULTI-MODEL SWARMS`, `FULL-STACK SAAS`, `HEADLESS COMMERCE`, `SPEC-FIRST AUDIT`, `DISTRIBUTED APIS`).
+- Smooth, non-popping hairline hover transitions.
+
+### 🔐 Zero-Trust Administrative Security & Magic Reset
+- **Email-Based Magic Links:** Secure 1-click vault access and password set/reset tokens signed with HMAC-SHA256.
+- **Database Persistence:** Custom administrative credentials persist permanently in Neon Postgres (`admin_settings` table) across serverless deploys.
+- **Zero Route Disclosure:** Route structures and endpoints are protected against reconnaissance scanning.
+
+### 📈 SEO, Performance & Telemetry
+- **Google Preferred Sources:** Implements Google's official user-controlled SEO ranking signal with direct-add modal popup fallback.
+- **Instant Indexing:** Automated IndexNow broadcasting to Bing and Yandex upon Sanity content publishing.
+- **Edge Audience Telemetry:** Real-time visitor country, city, device, and referrer tracking without invasive cookies.
+- **Smooth 60FPS Performance:** Zero main-thread scroll hijacking, isolated touch momentum, and hardware layer promotion.
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 ├── app/
 │   ├── api/
-│   │   ├── chat/route.ts          # Gemini AI chat endpoint
-│   │   ├── like/route.ts          # Project like counter
-│   │   └── profile/route.ts       # Profile data API
-│   ├── blog/[slug]/page.tsx       # Dynamic blog post pages
-│   ├── studio/[[...tool]]/        # Sanity Studio
-│   ├── about/page.tsx             # About page
-│   ├── projects/page.tsx          # Projects page
-│   ├── services/page.tsx          # Services page
-│   ├── skills/page.tsx            # Skills page
-│   ├── contact/page.tsx           # Contact page
-│   ├── layout.tsx                 # Root layout (ThemeProvider, fonts)
-│   ├── page.tsx                   # Homepage (all sections)
-│   └── globals.css                # CSS variables, themes, animations
+│   │   ├── admin/                 # Admin verify, reset, and overview routes
+│   │   ├── analytics/             # Telemetry & metrics aggregation
+│   │   ├── chat/                  # Zod-validated Gemini AI chat endpoint
+│   │   ├── live-token/            # Ephemeral token minting for Gemini Live Voice
+│   │   ├── revalidate/            # On-demand ISR webhook & IndexNow pinging
+│   │   └── ...                    # Directory, comments, like endpoints
+│   ├── blog/                      # Sanity-powered editorial articles with ISR
+│   ├── stores/                    # Pakistan E-Commerce Directory (Postgres + Drizzle)
+│   ├── layout.tsx                 # Root layout, theme provider, and analytics
+│   ├── page.tsx                   # Homepage (Hero, Bento Services, Projects, Stats)
+│   └── globals.css                # Obsidian tokens, dual-pitch lattice, glassmorphism
 ├── components/
-│   ├── ui/                        # shadcn/ui base components
-│   ├── Hero/                      # Hero section
-│   ├── About/                     # About section
-│   ├── Contact/                   # Contact form
-│   ├── BlogSection/               # Blog listing
-│   ├── Projects/                  # Projects showcase
-│   └── SkillsSlider.tsx           # Skills marquee
-├── data/
-│   └── profile.ts                 # Projects, skills, experience (single source of truth)
+│   ├── Hero.tsx                   # Symmetrical hero, CTA buttons, and Otto AI pill
+│   ├── ServicesGrid.tsx           # 12-column balanced Bento layout with split-flap labels
+│   ├── StatsBand.tsx              # Single-row mobile & 4-col desktop telemetry counters
+│   ├── ui/
+│   │   ├── ChatBot.tsx            # Otto AI dual-mode Text & Live Voice widget
+│   │   └── VoiceVisualizer.tsx    # Audio frequency canvas & pulse visualizer
+│   └── admin/                     # Admin Dashboard Shell & mission control views
+├── hooks/
+│   ├── useChat.ts                 # Chat stream management with guardrail error handling
+│   └── useLiveVoice.ts            # WebSockets, AudioWorklet capture, and LiveAudioPlayer
 ├── lib/
-│   ├── blogs.ts                   # Sanity blog queries
-│   ├── sanity.ts                  # Sanity client config
-│   └── fonts.ts                   # Font configuration
+│   ├── admin-token.ts             # HMAC-SHA256 tokens and persistent DB settings
+│   ├── chat-security.ts           # Zod schemas, injection detection & rate limiting
+│   ├── db.ts                      # Neon Postgres serverless client initialization
+│   └── voice/audio-player.ts      # Gapless 24kHz PCM audio queue & barge-in handler
 ├── public/
-│   ├── assets/                    # Images, project screenshots
-│   ├── sw.js                      # Service worker (generated)
-│   ├── manifest.json              # PWA manifest
-│   ├── robots.txt                 # Crawler rules
-│   ├── sitemap.ts                 # Dynamic sitemap
-│   └── llms.txt                   # AI crawler metadata
-├── sanity/
-│   ├── schemaTypes/               # Sanity content schemas
-│   └── structure/                 # Sanity Studio structure
-├── next.config.ts                 # PWA, image optimization
-├── tailwind.config.ts             # Theme, animations, breakpoints
-├── tsconfig.json                  # Path aliases, strict mode
-├── components.json                # shadcn/ui config
-└── package.json                   # Dependencies
+│   └── worklets/pcm-processor.js  # AudioWorklet processor for 16kHz PCM streaming
+├── schema/
+│   └── directory.ts               # Drizzle ORM schema (stores, claims, admin_settings)
+└── .agents/skills/                # Packaged agent skills (gemini-live-voice-agent, etc.)
 ```
 
 ---
 
-## Getting Started
+## ⚙️ Getting Started
 
-### Prerequisites
+### 1. Prerequisites
+- **Node.js** v20+ and npm
+- **Google Gemini API Key** (from [Google AI Studio](https://aistudio.google.com/))
+- **Neon Postgres Database** (from [Neon](https://neon.tech/))
+- **Sanity CMS Project** (from [Sanity.io](https://sanity.io/))
+- **Resend Account** (from [Resend](https://resend.com/))
 
-- **Node.js** v18+ and npm
-- **Sanity account** (for CMS)
-- **Gemini API key** (for AI chatbot)
-- **Resend API key** (for email)
-
-### Installation
+### 2. Installation
 
 ```bash
-# Clone the repo
-git clone https://github.com/MrOwaisAbdullah/next-portfolio.git
-cd next-portfolio
+# Clone the repository
+git clone https://github.com/MrOwaisAbdullah/Owais-Abdullah.git
+cd Owais-Abdullah
 
 # Install dependencies
 npm install
 
-# Set up environment variables
+# Initialize environment configuration
 cp .env.example .env.local
 ```
 
-### Environment Variables
+### 3. Configure Environment Variables
+
+Edit `.env.local` with your private credentials. See [`.env.example`](./.env.example) for detailed documentation of all variables:
 
 ```env
-# Sanity CMS
+# Administrative Security
+ADMIN_EMAIL=your_admin_email@domain.com
+ADMIN_PASSWORD=your_secure_password_here
+
+# AI & Live Voice
+GEMINI_API_KEY=your_gemini_api_key_here
+LIVE_VOICE_ENABLED=true
+
+# Database (Neon Serverless Postgres)
+DATABASE_URL="postgresql://user:password@ep-sample-pooler.region.neon.tech/neondb?sslmode=require"
+
+# Headless CMS (Sanity)
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_sanity_project_id
 NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_READ_TOKEN=your_read_token
+SANITY_API_TOKEN=your_sanity_token
+SANITY_REVALIDATE_SECRET=your_webhook_secret
 
-# AI Chat
-GEMINI_API_KEY=your_gemini_api_key
+# Email Delivery (Resend)
+RESEND_API_KEY=re_your_api_key_here
+RESEND_FROM_EMAIL="Owais Abdullah <contact@yourdomain.com>"
+CONTACT_TO_EMAIL=your_inbox@domain.com
 
-# Email
-RESEND_API_KEY=your_resend_api_key
-
-# Analytics (optional)
-NEXT_PUBLIC_GA_ID=your_google_analytics_id
+# Analytics & Indexing
+NEXT_PUBLIC_GA_ID="G-XXXXXXXXXX"
+INDEXNOW_KEY=your_indexnow_key_here
 ```
 
-### Development
+### 4. Push Database Schema
 
 ```bash
-npm run dev      # Start dev server at localhost:3000
-npm run build    # Production build
-npm run start    # Start production server
-npm run lint     # Run ESLint
+# Synchronize Postgres schema with Neon
+npm run db:push
 ```
 
----
-
-## Deployment
-
-### Vercel (Recommended)
+### 5. Run Development Server
 
 ```bash
-npm i -g vercel
-vercel
+npm run dev
 ```
 
-The project is pre-configured for Vercel with:
-- PWA support via `@ducanh2912/next-pwa`
-- Image optimization for Unsplash and Sanity CDNs
-- ISR for blog posts (30 min revalidation)
-
-### Sanity Studio
-
-Access the CMS at `/studio` in development. Deploy with:
-
-```bash
-npx sanity deploy
-```
+Open [http://localhost:3000](http://localhost:3000) to view your local deployment.
 
 ---
 
-## Design System
+## 🧠 Packaged Skills & Agent Customizations
 
-### Color Tokens
+This repository contains production-ready skills located in `.agents/skills/`:
 
-| Token | Light | Dark |
-|-------|-------|------|
-| `--background` | `#ffffff` | `#212428` |
-| `--text` | `#1f2937` | `#e5e7eb` |
-| `--accent` | `#3b82f6` | `#3a69ff` |
-| `--muted` | `#f3f4f6` | `#2d3748` |
-
-### Typography
-
-- **Headings:** Clash Display (bold, modern)
-- **Body:** Satoshi (clean, readable)
-- Both loaded via `next/font/local` (~116 KB total)
-
-### Animations
-
-- **Framer Motion:** UI transitions, layout animations, entrance effects
-- **GSAP ScrollTrigger:** Scroll-driven reveals, parallax effects
-- **CSS:** Custom keyframes for marquee, accordion, pulse
+| Skill | Description | Location |
+| :--- | :--- | :--- |
+| **`gemini-live-voice-agent`** | Full guide, protocol reference, and templates for building real-time WebSockets/WebRTC voice agents using Google Gemini Live API. | [`.agents/skills/gemini-live-voice-agent`](./.agents/skills/gemini-live-voice-agent/) |
+| **`google-preferred-sources`** | Implementation patterns for Google's official Preferred Sources user-controlled SEO ranking signal with direct-add modals. | [`.agents/skills/google-preferred-sources`](./.agents/skills/google-preferred-sources/) |
+| **`smooth-ui-performance`** | Production guidelines for 60FPS/120FPS smooth UI rendering, GPU compositing layers, and native touch isolation. | [`.agents/skills/smooth-ui-performance`](./.agents/skills/smooth-ui-performance/) |
 
 ---
 
-## How I Work
+## 📬 Contact & Connect
 
-1. **Discover** — Understand the problem, map constraints, define success
-2. **Design** — Architecture, data models, API contracts, component hierarchy
-3. **Develop** — Spec-driven code with AI assistance, test-driven validation
-4. **Deploy** — CI/CD, monitoring, iteration based on real usage
-
----
-
-## Contact
-
-- **Email:** [mrowaisabdullah@gmail.com](mailto:mrowaisabdullah@gmail.com)
+- **Portfolio:** [owaisabdullah.dev](https://owaisabdullah.dev)
 - **LinkedIn:** [linkedin.com/in/mrowaisabdullah](https://linkedin.com/in/mrowaisabdullah)
 - **GitHub:** [github.com/MrOwaisAbdullah](https://github.com/MrOwaisAbdullah)
 - **X:** [x.com/mrowaisabdullah](https://x.com/mrowaisabdullah)
 
 ---
 
-Built with Next.js, TypeScript, Tailwind CSS, and AI.
+Built with Next.js 15, TypeScript, Tailwind CSS, Neon Postgres, and Google Gemini AI.
