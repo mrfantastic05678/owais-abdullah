@@ -707,3 +707,24 @@
   animation: shimmer-sweep 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Autonomous Agent Navigation Target Glow Highlight */
+@keyframes agent-target-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+  }
+  20% {
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.75), 0 0 35px rgba(20, 184, 166, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.5), 0 0 20px rgba(20, 184, 166, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+  }
+}
+
+.agent-target-highlight {
+  animation: agent-target-glow 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  scroll-margin-top: 5rem;
+}
+

@@ -213,20 +213,20 @@ public interrupt(): void {
 
 ---
 
-## 6. Zero-Reload SPA Navigation & Persistent Voice Sessions
+## 6. Zero-Reload SPA Navigation, Agent HUD & Coordinated Timing
 
-If the voice bot navigates the visitor to another page or section, the voice connection **must not drop**.
+If the voice bot navigates the visitor to another page or section, the voice connection **must not drop**, and the transition must feel visually intentional and coordinated with the assistant's speech.
 
 ### Seamless Multi-Page Persistence:
 1. Mount the voice agent in the Root Layout Shell (`components/ConditionalUI.tsx`), not inside route page components.
-2. When executing the `navigate` tool, use Next.js client-side router (`router.push(path)`):
-   ```typescript
-   if (name === "navigate") {
-     const res = handlePortfolioNavigation(args.target, pathname, router);
-     return res;
-   }
-   ```
-3. Because client-side routing changes only the page DOM without reloading the root layout shell, the active WebSocket connection, `AudioContext`, and `AudioWorklet` remain 100% active and speaking continuously across route transitions.
+2. Mount the **Agent Navigation HUD** (`components/ui/AgentNavigationHUD.tsx`) in the Root Layout Shell. When navigation triggers, it displays a top neon scanning beam and a floating status capsule (`Otto AI · Navigating to Projects →`) for immediate visual confirmation.
+3. **Arrival-Tense Phrasing (Preventing Delayed "I will navigate" Speech)**:
+   In the voice persona prompt, instruct Gemini to speak in the arrival/present tense upon calling `navigate`:
+   - Good: *"Here are Owais's latest projects!"* or *"Bringing you right to the Digital FTE services—check these out below!"*
+   - Avoid: *"Yes, I will navigate you to this page"* (which sounds delayed because the page has already started moving).
+4. **Coordinated Timing & Target Glow**:
+   In `lib/client-navigation.ts`, dispatch the HUD event immediately, then apply a smooth 350ms delay before `scrollIntoView()` or `router.push()`. This synchronizes the smooth camera glide with the arrival of Gemini's first synthesized speech chunk, while applying a temporary glowing highlight ring (`.agent-target-highlight`) to the target section.
+5. Because client-side routing changes only the page DOM without reloading the root layout shell, the active WebSocket connection, `AudioContext`, and `AudioWorklet` remain 100% active and speaking continuously across route transitions.
 
 ---
 

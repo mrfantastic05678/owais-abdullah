@@ -88,6 +88,54 @@ export function handlePortfolioNavigation(
     "/search": "/search",
   };
 
+  const targetDisplayNames: Record<string, string> = {
+    projects: "Projects & Builds",
+    work: "Projects & Builds",
+    services: "Engineering Services",
+    "digital-fte": "Digital FTEs",
+    "/services/digital-fte": "Digital FTEs",
+    stack: "Verified Tech Stack",
+    skills: "Core Engineering Skills",
+    blog: "Tech Articles & Insights",
+    stores: "E-Commerce Directory",
+    about: "Background & Bio",
+    contact: "Project Scope & Contact",
+    faq: "Frequently Asked Questions",
+    journey: "Engineering Journey",
+    hero: "Mission Overview",
+  };
+
+  const displayName =
+    targetDisplayNames[normalizedSection] ||
+    targetDisplayNames[lower] ||
+    targetDisplayNames[cleanSection] ||
+    trimmed;
+
+  // Helper: Trigger visual glow animation on arriving element
+  const highlightElement = (elem: HTMLElement) => {
+    elem.classList.remove("agent-target-highlight");
+    void elem.offsetWidth; // trigger reflow
+    elem.classList.add("agent-target-highlight");
+    setTimeout(() => {
+      elem.classList.remove("agent-target-highlight");
+    }, 2800);
+  };
+
+  // Helper: Broadcast HUD notification to on-screen overlay
+  const notifyAgentNavigation = (type: "section" | "page") => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("agent_navigation", {
+          detail: {
+            target: rawTarget,
+            displayName,
+            type,
+          },
+        })
+      );
+    }
+  };
+
   // 1. If currently on Home page and target is a home section
   if (pathname === "/" && homeSections.includes(normalizedSection)) {
     const el =
@@ -95,7 +143,13 @@ export function handlePortfolioNavigation(
       document.getElementById(cleanSection) ||
       document.querySelector(`[data-section="${normalizedSection}"]`);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
+      notifyAgentNavigation("section");
+      // 350ms orchestrated delay so speech/chat response starts alongside the smooth glide
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: "smooth" });
+        highlightElement(el as HTMLElement);
+      }, 350);
+
       return {
         status: "navigated",
         target: normalizedSection,
@@ -108,16 +162,24 @@ export function handlePortfolioNavigation(
   // 2. If on a different page and target is a home section
   // Navigate back to home section via client router (no full reload)
   if (pathname !== "/" && homeSections.includes(normalizedSection)) {
-    router.push(`/#${normalizedSection}`);
-    if (typeof window !== "undefined") {
-      setTimeout(() => {
-        const el =
-          document.getElementById(normalizedSection) ||
-          document.getElementById(cleanSection) ||
-          document.querySelector(`[data-section="${normalizedSection}"]`);
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }, 300);
-    }
+    notifyAgentNavigation("section");
+    // Orchestrated transition delay
+    setTimeout(() => {
+      router.push(`/#${normalizedSection}`);
+      if (typeof window !== "undefined") {
+        setTimeout(() => {
+          const el =
+            document.getElementById(normalizedSection) ||
+            document.getElementById(cleanSection) ||
+            document.querySelector(`[data-section="${normalizedSection}"]`);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+            highlightElement(el as HTMLElement);
+          }
+        }, 300);
+      }
+    }, 350);
+
     return {
       status: "navigated",
       target: normalizedSection,
@@ -134,8 +196,11 @@ export function handlePortfolioNavigation(
 
   if (targetPage) {
     if (pathname === targetPage) {
+      notifyAgentNavigation("page");
       if (typeof window !== "undefined") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }, 350);
       }
       return {
         status: "already_there",
@@ -145,7 +210,12 @@ export function handlePortfolioNavigation(
       };
     }
 
-    router.push(targetPage);
+    notifyAgentNavigation("page");
+    // Orchestrated transition delay
+    setTimeout(() => {
+      router.push(targetPage);
+    }, 350);
+
     return {
       status: "navigated",
       target: targetPage,
@@ -160,7 +230,11 @@ export function handlePortfolioNavigation(
       document.getElementById(cleanSection) ||
       document.querySelector(`[data-section="${cleanSection}"]`);
     if (anyEl) {
-      anyEl.scrollIntoView({ behavior: "smooth" });
+      notifyAgentNavigation("section");
+      setTimeout(() => {
+        anyEl.scrollIntoView({ behavior: "smooth" });
+        highlightElement(anyEl as HTMLElement);
+      }, 350);
       return {
         status: "navigated",
         target: cleanSection,

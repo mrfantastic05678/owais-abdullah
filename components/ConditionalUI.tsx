@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { ChatBot } from "@/components/ui/ChatBot";
 import OctivelyPromoToast from "@/components/OctivelyPromoToast";
+import { AgentNavigationHUD } from "@/components/ui/AgentNavigationHUD";
 
 export function ConditionalUI() {
   const pathname = usePathname();
@@ -14,6 +15,7 @@ export function ConditionalUI() {
 
   return (
     <>
+      <AgentNavigationHUD />
       {!isPrivateArea && <ChatBot />}
       {!isPrivateArea && <OctivelyPromoToast />}
     </>

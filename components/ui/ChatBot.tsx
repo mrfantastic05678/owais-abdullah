@@ -543,7 +543,7 @@ export function ChatBot() {
             id="chatbot-window"
             data-lenis-prevent="true"
             onWheel={(e) => e.stopPropagation()}
-            className="fixed bottom-[84px] sm:bottom-[90px] right-4 sm:right-6 z-[5000] w-[350px] sm:w-[380px] max-w-[calc(100vw-2rem)] font-sans overscroll-contain"
+            className="fixed bottom-[78px] sm:bottom-[90px] inset-x-3 sm:inset-x-auto sm:right-6 z-[5000] w-auto sm:w-[390px] max-w-[calc(100vw-1.5rem)] sm:max-w-none font-sans overscroll-contain"
             initial={{ opacity: 0, y: 14, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 14, scale: 0.97 }}
@@ -552,7 +552,7 @@ export function ChatBot() {
             <div
               data-lenis-prevent="true"
               onWheel={(e) => e.stopPropagation()}
-              className="h-[450px] sm:h-[470px] max-h-[calc(100vh-8.8rem)] flex flex-col rounded-2xl border border-slate-200 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
+              className="h-[520px] sm:h-[500px] max-h-[calc(100dvh-5.8rem)] sm:max-h-[calc(100vh-8.5rem)] flex flex-col rounded-2xl border border-slate-200 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
             >
               {/* Hallmark-Crafted Header: Unified segmented control, restrained typography, zero button zoo */}
               <div className="px-3.5 py-2.5 border-b border-slate-200/70 dark:border-teal-900/40 bg-white/95 dark:bg-[#031316]/95 backdrop-blur-sm flex items-center justify-between shrink-0 select-none">
@@ -1010,7 +1010,7 @@ export function ChatBot() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/50 outline-none py-1 font-sans"
+                        className="flex-1 bg-transparent text-[13px] sm:text-xs text-foreground placeholder:text-muted-foreground/50 outline-none py-1.5 font-sans"
                       />
 
                       <button
