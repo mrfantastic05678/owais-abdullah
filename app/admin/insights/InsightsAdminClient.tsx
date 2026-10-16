@@ -161,12 +161,9 @@ interface AnalyticsData {
   audienceTelemetry?: AudienceTelemetry;
 }
 
-export default function InsightsClient() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passwordInput, setPasswordInput] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [authError, setAuthError] = useState("");
+export default function InsightsAdminClient() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [data, setData] = useState<AnalyticsData | null>(null);
 
   // Tabs & filters
@@ -176,69 +173,49 @@ export default function InsightsClient() {
   const [sortBy, setSortBy] = useState<"views" | "likes" | "dislikes" | "score" | "date">("score");
   const [geoSourceTab, setGeoSourceTab] = useState<"cities" | "sources">("cities");
 
-  // Check saved session auth
-  useEffect(() => {
-    const savedPassword = getAdminAuthToken();
-    if (savedPassword) {
-      fetchAnalytics(savedPassword);
+  // Fetch analytics using shared admin token
+  const fetchAnalytics = async (passOverride?: string) => {
+    const pass = passOverride || getAdminAuthToken();
+    if (!pass) {
+      setLoading(false);
+      return;
     }
-    const handleAuthChange = () => {
-      const p = getAdminAuthToken();
-      if (p) {
-        fetchAnalytics(p);
-      } else {
-        setIsAuthenticated(false);
-        setData(null);
-      }
-    };
-    window.addEventListener("admin_auth_change", handleAuthChange);
-    return () => window.removeEventListener("admin_auth_change", handleAuthChange);
-  }, []);
 
-  const fetchAnalytics = async (pass: string) => {
     setLoading(true);
-    setAuthError("");
+    setError("");
     try {
       const res = await fetch("/api/analytics", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${pass}`,
+        },
         body: JSON.stringify({ password: pass }),
       });
 
       if (res.ok) {
         const payload = await res.json();
         setData(payload);
-        setIsAuthenticated(true);
-        setAdminAuthToken(pass);
       } else {
-        const err = await res.json();
-        setAuthError(err.error || "Incorrect password. Access denied.");
-        clearAdminAuthToken();
-        setIsAuthenticated(false);
+        const err = await res.json().catch(() => ({}));
+        setError(err.error || "Failed to load analytics data.");
       }
     } catch {
-      setAuthError("Failed to connect to analytics server. Please try again.");
+      setError("Failed to connect to analytics server. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!passwordInput.trim()) return;
-    fetchAnalytics(passwordInput.trim());
-  };
-
-  const handleLogout = () => {
-    clearAdminAuthToken();
-    setIsAuthenticated(false);
-    setPasswordInput("");
-    setData(null);
-  };
+  useEffect(() => {
+    fetchAnalytics();
+    const handleAuthChange = () => fetchAnalytics();
+    window.addEventListener("admin_auth_change", handleAuthChange);
+    return () => window.removeEventListener("admin_auth_change", handleAuthChange);
+  }, []);
 
   const handleRefresh = () => {
-    const pass = getAdminAuthToken();
-    if (pass) fetchAnalytics(pass);
+    fetchAnalytics();
   };
 
   // Categories list
@@ -281,133 +258,68 @@ export default function InsightsClient() {
     return list;
   }, [data?.posts, searchQuery, categoryFilter, sortBy]);
 
-  // =========================================================================
-  // 1. PASSWORD GATE SCREEN
-  // =========================================================================
-  if (!isAuthenticated) {
+  if (loading && !data) {
     return (
-      <main className="min-h-screen pt-32 pb-20 px-4 flex items-center justify-center text-foreground relative overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="w-full max-w-md bg-transparent border border-border/60 rounded-2xl p-7 relative z-10"
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <RefreshCw className="w-8 h-8 text-primary animate-spin mb-3" />
+        <p className="text-sm font-semibold text-foreground">Loading Analytics Vault...</p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Aggregating real-time audience telemetry, blog metrics, and A/B conversions
+        </p>
+      </div>
+    );
+  }
+
+  if (error && !data) {
+    return (
+      <div className="p-8 rounded-2xl bg-destructive/10 border border-destructive/20 text-center max-w-md mx-auto my-12">
+        <AlertTriangle className="w-8 h-8 text-destructive mx-auto mb-2" />
+        <h3 className="text-sm font-bold text-destructive">Failed to Load Telemetry</h3>
+        <p className="text-xs text-muted-foreground mt-1 mb-4">{error}</p>
+        <button
+          onClick={() => fetchAnalytics()}
+          className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors cursor-pointer"
         >
-          <div className="flex flex-col items-center text-center mb-6">
-            <div className="w-12 h-12 rounded-xl border border-accent/40 text-accent flex items-center justify-center mb-3">
-              <Lock size={22} />
-            </div>
-            <span className="text-[11px] font-mono tracking-widest uppercase text-accent font-bold mb-1">
-              Private Access Only
-            </span>
-            <h1 className="text-2xl font-bold font-sans text-foreground">Analytics Vault</h1>
-            <p className="text-xs text-muted-foreground mt-1 max-w-xs">
-              Enter your master key to view real-time blog metrics, audience geography, clicks, views, and campaign conversion telemetry.
-            </p>
-          </div>
-
-          <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted-foreground">
-                <KeyRound size={16} />
-              </div>
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password..."
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                className="w-full pl-10 pr-10 py-3 rounded-xl bg-transparent border border-border text-foreground placeholder:text-muted-foreground/60 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
-                autoFocus
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Toggle password visibility"
-              >
-                <Eye size={16} />
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between text-xs">
-              <Link
-                href="/admin/reset"
-                className="text-[11px] font-mono text-accent hover:underline transition-colors"
-              >
-                Forgot or need password reset? Send email link →
-              </Link>
-            </div>
-
-            {authError && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center gap-2"
-              >
-                <ShieldAlert size={14} className="shrink-0" />
-                <span>{authError}</span>
-              </motion.div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-xl bg-accent hover:bg-accent-hover text-accent-foreground font-semibold text-sm transition-all duration-200 shadow-md shadow-accent/20 flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {loading ? (
-                <>
-                  <RefreshCw size={15} className="animate-spin" />
-                  <span>Verifying Credentials...</span>
-                </>
-              ) : (
-                <>
-                  <Unlock size={15} />
-                  <span>Unlock Dashboard</span>
-                </>
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 pt-4 border-t border-border/60 flex items-center justify-between text-[11px] font-mono text-muted-foreground">
-            <span>Secure Access Gateway</span>
-            <span className="text-signal-500">noindex · secure</span>
-          </div>
-        </motion.div>
-      </main>
+          Retry Loading
+        </button>
+      </div>
     );
   }
 
   // =========================================================================
-  // 2. AUTHENTICATED DASHBOARD SCREEN
+  // AUTHENTICATED ADMIN DASHBOARD SCREEN
   // =========================================================================
   const promo = data?.promoAnalytics;
   const summary = data?.summary;
   const audience = data?.audienceTelemetry;
 
   return (
-    <main className="min-h-screen pt-28 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-foreground">
+    <div className="space-y-8">
       {/* Top Header Row */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-border mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
         <div>
-          <div className="flex items-center gap-2.5 mb-1">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-signal-500/10 text-signal-500 border border-signal-500/20 text-xs font-mono">
-              <span className="w-2 h-2 rounded-full bg-signal-500 animate-pulse" />
+          <div className="flex items-center gap-2 mb-1">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-xs font-mono font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               LIVE TELEMETRY
             </span>
-            <span className="text-xs font-mono text-muted-foreground">/insights-0786</span>
+            <span className="text-xs font-mono text-muted-foreground">/admin/insights</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold font-sans text-foreground">
-            Internal Analytics & Growth Portal
+          <h1 className="text-2xl font-extrabold tracking-tight text-foreground font-sans">
+            Analytics Vault & Telemetry
           </h1>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Real-time blog metrics, audience geography, clicks, views, and campaign conversion telemetry.
+          </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-card border border-border hover:bg-muted text-foreground text-xs font-medium transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-card border border-border hover:bg-muted text-foreground text-xs font-medium transition-colors cursor-pointer"
           >
-            <RefreshCw size={13} className={loading ? "animate-spin text-accent" : ""} />
+            <RefreshCw size={13} className={loading ? "animate-spin text-primary" : ""} />
             <span>Refresh</span>
           </button>
           <Link
@@ -419,18 +331,11 @@ export default function InsightsClient() {
           </Link>
           <Link
             href="/studio"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-muted/60 border border-border hover:border-accent text-foreground text-xs font-medium transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-muted/60 border border-border hover:border-primary text-foreground text-xs font-medium transition-colors"
           >
             <span>Sanity Studio</span>
             <ArrowUpRight size={13} />
           </Link>
-          <button
-            onClick={handleLogout}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-destructive/10 border border-destructive/30 hover:bg-destructive/20 text-destructive text-xs font-medium transition-colors"
-          >
-            <Lock size={13} />
-            <span>Lock</span>
-          </button>
         </div>
       </div>
 
@@ -1194,7 +1099,7 @@ export default function InsightsClient() {
           </div>
         )}
       </section>
-    </main>
+    </div>
   );
 }
 

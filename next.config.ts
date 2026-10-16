@@ -60,6 +60,20 @@ const nextConfig: NextConfig = {
     "styled-components",
   ],
   turbopack: {},
+  async redirects() {
+    return [
+      {
+        source: "/insights-0786",
+        destination: "/admin/insights",
+        permanent: true,
+      },
+      {
+        source: "/insights-0786/:path*",
+        destination: "/admin/insights",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

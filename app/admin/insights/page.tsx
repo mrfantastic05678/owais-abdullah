@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import InsightsClient from "@/app/insights-0786/InsightsClient";
+import InsightsAdminClient from "./InsightsAdminClient";
 
 export const metadata: Metadata = {
-  title: "Private Analytics & Insights Vault | Owais Abdullah",
-  description: "Private analytics portal for blog metrics, user engagement, and Octively AI promo banner A/B performance.",
+  title: "Analytics Vault | Admin Suite",
+  description: "Private analytics portal for blog metrics, user engagement, audience geography, and Octively AI promo performance.",
   robots: {
     index: false,
     follow: false,
@@ -15,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminInsightsPage() {
-  return <InsightsClient />;
+  return <InsightsAdminClient />;
 }
