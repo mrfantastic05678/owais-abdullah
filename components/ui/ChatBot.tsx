@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, KeyboardEvent } from "react";
+import { useState, useRef, useEffect, KeyboardEvent, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   X,
@@ -26,6 +27,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "@/hooks/useChat";
 import { useLiveVoice } from "@/hooks/useLiveVoice";
 import { VoiceVisualizer } from "@/components/ui/VoiceVisualizer";
+import { handlePortfolioNavigation } from "@/lib/client-navigation";
 import ReactMarkdown from "react-markdown";
 import SplitFlapLabel from "@/components/ui/SplitFlapLabel";
 
@@ -37,9 +39,32 @@ const STARTER_PROMPTS = [
 ];
 
 export function ChatBot() {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<"text" | "voice">("text");
-  const { messages, input, setInput, handleSubmit, isLoading, clearChat, addMessages, syncSessionToDb } = useChat();
+
+  const handleToolExecutionRef = useRef<
+    (name: string, args: Record<string, unknown>) => Promise<unknown> | unknown
+  >(() => {});
+
+  const {
+    messages,
+    input,
+    setInput,
+    handleSubmit,
+    isLoading,
+    clearChat,
+    addMessages,
+    syncSessionToDb,
+  } = useChat({
+    onExecuteTool: (name, args) => {
+      if (handleToolExecutionRef.current) {
+        return handleToolExecutionRef.current(name, args);
+      }
+    },
+  });
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -57,6 +82,62 @@ export function ChatBot() {
   const [leadMessage, setLeadMessage] = useState("");
   const [leadStatus, setLeadStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [leadError, setLeadError] = useState("");
+
+  // Central Tool Executor for both Text Chat and Live Voice Agent
+  const handleToolExecution = useCallback(
+    async (name: string, args: Record<string, unknown>): Promise<Record<string, unknown>> => {
+      if (name === "navigate" || name === "navigate_to_section") {
+        const target = (args.target as string) || (args.section as string) || "projects";
+        return handlePortfolioNavigation(target, pathname, router) as Record<string, unknown>;
+      }
+
+      if (name === "open_lead_drawer") {
+        setShowLeadForm(true);
+        setMode("text");
+        return { status: "lead_drawer_opened" };
+      }
+
+      if (name === "submit_lead") {
+        const nameVal = (args.name as string) || "";
+        const emailVal = (args.email as string) || "";
+        const msgVal = (args.message as string) || "";
+        const serviceType = (args.serviceType as string) || "General Inquiry";
+
+        try {
+          await fetch("/api/contact", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: nameVal,
+              email: emailVal,
+              subject: `[Agent Lead] ${serviceType}`,
+              message: msgVal,
+            }),
+          });
+
+          syncSessionToDb(
+            messages,
+            {
+              name: nameVal,
+              email: emailVal,
+              message: msgVal,
+              source: mode === "voice" ? "voice_agent_tool" : "chat_agent_tool",
+            },
+            mode
+          );
+
+          return { status: "lead_dispatched", name: nameVal };
+        } catch (err) {
+          return { status: "lead_dispatch_failed", error: String(err) };
+        }
+      }
+
+      return { status: "unsupported_tool", name };
+    },
+    [pathname, router, messages, mode, syncSessionToDb]
+  );
+
+  handleToolExecutionRef.current = handleToolExecution;
 
   // Live Voice Hook
   const {
@@ -84,6 +165,7 @@ export function ChatBot() {
       setShowLeadForm(true);
       setMode("text");
     },
+    onExecuteTool: handleToolExecution,
   });
 
   // Switch to Voice Mode

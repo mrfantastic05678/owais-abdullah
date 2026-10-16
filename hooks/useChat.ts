@@ -16,7 +16,7 @@ const UserInputSchema = z
   .max(1000)
   .refine(
     (input) => ![/script/i, /<.*>/, /\{\{.*\}\}/, /\$\{.*\}/].some((pattern) => pattern.test(input)),
-    { message: "Input contains potentially unsafe content" },
+    { message: "Input contains potentially unsafe content" }
   );
 
 type Message = z.infer<typeof MessageSchema>;
@@ -37,12 +37,19 @@ Your question was: *"${sanitizedQuery}"*
 
 const AUTO_CLEAR_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-export function useChat() {
+export interface UseChatOptions {
+  onExecuteTool?: (name: string, args: Record<string, unknown>) => Promise<unknown> | unknown;
+}
+
+export function useChat(options: UseChatOptions = {}) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const clearTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
 
   const clearLocalStorage = useCallback(() => {
     if (typeof window !== "undefined") {
@@ -51,7 +58,8 @@ export function useChat() {
       setMessages([
         {
           role: "assistant",
-          content: "I am Owais's AI assistant. Ask me anything about his spec-driven development process, Digital FTEs, Next.js SaaS architecture, or ultra-fast Astro builds.",
+          content:
+            "I am Owais's AI assistant. Ask me anything about his spec-driven development process, Digital FTEs, Next.js SaaS architecture, or ultra-fast Astro builds.",
         },
       ]);
     }
@@ -80,7 +88,7 @@ export function useChat() {
       },
       sessionMode: string = "text"
     ) => {
-      if (typeof window === "undefined" || msgs.length <= 1) return;
+      if (typeof window === "undefined" || msgs.length === 0) return;
       try {
         let visitorId = localStorage.getItem("otto_visitor_id");
         if (!visitorId) {
@@ -145,7 +153,8 @@ export function useChat() {
           setMessages([
             {
               role: "assistant",
-              content: "I am Owais's AI assistant. Ask me anything about his spec-driven development process, Digital FTEs, Next.js SaaS architecture, or ultra-fast Astro builds.",
+              content:
+                "I am Owais's AI assistant. Ask me anything about his spec-driven development process, Digital FTEs, Next.js SaaS architecture, or ultra-fast Astro builds.",
             },
           ]);
         }
@@ -212,6 +221,19 @@ export function useChat() {
       if (response.ok) {
         const data = await response.json();
         setMessages((prev) => [...prev, { role: "assistant", content: data.response }]);
+
+        // Execute any returned tool calls on the client
+        if (data.toolCalls && Array.isArray(data.toolCalls)) {
+          for (const tc of data.toolCalls) {
+            if (optionsRef.current.onExecuteTool) {
+              try {
+                await optionsRef.current.onExecuteTool(tc.name, tc.args || {});
+              } catch (toolErr) {
+                console.error("[useChat] Error executing tool:", tc.name, toolErr);
+              }
+            }
+          }
+        }
       } else if (response.status === 429) {
         setMessages((prev) => [...prev, { role: "assistant", content: getMockResponse(input) }]);
       } else {

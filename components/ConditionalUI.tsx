@@ -14,7 +14,7 @@ export function ConditionalUI() {
 
   return (
     <>
-      {!isBlogPost && !isPrivateArea && <ChatBot />}
+      {!isPrivateArea && <ChatBot />}
       {!isPrivateArea && <OctivelyPromoToast />}
     </>
   );

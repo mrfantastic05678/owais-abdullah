@@ -15,22 +15,11 @@ export type LiveVoiceStatus =
 export interface LiveVoiceHookOptions {
   onSessionEnd?: (transcriptHistory: Array<{ role: "user" | "assistant"; text: string }>) => void;
   onOpenLeadDrawer?: () => void;
+  onExecuteTool?: (name: string, args: Record<string, unknown>) => Promise<Record<string, unknown>> | Record<string, unknown>;
 }
 
-const VOICE_PERSONA = `
-You are Otto AI, the real-time AI Voice Assistant on Owais Abdullah's portfolio site (owaisabdullah.dev). Your initials O.A. mirror Owais Abdullah.
-You speak with natural warmth, clarity, confidence, and conversational brevity. You are having a real-time phone-like voice conversation with a visitor.
-
-Key Guidelines:
-- Keep answers concise (1-3 conversational sentences). Avoid long monologues.
-- You know Owais's full background: Full-Stack Engineer, AI Agents Architect, builder of Digital FTEs, Next.js SaaS platforms, and high-performance Astro web systems.
-- When someone asks what Owais builds, mention:
-  "Owais builds autonomous AI agents, Digital FTEs that automate company operations 24/7, and high-scale Next.js SaaS platforms. What kind of project are you looking to launch?"
-- If they want to see his work, call the tool 'navigate_to_section' with 'work' or 'services'.
-- If they are ready to discuss hiring, getting an estimate, or building a project, call 'open_lead_drawer' and tell them:
-  "I've opened the project intake form right on your screen. You can pop your details in there, or reach Owais directly on WhatsApp."
-- Languages: English default, but you understand and can speak Urdu or other languages fluently if the visitor speaks them.
-`;
+import { AGENT_FUNCTION_DECLARATIONS } from "@/lib/agent-tools";
+import { getVoicePersonaPrompt } from "@/lib/canonical-context";
 
 export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const [status, setStatus] = useState<LiveVoiceStatus>("idle");
@@ -58,6 +47,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const currentAssistantTranscriptRef = useRef<string>("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const speechRecognitionRef = useRef<any>(null);
+  const sessionResumptionHandleRef = useRef<string | null>(null);
 
   const optionsRef = useRef(options);
   optionsRef.current = options;
@@ -239,7 +229,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
         throw new Error(errorData.error || "Failed to initialize voice session.");
       }
 
-      const { token, model } = await tokenRes.json();
+      const { token, model, systemInstruction: remoteInstruction } = await tokenRes.json();
       if (!token) throw new Error("No authorization token received.");
 
       // 5. Connect to Live WebSocket directly from browser
@@ -252,7 +242,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
 
       ws.onopen = async () => {
         // Send initial Session Setup configuration with native transcription enabled
-        const setupMessage = {
+        const setupMessage: Record<string, unknown> = {
           setup: {
             model: model || "models/gemini-3.1-flash-live-preview",
             generationConfig: {
@@ -268,36 +258,16 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             inputAudioTranscription: {},
             outputAudioTranscription: {},
             systemInstruction: {
-              parts: [{ text: VOICE_PERSONA }],
+              parts: [{ text: remoteInstruction || getVoicePersonaPrompt() }],
             },
             tools: [
               {
-                functionDeclarations: [
-                  {
-                    name: "navigate_to_section",
-                    description: "Smoothly navigate the portfolio page to a section (e.g. 'work', 'services', 'contact', 'hero').",
-                    parameters: {
-                      type: "OBJECT",
-                      properties: {
-                        section: {
-                          type: "STRING",
-                          description: "The section identifier: 'work', 'services', 'contact', or 'hero'",
-                        },
-                      },
-                      required: ["section"],
-                    },
-                  },
-                  {
-                    name: "open_lead_drawer",
-                    description: "Open the interactive project spec intake drawer in the chat interface.",
-                    parameters: {
-                      type: "OBJECT",
-                      properties: {},
-                    },
-                  },
-                ],
+                functionDeclarations: AGENT_FUNCTION_DECLARATIONS,
               },
             ],
+            sessionResumption: sessionResumptionHandleRef.current
+              ? { handle: sessionResumptionHandleRef.current }
+              : {},
           },
         };
 
@@ -481,25 +451,45 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             setUserTranscript("");
           }
 
-          // 5. Handle tool calls
+          // 5. Handle session resumption update
+          if (data.sessionResumptionUpdate?.newHandle) {
+            sessionResumptionHandleRef.current = data.sessionResumptionUpdate.newHandle;
+          }
+
+          // 6. Handle tool calls
           if (data.toolCall?.functionCalls) {
             const functionResponses = [];
             for (const fc of data.toolCall.functionCalls) {
-              const result = executeClientTool(fc.name, fc.args || {});
+              let output: Record<string, unknown> = { status: "completed" };
+              if (optionsRef.current.onExecuteTool) {
+                try {
+                  output = (await optionsRef.current.onExecuteTool(
+                    fc.name,
+                    fc.args || {}
+                  )) as Record<string, unknown>;
+                } catch (toolErr) {
+                  output = { status: "error", error: String(toolErr) };
+                }
+              } else {
+                output = executeClientTool(fc.name, fc.args || {});
+              }
+
               functionResponses.push({
-                response: { output: result },
+                response: { output },
                 id: fc.id,
               });
             }
 
-            // Return tool response
-            ws.send(
-              JSON.stringify({
-                toolResponse: {
-                  functionResponses,
-                },
-              })
-            );
+            // Return tool response back to Gemini Live
+            if (ws.readyState === WebSocket.OPEN) {
+              ws.send(
+                JSON.stringify({
+                  toolResponse: {
+                    functionResponses,
+                  },
+                })
+              );
+            }
           }
         } catch (err) {
           console.error("[useLiveVoice] Error parsing message:", err);
