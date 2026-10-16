@@ -157,7 +157,8 @@ export function ChatBot() {
           role: h.role,
           content: h.text,
         }));
-        // Persist voice session telemetry directly to DB without polluting text chat interface
+        // Append voice conversation history into text chat stream and persist to DB
+        addMessages(mapped);
         syncSessionToDb(mapped, undefined, "voice");
       }
     },

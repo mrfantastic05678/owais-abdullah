@@ -31,6 +31,12 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [isUserSpeaking, setIsUserSpeaking] = useState(false);
 
+  const currentUserTranscriptRef = useRef("");
+  const currentAssistantTranscriptRef = useRef("");
+  const transcriptHistoryRef = useRef<Array<{ role: "user" | "assistant"; text: string }>>([]);
+  const hasUserSpokenRef = useRef(false);
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const wsRef = useRef<WebSocket | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -56,6 +62,11 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
 
   // Stop session and release audio hardware
   const stopSession = useCallback(() => {
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+
     if (animFrameRef.current) {
       cancelAnimationFrame(animFrameRef.current);
       animFrameRef.current = null;
@@ -90,6 +101,22 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       wsRef.current = null;
     }
 
+    // Flush any pending uncommitted speech
+    const pendingUser = currentUserTranscriptRef.current.trim();
+    const pendingAssistant = currentAssistantTranscriptRef.current.trim();
+    const finalHistory = [...transcriptHistoryRef.current];
+    if (pendingUser) {
+      finalHistory.push({ role: "user", text: pendingUser });
+    }
+    if (pendingAssistant) {
+      finalHistory.push({ role: "assistant", text: pendingAssistant });
+    }
+
+    currentUserTranscriptRef.current = "";
+    currentAssistantTranscriptRef.current = "";
+    transcriptHistoryRef.current = [];
+    hasUserSpokenRef.current = false;
+
     setStatus("ended");
     setVolumeLevel(0);
     setIsUserSpeaking(false);
@@ -97,8 +124,8 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
     setAssistantTranscript("");
     setUserTranscript("");
 
-    if (optionsRef.current.onSessionEnd) {
-      optionsRef.current.onSessionEnd([]);
+    if (optionsRef.current.onSessionEnd && finalHistory.length > 0) {
+      optionsRef.current.onSessionEnd(finalHistory);
     }
   }, []);
 
@@ -128,6 +155,14 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
     try {
       setErrorMessage(null);
       setStatus("requesting-mic");
+      currentUserTranscriptRef.current = "";
+      currentAssistantTranscriptRef.current = "";
+      transcriptHistoryRef.current = [];
+      hasUserSpokenRef.current = false;
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
 
       // 1. Initialize Player and resume audio pipeline
       const player = new LiveAudioPlayer(24000);
@@ -165,7 +200,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       wsRef.current = ws;
 
       ws.onopen = async () => {
-        // Send initial Session Setup configuration (clean audio-only without text transcription overhead)
+        // Send initial Session Setup configuration with native transcription enabled
         const setupMessage: Record<string, unknown> = {
           setup: {
             model: model || "models/gemini-3.1-flash-live-preview",
@@ -179,6 +214,8 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
                 },
               },
             },
+            inputAudioTranscription: {},
+            outputAudioTranscription: {},
             systemInstruction: {
               parts: [{ text: remoteInstruction || getVoicePersonaPrompt() }],
             },
@@ -220,22 +257,52 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
               sumSq += int16Array[i] * int16Array[i];
             }
             const rms = Math.sqrt(sumSq / int16Array.length);
-            const normMic = Math.min(rms / 12000, 1);
+            // Scaled for high sensitivity so calm / slower speaking is immediately recognized
+            const normMic = Math.min(rms / 2500, 1);
             userVolumeRef.current = normMic;
 
             // Acoustic Echo Gate:
             // If the assistant is actively talking through the device speakers,
-            // suppress streaming speaker bleed into the mic to prevent self-interruption loops.
-            // Only stream if the user is intentionally speaking loudly over the assistant (barge-in).
+            // suppress speaker bleed unless user speaks with intentional volume (barge-in >= 0.22)
             const isAssistantSpeaking = audioPlayerRef.current?.isSpeaking ?? false;
-            if (isAssistantSpeaking && normMic < 0.16) {
+            if (isAssistantSpeaking && normMic < 0.22) {
               setIsUserSpeaking(false);
               return;
             }
 
-            setIsUserSpeaking(normMic > 0.05);
+            const speakingNow = normMic > 0.030;
+            setIsUserSpeaking(speakingNow);
 
-            // Stream real-time audio chunk (Google's server-side VAD handles turn detection natively)
+            // Speech cadence and turn completion handler for slower speakers
+            if (speakingNow && !isAssistantSpeaking) {
+              hasUserSpokenRef.current = true;
+              if (silenceTimerRef.current) {
+                clearTimeout(silenceTimerRef.current);
+                silenceTimerRef.current = null;
+              }
+            } else if (hasUserSpokenRef.current && !isAssistantSpeaking) {
+              // User was speaking and paused.
+              // 900ms allows calm/slow speakers breathing room between words,
+              // and prompts Gemini once they have finished their sentence.
+              if (!silenceTimerRef.current) {
+                silenceTimerRef.current = setTimeout(() => {
+                  if (ws.readyState === WebSocket.OPEN && hasUserSpokenRef.current) {
+                    ws.send(
+                      JSON.stringify({
+                        clientContent: {
+                          turnComplete: true,
+                        },
+                      })
+                    );
+                    hasUserSpokenRef.current = false;
+                    silenceTimerRef.current = null;
+                    setIsUserSpeaking(false);
+                  }
+                }, 900);
+              }
+            }
+
+            // Stream real-time audio chunk to Gemini Live
             ws.send(
               JSON.stringify({
                 realtimeInput: {
@@ -304,20 +371,54 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
             return;
           }
 
+          // 1. Capture user spoken transcript from native inputAudioTranscription
+          if (data.serverContent?.inputTranscription?.text) {
+            const userChunk = data.serverContent.inputTranscription.text;
+            currentUserTranscriptRef.current += userChunk;
+            setUserTranscript((prev) => prev + userChunk);
+          }
 
-          // 3. Handle incoming 24kHz audio playback
+          // 2. Capture assistant spoken transcript from native outputAudioTranscription
+          if (data.serverContent?.outputTranscription?.text) {
+            const assistantChunk = data.serverContent.outputTranscription.text;
+            currentAssistantTranscriptRef.current += assistantChunk;
+            setAssistantTranscript((prev) => prev + assistantChunk);
+          }
+
+          // 3. Handle incoming 24kHz audio playback & fallback caption parts
           if (data.serverContent?.modelTurn?.parts) {
             for (const part of data.serverContent.modelTurn.parts) {
               if (part.inlineData?.data && audioPlayerRef.current) {
                 audioPlayerRef.current.playChunk(part.inlineData.data);
                 setStatus("speaking");
               }
+
+              // Text caption fallback
+              if (part.text && !currentAssistantTranscriptRef.current.includes(part.text)) {
+                currentAssistantTranscriptRef.current += part.text;
+                setAssistantTranscript((prev) => prev + part.text);
+              }
             }
           }
 
-          // 4. Handle turn complete
+          // 4. Handle turn complete: commit dialogue turn to session history
           if (data.serverContent?.turnComplete) {
             setStatus("listening");
+            const userSpeech = currentUserTranscriptRef.current.trim();
+            const assistantSpeech = currentAssistantTranscriptRef.current.trim();
+
+            if (userSpeech) {
+              transcriptHistoryRef.current.push({ role: "user", text: userSpeech });
+            }
+            if (assistantSpeech) {
+              transcriptHistoryRef.current.push({ role: "assistant", text: assistantSpeech });
+            }
+
+            currentUserTranscriptRef.current = "";
+            currentAssistantTranscriptRef.current = "";
+            setTranscriptHistory([...transcriptHistoryRef.current]);
+            setAssistantTranscript("");
+            setUserTranscript("");
           }
 
           // 5. Handle session resumption update

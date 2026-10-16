@@ -157,19 +157,22 @@ registerProcessor("pcm-processor", AudioProcessor);
 
 When visitors use device speakers (laptops or phones without headphones), the microphone captures the assistant's own voice coming from the speakers. Without suppression, Gemini hears its own voice, thinks the user is speaking, and interrupts itself repeatedly.
 
-### The Acoustic Echo Gate Solution
+### The Acoustic Echo Gate & Speech Cadence Solution
 In `hooks/useLiveVoice.ts`:
 1. Track whether the assistant is currently playing audio (`audioPlayerRef.current?.isSpeaking`).
-2. Compute real-time Root-Mean-Square (RMS) amplitude on captured microphone chunks.
-3. If the assistant is speaking and mic amplitude is below intentional barge-in volume (`normMic < 0.16`), **suppress the audio packet**:
+2. Compute real-time Root-Mean-Square (RMS) amplitude on captured microphone chunks with high-sensitivity scaling: `normMic = Math.min(rms / 2500, 1)`.
+3. If the assistant is speaking and mic amplitude is below intentional barge-in volume (`normMic < 0.22`), **suppress the audio packet** to prevent laptop speaker bleed from triggering self-interruption:
    ```typescript
    const isAssistantSpeaking = audioPlayerRef.current?.isSpeaking ?? false;
-   if (isAssistantSpeaking && normMic < 0.16) {
+   if (isAssistantSpeaking && normMic < 0.22) {
      setIsUserSpeaking(false);
      return; // Echo gate: suppress speaker bleed
    }
    ```
-4. **Never send artificial client `turnComplete: true` on timers** when streaming live PCM audio. Gemini Live has built-in server-side Voice Activity Detection (VAD) that naturally detects conversational turn completion.
+4. **Speech Cadence for Slower Speakers**:
+   When the user is speaking (`normMic > 0.030`), immediately set `isUserSpeaking = true`. When they pause, wait 900ms before sending `{ clientContent: { turnComplete: true } }`. This gives slow and thoughtful speakers breathing room between words without premature cutoffs, while ensuring Gemini receives a prompt turn-completion signal once they finish their sentence.
+5. **Clean Voice UI with Preserved Chat Transcripts**:
+   Enable `inputAudioTranscription: {}` and `outputAudioTranscription: {}` in `setupMessage`. Collect dialogue turns into memory without rendering distracting subtitle cards over the voice visualizer modal. When the voice call concludes, push the full dialogue history into the text chat stream and persist to the database.
 
 ---
 
