@@ -35,6 +35,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
   const currentAssistantTranscriptRef = useRef("");
   const transcriptHistoryRef = useRef<Array<{ role: "user" | "assistant"; text: string }>>([]);
   const hasUserSpokenRef = useRef(false);
+  const speechFramesRef = useRef(0);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);
@@ -116,6 +117,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
     currentAssistantTranscriptRef.current = "";
     transcriptHistoryRef.current = [];
     hasUserSpokenRef.current = false;
+    speechFramesRef.current = 0;
 
     setStatus("ended");
     setVolumeLevel(0);
@@ -159,6 +161,7 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
       currentAssistantTranscriptRef.current = "";
       transcriptHistoryRef.current = [];
       hasUserSpokenRef.current = false;
+      speechFramesRef.current = 0;
       if (silenceTimerRef.current) {
         clearTimeout(silenceTimerRef.current);
         silenceTimerRef.current = null;
@@ -257,33 +260,60 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
               sumSq += int16Array[i] * int16Array[i];
             }
             const rms = Math.sqrt(sumSq / int16Array.length);
-            // Scaled for high sensitivity so calm / slower speaking is immediately recognized
+            // Scaled mic amplitude for UI visualizer and noise gating
             const normMic = Math.min(rms / 2500, 1);
             userVolumeRef.current = normMic;
 
-            // Acoustic Echo Gate:
+            // 1. Acoustic Echo Gate:
             // If the assistant is actively talking through the device speakers,
-            // suppress speaker bleed unless user speaks with intentional volume (barge-in >= 0.22)
+            // completely block mic streaming to prevent the assistant's own voice from bleeding
+            // into the microphone and causing self-interruption / echo loops.
             const isAssistantSpeaking = audioPlayerRef.current?.isSpeaking ?? false;
-            if (isAssistantSpeaking && normMic < 0.22) {
-              setIsUserSpeaking(false);
+            if (isAssistantSpeaking) {
+              if (normMic < 0.35) {
+                // Background speaker bleed or quiet room noise: suppress completely
+                setIsUserSpeaking(false);
+                return;
+              } else {
+                // User intentionally shouting or speaking loud enough to barge-in:
+                // Immediately cut assistant playback locally on client
+                audioPlayerRef.current?.interrupt();
+              }
+            }
+
+            // 2. Speech vs Noise Detection:
+            // Noise floor threshold (0.065 ~160 RMS) avoids triggering on quiet breathing or ambient room hiss
+            const isSpeechEnergy = normMic > 0.065;
+
+            if (isSpeechEnergy && !isAssistantSpeaking) {
+              speechFramesRef.current += 1;
+              // Require 2+ consecutive speech frames (~80ms) to avoid single clicks or mic pops
+              if (speechFramesRef.current >= 2) {
+                hasUserSpokenRef.current = true;
+                setIsUserSpeaking(true);
+                if (silenceTimerRef.current) {
+                  clearTimeout(silenceTimerRef.current);
+                  silenceTimerRef.current = null;
+                }
+              }
+            } else {
+              speechFramesRef.current = Math.max(0, speechFramesRef.current - 1);
+              if (speechFramesRef.current === 0) {
+                setIsUserSpeaking(false);
+              }
+            }
+
+            // 3. Hallucination Prevention Gate:
+            // If user hasn't spoken yet in this turn and audio is below noise floor (e.g. ambient fan/mic hiss),
+            // do NOT stream audio to Gemini Live. This completely prevents Whisper/Gemini STT
+            // from hallucinating phantom foreign words (Spanish, Hindi, Portuguese).
+            if (!hasUserSpokenRef.current && normMic < 0.055) {
               return;
             }
 
-            const speakingNow = normMic > 0.030;
-            setIsUserSpeaking(speakingNow);
-
-            // Speech cadence and turn completion handler for slower speakers
-            if (speakingNow && !isAssistantSpeaking) {
-              hasUserSpokenRef.current = true;
-              if (silenceTimerRef.current) {
-                clearTimeout(silenceTimerRef.current);
-                silenceTimerRef.current = null;
-              }
-            } else if (hasUserSpokenRef.current && !isAssistantSpeaking) {
-              // User was speaking and paused.
-              // 900ms allows calm/slow speakers breathing room between words,
-              // and prompts Gemini once they have finished their sentence.
+            // 4. Turn Completion:
+            // If user has spoken and pauses for 1000ms, finalize turn
+            if (hasUserSpokenRef.current && !isAssistantSpeaking && !isSpeechEnergy) {
               if (!silenceTimerRef.current) {
                 silenceTimerRef.current = setTimeout(() => {
                   if (ws.readyState === WebSocket.OPEN && hasUserSpokenRef.current) {
@@ -295,10 +325,11 @@ export function useLiveVoice(options: LiveVoiceHookOptions = {}) {
                       })
                     );
                     hasUserSpokenRef.current = false;
+                    speechFramesRef.current = 0;
                     silenceTimerRef.current = null;
                     setIsUserSpeaking(false);
                   }
-                }, 900);
+                }, 1000);
               }
             }
 

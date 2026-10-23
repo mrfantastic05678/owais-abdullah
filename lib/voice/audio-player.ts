@@ -131,10 +131,14 @@ export class LiveAudioPlayer {
   }
 
   /**
-   * Check if model is currently producing audio
+   * Check if model is currently producing audio, including queued chunks and reverb decay.
    */
   get isSpeaking(): boolean {
-    return this.activeSources.length > 0;
+    if (!this.audioCtx) return false;
+    return (
+      this.activeSources.length > 0 ||
+      this.audioCtx.currentTime < this.nextStartTime + 0.25
+    );
   }
 
   /**

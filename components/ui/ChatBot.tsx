@@ -389,13 +389,13 @@ export function ChatBot() {
   return (
     <>
       {/* Floating Trigger FAB */}
-      <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-[5001]">
+      <div className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[5001] ${isOpen ? "hidden sm:block" : "block"}`}>
         <div className="relative">
           {/* Proactive Client Closer Nudge Toast */}
           <AnimatePresence>
             {showProactiveNudge && !isOpen && (
               <motion.div
-                className="absolute -top-32 right-0 w-[310px] sm:w-[330px] bg-white dark:bg-[#041619] rounded-2xl p-3.5 shadow-2xl border border-teal-500/40 z-50 text-foreground"
+                className="absolute -top-32 right-0 w-[calc(100vw-2rem)] max-w-[310px] sm:w-[330px] bg-white dark:bg-[#041619] rounded-2xl p-3.5 shadow-2xl border border-teal-500/40 z-50 text-foreground"
                 initial={{ opacity: 0, y: 12, scale: 0.94 }}
                 animate={{
                   opacity: 1,
@@ -490,10 +490,10 @@ export function ChatBot() {
           <motion.button
             onClick={toggleChat}
             aria-label={isOpen ? "Close AI chat" : "Open AI chat"}
-            className={`flex items-center justify-center w-13 h-13 sm:w-14 sm:h-14 rounded-2xl shadow-xl transition-all cursor-pointer backdrop-blur-md ${
+            className={`flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full sm:rounded-2xl shadow-xl transition-all cursor-pointer backdrop-blur-md ${
               isOpen
                 ? "bg-white dark:bg-[#041417] text-teal-600 dark:text-teal-400 border border-teal-500/30 dark:border-teal-500/40 hover:bg-slate-50 dark:hover:bg-[#071F22] hover:border-teal-500 shadow-teal-900/10 dark:shadow-teal-950/60"
-                : "bg-white dark:bg-[#031518] hover:bg-slate-50 dark:hover:bg-[#061e22] border border-teal-500/30 dark:border-teal-500/50 hover:border-teal-500 shadow-teal-900/10 dark:shadow-teal-950/60 hover:scale-105"
+                : "bg-white dark:bg-[#031518] hover:bg-slate-50 dark:hover:bg-[#061e22] border border-teal-500/30 dark:border-teal-500/50 hover:border-teal-500 shadow-teal-900/10 dark:shadow-teal-950/60 hover:scale-105 active:scale-95"
             }`}
             whileTap={{ scale: 0.92 }}
           >
@@ -507,7 +507,7 @@ export function ChatBot() {
                   transition={{ duration: 0.15 }}
                   className="text-teal-600 dark:text-teal-400"
                 >
-                  <X size={22} strokeWidth={2.4} />
+                  <X size={20} strokeWidth={2.4} />
                 </motion.div>
               ) : (
                 <motion.div
@@ -518,7 +518,7 @@ export function ChatBot() {
                   transition={{ duration: 0.15 }}
                   className="relative flex items-center justify-center w-full h-full p-2"
                 >
-                  <div className="relative w-8 h-8 flex items-center justify-center">
+                  <div className="relative w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
                     <Image
                       src="/assets/bot.png"
                       alt="Otto AI Agent"
@@ -528,7 +528,7 @@ export function ChatBot() {
                       priority
                     />
                   </div>
-                  <span className="absolute bottom-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#031518] animate-pulse" />
+                  <span className="absolute bottom-0.5 right-0.5 sm:bottom-1 sm:right-1 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-[#031518] animate-pulse" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -543,17 +543,21 @@ export function ChatBot() {
             id="chatbot-window"
             data-lenis-prevent="true"
             onWheel={(e) => e.stopPropagation()}
-            className="fixed bottom-[78px] sm:bottom-[90px] inset-x-3 sm:inset-x-auto sm:right-6 z-[5000] w-auto sm:w-[390px] max-w-[calc(100vw-1.5rem)] sm:max-w-none font-sans overscroll-contain"
-            initial={{ opacity: 0, y: 14, scale: 0.97 }}
+            className="fixed inset-x-0 bottom-0 sm:bottom-24 sm:right-6 sm:left-auto sm:inset-x-auto z-[5000] w-full sm:w-[400px] font-sans overscroll-contain"
+            initial={{ opacity: 0, y: 20, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 14, scale: 0.97 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+            exit={{ opacity: 0, y: 20, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
             <div
               data-lenis-prevent="true"
               onWheel={(e) => e.stopPropagation()}
-              className="h-[520px] sm:h-[500px] max-h-[calc(100dvh-5.8rem)] sm:max-h-[calc(100vh-8.5rem)] flex flex-col rounded-2xl border border-slate-200 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
+              className="h-[80dvh] sm:h-[540px] max-h-[85dvh] sm:max-h-[calc(100vh-8rem)] flex flex-col rounded-t-[24px] sm:rounded-2xl border-t sm:border border-slate-200/90 dark:border-teal-900/50 bg-white dark:bg-[#041417] shadow-2xl overflow-hidden font-sans overscroll-contain"
             >
+              {/* Mobile Sheet Handle */}
+              <div className="w-full pt-2 pb-1 flex justify-center sm:hidden select-none bg-white/95 dark:bg-[#031316]/95">
+                <div className="w-9 h-1 bg-slate-300 dark:bg-teal-900/60 rounded-full" />
+              </div>
               {/* Hallmark-Crafted Header: Unified segmented control, restrained typography, zero button zoo */}
               <div className="px-3.5 py-2.5 border-b border-slate-200/70 dark:border-teal-900/40 bg-white/95 dark:bg-[#031316]/95 backdrop-blur-sm flex items-center justify-between shrink-0 select-none">
                 {/* Brand & Identity */}
@@ -650,9 +654,9 @@ export function ChatBot() {
                       onClick={toggleChat}
                       title="Close"
                       aria-label="Close"
-                      className="w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-teal-950/60 transition-colors cursor-pointer"
+                      className="w-7 h-7 sm:w-6 sm:h-6 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-teal-950/60 transition-colors cursor-pointer"
                     >
-                      <X className="w-3.5 h-3.5" />
+                      <X className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                     </button>
                   </div>
                 </div>
