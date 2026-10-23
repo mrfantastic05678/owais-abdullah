@@ -130,25 +130,25 @@ export default function GooglePreferredSourceButton({
   if (variant === "card") {
     return (
       <div
-        className={`relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-[#0b1329] via-[#091024] to-[#060a17] p-5 sm:p-6 text-foreground shadow-xl shadow-blue-950/30 ${className}`}
+        className={`relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-50/70 via-background to-slate-100/70 dark:from-[#0b1329] dark:via-[#091024] dark:to-[#060a17] p-5 sm:p-6 text-foreground shadow-sm dark:shadow-xl dark:shadow-blue-950/30 ${className}`}
       >
         {/* Google Colors Ambient Corner Glows */}
-        <div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-500/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-500/10 dark:bg-blue-500/15 rounded-full blur-2xl pointer-events-none" />
         <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="flex items-start gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+            <div className="w-10 h-10 rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center shrink-0 shadow-xs mt-0.5">
               <GoogleGIcon className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-mono tracking-wider uppercase text-blue-400 font-bold flex items-center gap-1">
-                  <Star size={11} className="fill-blue-400 text-blue-400" />
+                <span className="text-[10px] font-mono tracking-wider uppercase text-blue-600 dark:text-blue-400 font-bold flex items-center gap-1">
+                  <Star size={11} className="fill-blue-600 text-blue-600 dark:fill-blue-400 dark:text-blue-400" />
                   Google Preferred Source
                 </span>
               </div>
-              <h3 className="text-base sm:text-lg font-bold font-sans text-white leading-snug">
+              <h3 className="text-base sm:text-lg font-bold font-sans text-foreground dark:text-white leading-snug">
                 Follow Owais Abdullah on Google Search & Discover
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed mt-1 max-w-xl">
@@ -159,7 +159,7 @@ export default function GooglePreferredSourceButton({
 
           <button
             onClick={handleClick}
-            className="group inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-white/90 text-neutral-900 font-semibold text-xs transition-all duration-200 shadow-md shadow-white/10 hover:shadow-white/20 active:scale-[0.98] shrink-0 self-start md:self-center"
+            className="group inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-foreground text-background dark:bg-white dark:text-neutral-900 font-semibold text-xs transition-all duration-200 shadow-md hover:opacity-90 active:scale-[0.98] shrink-0 self-start md:self-center"
           >
             <GoogleGIcon className="w-4 h-4" />
             {clicked ? (

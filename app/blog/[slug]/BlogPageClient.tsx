@@ -356,7 +356,7 @@ export default function BlogPageClient({
             {blog.faqs && blog.faqs.length > 0 && <FaqSection faqs={blog.faqs} />}
 
             {/* Helpful / Needs Work Rating Box */}
-            <div className="mt-10 p-5 sm:p-6 rounded-xl border border-[#143B42] dark:border-[#143B42] border-slate-300/80 bg-[#031215] dark:bg-[#031215] bg-[#EEF4F2] shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="mt-10 p-5 sm:p-6 rounded-xl border border-border/80 dark:border-[#143B42] bg-white dark:bg-[#031215] shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <h4 className="text-sm sm:text-base font-bold text-foreground mb-1">
                   Was this article helpful?
@@ -373,7 +373,7 @@ export default function BlogPageClient({
                   className={`group flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-semibold transition-all ${
                     userVote === "like"
                       ? "bg-accent/20 border-accent text-accent"
-                      : "bg-[#081B1E] dark:bg-[#081B1E] bg-white border-[#18464E] dark:border-[#18464E] border-slate-300 text-muted-foreground hover:text-foreground hover:border-accent"
+                      : "bg-slate-50 dark:bg-[#081B1E] border-slate-200 dark:border-[#18464E] text-muted-foreground hover:text-foreground hover:border-accent"
                   }`}
                 >
                   <ThumbsUp className="w-3.5 h-3.5" />
@@ -386,7 +386,7 @@ export default function BlogPageClient({
                   className={`group flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-semibold transition-all ${
                     userVote === "dislike"
                       ? "bg-destructive/20 border-destructive text-destructive"
-                      : "bg-[#081B1E] dark:bg-[#081B1E] bg-white border-[#18464E] dark:border-[#18464E] border-slate-300 text-muted-foreground hover:text-foreground hover:border-destructive/60"
+                      : "bg-slate-50 dark:bg-[#081B1E] border-slate-200 dark:border-[#18464E] text-muted-foreground hover:text-foreground hover:border-destructive/60"
                   }`}
                 >
                   <ThumbsDown className="w-3.5 h-3.5" />
@@ -404,7 +404,7 @@ export default function BlogPageClient({
       {/* 4. Engineering Solutions & Related Posts Section */}
       <section className="max-w-[1380px] mx-auto px-4 sm:px-6 w-full mb-20 space-y-12">
         {/* Contextual Service Callout: Routes PageRank to Money Pages */}
-        <div className="rounded-2xl border border-[#143B42] dark:border-[#143B42] border-slate-300 bg-[#031215] dark:bg-[#031215] bg-[#EEF4F2] p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="rounded-2xl border border-border/80 dark:border-[#143B42] bg-white dark:bg-[#031215] p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xs">
           <div className="max-w-2xl">
             <span className="font-mono text-[10px] sm:text-[11px] font-bold text-accent uppercase tracking-wider block mb-1.5">
               Production AI Implementation
@@ -446,7 +446,7 @@ export default function BlogPageClient({
       </section>
 
       {/* 5. Floating Dynamic Island Pill (Fixed bottom center) */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#081B1E]/95 dark:bg-[#081B1E]/95 bg-card/95 text-foreground border border-border rounded-full shadow-2xl backdrop-blur-xl px-4 py-2 flex items-center gap-3 sm:gap-3.5 text-xs font-medium">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-white/95 dark:bg-[#081B1E]/95 text-foreground border border-slate-200/90 dark:border-border rounded-full shadow-xl dark:shadow-2xl backdrop-blur-xl px-4 py-2 flex items-center gap-3 sm:gap-3.5 text-xs font-medium">
         {/* Reading % */}
         <div className="flex items-center gap-1.5 font-mono text-accent font-bold">
           <Clock className="w-3.5 h-3.5" />
@@ -454,7 +454,7 @@ export default function BlogPageClient({
           <span className="hidden sm:inline text-muted-foreground text-[10px]">READ</span>
         </div>
 
-        <div className="w-px h-4 bg-border" />
+        <div className="w-px h-4 bg-slate-200 dark:bg-border" />
 
         {/* Like / Helpful button */}
         <button
@@ -468,7 +468,7 @@ export default function BlogPageClient({
           <ThumbsUp className="w-3.5 h-3.5" />
         </button>
 
-        <div className="w-px h-4 bg-border" />
+        <div className="w-px h-4 bg-slate-200 dark:bg-border" />
 
         {/* Jump to Comments */}
         <a
@@ -482,7 +482,7 @@ export default function BlogPageClient({
           </span>
         </a>
 
-        <div className="w-px h-4 bg-border" />
+        <div className="w-px h-4 bg-slate-200 dark:bg-border" />
 
         {/* Share Button */}
         <button

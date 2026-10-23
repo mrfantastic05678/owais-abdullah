@@ -32,12 +32,12 @@ export default function FaqSection({ faqs }: FaqProps) {
           <AccordionItem
             value={`item-${index}`}
             key={index}
-            className="rounded-xl border border-[#143B42] dark:border-[#143B42] border-slate-300/80 bg-[#031215] dark:bg-[#031215] bg-[#EEF4F2] px-4 sm:px-5 py-0 overflow-hidden transition-all data-[state=open]:border-accent data-[state=open]:bg-[#04171B] dark:data-[state=open]:bg-[#04171B] shadow-xs"
+            className="rounded-xl border border-border/80 dark:border-[#143B42] bg-white dark:bg-[#031215] px-4 sm:px-5 py-0 overflow-hidden transition-all data-[state=open]:border-accent data-[state=open]:bg-secondary/60 dark:data-[state=open]:bg-[#04171B] shadow-xs"
           >
             <AccordionTrigger className="py-4 text-xs sm:text-sm font-semibold text-left text-foreground hover:text-accent transition-colors hover:no-underline">
               {faq.question}
             </AccordionTrigger>
-            <AccordionContent className="pt-2 pb-4 text-xs sm:text-[13px] text-muted-foreground leading-relaxed border-t border-[#143B42]/80 dark:border-[#143B42]/80 border-slate-300/60">
+            <AccordionContent className="pt-2 pb-4 text-xs sm:text-[13px] text-muted-foreground leading-relaxed border-t border-border/60 dark:border-[#143B42]/80">
               {faq.answer}
             </AccordionContent>
           </AccordionItem>
